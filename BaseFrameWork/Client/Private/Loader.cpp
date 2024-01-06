@@ -2,7 +2,6 @@
 #include "Loader.h"
 
 #include "GameInstance.h"
-#include "BackGround.h"
 
 CLoader::CLoader()
 {

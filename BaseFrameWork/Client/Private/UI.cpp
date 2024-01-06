@@ -11,10 +11,6 @@ CUI::CUI()
 {
 }
 
-void CUI::PreInitialize()
-{
-}
-
 HRESULT CUI::Initialize(tagUIInfo _UIinfo, _int _iPriorityIndex)
 {
     if (FAILED(__super::Initialize(nullptr)))

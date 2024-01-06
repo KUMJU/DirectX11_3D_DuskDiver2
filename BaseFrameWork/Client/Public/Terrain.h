@@ -21,8 +21,6 @@ public:
 	virtual ~CTerrain();
 
 public:
-	virtual void PreInitialize() override;
-
 	virtual HRESULT Initialize(CVITerrain::TerrainDesc _desc);
 	virtual HRESULT Initialize(const wstring& strHeightMapFilePath);
 

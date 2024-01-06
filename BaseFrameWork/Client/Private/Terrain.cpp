@@ -18,9 +18,7 @@ CTerrain::~CTerrain()
 {
 }
 
-void CTerrain::PreInitialize()
-{
-}
+
 
 HRESULT CTerrain::Initialize(CVITerrain::TerrainDesc _desc)
 {

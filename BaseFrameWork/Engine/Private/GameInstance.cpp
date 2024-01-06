@@ -7,7 +7,6 @@
 #include "InputDevice.h"
 #include "PickingMgr.h"
 #include "LightMgr.h"
-#include "ResourceMgr.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -292,6 +291,11 @@ shared_ptr<class CShader> CGameInstance::GetShader(const wstring& _strShaderKey)
 		return nullptr;
 
 	return m_pResMgr->GetShader(_strShaderKey);
+}
+
+map<wstring, CResourceMgr::ResourceDesc<class CModel>>* CGameInstance::GetModels()
+{
+	return m_pResMgr->GetModels();
 }
 
 wrl::ComPtr<ID3D11Device> CGameInstance::GetDeviceInfo()

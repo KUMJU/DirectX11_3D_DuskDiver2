@@ -25,7 +25,6 @@ public:
 	virtual ~CUI() = default;
 
 public:
-	virtual void PreInitialize() override;
 	virtual HRESULT Initialize(tagUIInfo _UIinfo, _int _iPriorityIndex);
 	virtual void PriorityTick(_float _fTimeDelta) override;
 	virtual void Tick(_float _fTimeDelta) override;

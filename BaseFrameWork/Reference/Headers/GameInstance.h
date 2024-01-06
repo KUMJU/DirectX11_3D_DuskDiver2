@@ -3,6 +3,7 @@
 #include "Engine_Defines.h"
 #include "Renderer.h"
 #include "PipeLine.h"
+#include "ResourceMgr.h"
 
 BEGIN(Engine)
 
@@ -75,6 +76,8 @@ public:
 	shared_ptr<class CTexture> GetTexture(const wstring& _strTextureKey);
 	shared_ptr<class CModel> GetModel(const wstring& _strModelKey);
 	shared_ptr<class CShader> GetShader(const wstring& _strShaderKey);
+
+	map <wstring, CResourceMgr::ResourceDesc<class CModel>>* GetModels();
 
 private:
 	shared_ptr<class CGraphicDev> m_pGraphicDev = nullptr;

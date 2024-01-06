@@ -17,8 +17,7 @@ public:
 	virtual ~CDummy() = default;
 
 public:
-	virtual void PreInitialize() override;
-	virtual HRESULT Initialize();
+	virtual HRESULT Initialize(const wstring& _strKey);
 	virtual void PriorityTick(_float _fTimeDelta) override;
 	virtual void Tick(_float _fTimeDelta) override;
 	virtual void LateTick(_float _fTimeDelta) override;
@@ -33,7 +32,7 @@ private:
 	HRESULT BindShaderResources();
 
 public:
-	static shared_ptr<CDummy> Create();
+	static shared_ptr<CDummy> Create(const wstring& _strKey);
 
 };
 

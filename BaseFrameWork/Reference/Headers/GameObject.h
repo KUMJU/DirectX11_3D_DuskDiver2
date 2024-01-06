@@ -16,8 +16,6 @@ public:
 	virtual ~CGameObject() = default;
 
 public:
-	//Default
-	virtual void PreInitialize();
 	virtual HRESULT Initialize(CTransform::TRANSFORM_DESC* _pDesc);
 
 	virtual void PriorityTick(_float _fTimeDelta);

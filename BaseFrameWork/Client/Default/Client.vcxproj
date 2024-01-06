@@ -162,6 +162,7 @@
     <ClInclude Include="..\Public\imconfig.h" />
     <ClInclude Include="..\Public\imgui.h" />
     <ClInclude Include="..\Public\ImguiMgr.h" />
+    <ClInclude Include="..\Public\ImGuizmo.h" />
     <ClInclude Include="..\Public\imgui_impl_dx11.h" />
     <ClInclude Include="..\Public\imgui_impl_win32.h" />
     <ClInclude Include="..\Public\imgui_internal.h" />
@@ -172,6 +173,7 @@
     <ClInclude Include="..\Public\Loader.h" />
     <ClInclude Include="..\Public\Logo.h" />
     <ClInclude Include="..\Public\MainApp.h" />
+    <ClInclude Include="..\Public\MapObject.h" />
     <ClInclude Include="..\Public\pch.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\UI.h" />
@@ -182,6 +184,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\..\Downloads\ImGuizmo-master\ImGuizmo-master\ImGuizmo.cpp" />
     <ClCompile Include="..\Private\ArcadeMap.cpp" />
     <ClCompile Include="..\Private\CameraFree.cpp" />
     <ClCompile Include="..\Private\Dummy.cpp" />
@@ -199,6 +202,7 @@
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\Private\Logo.cpp" />
     <ClCompile Include="..\Private\MainApp.cpp" />
+    <ClCompile Include="..\Private\MapObject.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\UI.cpp" />
     <ClCompile Include="..\Private\UIBackGround.cpp" />

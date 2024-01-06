@@ -62,9 +62,6 @@ HRESULT CEdit::ReadyLayerCamera(const wstring& _strLayerTag)
 
 HRESULT CEdit::ReadyLayerPlayer(const wstring& _strLayerTag)
 {
-	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, CDummy::Create())))
-		return E_FAIL;
-
 	return S_OK;
 }
 

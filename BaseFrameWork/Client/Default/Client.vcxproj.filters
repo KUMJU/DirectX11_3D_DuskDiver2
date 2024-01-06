@@ -67,6 +67,15 @@
     <Filter Include="02. GameObject\02. Camera\00. CameraFree">
       <UniqueIdentifier>{fc33e8c1-86b5-418b-ad4d-c2a22f3091d1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\03. MapObject">
+      <UniqueIdentifier>{6143915d-e2bd-45ee-a9ee-d7f08e1b5a8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\03. MapObject\00. MonsterTower">
+      <UniqueIdentifier>{877ba863-de5c-4920-91ba-ef0b475efc34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Imgui\03. ImguiGizmo">
+      <UniqueIdentifier>{2294b1a6-c2fb-453c-8132-c9613443bed9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -150,6 +159,12 @@
     <ClInclude Include="..\Public\UIBackGround.h">
       <Filter>02. GameObject\01. UI\00.UIBackGroud</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\MapObject.h">
+      <Filter>02. GameObject\03. MapObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGuizmo.h">
+      <Filter>96. Imgui\03. ImguiGizmo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -217,6 +232,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\UIBackGround.cpp">
       <Filter>02. GameObject\01. UI\00.UIBackGroud</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MapObject.cpp">
+      <Filter>02. GameObject\03. MapObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\Downloads\ImGuizmo-master\ImGuizmo-master\ImGuizmo.cpp">
+      <Filter>96. Imgui\03. ImguiGizmo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

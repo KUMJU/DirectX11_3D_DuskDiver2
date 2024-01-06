@@ -85,7 +85,7 @@ HRESULT CArcadeMap::ReadyLayerCamera(const wstring& _strLayerTag)
 
 HRESULT CArcadeMap::ReadyLayerPlayer(const wstring& _strLayerTag)
 {
-	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag,CDummy::Create())))
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag,CDummy::Create(TEXT("AssetsA")))))
 		return E_FAIL;
 
 	return S_OK;

@@ -18,7 +18,6 @@ CImguiMgr::~CImguiMgr()
 
 HRESULT CImguiMgr::Initialize()
 {
-
     m_pDevice = CGameInstance::GetInstance()->GetDeviceInfo();
     m_pContext = CGameInstance::GetInstance()->GetDeviceContextInfo();
 
@@ -33,6 +32,8 @@ HRESULT CImguiMgr::Initialize()
 
     ImGui_ImplWin32_Init(g_hWnd);
     ImGui_ImplDX11_Init(m_pDevice.Get(), m_pContext.Get());
+
+    SetObjectList();
 
     return S_OK;
 }
@@ -58,6 +59,8 @@ HRESULT CImguiMgr::Render(void)
         GetMouse();
     }
 
+    ObjectLoader();
+    ImgZmoTest();
 
     ImGui::Render();
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
@@ -179,7 +182,7 @@ void CImguiMgr::PickingNavi()
     ImGui::Dummy(ImVec2(0.f, 6.f));
 
     if (ImGui::Button("Dummy Object Create")) {
-        shared_ptr<CDummy> pDummy = CDummy::Create();
+        shared_ptr<CDummy> pDummy = CDummy::Create(TEXT("AssetsA"));
         CGameInstance::GetInstance()->AddObject(LEVEL_EDIT, TEXT("Layer_BackGround"), pDummy);
         _float4 fPos = _float4(m_PickingPos.x, m_PickingPos.y, m_PickingPos.z, 1.f);
         pDummy->SetPosition(XMLoadFloat4(&fPos));
@@ -188,6 +191,49 @@ void CImguiMgr::PickingNavi()
 
     ImGui::End();
 
+}
+
+void CImguiMgr::ObjectLoader()
+{
+    ImGui::Begin("Map Object Creator");
+
+    static int item_current = 1;
+    ImGui::ListBox("listbox", &item_current, m_ObjectList.data(), m_ObjectList.size(), 10);
+
+    if (ImGui::Button("Select Object Create")) {
+       
+        _tchar szFullPath[MAX_PATH] = TEXT("");
+        MultiByteToWideChar(CP_ACP, 0, m_ObjectList[item_current] , (_int)strlen(m_ObjectList[item_current]), szFullPath, MAX_PATH);
+
+        shared_ptr<CDummy> pDummy = CDummy::Create(szFullPath);
+        CGameInstance::GetInstance()->AddObject(LEVEL_EDIT, TEXT("Layer_BackGround"), pDummy);
+  /*      _float4 fPos = _float4(m_PickingPos.x, m_PickingPos.y, m_PickingPos.z, 1.f);
+        pDummy->SetPosition(XMLoadFloat4(&fPos));*/
+    }
+
+    ImGui::End();
+}
+
+void CImguiMgr::ImgZmoTest()
+{
+    ImGuizmo::BeginFrame();
+
+
+}
+
+void CImguiMgr::SetObjectList()
+{
+
+    map <wstring, CResourceMgr::ResourceDesc<class CModel>>* ModelList = CGameInstance::GetInstance()->GetModels();
+
+    for (auto& iter : *ModelList) {
+
+        _int iSize = lstrlenW(iter.first.c_str());
+
+        char* strMultiByte = new char[iSize+1];
+        WideCharToMultiByte(CP_ACP, 0, iter.first.c_str(),-1, strMultiByte, iSize + 1, NULL, NULL);
+        m_ObjectList.push_back(const_cast<char*>(strMultiByte));
+    }
 }
 
 void CImguiMgr::GetMouse()

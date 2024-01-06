@@ -65,6 +65,9 @@ public:
 	//특정 레벨이 끝난 후, 그 레벨에서만 사용하는 리소스를 지워버리는 함수
 	void DeleteResource();
 
+public:
+	map <wstring, ResourceDesc<class CModel>>* GetModels() { return &m_Models; }
+
 private:
 	map <wstring, ResourceDesc<class CTexture>> m_Textures;
 	map <wstring, ResourceDesc<class CMesh>> m_Meshes;

@@ -9,11 +9,8 @@ CDummy::CDummy()
 {
 }
 
-void CDummy::PreInitialize()
-{
-}
 
-HRESULT CDummy::Initialize()
+HRESULT CDummy::Initialize(const wstring& _strKey)
 {
     if (FAILED(__super::Initialize(nullptr)))
         return E_FAIL;
@@ -22,6 +19,9 @@ HRESULT CDummy::Initialize()
         return E_FAIL;
 
     m_pShader = CGameInstance::GetInstance()->GetShader(TEXT("Shader_VtxMesh"));
+
+    m_pModelCom = CGameInstance::GetInstance()->GetModel(_strKey);
+    m_Components.emplace(TEXT("Com_Model"), m_pModelCom);
 
 	return S_OK;
 }
@@ -69,11 +69,8 @@ HRESULT CDummy::AddComponent()
     wrl::ComPtr<ID3D11Device> pDevice = CGameInstance::GetInstance()->GetDeviceInfo();
     wrl::ComPtr<ID3D11DeviceContext> pContext = CGameInstance::GetInstance()->GetDeviceContextInfo();
 
-    m_pModelCom = CGameInstance::GetInstance()->GetModel(TEXT("MonsterTower"));
-    m_Components.emplace(TEXT("Com_Model"), m_pModelCom);
-
     return S_OK;
-}
+}                       
 
 HRESULT CDummy::BindShaderResources()
 {
@@ -111,11 +108,11 @@ HRESULT CDummy::BindShaderResources()
     return S_OK;
 }
 
-shared_ptr<CDummy> CDummy::Create()
+shared_ptr<CDummy> CDummy::Create(const wstring& _strKey)
 {
     shared_ptr<CDummy> pInstance = make_shared<CDummy>();
 
-    if (FAILED(pInstance->Initialize()))
+    if (FAILED(pInstance->Initialize(_strKey)))
         MSG_BOX("Failed to Create : CDummy");
 
 	return pInstance;

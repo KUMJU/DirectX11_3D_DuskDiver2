@@ -7,11 +7,12 @@
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
 
+#include "ImGuizmo.h"
+
 BEGIN(Client)
 
 class CImguiMgr
 {
-
 	DECLARE_SINGLETON(CImguiMgr)
 
 public:
@@ -35,6 +36,12 @@ private:
 
 	void TerrainEditor();
 	void PickingNavi();
+	void ObjectLoader();
+	void ImgZmoTest();
+
+
+private:
+	void SetObjectList();
 
 private:
 	void GetMouse();
@@ -48,6 +55,9 @@ private:
 	shared_ptr<class CTerrain> m_pCurrentTerrain = nullptr;
 
 	_float3 m_PickingPos = _float3();
+	_bool m_IsZmoUsing = false;
+
+	vector<char*> m_ObjectList;
 
 };
 

@@ -9,11 +9,6 @@ CGameObject::CGameObject(const CGameObject& _rhs)
 {
 }
 
-
-void CGameObject::PreInitialize()
-{
-}
-
 HRESULT CGameObject::Initialize(CTransform::TRANSFORM_DESC* _pDesc)
 {
 	m_pTransformCom = CTransform::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo());
