@@ -8,6 +8,8 @@
 
 #include "Engine_Defines.h"
 
+#include "MapLoader.h"
+
 CArcadeMap::CArcadeMap()
 	:CLevel()
 {
@@ -27,14 +29,13 @@ HRESULT CArcadeMap::Initialize()
 	if (FAILED(ReadyLight()))
 		return E_FAIL;
 
-	if (FAILED(ReadyLayerBackGround(TEXT("Layer_BackGround"))))
-		return E_FAIL;
+	CMapLoader::GetInstance()->LoadMapData("../Bin/DataFiles/ArcadeMap.json");
 
 	if (FAILED(ReadyLayerCamera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 
-	if (FAILED(ReadyLayerPlayer(TEXT("Layer_Player"))))
-		return E_FAIL;
+	//if (FAILED(ReadyLayerPlayer(TEXT("Layer_Player"))))
+	//	return E_FAIL;
 
 	return S_OK;
 }
@@ -42,7 +43,7 @@ HRESULT CArcadeMap::Initialize()
 void CArcadeMap::Tick(_float _fTimeDelta)
 {
 }
-
+ 
 HRESULT CArcadeMap::Render()
 {
 #ifdef _DEBUG

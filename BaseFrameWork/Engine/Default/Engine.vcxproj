@@ -151,8 +151,6 @@
     <ClInclude Include="..\Public\GameObject.h" />
     <ClInclude Include="..\Public\GraphicDev.h" />
     <ClInclude Include="..\Public\InputDevice.h" />
-    <ClInclude Include="..\Public\Json\json-forwards.h" />
-    <ClInclude Include="..\Public\Json\json.h" />
     <ClInclude Include="..\Public\Layers.h" />
     <ClInclude Include="..\Public\Level.h" />
     <ClInclude Include="..\Public\LevelMgr.h" />
@@ -184,7 +182,6 @@
     <ClCompile Include="..\Private\GameObject.cpp" />
     <ClCompile Include="..\Private\GraphicDev.cpp" />
     <ClCompile Include="..\Private\InputDevice.cpp" />
-    <ClCompile Include="..\Private\jsoncpp.cpp" />
     <ClCompile Include="..\Private\Layers.cpp" />
     <ClCompile Include="..\Private\Level.cpp" />
     <ClCompile Include="..\Private\LevelMgr.cpp" />

@@ -24,7 +24,16 @@ private:
 	virtual HRESULT Render() override;
 
 private:
+	void KeyInput();
+
+private:
 	_float m_fMouseSensor = 0.f;
+	_bool m_IsCamLock = true;
+
+
+private:
+	_bool m_bKeyDeb = false;
+	_float m_fKeyDebTime = 0.f;
 
 public:
 	static shared_ptr<CCameraFree> Create(CAMERAFREE_DESC* _pCamFreeDesc, CAMERA_DESC* _pCamDes, CTransform::TRANSFORM_DESC* _TransDesc);

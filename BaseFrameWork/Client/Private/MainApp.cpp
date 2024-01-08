@@ -10,6 +10,10 @@
 #include "ImguiMgr.h"
 #include "Engine_Defines.h"
 
+#include <fstream>
+
+#include "Json/json.h"
+
 CMainApp::CMainApp()
 {
 }
@@ -80,6 +84,60 @@ HRESULT CMainApp::OpenLevel(LEVEL _eStartLevel)
 		return E_FAIL;
 
 	return CGameInstance::GetInstance()->OpenLevel(LEVEL_LOADING, CLevelLoading::Create(_eStartLevel));
+}
+
+void CMainApp::TestJSON()
+{
+
+	Json::Value root;
+
+	Json::Value Hero1;
+
+	Json::Value ValueData;
+
+	Hero1["Age"] = 10;
+	Hero1["Rad"] = 20.f;
+
+	root["Hero1"] = Hero1;
+	//Hero1.append(ValueData);
+	//root.append(Hero1);
+
+	//////////////////Save////////////////////
+
+	Json::StreamWriterBuilder builder;
+	const std::unique_ptr<Json::StreamWriter> writer(builder.newStreamWriter());
+
+	std::ofstream ofStream;
+	ofStream.open("test.json", ios_base::out);
+
+	if (ofStream.is_open()) {
+		writer->write(root, &ofStream);
+	}
+
+	ofStream.close();
+}
+
+void CMainApp::TestReadJson()
+{
+	Json::Value realJson;
+
+	ifstream fin("../test.json");
+	//JSONCPP_STRING err;
+	//string rawJson = "test.json";
+	//Json::CharReaderBuilder reader;                         
+
+	//const std::unique_ptr<Json::CharReader> charReader(reader.newCharReader());
+	//_bool ok = charReader->parse(rawJson.c_str(), rawJson.c_str() + rawJson.length(), &realJson, &err);
+
+	fin >> realJson;
+
+	_int www = realJson["Hero1"]["Age"].asInt();
+	_float www2 = realJson["Hero1"]["Rad"].asFloat();
+
+
+	fin.close();
+	int a = 34;
+
 }
 
 void CMainApp::Free()

@@ -13,7 +13,7 @@ CResourceMgr::CResourceMgr(wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID3D1
 
 void CResourceMgr::BaseResourceLoad()
 {
-    m_IsBaseRes = true;
+    m_iCurrentLevel = 0;
     const wstring& strBasePath = TEXT("../../Client/Bin/Resources/Base/");
 
     LoadTexture(strBasePath);
@@ -22,7 +22,7 @@ void CResourceMgr::BaseResourceLoad()
 
 void CResourceMgr::LogoResourceLoad()
 {
-    m_IsBaseRes = false;
+    m_iCurrentLevel = 2;
     const wstring& strBasePath = TEXT("../../Client/Bin/Resources/Logo/");
 
     LoadShader();
@@ -33,18 +33,22 @@ void CResourceMgr::LogoResourceLoad()
 
 void CResourceMgr::ArcadeMapResourceLoad()
 {
-    m_IsBaseRes = false;
+    const wstring& strBasePath = TEXT("../../Client/Bin/Resources/ArcadeMap/");
 
+    LoadTexture(strBasePath);
+    LoadMesh(strBasePath);
+ 
 }
 
 void CResourceMgr::TownMapResourceLoad()
 {
-    m_IsBaseRes = false;
 
 }
 
 void CResourceMgr::LoadLevelResource(_uint _iLevelIndex)
 {
+    m_iCurrentLevel = _iLevelIndex;
+
     switch (_iLevelIndex)
     {
     case 0:
@@ -54,6 +58,9 @@ void CResourceMgr::LoadLevelResource(_uint _iLevelIndex)
         break;
     case 2:
         LogoResourceLoad();
+        break;
+    case 3:
+        ArcadeMapResourceLoad();
         break;
     default:
         break;
@@ -176,7 +183,7 @@ void CResourceMgr::ReadTextureFile(const wstring& _strBaseFilepath, const wstrin
             wstring strName = fd.name;
             wstring strExt = FindExt(strName);
             if (TEXT(".png") == FindExt(strName) ||  TEXT(".dds") == FindExt(strName) || TEXT(".bmp") == FindExt(strName)) {
-                ResourceDesc<CTexture> tmp = { CTexture::Create(m_pDevice, m_pContext, strPath, 1) , m_IsBaseRes };
+                ResourceDesc<CTexture> tmp = { CTexture::Create(m_pDevice, m_pContext, strPath, 1) , m_iCurrentLevel };
                 m_Textures.emplace(EraseExt(strName), tmp);
             }
         }
@@ -223,7 +230,7 @@ void CResourceMgr::ReadAnimMeshFile(const wstring& _strBaseFilepath, const wstri
             WideCharToMultiByte(CP_ACP, 0, strPath.c_str(), lstrlenW(strPath.c_str()), strMultiByte, MAX_PATH, NULL, NULL);
 
             if (TEXT(".fbx") == FindExt(strName)) {
-                ResourceDesc<CModel> tmp = { CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM , strMultiByte) , m_IsBaseRes};
+                ResourceDesc<CModel> tmp = { CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM , strMultiByte) , m_iCurrentLevel };
                 m_Models.emplace(EraseExt(strName), tmp);
             }
         }
@@ -259,7 +266,7 @@ void CResourceMgr::ReadNonAnimMeshFile(const wstring& _strBaseFilepath, const ws
             WideCharToMultiByte(CP_ACP, 0, strPath.c_str(),lstrlenW(strPath.c_str()), strMultiByte, MAX_PATH , NULL, NULL);
 
             if (TEXT(".fbx") == FindExt(strName)) {
-                ResourceDesc<CModel> tmp = { CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM , strMultiByte, XMMatrixIdentity()) , m_IsBaseRes };
+                ResourceDesc<CModel> tmp = { CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM , strMultiByte, XMMatrixIdentity()) , m_iCurrentLevel };
                 m_Models.emplace(EraseExt(strName), tmp);
             }
         }
@@ -295,7 +302,7 @@ void CResourceMgr::DeleteResource()
     //특정 레벨에서만 사용하는 텍스쳐 제거
     for (auto iter = m_Textures.begin(); iter != m_Textures.end(); ) {
 
-        if (!(*iter).second.IsBaseRes) {
+        if (0 != (*iter).second.iLevel  && m_iCurrentLevel != (*iter).second.iLevel) {
             iter = m_Textures.erase(iter);
         }
         else {
@@ -303,18 +310,16 @@ void CResourceMgr::DeleteResource()
         }
     }
 
-    //특정 레벨에서만 사용하는 메쉬 제거
-    for (auto iter = m_Meshes.begin(); iter != m_Meshes.end(); ) {
 
-        if (!(*iter).second.IsBaseRes) {
-            iter = m_Meshes.erase(iter);
+    for (auto iter = m_Models.begin(); iter != m_Models.end(); ) {
+
+        if (0 != (*iter).second.iLevel && m_iCurrentLevel != (*iter).second.iLevel) {
+            iter = m_Models.erase(iter);
         }
         else {
             ++iter;
         }
     }
-
-
 }
 
 shared_ptr<CResourceMgr> CResourceMgr::Create(wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID3D11DeviceContext> _pContext)

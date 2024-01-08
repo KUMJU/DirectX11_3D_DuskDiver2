@@ -24,6 +24,9 @@ public:
 private:
 	HRESULT OpenLevel(LEVEL _eStartLevel);	 
 
+	void TestJSON();
+	void TestReadJson();
+
 private:
 	_bool m_IsImguiOn = true;
 

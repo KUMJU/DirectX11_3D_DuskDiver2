@@ -19,7 +19,7 @@ HRESULT CGameObject::Initialize(CTransform::TRANSFORM_DESC* _pDesc)
 	if (FAILED(m_pTransformCom->Initialize(_pDesc)))
 		return E_FAIL;
 
-	m_Components.emplace(TEXT("Com_Transform"), m_pTransformCom);
+	m_Components.emplace(TEXT("Com_Transform"), m_pTransformCom);                    
 
 	return S_OK;
 }
@@ -54,6 +54,21 @@ void CGameObject::SetPosition(_vector _vPos)
 {
 	m_pTransformCom->SetState(CTransform::STATE_POSITION, _vPos);
 
+}
+
+_matrix CGameObject::GetWorldMatrix()
+{
+	return m_pTransformCom->GetWorldMatrix(); 
+}
+
+_float* CGameObject::GetWoldMatFloatArr()
+{
+	return m_pTransformCom->GetWorldMatFloatArr();
+}
+
+void CGameObject::SetWorldMatrix(_float4x4 _worldMat)
+{
+	m_pTransformCom->SetWorldMatrix(_worldMat);
 }
 
 shared_ptr<CComponent> CGameObject::GetComponent(const wstring& _strComTag)

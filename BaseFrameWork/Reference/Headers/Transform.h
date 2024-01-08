@@ -35,6 +35,10 @@ public:
 		);
 	}
 
+	_float* GetWorldMatFloatArr() {
+		return m_WorldMatrix.m[0];
+	}
+
 	_matrix GetWorldMatrix() {
 		return XMLoadFloat4x4(&m_WorldMatrix);
 	}
@@ -49,6 +53,10 @@ public:
 		_float4 vTmp;
 		XMStoreFloat4(&vTmp, _vState);
 		memcpy(&m_WorldMatrix.m[_eState], &vTmp, sizeof(_float4));
+	}
+
+	void SetWorldMatrix(_float4x4 _worldMat) {
+		m_WorldMatrix = _worldMat;
 	}
 
 

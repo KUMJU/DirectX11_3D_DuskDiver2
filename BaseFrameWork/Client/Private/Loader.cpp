@@ -100,6 +100,7 @@ HRESULT CLoader::LoadingForLogo()
 
 HRESULT CLoader::LoadingForArcadeMap()
 {    
+    CGameInstance::GetInstance()->LoadLevelResource(LEVEL_ARCADE);
 
     m_strLoadingText = TEXT("텍스쳐를(을) 로딩 중 입니다.");
     m_strLoadingText = TEXT("모델를(을) 로딩 중 입니다.");
@@ -115,6 +116,8 @@ HRESULT CLoader::LoadingForArcadeMap()
 
 HRESULT CLoader::LoadingForEdit()
 {
+    CGameInstance::GetInstance()->LoadLevelResource(LEVEL_ARCADE);
+
     m_isFinished = true;
     return S_OK;
 }

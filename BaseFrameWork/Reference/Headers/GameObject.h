@@ -31,6 +31,13 @@ public:
 	void SetPosition(_vector _vPos);
 
 public:
+	_matrix GetWorldMatrix();
+	//ImguiZmo Àü¿ë//
+	_float* GetWoldMatFloatArr();
+	void SetWorldMatrix(_float4x4 _worldMat);
+
+
+public:
 	shared_ptr<CComponent> GetComponent(const wstring& _strComTag);
 
 protected:

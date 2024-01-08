@@ -11,7 +11,7 @@ public:
 	template<typename T>
 	struct ResourceDesc {
 		shared_ptr<T> pRes;
-		_bool IsBaseRes;
+		_uint iLevel;
 	};
 
 public:
@@ -63,6 +63,7 @@ private:
 
 public:
 	//특정 레벨이 끝난 후, 그 레벨에서만 사용하는 리소스를 지워버리는 함수
+	//레벨을 매개변수로 받아야할지 생각해보기
 	void DeleteResource();
 
 public:
@@ -76,6 +77,7 @@ private:
 
 private:
 
+	_uint m_iCurrentLevel = 0;
 	_bool m_IsBaseRes = true;
 
 	wrl::ComPtr<ID3D11Device> m_pDevice = nullptr;

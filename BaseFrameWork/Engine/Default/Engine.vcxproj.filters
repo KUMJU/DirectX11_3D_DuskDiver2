@@ -58,12 +58,6 @@
     <Filter Include="98. Helper">
       <UniqueIdentifier>{0f87c629-88e6-492c-9ab5-59e2bc739d9d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="98. Helper\Jsoncpp">
-      <UniqueIdentifier>{e8e75393-5b9f-429a-8eaf-2134614959c6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="98. Helper\Jsoncpp\Json">
-      <UniqueIdentifier>{de827418-9e26-4eeb-84a0-f82df3513e2c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Utility\05. Pool">
       <UniqueIdentifier>{242809c0-92b3-47f0-81f3-5809de6acaa1}</UniqueIdentifier>
     </Filter>
@@ -186,12 +180,6 @@
     <ClInclude Include="..\Public\VIRect.h">
       <Filter>01. Utility\04. Component\00. VIBuffer\00. Rect</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Json\json.h">
-      <Filter>98. Helper\Jsoncpp\Json</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Json\json-forwards.h">
-      <Filter>98. Helper\Jsoncpp\Json</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Texture.h">
       <Filter>01. Utility\04. Component\01. Texture</Filter>
     </ClInclude>
@@ -277,9 +265,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer.cpp">
       <Filter>01. Utility\04. Component\00. VIBuffer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\jsoncpp.cpp">
-      <Filter>98. Helper\Jsoncpp</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\VIRect.cpp">
       <Filter>01. Utility\04. Component\00. VIBuffer\00. Rect</Filter>

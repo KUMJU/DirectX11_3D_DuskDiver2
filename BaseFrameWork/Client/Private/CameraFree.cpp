@@ -23,6 +23,16 @@ HRESULT CCameraFree::Initialize(CAMERAFREE_DESC* _pCamFreeDesc, CAMERA_DESC* _pC
 
 void CCameraFree::PriorityTick(_float fTimeDelta)
 {
+	if (m_bKeyDeb) {
+		m_fKeyDebTime += fTimeDelta;
+
+		if (m_fKeyDebTime > 0.2f) {
+			m_bKeyDeb = false;
+			m_fKeyDebTime = 0.f;
+		}
+	}
+
+	KeyInput();
 
 	if (GetKeyState('W') & 0x8000)
 	{
@@ -44,13 +54,17 @@ void CCameraFree::PriorityTick(_float fTimeDelta)
 		m_pTransformCom->GoRight(fTimeDelta);
 	}
 
-	_long MouseMove = 0;
+	if (!m_IsCamLock) {
 
-	if(MouseMove = CGameInstance::GetInstance()->GetDIMouseMove(DIMS_X))
-		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta * MouseMove * m_fMouseSensor);
+		_long MouseMove = 0;
 
-	if (MouseMove = CGameInstance::GetInstance()->GetDIMouseMove(DIMS_Y))
-		m_pTransformCom->Turn(m_pTransformCom->GetState(CTransform::STATE_RIGHT), fTimeDelta * MouseMove * m_fMouseSensor);
+		if (MouseMove = CGameInstance::GetInstance()->GetDIMouseMove(DIMS_X))
+			m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta * MouseMove * m_fMouseSensor);
+
+		if (MouseMove = CGameInstance::GetInstance()->GetDIMouseMove(DIMS_Y))
+			m_pTransformCom->Turn(m_pTransformCom->GetState(CTransform::STATE_RIGHT), fTimeDelta * MouseMove * m_fMouseSensor);
+
+	}
 
 	if (FAILED(SetUpTransformMatices()))
 		return;
@@ -68,6 +82,20 @@ void CCameraFree::LateTick(_float fTimeDelta)
 HRESULT CCameraFree::Render()
 {
 	return S_OK;
+
+}
+
+void CCameraFree::KeyInput()
+{
+	if (m_bKeyDeb)
+		return;
+
+	//Lock On & Off
+	if (GetKeyState('L') & 0x8000)
+	{
+		m_IsCamLock = !m_IsCamLock;
+		m_bKeyDeb = true;
+	}
 }
 
 shared_ptr<CCameraFree> CCameraFree::Create(CAMERAFREE_DESC* _pCamFreeDesc, CAMERA_DESC* _pCamDes, CTransform::TRANSFORM_DESC* _TransDesc)
