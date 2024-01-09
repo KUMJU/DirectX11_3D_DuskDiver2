@@ -158,6 +158,7 @@
   <ItemGroup>
     <ClInclude Include="..\Public\ArcadeMap.h" />
     <ClInclude Include="..\Public\CameraFree.h" />
+    <ClInclude Include="..\Public\CameraMgr.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Dummy.h" />
     <ClInclude Include="..\Public\Edit.h" />
@@ -196,6 +197,7 @@
     <ClCompile Include="..\..\..\..\..\..\..\Downloads\ImGuizmo-master\ImGuizmo-master\ImGuizmo.cpp" />
     <ClCompile Include="..\Private\ArcadeMap.cpp" />
     <ClCompile Include="..\Private\CameraFree.cpp" />
+    <ClCompile Include="..\Private\CameraMgr.cpp" />
     <ClCompile Include="..\Private\Dummy.cpp" />
     <ClCompile Include="..\Private\Edit.cpp" />
     <ClCompile Include="..\Private\GameMgr.cpp" />
@@ -236,6 +238,7 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnim.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl">

@@ -1,8 +1,9 @@
 #include "Model.h"
 #include "Mesh.h"
-#include "Material.h"
+#include "ModelMaterial.h"
 #include "Texture.h"
 #include "Bone.h"
+#include "Shader.h"
 
 #include "GameInstance.h"
 
@@ -18,13 +19,12 @@ CModel::CModel(const CModel& _rhs)
     , m_Meshes(_rhs.m_Meshes)
     , m_iNumMaterials(_rhs.m_iNumMaterials)
     , m_Materials(_rhs.m_Materials)
-    , m_pAIScene(_rhs.m_pAIScene)
+    , m_Bones(_rhs.m_Bones)
 {
 }
 
 HRESULT CModel::Initialize(TYPE eModelType, const _char* pModelFilePath, _fmatrix PivotMatrix)
 {
-    XMStoreFloat4x4(&m_PivotMatrix, PivotMatrix);
 
     _uint iFlag = aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_Fast;
     m_eModelType = eModelType;
@@ -35,6 +35,10 @@ HRESULT CModel::Initialize(TYPE eModelType, const _char* pModelFilePath, _fmatri
     m_pAIScene = m_Importer.ReadFile(pModelFilePath, iFlag);
 
     if (!m_pAIScene)
+        return E_FAIL;
+
+
+    if (FAILED(ReadyBones(m_pAIScene->mRootNode, -1)))
         return E_FAIL;
 
     if (FAILED(ReadyMeshes()))
@@ -48,8 +52,6 @@ HRESULT CModel::Initialize(TYPE eModelType, const _char* pModelFilePath, _fmatri
 
 HRESULT CModel::InitializeClone()
 {
-    if (FAILED(ReadyBones(m_pAIScene->mRootNode, -1)))
-        return E_FAIL;
 
     return S_OK;
 }
@@ -63,11 +65,48 @@ HRESULT CModel::Render(_uint _iMeshIndex)
     return S_OK;
 }
 
+_int CModel::GetBoneIndex(const _char* _pBoneName) const
+{
+    _int iBoneIndex = { -1 };
+
+    auto iter = find_if(m_Bones.begin(), m_Bones.end(), [&](shared_ptr<CBone> pBone) {
+
+        iBoneIndex++;
+
+        if (!strcmp(_pBoneName, pBone->GetBoneName()))
+            return true;
+        return false;
+    });
+
+
+    if (iter == m_Bones.end())
+        return -1;
+
+
+    return iBoneIndex;
+}
+
 HRESULT CModel::BindMaterialShaderResource(shared_ptr<class CShader> _pShader, _uint _iMeshIndex, aiTextureType _eMaterialType, const _char* _pConstantName)
 {
     _uint iMaterialIndex = m_Meshes[_iMeshIndex]->GetMaterialIndex();
     shared_ptr<CTexture> pTexture =  m_Materials[iMaterialIndex]->GetTextures()[_eMaterialType];
     return pTexture->BindShaderResource(_pShader, _pConstantName, 0);
+}
+
+HRESULT CModel::BindBoneMatrices(shared_ptr<class CShader> _pShader, const _char* _pConstName, _uint _iMeshIndex)
+{
+    _float4x4 BoneMatirces[MAX_BONE];
+
+    m_Meshes[_iMeshIndex]->SetUpBoneMatrices(BoneMatirces, m_Bones);
+
+    return _pShader->BindMatrices(_pConstName, BoneMatirces, MAX_BONE) ;
+}
+
+void CModel::PlayAnimation(_float _fTimeDelta)
+{
+    for (auto& pBone : m_Bones)
+        pBone->InvalidateCombinedTransformationMatrix(m_Bones);
+
 }
 
 HRESULT CModel::ReadyMeshes()
@@ -76,7 +115,7 @@ HRESULT CModel::ReadyMeshes()
 
     for (size_t i = 0; i < m_iNumMeshes; i++) {
 
-        shared_ptr<CMesh> pMesh = CMesh::Create(m_eModelType, m_pDevice, m_pContext, m_pAIScene->mMeshes[i], XMLoadFloat4x4(&m_PivotMatrix));
+        shared_ptr<CMesh> pMesh = CMesh::Create(m_eModelType, m_pDevice, m_pContext, m_pAIScene->mMeshes[i], dynamic_pointer_cast<CModel>(shared_from_this()),  XMLoadFloat4x4(&m_PivotMatrix));
 
         if (!pMesh)
             return E_FAIL;
@@ -135,16 +174,18 @@ HRESULT CModel::ReadyMaterials(const _char* _pModelFilePath)
 
 HRESULT CModel::ReadyBones(aiNode* _pNode, _int _iParentBoneIndex)
 {
-    shared_ptr<CBone> pBone= CBone::Create(_pNode, _iParentBoneIndex++);
+    shared_ptr<CBone> pBone= CBone::Create(_pNode, _iParentBoneIndex);
     
     if (!pBone)
         return E_FAIL;
 
     m_Bones.push_back(pBone);
 
+    _uint iParentIndex = m_Bones.size() - 1;
+
     //재귀함수로 가장 최하단 노드까지 순회한다
     for (size_t i = 0; i < _pNode->mNumChildren; i++) {
-        ReadyBones(_pNode->mChildren[i], _iParentBoneIndex);
+        ReadyBones(_pNode->mChildren[i], iParentIndex);
     }
 
     return S_OK;

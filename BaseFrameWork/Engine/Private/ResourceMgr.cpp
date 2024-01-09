@@ -94,9 +94,9 @@ shared_ptr<class CModel> CResourceMgr::GetModel(const wstring& _strModelKey)
 
     if (iter != m_Models.end()) {
 
-        if (CModel::TYPE::TYPE_ANIM == (*iter).second.pRes->GetModelType()) {
-            return CModel::Clone(((*iter).second.pRes));
-        }
+        //if (CModel::TYPE::TYPE_ANIM == (*iter).second.pRes->GetModelType()) {
+        //    return CModel::Clone(((*iter).second.pRes));
+        //}
         return (*iter).second.pRes;
     }
 
@@ -161,6 +161,9 @@ void CResourceMgr::ReadShaderFile(const wstring& _strBaseFilepath, const wstring
             }
             else if (wstring::npos != strName.find(TEXT("Mesh"))) {
                 pShader = CShader::Create(m_pDevice, m_pContext, strPath, VTXMESH::Elements, VTXMESH::iNumElements);
+            }
+            else if (wstring::npos != strName.find(TEXT("Anim"))) {
+                pShader = CShader::Create(m_pDevice, m_pContext, strPath, VTXANIMMESH::Elements, VTXANIMMESH::iNumElements);
             }
 
             if (pShader) {

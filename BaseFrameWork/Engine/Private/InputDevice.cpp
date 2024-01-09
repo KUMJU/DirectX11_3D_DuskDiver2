@@ -36,7 +36,7 @@ HRESULT Engine::CInputDevice::Ready_InputDev(HINSTANCE hInst, HWND hWnd)
 
 void Engine::CInputDevice::Tick(void)
 {
-	m_pKeyBoard->GetDeviceState(256, m_byKeyState);
+	m_pKeyBoard->GetDeviceState(MAX_BONE, m_byKeyState);
 	m_pMouse->GetDeviceState(sizeof(m_tMouseState), &m_tMouseState);
 }
 

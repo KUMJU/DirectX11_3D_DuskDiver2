@@ -11,18 +11,24 @@ CCameraFree::~CCameraFree()
 {
 }
 
-HRESULT CCameraFree::Initialize(CAMERAFREE_DESC* _pCamFreeDesc, CAMERA_DESC* _pCamDes, CTransform::TRANSFORM_DESC* _TransDesc)
+HRESULT CCameraFree::Initialize(_bool _IsEnable, CAMERAFREE_DESC* _pCamFreeDesc, CAMERA_DESC* _pCamDes, CTransform::TRANSFORM_DESC* _TransDesc)
 {
 	m_fMouseSensor = _pCamFreeDesc->fMouseSensor;
 
 	if(FAILED(__super::Initialize(_pCamDes, _TransDesc)))
 		return E_FAIL;
 
+	m_IsEnabled = _IsEnable;
+
 	return S_OK;
 }
 
 void CCameraFree::PriorityTick(_float fTimeDelta)
 {
+	if (!m_IsEnabled)
+		return;
+
+
 	if (m_bKeyDeb) {
 		m_fKeyDebTime += fTimeDelta;
 
@@ -34,22 +40,22 @@ void CCameraFree::PriorityTick(_float fTimeDelta)
 
 	KeyInput();
 
-	if (GetKeyState('W') & 0x8000)
+	if (GetKeyState(VK_UP) & 0x8000)
 	{
 		m_pTransformCom->GoStraight(fTimeDelta);
 	}
 
-	if (GetKeyState('S') & 0x8000)
+	if (GetKeyState(VK_DOWN) & 0x8000)
 	{
 		m_pTransformCom->GoBackward(fTimeDelta);
 	}
 
-	if (GetKeyState('A') & 0x8000)
+	if (GetKeyState(VK_LEFT) & 0x8000)
 	{
 		m_pTransformCom->GoLeft(fTimeDelta);
 	}
 
-	if (GetKeyState('D') & 0x8000)
+	if (GetKeyState(VK_RIGHT) & 0x8000)
 	{
 		m_pTransformCom->GoRight(fTimeDelta);
 	}
@@ -98,12 +104,13 @@ void CCameraFree::KeyInput()
 	}
 }
 
-shared_ptr<CCameraFree> CCameraFree::Create(CAMERAFREE_DESC* _pCamFreeDesc, CAMERA_DESC* _pCamDes, CTransform::TRANSFORM_DESC* _TransDesc)
+shared_ptr<CCameraFree> CCameraFree::Create(_bool _IsEnable, CAMERAFREE_DESC* _pCamFreeDesc, CAMERA_DESC* _pCamDes, CTransform::TRANSFORM_DESC* _TransDesc)
 {
 	shared_ptr<CCameraFree> pInstance = make_shared<CCameraFree>();
 
-	if (FAILED(pInstance->Initialize(_pCamFreeDesc, _pCamDes, _TransDesc)))
+	if (FAILED(pInstance->Initialize(_IsEnable, _pCamFreeDesc, _pCamDes, _TransDesc)))
 		MSG_BOX("Failed to Create : CCamFree");
+
 
 	return pInstance;
 }

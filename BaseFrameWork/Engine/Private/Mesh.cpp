@@ -1,16 +1,16 @@
 #include "Mesh.h"
+#include "Bone.h"
 
 CMesh::CMesh(wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID3D11DeviceContext> _pContext)
 	:CVIBuffer(_pDevice, _pContext)
 {
 }
 
-HRESULT CMesh::Initialize(CModel::TYPE _eType, const aiMesh* pAIMesh, _fmatrix PivotMatrix)
+HRESULT CMesh::Initialize(CModel::TYPE _eType, const aiMesh* pAIMesh, shared_ptr<CModel> _pModel, _fmatrix PivotMatrix)
 {
 	m_iMaterialIndex = pAIMesh->mMaterialIndex;
 
 	m_iNumVertexBuffers = 1;
-	m_iVertexStride = sizeof(VTXMESH);
 	m_iNumVertices = pAIMesh->mNumVertices;
 
 	m_iIndexStride = 4;
@@ -20,7 +20,7 @@ HRESULT CMesh::Initialize(CModel::TYPE _eType, const aiMesh* pAIMesh, _fmatrix P
 	m_ePrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
 	/////////////Vertex Buffer///////////////
-	HRESULT hr = _eType == CModel::TYPE_NONANIM ? ReadyVertexBufferNonAnim(pAIMesh, PivotMatrix) : ReadyVertexBufferAnim(pAIMesh);
+	HRESULT hr = _eType == CModel::TYPE_NONANIM ? ReadyVertexBufferNonAnim(pAIMesh, PivotMatrix) : ReadyVertexBufferAnim(pAIMesh, _pModel);
 
 	if (FAILED(hr))
 		return E_FAIL;
@@ -54,6 +54,16 @@ HRESULT CMesh::Initialize(CModel::TYPE _eType, const aiMesh* pAIMesh, _fmatrix P
 	Safe_Delete_Array(pIndices);
 	return S_OK;
 }
+
+void CMesh::SetUpBoneMatrices(_float4x4* _pBoneMatirces, vector<shared_ptr<class CBone>>& _Bones)
+{
+	_float4x4 CombinedMat;
+
+	for (size_t i = 0; i < m_iNumBones; i++) {
+		CombinedMat = _Bones[m_BoneIndices[i]]->GetCombiendTransformationMatrix();
+		XMStoreFloat4x4(&_pBoneMatirces[i], XMLoadFloat4x4(&m_OffsetMatrices[i])* XMLoadFloat4x4(&CombinedMat));
+	}
+} 
 
 HRESULT CMesh::ReadyVertexBufferNonAnim(const aiMesh* _pAIMesh, _fmatrix PivotMatrix)
 {
@@ -89,7 +99,7 @@ HRESULT CMesh::ReadyVertexBufferNonAnim(const aiMesh* _pAIMesh, _fmatrix PivotMa
 	return S_OK;
 }
 
-HRESULT CMesh::ReadyVertexBufferAnim(const aiMesh* _pAIMesh)
+HRESULT CMesh::ReadyVertexBufferAnim(const aiMesh* _pAIMesh, shared_ptr<CModel> _pModel)
 {
 	m_iVertexStride = sizeof(VTXANIMMESH);
 
@@ -120,6 +130,15 @@ HRESULT CMesh::ReadyVertexBufferAnim(const aiMesh* _pAIMesh)
 	for (size_t i = 0; i < m_iNumBones; i++) {
 
 		aiBone* pAIBone = _pAIMesh->mBones[i];
+		aiString dd = _pAIMesh->mName;
+
+		_float4x4 OffsetMatrix = {};
+
+		memcpy(&OffsetMatrix, &pAIBone->mOffsetMatrix, sizeof(_float4x4));
+		XMStoreFloat4x4(&OffsetMatrix, XMMatrixTranspose(XMLoadFloat4x4(&OffsetMatrix)));
+
+		m_OffsetMatrices.push_back(OffsetMatrix);
+		m_BoneIndices.push_back(_pModel->GetBoneIndex(pAIBone->mName.data));
 
 		//최대 4개까지 영향을 받을 수 있음 
 		//Weight는 0이 될 수 없기 때문에 weights가 0일때 값이 채워지지 않음을 알 수 있다
@@ -159,11 +178,11 @@ HRESULT CMesh::ReadyVertexBufferAnim(const aiMesh* _pAIMesh)
 	return S_OK;
 }
 
-shared_ptr<CMesh> CMesh::Create(CModel::TYPE _eType, wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID3D11DeviceContext> _pContext, const aiMesh* pAIMesh, _fmatrix PivotMatrix)
+shared_ptr<CMesh> CMesh::Create(CModel::TYPE _eType, wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID3D11DeviceContext> _pContext, const aiMesh* pAIMesh, shared_ptr<CModel> _pModel, _fmatrix PivotMatrix)
 {
 	shared_ptr<CMesh> pInstance = make_shared<CMesh>(_pDevice, _pContext);
 
-	if (FAILED(pInstance->Initialize(_eType, pAIMesh, PivotMatrix)))
+	if (FAILED(pInstance->Initialize(_eType, pAIMesh, _pModel, PivotMatrix)))
 		MSG_BOX("Failed to Create : CMesh");
 
 	return pInstance;

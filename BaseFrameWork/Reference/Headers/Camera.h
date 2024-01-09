@@ -29,6 +29,9 @@ public:
 	virtual void LateTick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+public:
+	XMFLOAT3 GetCamLook() {return m_vCamAt;};
+
 protected:
 	HRESULT SetUpTransformMatices();
 	CAMERA_DESC* m_pCameraInfo = {};
@@ -37,6 +40,10 @@ protected:
 	_float				m_fNear = { 0.0f };
 	_float				m_fFar = { 0.0f };
 	_float				m_fAspect = { 0.0f };
+
+
+protected:
+	XMFLOAT3 m_vCamAt = {};
 
 };
 

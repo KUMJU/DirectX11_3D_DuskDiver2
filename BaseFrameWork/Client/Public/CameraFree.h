@@ -17,7 +17,7 @@ public:
 	virtual ~CCameraFree();
 
 private:
-	virtual HRESULT Initialize(CAMERAFREE_DESC* _pCamFreeDesc, CAMERA_DESC* _pCamDes, CTransform::TRANSFORM_DESC* _TransDesc);
+	virtual HRESULT Initialize(_bool _IsEnable, CAMERAFREE_DESC* _pCamFreeDesc, CAMERA_DESC* _pCamDes, CTransform::TRANSFORM_DESC* _TransDesc);
 	virtual void PriorityTick(_float fTimeDelta) override;
 	virtual void Tick(_float fTimeDelta) override;
 	virtual void LateTick(_float fTimeDelta) override;
@@ -36,7 +36,7 @@ private:
 	_float m_fKeyDebTime = 0.f;
 
 public:
-	static shared_ptr<CCameraFree> Create(CAMERAFREE_DESC* _pCamFreeDesc, CAMERA_DESC* _pCamDes, CTransform::TRANSFORM_DESC* _TransDesc);
+	static shared_ptr<CCameraFree> Create(_bool _IsEnable, CAMERAFREE_DESC* _pCamFreeDesc, CAMERA_DESC* _pCamDes, CTransform::TRANSFORM_DESC* _TransDesc);
 
 };
 

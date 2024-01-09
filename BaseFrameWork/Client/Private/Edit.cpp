@@ -54,7 +54,7 @@ HRESULT CEdit::ReadyLayerCamera(const wstring& _strLayerTag)
 	pTransDesc.fSpeedPerSet = 20.f;
 	pTransDesc.fRotationPerSet = XMConvertToRadians(90.0f);
 
-	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_EDIT, _strLayerTag, CCameraFree::Create(&pCamFreeDesc, &pCamDesc, &pTransDesc))))
+	if (FAILED(CGameInstance::GetInstance()->AddObject( LEVEL_EDIT, _strLayerTag, CCameraFree::Create(true, &pCamFreeDesc, &pCamDesc, &pTransDesc))))
 		return E_FAIL;
 
 	return S_OK;

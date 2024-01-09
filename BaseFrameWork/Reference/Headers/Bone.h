@@ -11,7 +11,17 @@ public:
 	~CBone() = default;
 
 public:
+	const _char* GetBoneName() const {
+		return m_szName;
+	}
+
+	_float4x4 GetCombiendTransformationMatrix() const {
+		return m_CombinedTransformationMatrix;
+	}
+
+public:
 	HRESULT Initialize(const aiNode* _pAIBone, _int _iParentBoneIndex);
+	void InvalidateCombinedTransformationMatrix(const vector<shared_ptr<CBone>>& _Bones);
 
 private:
 	_char m_szName[MAX_PATH] = "";

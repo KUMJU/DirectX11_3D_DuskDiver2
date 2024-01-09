@@ -47,9 +47,9 @@ HRESULT CThirdPersonCam::Initialize()
 	m_fMaxAzimuth = 360.f;
 
 	m_fMinElevation = 0.f;
-	m_fMaxElevation = 50.f;
+	m_fMaxElevation = 30.f;
 
-	m_fMouseSensor = 0.4f;
+	m_fMouseSensor = 0.05f;
 	m_fHeight = 0.3f;
 
 	return S_OK;
@@ -57,6 +57,8 @@ HRESULT CThirdPersonCam::Initialize()
 
 void CThirdPersonCam::PriorityTick(_float fTimeDelta)
 {
+	if (!m_IsEnabled)
+		return;
 
 	if (!m_IsInitDone) {
 		_vector vPlayerPos = dynamic_pointer_cast<CTransform>(m_TargetPlayer->GetComponent(TEXT("Com_Transform")))->GetState(CTransform::STATE_POSITION);
@@ -71,10 +73,11 @@ void CThirdPersonCam::PriorityTick(_float fTimeDelta)
 
 		_vector vCameraPos = ToCartesian() + vPlayerPos;
 
+		XMStoreFloat4(&m_vPreCamPos, XMVectorSetW(vCameraPos, 1.f));
 		m_pTransformCom->SetState(CTransform::STATE_POSITION, XMVectorSetW(vCameraPos, 1.f));
 		XMStoreFloat3(&m_vCameraEye, vPlayerPos);
 		m_pTransformCom->LookAt(XMVectorSetY(vPlayerPos, XMVectorGetY(vPlayerPos) + m_fHeight));
-		XMStoreFloat3(&m_vCameraAt, XMVectorSetY(vPlayerPos, XMVectorGetY(vPlayerPos) + m_fHeight));
+		XMStoreFloat3(&m_vCamAt, XMVectorSetY(vPlayerPos, XMVectorGetY(vPlayerPos)));
 	}
 
 	//CCamera::SetUpTransformMatices();
@@ -82,12 +85,16 @@ void CThirdPersonCam::PriorityTick(_float fTimeDelta)
 
 void CThirdPersonCam::Tick(_float fTimeDelta)
 {
+	if (!m_IsEnabled)
+		return;
 	//플레이어가 움직임
 }
 
 void CThirdPersonCam::LateTick(_float fTimeDelta)
 {
-	//Lerp 넣어서 부드러운 카메라 만들기
+
+	if (!m_IsEnabled)
+		return;
 
 	_vector vCamPos = {};
 	_vector vPlayerPos = dynamic_pointer_cast<CTransform>(m_TargetPlayer->GetComponent(TEXT("Com_Transform")))->GetState(CTransform::STATE_POSITION);
@@ -100,13 +107,18 @@ void CThirdPersonCam::LateTick(_float fTimeDelta)
 	vCamPos = ToCartesian();
 	vCamPos += vPlayerPos;
 
+	//선형 보간
 	XMStoreFloat3(&m_vCameraEye, vCamPos);
-	m_pTransformCom->SetState(CTransform::STATE_POSITION, XMVectorSetW(vCamPos, 1.f));
+	vCamPos = XMVectorSetW(vCamPos, 1.f);
+	vCamPos = XMVectorLerp(XMLoadFloat4(&m_vPreCamPos), vCamPos , 0.5f);
+	XMStoreFloat4(&m_vPreCamPos, vCamPos);
+
+	m_pTransformCom->SetState(CTransform::STATE_POSITION, vCamPos);
 	m_pTransformCom->LookAt(XMVectorSetY(vPlayerPos, XMVectorGetY(vPlayerPos) + m_fHeight));
-	XMStoreFloat3(&m_vCameraAt, XMVectorSetY(vPlayerPos, XMVectorGetY(vPlayerPos) + m_fHeight));
 
 	CCamera::SetUpTransformMatices();
 
+	MouseFix();
 
 }
 
@@ -184,4 +196,12 @@ void CThirdPersonCam::LockOn()
 
 void CThirdPersonCam::CameraEffect()
 {
+}
+
+void CThirdPersonCam::MouseFix()
+{
+	POINT	ptMouse{ Client::g_iWinSizeX >> 1, Client::g_iWinSizeY >> 1 };
+
+	ClientToScreen(g_hWnd, &ptMouse);
+	SetCursorPos(ptMouse.x, ptMouse.y);
 }

@@ -28,8 +28,13 @@ public:
 		return m_iNumMeshes;
 	}
 
+
+	_int GetBoneIndex(const _char* _pBoneName) const;
+
 public:
 	HRESULT BindMaterialShaderResource(shared_ptr<class CShader> _pShader, _uint _iMeshIndex, aiTextureType _eMaterialType, const _char* _pConstantName);
+	HRESULT BindBoneMatrices(shared_ptr<class CShader> _pShader, const _char* _pConstName, _uint _iMeshIndex);
+	void PlayAnimation(_float _fTimeDelta);
 
 private:
 	const aiScene* m_pAIScene = {};

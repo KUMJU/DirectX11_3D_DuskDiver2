@@ -14,10 +14,20 @@ HRESULT CBone::Initialize(const aiNode* _pAIBone, _int _iParentBoneIndex)
 
     //초기에는 값을 세팅할 수 없기에 identity를 넣어둔다
     XMStoreFloat4x4(&m_CombinedTransformationMatrix, XMMatrixIdentity());
+    XMStoreFloat4x4(&m_CombinedTransformationMatrix, XMMatrixIdentity());
 
     m_iParentBoneIndex = _iParentBoneIndex;
 
     return S_OK;
+}
+
+void CBone::InvalidateCombinedTransformationMatrix(const vector<shared_ptr<CBone>>& _Bones)
+{
+    if (-1 == m_iParentBoneIndex)
+        m_CombinedTransformationMatrix = m_TransformationMatrix;
+    else
+        XMStoreFloat4x4(&m_CombinedTransformationMatrix, XMLoadFloat4x4(&m_TransformationMatrix) * XMLoadFloat4x4(&_Bones[m_iParentBoneIndex]->m_CombinedTransformationMatrix));
+
 }
 
 shared_ptr<CBone> CBone::Create(const aiNode* _pAIBone, _int _iParentBoneIndex)

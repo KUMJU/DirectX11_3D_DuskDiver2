@@ -26,18 +26,25 @@ HRESULT CGameObject::Initialize(CTransform::TRANSFORM_DESC* _pDesc)
 
 void CGameObject::PriorityTick(_float _fTimeDelta)
 {
+
+
 }
 
 void CGameObject::Tick(_float _fTimeDelta)
 {
+
+
 }
 
 void CGameObject::LateTick(_float _fTimeDelta)
 {
+
 }
 
 HRESULT CGameObject::Render()
 {
+
+
 	return S_OK;
 }
 

@@ -62,6 +62,9 @@ private:
 	_float3 m_vCameraAt;
 	_float3 m_vCameraEye;
 
+//for Camera Lerp
+private:
+	_float4 m_vPreCamPos = {};
 
 
 private:
@@ -70,6 +73,10 @@ private:
 private:
 	void LockOn();
 	void CameraEffect();
+
+private:
+	void MouseFix();
+
 
 private:
 	shared_ptr<class CPlayer> m_TargetPlayer = nullptr;

@@ -94,6 +94,9 @@
     <Filter Include="02. GameObject\02. Camera\01. ThirdPerson Cam">
       <UniqueIdentifier>{96aebbe3-acab-45d4-ac7e-dcb33b9735f2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\01. UI\01.UI_PlayerHUD">
+      <UniqueIdentifier>{56162f41-41e5-4634-9dbd-c31e1887f936}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -201,6 +204,9 @@
     <ClInclude Include="..\Public\ThirdPersonCam.h">
       <Filter>02. GameObject\02. Camera\01. ThirdPerson Cam</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CameraMgr.h">
+      <Filter>03. Manager\03. CameraMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -290,6 +296,9 @@
     <ClCompile Include="..\Private\ThirdPersonCam.cpp">
       <Filter>02. GameObject\02. Camera\01. ThirdPerson Cam</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\CameraMgr.cpp">
+      <Filter>03. Manager\03. CameraMgr</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -312,6 +321,9 @@
       <Filter>97. ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh.hlsl">
+      <Filter>97. ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnim.hlsl">
       <Filter>97. ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

@@ -28,6 +28,7 @@ public:
 	bool IsEnabled() { return m_IsEnabled; }
 
 	void SetInActive() { m_IsActive = false; }
+	void SetEnable(_bool _bState) { m_IsEnabled = _bState; }
 	void SetPosition(_vector _vPos);
 
 public:
@@ -52,7 +53,7 @@ protected:
 protected:
 	HRESULT AddComponent(_uint _iLevelIndex, const wstring& _strProtoTag, const wstring& _strComTag, shared_ptr<CComponent>* _ppOut, shared_ptr<void> _pArg = nullptr);
 
-private:
+protected:
 	bool m_IsActive = true; //true일시 Delete
 	bool m_IsEnabled = true; //false일시 Update+Render 돌리지 않음
 

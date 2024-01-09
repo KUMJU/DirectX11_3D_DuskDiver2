@@ -228,11 +228,14 @@
     <ClInclude Include="..\Public\Shader.h">
       <Filter>01. Utility\09. Manager\00. ResourceMgr\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Material.h">
-      <Filter>01. Utility\04. Component\03. Model\Material</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Bone.h">
       <Filter>01. Utility\04. Component\03. Model\Bone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ModelMaterial.h">
+      <Filter>01. Utility\04. Component\03. Model\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SoundMgr.h">
+      <Filter>01. Utility\09. Manager\01. SoundMgr</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -323,11 +326,14 @@
     <ClCompile Include="..\Private\Shader.cpp">
       <Filter>01. Utility\09. Manager\00. ResourceMgr\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Material.cpp">
-      <Filter>01. Utility\04. Component\03. Model\Material</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Bone.cpp">
       <Filter>01. Utility\04. Component\03. Model\Bone</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ModelMaterial.cpp">
+      <Filter>01. Utility\04. Component\03. Model\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SoundMgr.cpp">
+      <Filter>01. Utility\09. Manager\01. SoundMgr</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

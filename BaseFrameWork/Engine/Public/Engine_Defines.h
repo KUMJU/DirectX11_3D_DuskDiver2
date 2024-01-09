@@ -17,6 +17,10 @@
 #include <assimp/postprocess.h>
 using namespace DirectX;
 
+#include <Fmod/fmod.h>
+
+#define MAX_BONE 512
+
 namespace Engine
 {
 	enum MOUSEKEYSTATE { DIM_LB, DIM_RB, DIM_MB, DIM_END };

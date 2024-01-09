@@ -6,6 +6,8 @@
 #include "Model.h"
 #include "Shader.h"
 
+#include "CameraMgr.h"
+
 CPlayer::CPlayer()
 {
 }
@@ -23,9 +25,9 @@ HRESULT CPlayer::Initialize()
     if (FAILED(AddComponent()))
         return E_FAIL;
 
-    m_pShader = CGameInstance::GetInstance()->GetShader(TEXT("Shader_VtxMesh"));
+    m_pShader = CGameInstance::GetInstance()->GetShader(TEXT("Shader_VtxAnim"));
 
-    m_pModelCom = CGameInstance::GetInstance()->GetModel(TEXT("Hero1"));
+    m_pModelCom = CGameInstance::GetInstance()->GetModel(TEXT("Hero1Walk"));
     m_Components.emplace(TEXT("Com_Model"), m_pModelCom);
 
     return S_OK;
@@ -37,7 +39,11 @@ void CPlayer::PriorityTick(_float _fTimeDelta)
 
 void CPlayer::Tick(_float _fTimeDelta)
 {
+   // _float3 CamLook = CCameraMgr::GetInstance()->GetCamLook();
+   // m_pTransformCom->LookAt(XMLoadFloat3(&CamLook));
     KeyInput(_fTimeDelta);
+    m_pModelCom->PlayAnimation(_fTimeDelta);
+
 }
 
 void CPlayer::LateTick(_float _fTimeDelta)
@@ -56,6 +62,9 @@ HRESULT CPlayer::Render()
     for (size_t i = 0; i < iNumMeshes; i++) {
 
         if (FAILED(m_pModelCom->BindMaterialShaderResource(m_pShader, (_uint)i, aiTextureType::aiTextureType_DIFFUSE, "g_DiffuseTexture")))
+            return E_FAIL;
+
+        if (FAILED(m_pModelCom->BindBoneMatrices(m_pShader, "g_BoneMatrices", i)))
             return E_FAIL;
 
         if (FAILED(m_pShader->Begin(0)))
@@ -130,6 +139,20 @@ void CPlayer::KeyInput(_float _fTimeDelta)
     if (GetKeyState('D') & 0x8000)
     {
         m_pTransformCom->GoRight(_fTimeDelta);
+    }
+
+
+////////////////Camera/////////////////////////
+
+    if (GetKeyState('1') & 0x8000)
+    {
+        CCameraMgr::GetInstance()->SwitchingCamera(CCameraMgr::ECAMERATYPE::THIRDPERSON);
+    }
+
+
+    if (GetKeyState('2') & 0x8000)
+    {
+        CCameraMgr::GetInstance()->SwitchingCamera(CCameraMgr::ECAMERATYPE::FREE);
     }
 
 }

@@ -1,4 +1,4 @@
-#include "Material.h"
+#include "ModelMaterial.h"
 #include "Texture.h"
 
 CMaterial::CMaterial(map<aiTextureType, shared_ptr<class CTexture>> _Textures)
