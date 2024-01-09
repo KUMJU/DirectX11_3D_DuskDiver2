@@ -57,6 +57,26 @@ namespace Engine
 		static const unsigned int	iNumElements = { 4 };
 		static const D3D11_INPUT_ELEMENT_DESC		Elements[4];
 	}VTXMESH;
+
+	typedef struct ENGINE_DLL VTXANIMMESH
+	{
+		XMFLOAT3		vPosition;
+		XMFLOAT3		vNormal;
+		XMFLOAT2		vTexcoord;
+		XMFLOAT3		vTangent;
+
+		/* 이 정점은 어떤 뼈들(최대 4개)의 상태를 받아서 변환되어야하는가?! */
+		/* iIndex = 각각의 메시가 사용하는 뼈들의 인덱스 */
+		XMUINT4			vBlendIndices;
+		/* 각각의 뼈의 상태를 몇 퍼센트나 이용할지?!(가중치 0 ~ 1) */
+		/* 1 = x + y + z + w */
+		XMFLOAT4		vBlendWeights;
+
+
+		static const unsigned int	iNumElements = { 6 };
+		static const D3D11_INPUT_ELEMENT_DESC		Elements[6];
+	}VTXANIMMESH;
+
 }
 
 #endif // Engine_Struct_h__

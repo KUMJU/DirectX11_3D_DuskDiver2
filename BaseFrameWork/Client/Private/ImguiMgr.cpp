@@ -119,7 +119,6 @@ void CImguiMgr::ObjectLoader()
 
         shared_ptr<CGameObject> pDummy = CDummy::Create(szFullPath);
         CGameInstance::GetInstance()->AddObject(LEVEL_EDIT, TEXT("Layer_BackGround"), pDummy);
-        pDummy->SetPosition({ 0.f, 10.f, 4.f, 1.f });
         m_CurrentObjectList.push_back(m_ObjectList[m_ObjListIdx]);
         m_Objects.push_back(pDummy);
     }
@@ -195,7 +194,7 @@ void CImguiMgr::ObjectLoader()
         string fileName = m_SaveFileName;
         string fullPathName = strBasePath + fileName + ".json";
 
-        CMapLoader::GetInstance()->LoadMapData(fullPathName.c_str(), &m_ObjectList, &m_Objects);
+        CMapLoader::GetInstance()->LoadMapData(fullPathName.c_str(), &m_CurrentObjectList, &m_Objects);
     }
 
     if (m_Objects.empty())

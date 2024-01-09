@@ -92,10 +92,31 @@ shared_ptr<class CModel> CResourceMgr::GetModel(const wstring& _strModelKey)
 {
     auto iter = m_Models.find(_strModelKey);
 
-    if (iter != m_Models.end())
+    if (iter != m_Models.end()) {
+
+        if (CModel::TYPE::TYPE_ANIM == (*iter).second.pRes->GetModelType()) {
+            return CModel::Clone(((*iter).second.pRes));
+        }
         return (*iter).second.pRes;
+    }
 
     return nullptr;
+}
+
+shared_ptr<class CComponent> CResourceMgr::GetBuffer(const wstring& _strModelKey)
+{
+    auto iter = m_Buffers.find(_strModelKey);
+
+    if (m_Buffers.end() != iter) {
+        return (*iter).second;
+    }
+
+    return nullptr;
+}
+
+void CResourceMgr::AddBuffer(const wstring& _strKeyName, shared_ptr<class CComponent> _pBuf)
+{
+    m_Buffers.emplace(_strKeyName, _pBuf);
 }
 
 HRESULT CResourceMgr::LoadShader()

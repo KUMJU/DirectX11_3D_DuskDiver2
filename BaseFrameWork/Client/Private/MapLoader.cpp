@@ -48,7 +48,12 @@ void CMapLoader::LoadMapData(const char* _filePath, vector<char*>* _ObjectNameLi
 		strModelName.assign(KeyName.begin(), KeyName.end());
 		
 		if (m_IsImguiLoad) {
-			_ObjectNameList->push_back(const_cast<char*>(KeyName                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          .c_str()));
+			char* ddd = (char*)(KeyName.c_str());
+			_int a = 4;
+
+			char* szKeyName = new char[KeyName.size()+1];
+			memcpy(szKeyName, KeyName.c_str(), KeyName.size() + 1);
+			_ObjectNameList->push_back(szKeyName);
 		}
 
 		ClassifyObject(strModelName, &CurrentMatrix, _ObjectList);
@@ -105,8 +110,13 @@ HRESULT CMapLoader::JsonFileWriter(Json::Value _root, const char* _filePath)
 
 Json::Value CMapLoader::JsonFileReader(const char* _filePath)
 {
-    Json::Value root;
+	Json::Value root;
+
+	if ("" == _filePath)
+		return root;
+
     ifstream fin(_filePath);
+
     fin >> root;
 
 	return root;

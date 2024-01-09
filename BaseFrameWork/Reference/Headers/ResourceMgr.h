@@ -25,7 +25,11 @@ public:
 	shared_ptr<class CShader> GetShader(const wstring& _strShaderKey);
 	shared_ptr<class CTexture> GetTexture(const wstring& _strTextureKey);
 	shared_ptr<class CModel> GetModel(const wstring& _strModelKey);
-		
+	shared_ptr<class CComponent> GetBuffer(const wstring& _strModelKey);
+
+public:
+	void AddBuffer(const wstring& _strKeyName, shared_ptr<class CComponent> _pBuf);
+
 private:
 	void BaseResourceLoad();
 	void LogoResourceLoad();
@@ -71,9 +75,9 @@ public:
 
 private:
 	map <wstring, ResourceDesc<class CTexture>> m_Textures;
-	map <wstring, ResourceDesc<class CMesh>> m_Meshes;
 	map <wstring, ResourceDesc<class CModel>> m_Models;
 	map<wstring, shared_ptr<class CShader>> m_Shaders;
+	map<wstring, shared_ptr<class CComponent>> m_Buffers;
 
 private:
 

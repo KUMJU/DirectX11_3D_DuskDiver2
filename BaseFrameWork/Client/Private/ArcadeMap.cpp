@@ -4,11 +4,17 @@
 #include "GameInstance.h"
 #include "Terrain.h"
 #include "CameraFree.h"
+#include "ThirdPersonCam.h"
+
 #include "Dummy.h"
+#include "Player.h"
 
 #include "Engine_Defines.h"
+#include "GameMgr.h"
 
 #include "MapLoader.h"
+
+
 
 CArcadeMap::CArcadeMap()
 	:CLevel()
@@ -31,11 +37,13 @@ HRESULT CArcadeMap::Initialize()
 
 	CMapLoader::GetInstance()->LoadMapData("../Bin/DataFiles/ArcadeMap.json");
 
-	if (FAILED(ReadyLayerCamera(TEXT("Layer_Camera"))))
+
+	if (FAILED(ReadyLayerPlayer(TEXT("Layer_Player"))))
 		return E_FAIL;
 
-	//if (FAILED(ReadyLayerPlayer(TEXT("Layer_Player"))))
-	//	return E_FAIL;
+
+	if (FAILED(ReadyLayerCamera(TEXT("Layer_Camera"))))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -63,7 +71,7 @@ HRESULT CArcadeMap::ReadyLayerBackGround(const wstring& _strLayerTag)
 
 HRESULT CArcadeMap::ReadyLayerCamera(const wstring& _strLayerTag)
 {
-	CCameraFree::CAMERAFREE_DESC pCamFreeDesc = {};
+	/*CCameraFree::CAMERAFREE_DESC pCamFreeDesc = {};
 	pCamFreeDesc.fMouseSensor = 0.05f;
 
 	CCameraFree::CAMERA_DESC pCamDesc = {};
@@ -76,18 +84,25 @@ HRESULT CArcadeMap::ReadyLayerCamera(const wstring& _strLayerTag)
 
 	CTransform::TRANSFORM_DESC pTransDesc = {};
 	pTransDesc.fSpeedPerSet = 20.f;
-	pTransDesc.fRotationPerSet = XMConvertToRadians(90.0f);
+	pTransDesc.fRotationPerSet = XMConvertToRadians(90.0f);*/
 
-	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, CCameraFree::Create(&pCamFreeDesc, &pCamDesc, &pTransDesc))))
-		return E_FAIL;
+	//if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, CCameraFree::Create(&pCamFreeDesc, &pCamDesc, &pTransDesc))))
+	//	return E_FAIL;
+
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, CThirdPersonCam::Create())))
+		return E_FAIL; 
 
 	return S_OK;
 }
 
 HRESULT CArcadeMap::ReadyLayerPlayer(const wstring& _strLayerTag)
 {
-	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag,CDummy::Create(TEXT("AssetsA")))))
+	shared_ptr<CPlayer> pPlayer = CPlayer::Create();
+
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pPlayer)))
 		return E_FAIL;
+
+	CGameMgr::GetInstance()->SetPlayer(pPlayer);
 
 	return S_OK;
 }

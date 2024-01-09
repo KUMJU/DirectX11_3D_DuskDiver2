@@ -59,6 +59,8 @@ private:
 	EObjType m_eObjType = EObjType::OBJ_END;
 	wstring m_strObjKey;
 
+	wstring strObjectKeyName = TEXT("");
+
 };
 
 END

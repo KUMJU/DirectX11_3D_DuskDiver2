@@ -88,6 +88,12 @@
     <Filter Include="03. Manager\02. MapLoader">
       <UniqueIdentifier>{c76d9dbd-bfad-4c7e-94aa-93934ae6f5dc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03. Manager\03. CameraMgr">
+      <UniqueIdentifier>{1c56e7c4-009d-4ae1-b2bb-4928cc42b788}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Camera\01. ThirdPerson Cam">
+      <UniqueIdentifier>{96aebbe3-acab-45d4-ac7e-dcb33b9735f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -192,6 +198,9 @@
     <ClInclude Include="..\Public\MapLoader.h">
       <Filter>03. Manager\02. MapLoader</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\ThirdPersonCam.h">
+      <Filter>02. GameObject\02. Camera\01. ThirdPerson Cam</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -277,6 +286,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\MapLoader.cpp">
       <Filter>03. Manager\02. MapLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ThirdPersonCam.cpp">
+      <Filter>02. GameObject\02. Camera\01. ThirdPerson Cam</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

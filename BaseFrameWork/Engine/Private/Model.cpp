@@ -2,6 +2,7 @@
 #include "Mesh.h"
 #include "Material.h"
 #include "Texture.h"
+#include "Bone.h"
 
 #include "GameInstance.h"
 
@@ -10,11 +11,23 @@ CModel::CModel(wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID3D11DeviceConte
 {
 }
 
+CModel::CModel(const CModel& _rhs)
+    :CComponent(_rhs.m_pDevice, _rhs.m_pContext)
+    , m_PivotMatrix(_rhs.m_PivotMatrix)
+    , m_iNumMeshes(_rhs.m_iNumMeshes)
+    , m_Meshes(_rhs.m_Meshes)
+    , m_iNumMaterials(_rhs.m_iNumMaterials)
+    , m_Materials(_rhs.m_Materials)
+    , m_pAIScene(_rhs.m_pAIScene)
+{
+}
+
 HRESULT CModel::Initialize(TYPE eModelType, const _char* pModelFilePath, _fmatrix PivotMatrix)
 {
     XMStoreFloat4x4(&m_PivotMatrix, PivotMatrix);
 
     _uint iFlag = aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_Fast;
+    m_eModelType = eModelType;
 
     if (TYPE_NONANIM == eModelType)
         iFlag |= aiProcess_PreTransformVertices;
@@ -28,6 +41,14 @@ HRESULT CModel::Initialize(TYPE eModelType, const _char* pModelFilePath, _fmatri
         return E_FAIL;
 
     if (FAILED(ReadyMaterials(pModelFilePath)))
+        return E_FAIL;
+
+    return S_OK;
+}
+
+HRESULT CModel::InitializeClone()
+{
+    if (FAILED(ReadyBones(m_pAIScene->mRootNode, -1)))
         return E_FAIL;
 
     return S_OK;
@@ -55,7 +76,7 @@ HRESULT CModel::ReadyMeshes()
 
     for (size_t i = 0; i < m_iNumMeshes; i++) {
 
-        shared_ptr<CMesh> pMesh = CMesh::Create(m_pDevice, m_pContext, m_pAIScene->mMeshes[i], XMLoadFloat4x4(&m_PivotMatrix));
+        shared_ptr<CMesh> pMesh = CMesh::Create(m_eModelType, m_pDevice, m_pContext, m_pAIScene->mMeshes[i], XMLoadFloat4x4(&m_PivotMatrix));
 
         if (!pMesh)
             return E_FAIL;
@@ -112,12 +133,40 @@ HRESULT CModel::ReadyMaterials(const _char* _pModelFilePath)
     return S_OK;
 }
 
+HRESULT CModel::ReadyBones(aiNode* _pNode, _int _iParentBoneIndex)
+{
+    shared_ptr<CBone> pBone= CBone::Create(_pNode, _iParentBoneIndex++);
+    
+    if (!pBone)
+        return E_FAIL;
+
+    m_Bones.push_back(pBone);
+
+    //재귀함수로 가장 최하단 노드까지 순회한다
+    for (size_t i = 0; i < _pNode->mNumChildren; i++) {
+        ReadyBones(_pNode->mChildren[i], _iParentBoneIndex);
+    }
+
+    return S_OK;
+}
+
 shared_ptr<CModel> CModel::Create(wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID3D11DeviceContext> _pContext, TYPE eModelType, const _char* pModelFilePath, _fmatrix PivotMatrix)
 {
     shared_ptr<CModel> pInstance = make_shared<CModel>(_pDevice, _pContext);
 
     if (FAILED(pInstance->Initialize(eModelType, pModelFilePath, PivotMatrix)))
         MSG_BOX("Failed to Create : CModel");
+
+    return pInstance;
+}
+
+shared_ptr<CModel> CModel::Clone(shared_ptr<CModel> _rhs)
+{   
+    shared_ptr<CModel> pInstance = _rhs;
+
+    if (FAILED(pInstance->InitializeClone())) {
+        MSG_BOX("Failed to Clone : CModel");
+    }
 
     return pInstance;
 }
