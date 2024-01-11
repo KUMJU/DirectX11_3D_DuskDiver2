@@ -29,7 +29,7 @@ public:
 
 public:
 	HRESULT Initialize(const aiNode* _pAIBone, _int _iParentBoneIndex);
-	void InvalidateCombinedTransformationMatrix(const vector<shared_ptr<CBone>>& _Bones);
+	void InvalidateCombinedTransformationMatrix(const vector<shared_ptr<CBone>>& _Bones, _float3* _vRootPos, _bool _IsLinearState);
 
 
 private:

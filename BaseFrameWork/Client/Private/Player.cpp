@@ -43,16 +43,29 @@ void CPlayer::PriorityTick(_float _fTimeDelta)
 
 void CPlayer::Tick(_float _fTimeDelta)
 {
+
+    if (m_IsMouseDeb) {
+
+        m_fDebTime += _fTimeDelta;
+
+        if (m_fDebTime > 0.2f) {
+            m_fDebTime = 0.f;
+            m_IsMouseDeb = false;
+        }
+            
+
+    }
+
    // _float3 CamLook = CCameraMgr::GetInstance()->GetCamLook();
    // m_pTransformCom->LookAt(XMLoadFloat3(&CamLook));
     MouseInput(_fTimeDelta);
     KeyInput(_fTimeDelta);
-    if(m_pModelCom->PlayAnimation(_fTimeDelta, m_isAnimLoop)){
+    if(m_pModelCom->PlayAnimation(_fTimeDelta, m_isAnimLoop, &m_vCurretnAnimPos)){
         m_eCurrentState = HEROSTATE::IDLE;
-        m_iCurrentAnimIdx = 1;
-        m_isAnimLoop = true;
-        m_pModelCom->ChangeAnimation(m_iCurrentAnimIdx);
+        ChangeAnim(1, true); 
     }
+
+    CalcAnimMoveDistance();
 }
 
 void CPlayer::LateTick(_float _fTimeDelta)
@@ -131,8 +144,31 @@ void CPlayer::ChangeAnim(_uint _iAnimNum, _bool _isLoop)
 {
     //if문으로 제한걸기->attack중이라던가 뭐 그런거면 못 바꾸게 
     m_vPrevAnimPos = { 0.f, 0.f, 0.f };
+    m_vCurretnAnimPos = { 0.f, 0.f, 0.f };
     m_isAnimLoop = _isLoop;
     m_pModelCom->ChangeAnimation(_iAnimNum);
+
+}
+
+void CPlayer::CalcAnimMoveDistance()
+{
+    _vector vDistance =  XMLoadFloat3(&m_vCurretnAnimPos) - XMLoadFloat3(&m_vPrevAnimPos);
+    _vector vLook = m_pTransformCom->GetState(CTransform::STATE_LOOK);
+
+
+    _matrix WorldMat = m_pTransformCom->GetWorldMatrix();
+
+    XMVector3TransformCoord(vDistance, WorldMat);
+
+    vDistance = vDistance * vLook;
+
+    _vector vCurrentPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+    vCurrentPos += vDistance;
+    //vCurrentPos = XMVectorSetW(vCurrentPos, 1.f);
+
+    m_pTransformCom->SetState(CTransform::STATE_POSITION, vCurrentPos);
+
+    m_vPrevAnimPos = m_vCurretnAnimPos;
 
 }
 

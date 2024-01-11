@@ -24,16 +24,22 @@ HRESULT CBone::Initialize(const aiNode* _pAIBone, _int _iParentBoneIndex)
     return S_OK;
 }
 
-void CBone::InvalidateCombinedTransformationMatrix(const vector<shared_ptr<CBone>>& _Bones)
+void CBone::InvalidateCombinedTransformationMatrix(const vector<shared_ptr<CBone>>& _Bones, _float3* _vRootPos, _bool _IsLinearState)
 {
     if (-1 == m_iParentBoneIndex)
         m_CombinedTransformationMatrix = m_TransformationMatrix;
     else
         XMStoreFloat4x4(&m_CombinedTransformationMatrix, XMLoadFloat4x4(&m_TransformationMatrix) * XMLoadFloat4x4(&_Bones[m_iParentBoneIndex]->m_CombinedTransformationMatrix));
 
-    //방법1(애니메이션 움직임을 아예 없게한다~~ )
+    /*애니메이션 움직임 조절 */
     if (!strcmp(m_szName, "root"))
     {  
+        if (!_IsLinearState) {
+            _vRootPos->x = m_CombinedTransformationMatrix._41;
+            _vRootPos->y = m_CombinedTransformationMatrix._42;
+            _vRootPos->z = m_CombinedTransformationMatrix._43;
+        }
+
         m_CombinedTransformationMatrix._41 = 0.f;
         m_CombinedTransformationMatrix._42 = 0.f;
         m_CombinedTransformationMatrix._43 = 0.f;

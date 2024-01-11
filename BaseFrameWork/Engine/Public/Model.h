@@ -32,20 +32,14 @@ public:
 	_int GetBoneIndex(const _char* _pBoneName) const;
 
 public:
-	_vector GetRootVectorPosition();
-
-public:
 	HRESULT BindMaterialShaderResource(shared_ptr<class CShader> _pShader, _uint _iMeshIndex, aiTextureType _eMaterialType, const _char* _pConstantName);
 	HRESULT BindBoneMatrices(shared_ptr<class CShader> _pShader, const _char* _pConstName, _uint _iMeshIndex);
-	_bool PlayAnimation(_float _fTimeDelta, _bool _isLoop);
+	_bool PlayAnimation(_float _fTimeDelta, _bool _isLoop, _float3* _vRootPos);
 
 public:
 	//초기 세팅용 , 근데 이건 init에서 받아도 될거 같기도? 일단 냅두기
 	void SetAnimNum(_uint _iAnimNum) { _iAnimNum = _iAnimNum; }
 	void ChangeAnimation(_uint _iAnimNum);
-
-public:
-	
 
 
 private:

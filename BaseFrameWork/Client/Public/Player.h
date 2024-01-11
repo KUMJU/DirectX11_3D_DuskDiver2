@@ -50,6 +50,10 @@ private:
 	_bool m_isAnimLoop = true;
 
 private:
+	//애니메이션 root 이동거리를 측정해서 플레이어 움직임에 직접 더해준다 
+	void CalcAnimMoveDistance();
+
+private:
 	void KeyInput(_float _fTimeDelta);
 	void MouseInput(_float _fTimeDelta);
 

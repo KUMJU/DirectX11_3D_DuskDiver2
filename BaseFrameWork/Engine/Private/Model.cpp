@@ -92,10 +92,6 @@ _int CModel::GetBoneIndex(const _char* _pBoneName) const
     return iBoneIndex;
 }
 
-_vector CModel::GetRootVectorPosition()
-{
-    return m_Bones[m_RootBoneIdx]->CalcMatrixRootMotion();
-}
 
 HRESULT CModel::BindMaterialShaderResource(shared_ptr<class CShader> _pShader, _uint _iMeshIndex, aiTextureType _eMaterialType, const _char* _pConstantName)
 {
@@ -113,16 +109,20 @@ HRESULT CModel::BindBoneMatrices(shared_ptr<class CShader> _pShader, const _char
     return _pShader->BindMatrices(_pConstName, BoneMatirces, MAX_BONE) ;
 } 
 
-_bool CModel::PlayAnimation(_float _fTimeDelta , _bool _isLoop)
+_bool CModel::PlayAnimation(_float _fTimeDelta , _bool _isLoop, _float3* _vRootPos)
 {
     _bool m_IsFinish = false;
+    _bool IsSaveRootPos = true;
 
     //애니메이션 변경 이후 선형보간하는 시간
     if (m_IsLinearState) {
 
         m_fLinearTime += _fTimeDelta;
         if (m_fLinearTime >= m_fLinearTotalTime) {
+            m_Animations[m_iCurrentAnimation]->ChangeAnimation(m_NextAnim, m_Bones, 1.f);
+
             m_IsLinearState = false;
+            m_Animations[m_iCurrentAnimation]->AnimStateReset();
             m_CurrentAnim = m_NextAnim;
             m_iCurrentAnimation = m_iNextAnimation;
 
@@ -133,16 +133,17 @@ _bool CModel::PlayAnimation(_float _fTimeDelta , _bool _isLoop)
         }
         else {
 
-            m_Animations[m_iCurrentAnimation]->ChangeAnimation(m_NextAnim, m_Bones, 0.7f);
-            return m_IsFinish;
+            m_Animations[m_iCurrentAnimation]->ChangeAnimation(m_NextAnim, m_Bones, m_fLinearTime / m_fLinearTotalTime);
         }
+    }
+    else {
+        m_IsFinish = m_Animations[m_iCurrentAnimation]->InvalidateTransformationMatrix(_fTimeDelta, m_Bones, _isLoop);
+        IsSaveRootPos = false;
     }
     //애니메이션 변경 없이 한 애니메이션을 계속 돌리는 상황
 
-    m_IsFinish = m_Animations[m_iCurrentAnimation]->InvalidateTransformationMatrix(_fTimeDelta, m_Bones, _isLoop);
-
     for (auto& pBone : m_Bones)
-        pBone->InvalidateCombinedTransformationMatrix(m_Bones);
+        pBone->InvalidateCombinedTransformationMatrix(m_Bones, _vRootPos, IsSaveRootPos);
 
 
     return m_IsFinish;

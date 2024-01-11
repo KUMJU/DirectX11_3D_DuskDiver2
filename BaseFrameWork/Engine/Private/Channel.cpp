@@ -105,9 +105,9 @@ _matrix CChannel::LinearInterpolation(_uint _iCurFrame, KEYFRAME _NextKeyFrame, 
 	_vector vScale, vRotation, vTranslation;
 	_matrix TransformationMatrix;
 
-	vScale = XMVectorLerp(XMLoadFloat3(&m_KeyFrames[_iCurFrame].vScale), XMLoadFloat3(&_NextKeyFrame.vScale), 0.3f);
-	vTranslation = XMVectorSetW(XMVectorLerp(XMLoadFloat3(&m_KeyFrames[_iCurFrame].vPosition), XMLoadFloat3(&_NextKeyFrame.vPosition), 0.3f), 1.f);
-	vRotation = XMQuaternionSlerp(XMLoadFloat4(&m_KeyFrames[_iCurFrame].vRotation), XMLoadFloat4(&_NextKeyFrame.vRotation), 0.3f);
+	vScale = XMVectorLerp(XMLoadFloat3(&m_KeyFrames[_iCurFrame].vScale), XMLoadFloat3(&_NextKeyFrame.vScale), _fRatio);
+	vTranslation = XMVectorSetW(XMVectorLerp(XMLoadFloat3(&m_KeyFrames[_iCurFrame].vPosition), XMLoadFloat3(&_NextKeyFrame.vPosition), _fRatio), 1.f);
+	vRotation = XMQuaternionSlerp(XMLoadFloat4(&m_KeyFrames[_iCurFrame].vRotation), XMLoadFloat4(&_NextKeyFrame.vRotation), _fRatio);
 
 	TransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vTranslation);
 	_Bones[m_iBoneIndex]->SetTranslationMatrix(TransformationMatrix);

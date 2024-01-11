@@ -67,16 +67,10 @@ void CAnimation::ChangeAnimation(shared_ptr<CAnimation> _pNextAnim, const vector
     vector<shared_ptr<CChannel>> pChannels = *(_pNextAnim->GetChannels());
     _uint iCurrentKeyFrame = _pNextAnim->GetCurrentKeyFrame();
 
-    _uint ddd = m_iNumChannels;
-    _uint sss = _pNextAnim->GetChannelNum();
-
     for (size_t i = 0; i < m_iNumChannels; ++i) {
         CChannel::KEYFRAME nextKey = pChannels[i]->GetKeyFrame(0);
         m_Channels[i]->LinearInterpolation(m_iCurrentKeyFrames[i], nextKey, _Bones, _fRatio);
     }
-
-    int a = 5;
-
 }
 
 shared_ptr<CAnimation> CAnimation::Create(const aiAnimation* pAIAnimation, shared_ptr<CModel> _pModel)
