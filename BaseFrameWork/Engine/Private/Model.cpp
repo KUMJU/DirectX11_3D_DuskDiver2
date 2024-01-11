@@ -51,7 +51,7 @@ HRESULT CModel::Initialize(TYPE eModelType, const _char* pModelFilePath, _fmatri
     if (FAILED(ReadyAnimations()))
         return E_FAIL;
 
-    m_iCurrentAnimation = 1;
+    m_iCurrentAnimation = 12;
 
     return S_OK;
 }
@@ -149,10 +149,10 @@ _bool CModel::PlayAnimation(_float _fTimeDelta , _bool _isLoop, _float3* _vRootP
     return m_IsFinish;
 }
 
-void CModel::ChangeAnimation(_uint _iAnimNum)
+_bool CModel::ChangeAnimation(_uint _iAnimNum)
 {
     if (_iAnimNum == m_iCurrentAnimation || m_IsLinearState)
-        return;
+        return false;
 
     m_IsLinearState = true;
     m_NextAnim = m_Animations[_iAnimNum];
@@ -167,7 +167,7 @@ void CModel::ChangeAnimation(_uint _iAnimNum)
     // ->위의 정보값을 현 animationd 객체에게 넘긴 후 그 animation이 갖고 있는 채널들에게 싹 다 돌려서 계산한다? 
     //잠만! 걍 애니메이션 객체를 던지면 될듯?
 
-
+    return true;
 }
 
 HRESULT CModel::ReadyMeshes()

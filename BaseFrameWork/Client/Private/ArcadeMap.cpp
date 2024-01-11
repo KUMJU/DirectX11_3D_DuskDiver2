@@ -38,7 +38,7 @@ HRESULT CArcadeMap::Initialize()
 	if (FAILED(ReadyLight()))
 		return E_FAIL;
 
-	CMapLoader::GetInstance()->LoadMapData("../Bin/DataFiles/ArcadeMap.json");
+	CMapLoader::GetInstance()->LoadMapData("../Bin/DataFiles/TestMap.json");
 
 
 	if (FAILED(ReadyLayerPlayer(TEXT("Layer_Player"))))

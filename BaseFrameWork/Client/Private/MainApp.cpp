@@ -103,9 +103,6 @@ void CMainApp::TestFileWrite()
 		return;
 	}
 
-	_float fX, fY, fZ;
-
-
 	for (_int i = 0; i < 2; ++i) {
 
 		WriteFile(hFile, &pVector[i].x, sizeof(_float), &dwByte, nullptr);

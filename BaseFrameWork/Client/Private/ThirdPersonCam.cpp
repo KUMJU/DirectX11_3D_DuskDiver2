@@ -49,7 +49,7 @@ HRESULT CThirdPersonCam::Initialize()
 	m_fMinElevation = 0.f;
 	m_fMaxElevation = 30.f;
 
-	m_fMouseSensor = 0.05f;
+	m_fMouseSensor = 0.2f;
 	m_fHeight = 0.3f;
 
 	return S_OK;

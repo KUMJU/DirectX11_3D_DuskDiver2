@@ -18,6 +18,7 @@ public:
 		IDLE, 
 		WALK, 
 		ATTACK, 
+		HEAVY_ATTACK,
 		ENUM_END
 	};
 
@@ -43,12 +44,18 @@ private:
 
 	void ChangeAnim(_uint _iAnimNum, _bool _isLoop);
 
+	void FinishCombo();
+
 private:
 	HEROSTATE m_eCurrentState = HEROSTATE::ENUM_END;
 
 	_uint m_iCurrentAnimIdx = 1;
 	_bool m_isAnimLoop = true;
 
+
+	_bool m_ComboArr[5] = {false, false, false, false, false};
+	_uint m_ComboAnimKeyArr[5] = { 0, 1, 3, 5, 7 };
+	_int m_CurrentCombo = -1;
 private:
 	//애니메이션 root 이동거리를 측정해서 플레이어 움직임에 직접 더해준다 
 	void CalcAnimMoveDistance();

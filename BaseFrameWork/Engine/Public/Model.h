@@ -39,7 +39,7 @@ public:
 public:
 	//초기 세팅용 , 근데 이건 init에서 받아도 될거 같기도? 일단 냅두기
 	void SetAnimNum(_uint _iAnimNum) { _iAnimNum = _iAnimNum; }
-	void ChangeAnimation(_uint _iAnimNum);
+	_bool ChangeAnimation(_uint _iAnimNum);
 
 
 private:

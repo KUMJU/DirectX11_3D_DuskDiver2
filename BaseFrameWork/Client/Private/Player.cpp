@@ -27,12 +27,12 @@ HRESULT CPlayer::Initialize()
 
     m_pShader = CGameInstance::GetInstance()->GetShader(TEXT("Shader_VtxAnim"));
 
-    m_pModelCom = CGameInstance::GetInstance()->GetModel(TEXT("Hero1AnimLinear"));
+    m_pModelCom = CGameInstance::GetInstance()->GetModel(TEXT("TestModel8"));
     m_Components.emplace(TEXT("Com_Model"), m_pModelCom);
 
     m_eCurrentState = HEROSTATE::IDLE;
-    m_iCurrentAnimIdx = 1;
-    m_pModelCom->SetAnimNum(1);
+    m_iCurrentAnimIdx = 12;
+    m_pModelCom->SetAnimNum(12);
 
     return S_OK;
 }
@@ -48,7 +48,7 @@ void CPlayer::Tick(_float _fTimeDelta)
 
         m_fDebTime += _fTimeDelta;
 
-        if (m_fDebTime > 0.2f) {
+        if (m_fDebTime > 0.1f) {
             m_fDebTime = 0.f;
             m_IsMouseDeb = false;
         }
@@ -56,13 +56,28 @@ void CPlayer::Tick(_float _fTimeDelta)
 
     }
 
-   // _float3 CamLook = CCameraMgr::GetInstance()->GetCamLook();
-   // m_pTransformCom->LookAt(XMLoadFloat3(&CamLook));
     MouseInput(_fTimeDelta);
     KeyInput(_fTimeDelta);
     if(m_pModelCom->PlayAnimation(_fTimeDelta, m_isAnimLoop, &m_vCurretnAnimPos)){
-        m_eCurrentState = HEROSTATE::IDLE;
-        ChangeAnim(1, true); 
+
+        if (HEROSTATE::ATTACK == m_eCurrentState) {
+            if (5 == m_CurrentCombo) {
+                FinishCombo();
+            }
+            else if(true == m_ComboArr[m_CurrentCombo+1]) 
+            {
+                ++m_CurrentCombo;
+                ChangeAnim(m_ComboAnimKeyArr[m_CurrentCombo], false);
+            }
+            else {
+                FinishCombo();
+            }
+        }
+        else {
+
+            m_eCurrentState = HEROSTATE::IDLE;
+            ChangeAnim(12, true);
+        }
     }
 
     CalcAnimMoveDistance();
@@ -142,12 +157,32 @@ HRESULT CPlayer::BindShaderResources()
 
 void CPlayer::ChangeAnim(_uint _iAnimNum, _bool _isLoop)
 {
-    //if문으로 제한걸기->attack중이라던가 뭐 그런거면 못 바꾸게 
-    m_vPrevAnimPos = { 0.f, 0.f, 0.f };
-    m_vCurretnAnimPos = { 0.f, 0.f, 0.f };
-    m_isAnimLoop = _isLoop;
-    m_pModelCom->ChangeAnimation(_iAnimNum);
+    if (!m_pModelCom->ChangeAnimation(_iAnimNum))
+        return;
 
+    //if문으로 제한걸기->attack중이라던가 뭐 그런거면 못 바꾸게 
+
+    if (HEROSTATE::ATTACK != m_eCurrentState) {
+        m_vPrevAnimPos = { 0.f, 0.f, 0.f };
+        m_vCurretnAnimPos = { 0.f, 0.f, 0.f };
+    }
+
+    m_isAnimLoop = _isLoop;
+
+}
+
+void CPlayer::FinishCombo()
+{
+    m_IsKeyDeb = true;
+
+    for (_uint i = 0; i < 5; ++i) {
+        m_ComboArr[i] = false;
+    }
+
+    m_CurrentCombo = -1;
+
+    m_eCurrentState = HEROSTATE::IDLE;
+    ChangeAnim(12, true);
 }
 
 void CPlayer::CalcAnimMoveDistance()
@@ -174,6 +209,11 @@ void CPlayer::CalcAnimMoveDistance()
 
 void CPlayer::KeyInput(_float _fTimeDelta)
 {
+    if (HEROSTATE::ATTACK == m_eCurrentState)
+        return;
+
+    _bool IsKeyInput = false;
+
     if (GetKeyState('W') & 0x8000)
     {
          /* 플레이어 몸을 카메라 방향으로 전환*/
@@ -189,13 +229,35 @@ void CPlayer::KeyInput(_float _fTimeDelta)
        /* 앞으로 전진. 이동값 변경 */
         m_pTransformCom->GoStraight(_fTimeDelta);
         m_eCurrentState = HEROSTATE::WALK;
-        m_iCurrentAnimIdx = 2;
-        m_isAnimLoop = true;
-
-        m_pModelCom->ChangeAnimation(m_iCurrentAnimIdx);
-
-        return;
+        ChangeAnim(14, true);
+        IsKeyInput = true;
         
+    }
+
+    if (GetKeyState('A') & 0x8000)
+    {
+        m_pTransformCom->GoLeft(_fTimeDelta);
+        /* 반대 방향 상태에서 앞으로 전진. 이동값 변경 */
+        m_eCurrentState = HEROSTATE::WALK;
+
+        m_pTransformCom->GoStraight(_fTimeDelta);
+        ChangeAnim(14, true);
+        IsKeyInput = true;
+
+    }
+
+    if (GetKeyState('D') & 0x8000)
+    {
+        m_pTransformCom->GoRight(_fTimeDelta);
+
+        /* 반대 방향 상태에서 앞으로 전진. 이동값 변경 */
+        m_eCurrentState = HEROSTATE::WALK;
+
+        m_pTransformCom->GoStraight(_fTimeDelta);
+        ChangeAnim(14, true);
+        IsKeyInput = true;
+
+
     }
 
     if (GetKeyState('S') & 0x8000)
@@ -208,17 +270,14 @@ void CPlayer::KeyInput(_float _fTimeDelta)
         vPos += vLookVec;
 
         m_pTransformCom->LookAt(vPos);
-
         /* 반대 방향 상태에서 앞으로 전진. 이동값 변경 */
-        m_pTransformCom->GoStraight(_fTimeDelta);
         m_eCurrentState = HEROSTATE::WALK;
-        m_iCurrentAnimIdx = 2;
-        m_isAnimLoop = true;
 
-        m_pModelCom->ChangeAnimation(m_iCurrentAnimIdx);
-        return;
-
+        m_pTransformCom->GoStraight(_fTimeDelta);
+        ChangeAnim(14, true);
+        IsKeyInput = true;
     }
+
 
 
 ////////////////Camera/////////////////////////
@@ -234,9 +293,10 @@ void CPlayer::KeyInput(_float _fTimeDelta)
         CCameraMgr::GetInstance()->SwitchingCamera(CCameraMgr::ECAMERATYPE::FREE);
     }
 
-    if (HEROSTATE::IDLE != m_eCurrentState && HEROSTATE::ATTACK != m_eCurrentState) {
+    if (HEROSTATE::IDLE != m_eCurrentState && HEROSTATE::ATTACK != m_eCurrentState && !IsKeyInput
+        && HEROSTATE::HEAVY_ATTACK != m_eCurrentState) {
         m_eCurrentState = HEROSTATE::IDLE;
-        m_iCurrentAnimIdx = 1;
+        m_iCurrentAnimIdx = 12;
         m_isAnimLoop = true;
 
         m_pModelCom->ChangeAnimation(m_iCurrentAnimIdx);
@@ -248,21 +308,37 @@ void CPlayer::MouseInput(_float _fTimeDelta)
     if (m_IsMouseDeb)
         return;
 
+    if (5 == m_CurrentCombo)
+        return;
+
 
     if (CGameInstance::GetInstance()->GetDIMouseState(MOUSEKEYSTATE::DIM_LB) & 0x8000)
     {
-        m_eCurrentState = HEROSTATE::ATTACK;
-        m_iCurrentAnimIdx = 0;
-        m_isAnimLoop = false;
-
-        m_pModelCom->ChangeAnimation(m_iCurrentAnimIdx);
         m_IsMouseDeb = true;
-        return;
 
+        if (-1 == m_CurrentCombo) {
+            ChangeAnim(0, false);
+            ++m_CurrentCombo;
+            m_eCurrentState = HEROSTATE::ATTACK;
+        }
+
+        for (_int i = 0; i < 5; ++i) {
+
+            if (false == m_ComboArr[i]) {
+                m_ComboArr[i] = true;
+                break;
+            }
+      }
     }
 
 
+    if (CGameInstance::GetInstance()->GetDIMouseState(MOUSEKEYSTATE::DIM_RB) & 0x8000)
+    {
+        m_eCurrentState = HEROSTATE::HEAVY_ATTACK;
+        m_IsMouseDeb = true;
+        ChangeAnim(11, false);
 
+    }
 }
 
 shared_ptr<CPlayer> CPlayer::Create()
