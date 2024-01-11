@@ -30,7 +30,7 @@ public:
 	virtual HRESULT Render() override;
 
 public:
-	XMFLOAT3 GetCamLook() {return m_vCamAt;};
+	_float3 GetCamLook();
 
 protected:
 	HRESULT SetUpTransformMatices();

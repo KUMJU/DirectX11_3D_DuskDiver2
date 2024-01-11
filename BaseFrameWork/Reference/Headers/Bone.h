@@ -19,9 +19,20 @@ public:
 		return m_CombinedTransformationMatrix;
 	}
 
+	_float4x4 GetTransformationMatrix() {
+		return m_TransformationMatrix;
+	}
+
+	void SetTranslationMatrix(_fmatrix _TranslationMatrix) {
+		XMStoreFloat4x4(&m_TransformationMatrix, _TranslationMatrix);
+	}
+
 public:
 	HRESULT Initialize(const aiNode* _pAIBone, _int _iParentBoneIndex);
 	void InvalidateCombinedTransformationMatrix(const vector<shared_ptr<CBone>>& _Bones);
+
+public:
+	_vector CalcMatrixRootMotion();
 
 private:
 	_char m_szName[MAX_PATH] = "";
@@ -29,6 +40,8 @@ private:
 	_float4x4 m_CombinedTransformationMatrix;
 
 	_int m_iParentBoneIndex = { 0 };
+
+	_matrix m_PrevTransformationMatrix = XMMatrixIdentity();
 
 public:
 	static shared_ptr<CBone> Create(const aiNode* _pAIBone, _int _iParentBoneIndex);

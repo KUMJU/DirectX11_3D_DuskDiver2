@@ -4,6 +4,7 @@
 #include "Texture.h"
 #include "Bone.h"
 #include "Shader.h"
+#include "Animation.h"
 
 #include "GameInstance.h"
 
@@ -47,9 +48,14 @@ HRESULT CModel::Initialize(TYPE eModelType, const _char* pModelFilePath, _fmatri
     if (FAILED(ReadyMaterials(pModelFilePath)))
         return E_FAIL;
 
+    if (FAILED(ReadyAnimations()))
+        return E_FAIL;
+
+    m_iCurrentAnimation = 1;
+
     return S_OK;
 }
-
+  
 HRESULT CModel::InitializeClone()
 {
 
@@ -72,7 +78,7 @@ _int CModel::GetBoneIndex(const _char* _pBoneName) const
     auto iter = find_if(m_Bones.begin(), m_Bones.end(), [&](shared_ptr<CBone> pBone) {
 
         iBoneIndex++;
-
+         
         if (!strcmp(_pBoneName, pBone->GetBoneName()))
             return true;
         return false;
@@ -84,6 +90,11 @@ _int CModel::GetBoneIndex(const _char* _pBoneName) const
 
 
     return iBoneIndex;
+}
+
+_vector CModel::GetRootVectorPosition()
+{
+    return m_Bones[m_RootBoneIdx]->CalcMatrixRootMotion();
 }
 
 HRESULT CModel::BindMaterialShaderResource(shared_ptr<class CShader> _pShader, _uint _iMeshIndex, aiTextureType _eMaterialType, const _char* _pConstantName)
@@ -100,12 +111,61 @@ HRESULT CModel::BindBoneMatrices(shared_ptr<class CShader> _pShader, const _char
     m_Meshes[_iMeshIndex]->SetUpBoneMatrices(BoneMatirces, m_Bones);
 
     return _pShader->BindMatrices(_pConstName, BoneMatirces, MAX_BONE) ;
-}
+} 
 
-void CModel::PlayAnimation(_float _fTimeDelta)
+_bool CModel::PlayAnimation(_float _fTimeDelta , _bool _isLoop)
 {
+    _bool m_IsFinish = false;
+
+    //애니메이션 변경 이후 선형보간하는 시간
+    if (m_IsLinearState) {
+
+        m_fLinearTime += _fTimeDelta;
+        if (m_fLinearTime >= m_fLinearTotalTime) {
+            m_IsLinearState = false;
+            m_CurrentAnim = m_NextAnim;
+            m_iCurrentAnimation = m_iNextAnimation;
+
+            m_NextAnim = nullptr;
+            m_iNextAnimation = 0;
+            m_fLinearTime = 0.f;
+
+        }
+        else {
+
+            m_Animations[m_iCurrentAnimation]->ChangeAnimation(m_NextAnim, m_Bones, 0.7f);
+            return m_IsFinish;
+        }
+    }
+    //애니메이션 변경 없이 한 애니메이션을 계속 돌리는 상황
+
+    m_IsFinish = m_Animations[m_iCurrentAnimation]->InvalidateTransformationMatrix(_fTimeDelta, m_Bones, _isLoop);
+
     for (auto& pBone : m_Bones)
         pBone->InvalidateCombinedTransformationMatrix(m_Bones);
+
+
+    return m_IsFinish;
+}
+
+void CModel::ChangeAnimation(_uint _iAnimNum)
+{
+    if (_iAnimNum == m_iCurrentAnimation || m_IsLinearState)
+        return;
+
+    m_IsLinearState = true;
+    m_NextAnim = m_Animations[_iAnimNum];
+    m_iNextAnimation = _iAnimNum;
+  
+    //m_Animations[m_iCurrentAnimation]->AnimStateReset();
+    //m_iCurrentAnimation = _iAnimNum;
+
+    //여기에 애니메이션 간의 러프 넣기 
+
+    //(구) animation 의 currentkeyFrame + m_KeyFrames 벡터 주소
+    // ->위의 정보값을 현 animationd 객체에게 넘긴 후 그 animation이 갖고 있는 채널들에게 싹 다 돌려서 계산한다? 
+    //잠만! 걍 애니메이션 객체를 던지면 될듯?
+
 
 }
 
@@ -181,11 +241,36 @@ HRESULT CModel::ReadyBones(aiNode* _pNode, _int _iParentBoneIndex)
 
     m_Bones.push_back(pBone);
 
-    _uint iParentIndex = m_Bones.size() - 1;
+    const char* ddname = pBone->GetBoneName();
+
+    if (!strcmp("root", ddname)) {
+        m_RootBoneIdx = (_uint)(m_Bones.size() - 1);
+    }
+
+    _uint iParentIndex = (_uint)(m_Bones.size() - 1);
 
     //재귀함수로 가장 최하단 노드까지 순회한다
     for (size_t i = 0; i < _pNode->mNumChildren; i++) {
         ReadyBones(_pNode->mChildren[i], iParentIndex);
+    }
+
+    return S_OK;
+}
+
+HRESULT CModel::ReadyAnimations()
+{
+    m_iNumAnimations = m_pAIScene->mNumAnimations;
+
+    shared_ptr<CModel> pModel = dynamic_pointer_cast<CModel>(shared_from_this());
+
+    for (size_t i = 0; i < m_iNumAnimations; i++) {
+
+        shared_ptr<CAnimation> pAnimation = CAnimation::Create(m_pAIScene->mAnimations[i], pModel);
+
+        if (!pAnimation)
+            return E_FAIL;
+
+        m_Animations.push_back(pAnimation);
     }
 
     return S_OK;

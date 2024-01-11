@@ -26,6 +26,10 @@ private:
 
 
 private:
+	void TestFileWrite();
+	void TestFileRead();
+
+private:
 	_bool m_IsImguiOn = true;
 
 

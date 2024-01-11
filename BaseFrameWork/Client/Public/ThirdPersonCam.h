@@ -20,6 +20,9 @@ private:
 	virtual void LateTick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+public:
+	_float4 GetCamLookVector() { return m_vLookPlr; }
+
 private:
 
 	//초기 플레이어 좌표값을 이용해 필요한 값을 계산해두는 함수
@@ -28,6 +31,7 @@ private:
 	void SphericalRotate(_float _fAzimuth , _float _fElevation);
 	//좌표계변환
 	_vector ToCartesian();
+
 
 private:
 
@@ -66,6 +70,11 @@ private:
 private:
 	_float4 m_vPreCamPos = {};
 
+//for Player
+private:
+	_float4 m_vLookPlr = {};
+
+	void CalcLookVectors(_fvector _vCamPos, _fvector _vPlrPos);
 
 private:
 	_bool m_IsInitDone = false;

@@ -33,7 +33,7 @@ public:
 	void SetCamObject(ECAMERATYPE _eType, shared_ptr<CGameObject> _pInstance);
 
 public:
-	XMFLOAT3 GetCamLook();
+	_float4 GetCamLook();
 
 
 private:

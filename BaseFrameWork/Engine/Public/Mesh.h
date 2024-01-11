@@ -19,6 +19,8 @@ public:
 public:
 	virtual HRESULT Initialize(CModel::TYPE _eType, const aiMesh* pAIMesh, shared_ptr<CModel> _pModel, _fmatrix PivotMatrix);
 	
+	_float4x4 GetRootOffset(_uint _iNum) { return m_OffsetMatrices[_iNum]; };
+
 public:
 	void SetUpBoneMatrices(_float4x4* _pBoneMatirces, vector<shared_ptr<class CBone>>& _Bones);
 
@@ -27,6 +29,7 @@ public:
 	HRESULT ReadyVertexBufferAnim(const aiMesh* _pAIMesh, shared_ptr<CModel> _pModel);
 
 private:
+	_char m_szName[MAX_PATH] = "";
 	_uint m_iMaterialIndex = { 0 };
 
 	_uint m_iNumBones = { 0 };

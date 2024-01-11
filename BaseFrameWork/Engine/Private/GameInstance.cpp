@@ -298,6 +298,11 @@ map<wstring, CResourceMgr::ResourceDesc<class CModel>>* CGameInstance::GetModels
 	return m_pResMgr->GetModels();
 }
 
+void CGameInstance::LoadResourceForTool()
+{
+	m_pResMgr->LoaderForTool();
+}
+
 wrl::ComPtr<ID3D11Device> CGameInstance::GetDeviceInfo()
 {
 	return m_pGraphicDev->GetDeviceInfo();

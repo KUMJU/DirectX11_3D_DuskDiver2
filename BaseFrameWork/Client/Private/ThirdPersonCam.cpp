@@ -114,7 +114,12 @@ void CThirdPersonCam::LateTick(_float fTimeDelta)
 	XMStoreFloat4(&m_vPreCamPos, vCamPos);
 
 	m_pTransformCom->SetState(CTransform::STATE_POSITION, vCamPos);
+
+	CalcLookVectors(vCamPos, vPlayerPos);
+
 	m_pTransformCom->LookAt(XMVectorSetY(vPlayerPos, XMVectorGetY(vPlayerPos) + m_fHeight));
+
+	//campos에 player pos 빼서 lookvector 만든거 매번 갱신해줬다가 필요할 때 get으로 빼주기 
 
 	CCamera::SetUpTransformMatices();
 
@@ -189,6 +194,12 @@ _vector CThirdPersonCam::ToCartesian()
 	return vNewCamPos;
 }
 
+void CThirdPersonCam::CalcLookVectors(_fvector _vCamPos, _fvector _vPlrPos)
+{
+	_vector vLook = _vPlrPos - _vCamPos;
+	vLook = XMVector4Normalize(XMVectorSetY(XMVectorSetW(vLook, 0.f),0.f));
+	XMStoreFloat4(&m_vLookPlr, vLook);
+}
 
 void CThirdPersonCam::LockOn()
 {

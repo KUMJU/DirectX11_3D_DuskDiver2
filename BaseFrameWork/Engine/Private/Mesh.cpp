@@ -8,6 +8,8 @@ CMesh::CMesh(wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID3D11DeviceContext
 
 HRESULT CMesh::Initialize(CModel::TYPE _eType, const aiMesh* pAIMesh, shared_ptr<CModel> _pModel, _fmatrix PivotMatrix)
 {
+	strcpy_s(m_szName, pAIMesh->mName.data);
+
 	m_iMaterialIndex = pAIMesh->mMaterialIndex;
 
 	m_iNumVertexBuffers = 1;
@@ -130,8 +132,6 @@ HRESULT CMesh::ReadyVertexBufferAnim(const aiMesh* _pAIMesh, shared_ptr<CModel> 
 	for (size_t i = 0; i < m_iNumBones; i++) {
 
 		aiBone* pAIBone = _pAIMesh->mBones[i];
-		aiString dd = _pAIMesh->mName;
-
 		_float4x4 OffsetMatrix = {};
 
 		memcpy(&OffsetMatrix, &pAIBone->mOffsetMatrix, sizeof(_float4x4));
@@ -166,6 +166,18 @@ HRESULT CMesh::ReadyVertexBufferAnim(const aiMesh* _pAIMesh, shared_ptr<CModel> 
 
 			}
 		}
+	}
+
+	//본이 없는 sword, shadow 같은 메쉬용
+	if (0 == m_iNumBones)
+	{
+		m_iNumBones = 1;
+		m_BoneIndices.push_back(_pModel->GetBoneIndex(m_szName));
+
+		_float4x4 OffsetMatrix;
+		XMStoreFloat4x4(&OffsetMatrix, XMMatrixIdentity());
+
+		m_OffsetMatrices.push_back(OffsetMatrix);
 	}
 
 	m_InitialData.pSysMem = pVertices;

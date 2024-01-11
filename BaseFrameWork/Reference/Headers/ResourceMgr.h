@@ -54,6 +54,9 @@ public:
 	void ReadNonAnimMeshFile(const wstring& _strBaseFilepath, const wstring& _strExt);
 
 
+public:
+	void LoaderForTool();
+
 /*Material*/
 public:
 

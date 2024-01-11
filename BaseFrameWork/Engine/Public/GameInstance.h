@@ -79,6 +79,9 @@ public:
 
 	map <wstring, CResourceMgr::ResourceDesc<class CModel>>* GetModels();
 
+	void LoadResourceForTool();
+
+
 private:
 	shared_ptr<class CGraphicDev> m_pGraphicDev = nullptr;
 	shared_ptr<class CInputDevice> m_pInputDev = nullptr;

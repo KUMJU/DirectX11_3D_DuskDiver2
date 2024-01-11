@@ -32,9 +32,21 @@ public:
 	_int GetBoneIndex(const _char* _pBoneName) const;
 
 public:
+	_vector GetRootVectorPosition();
+
+public:
 	HRESULT BindMaterialShaderResource(shared_ptr<class CShader> _pShader, _uint _iMeshIndex, aiTextureType _eMaterialType, const _char* _pConstantName);
 	HRESULT BindBoneMatrices(shared_ptr<class CShader> _pShader, const _char* _pConstName, _uint _iMeshIndex);
-	void PlayAnimation(_float _fTimeDelta);
+	_bool PlayAnimation(_float _fTimeDelta, _bool _isLoop);
+
+public:
+	//초기 세팅용 , 근데 이건 init에서 받아도 될거 같기도? 일단 냅두기
+	void SetAnimNum(_uint _iAnimNum) { _iAnimNum = _iAnimNum; }
+	void ChangeAnimation(_uint _iAnimNum);
+
+public:
+	
+
 
 private:
 	const aiScene* m_pAIScene = {};
@@ -53,10 +65,28 @@ private:
 
 	vector<shared_ptr<class CBone>> m_Bones;
 
+	_uint m_iNumAnimations = { 0 };
+	_uint m_iCurrentAnimation = { 0 };
+	vector<shared_ptr<class CAnimation>> m_Animations;
+
+//For Anim Linear
+private:
+
+	_bool m_IsLinearState = false;
+	_float m_fLinearTime = 0.f;
+	_float m_fLinearTotalTime = 0.08f;
+
+	shared_ptr<class CAnimation> m_CurrentAnim = nullptr;
+	shared_ptr<class CAnimation> m_NextAnim = nullptr;
+
+	_uint m_iNextAnimation = { 0 };
+	_uint m_RootBoneIdx = { 0 };
+
 private:
 	HRESULT ReadyMeshes();
 	HRESULT ReadyMaterials(const _char* _pModelFilePath);
 	HRESULT ReadyBones(aiNode* _pNode, _int _iParentBoneIndex);
+	HRESULT ReadyAnimations();
 
 public:
 	static shared_ptr<CModel> Create(wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID3D11DeviceContext> _pContext, TYPE eModelType, const _char* pModelFilePath, _fmatrix PivotMatrix = XMMatrixIdentity());

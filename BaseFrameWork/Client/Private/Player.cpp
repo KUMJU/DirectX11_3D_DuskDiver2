@@ -27,8 +27,12 @@ HRESULT CPlayer::Initialize()
 
     m_pShader = CGameInstance::GetInstance()->GetShader(TEXT("Shader_VtxAnim"));
 
-    m_pModelCom = CGameInstance::GetInstance()->GetModel(TEXT("Hero1Walk"));
+    m_pModelCom = CGameInstance::GetInstance()->GetModel(TEXT("Hero1AnimLinear"));
     m_Components.emplace(TEXT("Com_Model"), m_pModelCom);
+
+    m_eCurrentState = HEROSTATE::IDLE;
+    m_iCurrentAnimIdx = 1;
+    m_pModelCom->SetAnimNum(1);
 
     return S_OK;
 }
@@ -41,9 +45,14 @@ void CPlayer::Tick(_float _fTimeDelta)
 {
    // _float3 CamLook = CCameraMgr::GetInstance()->GetCamLook();
    // m_pTransformCom->LookAt(XMLoadFloat3(&CamLook));
+    MouseInput(_fTimeDelta);
     KeyInput(_fTimeDelta);
-    m_pModelCom->PlayAnimation(_fTimeDelta);
-
+    if(m_pModelCom->PlayAnimation(_fTimeDelta, m_isAnimLoop)){
+        m_eCurrentState = HEROSTATE::IDLE;
+        m_iCurrentAnimIdx = 1;
+        m_isAnimLoop = true;
+        m_pModelCom->ChangeAnimation(m_iCurrentAnimIdx);
+    }
 }
 
 void CPlayer::LateTick(_float _fTimeDelta)
@@ -68,12 +77,11 @@ HRESULT CPlayer::Render()
             return E_FAIL;
 
         if (FAILED(m_pShader->Begin(0)))
-            return E_FAIL;
+            return E_FAIL; 
 
         if (FAILED(m_pModelCom->Render((_uint)i)))
             return E_FAIL;
     }
-
 
     return S_OK;
 }
@@ -119,26 +127,61 @@ HRESULT CPlayer::BindShaderResources()
     return S_OK;
 }
 
+void CPlayer::ChangeAnim(_uint _iAnimNum, _bool _isLoop)
+{
+    //if문으로 제한걸기->attack중이라던가 뭐 그런거면 못 바꾸게 
+    m_vPrevAnimPos = { 0.f, 0.f, 0.f };
+    m_isAnimLoop = _isLoop;
+    m_pModelCom->ChangeAnimation(_iAnimNum);
+
+}
+
 void CPlayer::KeyInput(_float _fTimeDelta)
 {
     if (GetKeyState('W') & 0x8000)
     {
+         /* 플레이어 몸을 카메라 방향으로 전환*/
+
+        _float4 vLook =  CCameraMgr::GetInstance()->GetCamLook();
+        _vector vLookVec = XMLoadFloat4(&vLook);
+
+        _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+        vPos += vLookVec;
+
+        m_pTransformCom->LookAt(vPos);
+
+       /* 앞으로 전진. 이동값 변경 */
         m_pTransformCom->GoStraight(_fTimeDelta);
+        m_eCurrentState = HEROSTATE::WALK;
+        m_iCurrentAnimIdx = 2;
+        m_isAnimLoop = true;
+
+        m_pModelCom->ChangeAnimation(m_iCurrentAnimIdx);
+
+        return;
+        
     }
 
     if (GetKeyState('S') & 0x8000)
     {
-        m_pTransformCom->GoBackward(_fTimeDelta);
-    }
+        /* 플레이어 몸을 카메라 반대 방향으로 전환*/
+        _float4 vLook = CCameraMgr::GetInstance()->GetCamLook();
+        _vector vLookVec = XMLoadFloat4(&vLook) * -1.f;
 
-    if (GetKeyState('A') & 0x8000)
-    {
-        m_pTransformCom->GoLeft(_fTimeDelta);
-    }
+        _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+        vPos += vLookVec;
 
-    if (GetKeyState('D') & 0x8000)
-    {
-        m_pTransformCom->GoRight(_fTimeDelta);
+        m_pTransformCom->LookAt(vPos);
+
+        /* 반대 방향 상태에서 앞으로 전진. 이동값 변경 */
+        m_pTransformCom->GoStraight(_fTimeDelta);
+        m_eCurrentState = HEROSTATE::WALK;
+        m_iCurrentAnimIdx = 2;
+        m_isAnimLoop = true;
+
+        m_pModelCom->ChangeAnimation(m_iCurrentAnimIdx);
+        return;
+
     }
 
 
@@ -154,6 +197,35 @@ void CPlayer::KeyInput(_float _fTimeDelta)
     {
         CCameraMgr::GetInstance()->SwitchingCamera(CCameraMgr::ECAMERATYPE::FREE);
     }
+
+    if (HEROSTATE::IDLE != m_eCurrentState && HEROSTATE::ATTACK != m_eCurrentState) {
+        m_eCurrentState = HEROSTATE::IDLE;
+        m_iCurrentAnimIdx = 1;
+        m_isAnimLoop = true;
+
+        m_pModelCom->ChangeAnimation(m_iCurrentAnimIdx);
+    }
+}
+
+void CPlayer::MouseInput(_float _fTimeDelta)
+{
+    if (m_IsMouseDeb)
+        return;
+
+
+    if (CGameInstance::GetInstance()->GetDIMouseState(MOUSEKEYSTATE::DIM_LB) & 0x8000)
+    {
+        m_eCurrentState = HEROSTATE::ATTACK;
+        m_iCurrentAnimIdx = 0;
+        m_isAnimLoop = false;
+
+        m_pModelCom->ChangeAnimation(m_iCurrentAnimIdx);
+        m_IsMouseDeb = true;
+        return;
+
+    }
+
+
 
 }
 

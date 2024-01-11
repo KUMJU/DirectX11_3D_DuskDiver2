@@ -94,9 +94,10 @@ shared_ptr<class CModel> CResourceMgr::GetModel(const wstring& _strModelKey)
 
     if (iter != m_Models.end()) {
 
-        //if (CModel::TYPE::TYPE_ANIM == (*iter).second.pRes->GetModelType()) {
-        //    return CModel::Clone(((*iter).second.pRes));
-        //}
+    /*    if (CModel::TYPE::TYPE_ANIM == (*iter).second.pRes->GetModelType()) {
+            return CModel::Clone(((*iter).second.pRes));
+        }*/
+
         return (*iter).second.pRes;
     }
 
@@ -172,13 +173,14 @@ void CResourceMgr::ReadShaderFile(const wstring& _strBaseFilepath, const wstring
         }
     }
     _findclose(lHandle);
-}
+} 
 
 HRESULT CResourceMgr::LoadTexture(const wstring& _strBaseFilepath)
 {
     const wstring& strFlag = TEXT("*.*");
 
     ReadTextureFile(_strBaseFilepath, strFlag);
+    
 
     return S_OK;
 }
@@ -297,6 +299,14 @@ void CResourceMgr::ReadNonAnimMeshFile(const wstring& _strBaseFilepath, const ws
     }
 
     _findclose(lHandle);
+
+}
+
+void CResourceMgr::LoaderForTool()
+{
+
+    LoadMesh(TEXT("../../Client/Bin/Resources/Base/"));
+    LoadMesh(TEXT("../../Client/Bin/Resources/ArcadeMap/"));
 
 }
 

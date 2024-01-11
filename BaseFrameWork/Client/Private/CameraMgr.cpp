@@ -75,10 +75,10 @@ void CCameraMgr::SetCamObject(ECAMERATYPE _eType, shared_ptr<CGameObject> _pInst
 
 }
 
-XMFLOAT3 CCameraMgr::GetCamLook()
+_float4 CCameraMgr::GetCamLook()
 {
 	if (ECAMERATYPE::THIRDPERSON != m_eCurrentCamType)
-		return XMFLOAT3();
+		return XMFLOAT4();
 
-	return m_pMainCam->GetCamLook();
+	return m_pDefualtCam->GetCamLookVector();
 }

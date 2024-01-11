@@ -86,6 +86,68 @@ HRESULT CMainApp::OpenLevel(LEVEL _eStartLevel)
 	return CGameInstance::GetInstance()->OpenLevel(LEVEL_LOADING, CLevelLoading::Create(_eStartLevel));
 }
 
+void CMainApp::TestFileWrite()
+{
+	const _tchar* szName = TEXT("Test.dat");
+
+	vector<_float3> pVector = {};
+	pVector.push_back(_float3(1.f, 2.f, 3.f));
+	pVector.push_back(_float3(4.f, 5.f, 6.f));
+
+
+	_ulong dwByte = 0;
+	HANDLE hFile = CreateFile(szName, GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+
+	if (0 == hFile) {
+		MSG_BOX("Failed to Save");
+		return;
+	}
+
+	_float fX, fY, fZ;
+
+
+	for (_int i = 0; i < 2; ++i) {
+
+		WriteFile(hFile, &pVector[i].x, sizeof(_float), &dwByte, nullptr);
+		WriteFile(hFile, &pVector[i].y, sizeof(_float), &dwByte, nullptr);
+		WriteFile(hFile, &pVector[i].z, sizeof(_float), &dwByte, nullptr);
+
+	}
+
+	CloseHandle(hFile);
+}
+
+void CMainApp::TestFileRead()
+{
+	const _tchar* szName = TEXT("Test.dat");
+
+	_ulong dwByte = 0;
+	HANDLE hFile = CreateFile(szName, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+
+	//파일x
+	if (0 == hFile)
+		return;
+
+	//테스트용으로 벡터 2개 저장해보기
+
+	_float fX, fY, fZ;
+
+	vector<_float3> pVector = {};
+
+	for (_int i = 0; i < 2; i++) {
+
+		ReadFile(hFile, &fX, sizeof(_float), &dwByte, nullptr);
+		ReadFile(hFile, &fY, sizeof(_float), &dwByte, nullptr);
+		ReadFile(hFile, &fZ, sizeof(_float), &dwByte, nullptr);
+
+		_float3 newFloat = _float3(fX, fY, fZ);
+		pVector.push_back(newFloat);
+	}
+
+	CloseHandle(hFile);
+
+}
+
 
 void CMainApp::Free()
 {
