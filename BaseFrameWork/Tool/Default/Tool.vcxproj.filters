@@ -61,9 +61,6 @@
     <Filter Include="95. Helper">
       <UniqueIdentifier>{bbd60d54-7601-45e7-87b6-f4da4f20ef5b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03. Manager\03. CameraMgr">
-      <UniqueIdentifier>{1c56e7c4-009d-4ae1-b2bb-4928cc42b788}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\02. Camera\01. ThirdPerson Cam">
       <UniqueIdentifier>{96aebbe3-acab-45d4-ac7e-dcb33b9735f2}</UniqueIdentifier>
     </Filter>
@@ -150,9 +147,6 @@
     <ClInclude Include="..\Public\ThirdPersonCam.h">
       <Filter>02. GameObject\02. Camera\01. ThirdPerson Cam</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\CameraMgr.h">
-      <Filter>03. Manager\03. CameraMgr</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -217,9 +211,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\ThirdPersonCam.cpp">
       <Filter>02. GameObject\02. Camera\01. ThirdPerson Cam</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\CameraMgr.cpp">
-      <Filter>03. Manager\03. CameraMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -23,7 +23,7 @@ public:
 	~CChannel() = default;
 
 public:
-	HRESULT Initialize(const aiNodeAnim* _pAIChannel, shared_ptr<Engine::CModel> _pModel);
+	HRESULT Initialize(HANDLE _handle, shared_ptr<Engine::CModel> _pModel);
 	void InvalidateTransformationMatrix(_double _TrackPosition, _uint* _pCurrentKeyFrame,  const vector<shared_ptr<Engine::CBone>>& Bones);
 
 public:
@@ -34,6 +34,7 @@ public:
 		return m_KeyFrames[_iCurrentFrame];
 	}
 
+
 private:
 	_char m_szName[MAX_PATH] = "";
 	_uint m_iNumKeyFrames = { 0 };
@@ -42,7 +43,7 @@ private:
 	_uint m_iBoneIndex = { 0 };
 
 public:
-	static shared_ptr<CChannel> Create(const aiNodeAnim* _pAIChannel, shared_ptr<CModel> _pModel);
+	static shared_ptr<CChannel> Create(HANDLE _handle, shared_ptr<CModel> _pModel);
 
 
 };

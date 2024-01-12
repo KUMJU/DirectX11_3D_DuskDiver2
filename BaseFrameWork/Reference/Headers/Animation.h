@@ -14,7 +14,7 @@ public:
 	~CAnimation() = default;
 
 public:
-	HRESULT Initialize(const aiAnimation* _pAIAnimation, shared_ptr<CModel> _pModel);
+	HRESULT Initialize(HANDLE _handle, shared_ptr<CModel> _pModel);
 	_bool InvalidateTransformationMatrix(_float _fTimeDelta, const vector<shared_ptr<CBone>>& _Bones, _bool _isLoop);
 
 public:
@@ -26,6 +26,9 @@ public:
 	vector<shared_ptr<class CChannel>>* GetChannels() { return &m_Channels; }
 	_uint GetCurrentKeyFrame() { return m_iCurrentKeyFrames.front(); }
 	_uint GetChannelNum() { return m_iNumChannels; }
+
+public:
+	void ParsingAnimation(HANDLE _handle);
 
 private:
 	_uint m_iNumAnimations = { 0 };
@@ -42,7 +45,7 @@ private:
 	_bool m_isFinished = { false };
 
 public:
-	static shared_ptr<CAnimation> Create(const aiAnimation* pAIAnimation, shared_ptr<CModel> _pModel);
+	static shared_ptr<CAnimation> Create(HANDLE _handle, shared_ptr<CModel> _pModel);
 
 };
 

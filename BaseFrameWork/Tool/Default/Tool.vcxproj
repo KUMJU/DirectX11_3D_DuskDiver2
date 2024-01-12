@@ -157,7 +157,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\CameraFree.h" />
-    <ClInclude Include="..\Public\CameraMgr.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Dummy.h" />
     <ClInclude Include="..\Public\Edit.h" />
@@ -188,7 +187,6 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\..\..\Downloads\ImGuizmo-master\ImGuizmo-master\ImGuizmo.cpp" />
     <ClCompile Include="..\Private\CameraFree.cpp" />
-    <ClCompile Include="..\Private\CameraMgr.cpp" />
     <ClCompile Include="..\Private\Dummy.cpp" />
     <ClCompile Include="..\Private\Edit.cpp" />
     <ClCompile Include="..\Private\GameMgr.cpp" />

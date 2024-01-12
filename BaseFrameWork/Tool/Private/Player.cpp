@@ -27,8 +27,12 @@ HRESULT CPlayer::Initialize()
 
     m_pShader = CGameInstance::GetInstance()->GetShader(TEXT("Shader_VtxAnim"));
 
-    m_pModelCom = CGameInstance::GetInstance()->GetModel(TEXT("Hero1Walk"));
+    m_pModelCom = CGameInstance::GetInstance()->GetModel(TEXT("ModelFull"));
     m_Components.emplace(TEXT("Com_Model"), m_pModelCom);
+
+    m_eCurrentState = HEROSTATE::IDLE;
+    m_iCurrentAnimIdx = 6;
+    m_pModelCom->SetAnimNum(6);
 
     return S_OK;
 }
@@ -39,11 +43,15 @@ void CPlayer::PriorityTick(_float _fTimeDelta)
 
 void CPlayer::Tick(_float _fTimeDelta)
 {
-   // _float3 CamLook = CCameraMgr::GetInstance()->GetCamLook();
-   // m_pTransformCom->LookAt(XMLoadFloat3(&CamLook));
-    KeyInput(_fTimeDelta);
-    m_pModelCom->PlayAnimation(_fTimeDelta);
 
+
+    //MouseInput(_fTimeDelta);
+    //KeyInput(_fTimeDelta);
+    //if (m_pModelCom->PlayAnimation(_fTimeDelta, m_isAnimLoop, &m_vCurretnAnimPos)) {
+
+    //}
+
+    //CalcAnimMoveDistance();
 }
 
 void CPlayer::LateTick(_float _fTimeDelta)
@@ -73,7 +81,6 @@ HRESULT CPlayer::Render()
         if (FAILED(m_pModelCom->Render((_uint)i)))
             return E_FAIL;
     }
-
 
     return S_OK;
 }
@@ -119,41 +126,40 @@ HRESULT CPlayer::BindShaderResources()
     return S_OK;
 }
 
-void CPlayer::KeyInput(_float _fTimeDelta)
+void CPlayer::ChangeAnim(_uint _iAnimNum, _bool _isLoop)
 {
-    if (GetKeyState('W') & 0x8000)
-    {
-        m_pTransformCom->GoStraight(_fTimeDelta);
+    if (!m_pModelCom->ChangeAnimation(_iAnimNum))
+        return;
+
+    //if문으로 제한걸기->attack중이라던가 뭐 그런거면 못 바꾸게 
+
+    if (HEROSTATE::ATTACK != m_eCurrentState) {
+        m_vPrevAnimPos = { 0.f, 0.f, 0.f };
+        m_vCurretnAnimPos = { 0.f, 0.f, 0.f };
     }
 
-    if (GetKeyState('S') & 0x8000)
-    {
-        m_pTransformCom->GoBackward(_fTimeDelta);
-    }
+    m_isAnimLoop = _isLoop;
 
-    if (GetKeyState('A') & 0x8000)
-    {
-        m_pTransformCom->GoLeft(_fTimeDelta);
-    }
-
-    if (GetKeyState('D') & 0x8000)
-    {
-        m_pTransformCom->GoRight(_fTimeDelta);
-    }
+}
 
 
-////////////////Camera/////////////////////////
-
-    if (GetKeyState('1') & 0x8000)
-    {
-        CCameraMgr::GetInstance()->SwitchingCamera(CCameraMgr::ECAMERATYPE::THIRDPERSON);
-    }
+void CPlayer::CalcAnimMoveDistance()
+{
+    _vector vDistance = XMLoadFloat3(&m_vCurretnAnimPos) - XMLoadFloat3(&m_vPrevAnimPos);
+    _vector vLook = m_pTransformCom->GetState(CTransform::STATE_LOOK);
 
 
-    if (GetKeyState('2') & 0x8000)
-    {
-        CCameraMgr::GetInstance()->SwitchingCamera(CCameraMgr::ECAMERATYPE::FREE);
-    }
+    _matrix WorldMat = m_pTransformCom->GetWorldMatrix();
+
+    XMVector3TransformCoord(vDistance, WorldMat);
+
+    vDistance = vDistance * vLook;
+
+    _vector vCurrentPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+    vCurrentPos += vDistance;
+    m_pTransformCom->SetState(CTransform::STATE_POSITION, vCurrentPos);
+
+    m_vPrevAnimPos = m_vCurretnAnimPos;
 
 }
 

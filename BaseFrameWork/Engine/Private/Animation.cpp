@@ -5,19 +5,21 @@ CAnimation::CAnimation()
 {
 }
 
-HRESULT CAnimation::Initialize(const aiAnimation* _pAIAnimation, shared_ptr<class CModel> _pModel)
+HRESULT CAnimation::Initialize(HANDLE _handle, shared_ptr<class CModel> _pModel)
 {
-    strcpy_s(m_szName, _pAIAnimation->mName.data);
+    _ulong dwByte = 0;
 
-    m_Duration = _pAIAnimation->mDuration;
-    m_TickPerSecond = _pAIAnimation->mTicksPerSecond;
-    m_iNumChannels = _pAIAnimation->mNumChannels;
+    ReadFile(_handle, m_szName, sizeof(char) * MAX_PATH, &dwByte, nullptr);
+
+    ReadFile(_handle, &m_Duration, sizeof(_double), &dwByte, nullptr);
+    ReadFile(_handle, &m_TickPerSecond, sizeof(_double), &dwByte, nullptr);
+    ReadFile(_handle, &m_iNumChannels, sizeof(_uint), &dwByte, nullptr);
 
     m_iCurrentKeyFrames.resize(m_iNumChannels);
     
     for (size_t i = 0; i < m_iNumChannels; i++) {
 
-        shared_ptr<CChannel> pChannel = CChannel::Create(_pAIAnimation->mChannels[i], _pModel);
+        shared_ptr<CChannel> pChannel = CChannel::Create(_handle, _pModel);
 
         if (!pChannel)
             return E_FAIL;
@@ -73,11 +75,11 @@ void CAnimation::ChangeAnimation(shared_ptr<CAnimation> _pNextAnim, const vector
     }
 }
 
-shared_ptr<CAnimation> CAnimation::Create(const aiAnimation* pAIAnimation, shared_ptr<CModel> _pModel)
+shared_ptr<CAnimation> CAnimation::Create(HANDLE _handle, shared_ptr<CModel> _pModel)
 {
     shared_ptr<CAnimation> pInstance = make_shared<CAnimation>();
 
-    if (FAILED(pInstance->Initialize(pAIAnimation, _pModel)))
+    if (FAILED(pInstance->Initialize(_handle, _pModel)))
         MSG_BOX("Faile to Create : CAnimation");
 
     return pInstance;

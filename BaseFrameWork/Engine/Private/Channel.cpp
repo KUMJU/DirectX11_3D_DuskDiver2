@@ -5,53 +5,20 @@ CChannel::CChannel()
 {
 }
 
-HRESULT CChannel::Initialize(const aiNodeAnim* _pAIChannel, shared_ptr<Engine::CModel> _pModel)
+HRESULT CChannel::Initialize(HANDLE _handle, shared_ptr<Engine::CModel> _pModel)
 {
-	strcpy_s(m_szName, _pAIChannel->mNodeName.data);
+	_ulong dwByte = 0;
 
+	ReadFile(_handle, m_szName, sizeof(char) * MAX_PATH, &dwByte, nullptr);
 	m_iBoneIndex = _pModel->GetBoneIndex(m_szName);
 
-	m_iNumKeyFrames = max(_pAIChannel->mNumScalingKeys, _pAIChannel->mNumRotationKeys);
-	m_iNumKeyFrames = max(m_iNumKeyFrames, _pAIChannel->mNumPositionKeys);
-
-	_float3 vScale;
-	_float4 vRotation;
-	_float3 vPosition;
-
+	ReadFile(_handle, &m_iNumKeyFrames, sizeof(_uint), &dwByte, nullptr);
 
 	for (size_t i = 0; i < m_iNumKeyFrames; i++) {
 
 		KEYFRAME KeyFrame = {};
 
-		//키는 중간에 빈공간이 없이 연속적으로 있음 + 어느 한 키는 전체 프레임 키만큼 존재하기에 이렇게 for문을 작성해도 괜찮다
-		if (_pAIChannel->mNumScalingKeys > i) {
-
-			memcpy(&vScale, &_pAIChannel->mScalingKeys[i].mValue, sizeof(_float3));
-			KeyFrame.Time = _pAIChannel->mScalingKeys[i].mTime;
-		}
-
-		if (_pAIChannel->mNumRotationKeys > i) {
-			//wxyz 순서로 들어있어서 직접 매칭해줘야함
-
-			vRotation.x = _pAIChannel->mRotationKeys[i].mValue.x;
-			vRotation.y = _pAIChannel->mRotationKeys[i].mValue.y;
-			vRotation.z = _pAIChannel->mRotationKeys[i].mValue.z;
-			vRotation.w = _pAIChannel->mRotationKeys[i].mValue.w;
-			KeyFrame.Time = _pAIChannel->mScalingKeys[i].mTime;
-
-		}
-
-		if (_pAIChannel->mNumPositionKeys > i) {
-
-			memcpy(&vPosition, &_pAIChannel->mPositionKeys[i].mValue, sizeof(_float3));
-			KeyFrame.Time = _pAIChannel->mPositionKeys[i].mTime;
-		}
-
-
-		KeyFrame.vScale = vScale;
-		KeyFrame.vRotation = vRotation;
-		KeyFrame.vPosition = vPosition;
-
+		ReadFile(_handle, &KeyFrame, sizeof(KEYFRAME), &dwByte, nullptr);
 		m_KeyFrames.push_back(KeyFrame);
 
 	}
@@ -115,11 +82,11 @@ _matrix CChannel::LinearInterpolation(_uint _iCurFrame, KEYFRAME _NextKeyFrame, 
 	return TransformationMatrix;
 }
 
-shared_ptr<CChannel> CChannel::Create(const aiNodeAnim* _pAIChannel, shared_ptr<CModel> _pModel)
+shared_ptr<CChannel> CChannel::Create(HANDLE _handle, shared_ptr<CModel> _pModel)
 {
 	shared_ptr<CChannel> pInstance = make_shared<CChannel>();
 
-	if (FAILED(pInstance->Initialize(_pAIChannel, _pModel)))
+	if (FAILED(pInstance->Initialize(_handle, _pModel)))
 		MSG_BOX("Failed to Create : CChannel");
 
 	return pInstance;

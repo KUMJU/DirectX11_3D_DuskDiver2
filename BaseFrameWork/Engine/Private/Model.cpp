@@ -24,34 +24,58 @@ CModel::CModel(const CModel& _rhs)
 {
 }
 
-HRESULT CModel::Initialize(TYPE eModelType, const _char* pModelFilePath, _fmatrix PivotMatrix)
+HRESULT CModel::Initialize(TYPE eModelType, const _char* pModelFilePath, const _tchar* _DatFilePath, _fmatrix PivotMatrix)
 {
 
-    _uint iFlag = aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_Fast;
     m_eModelType = eModelType;
+    const _tchar* szName = _DatFilePath;
+    _ulong dwByte = 0;
+    HANDLE hFile = CreateFile(szName, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
-    if (TYPE_NONANIM == eModelType)
-        iFlag |= aiProcess_PreTransformVertices;
-
-    m_pAIScene = m_Importer.ReadFile(pModelFilePath, iFlag);
-
-    if (!m_pAIScene)
+    //파일x
+    if (0 == hFile)
         return E_FAIL;
 
+    //본갯수
+    size_t iBoneNumSize;
+    ReadFile(hFile, &iBoneNumSize, sizeof(size_t), &dwByte, nullptr);
 
-    if (FAILED(ReadyBones(m_pAIScene->mRootNode, -1)))
+    //ReadyBone
+    for (size_t i = 0; i < iBoneNumSize; ++i) {
+     
+        char* szName = new char[MAX_PATH];
+        ReadFile(hFile, szName, MAX_PATH * sizeof(char), &dwByte, nullptr);
+
+        _int iParentBone;
+        ReadFile(hFile, &iParentBone, sizeof(_int), &dwByte, nullptr);
+
+        shared_ptr<CBone> pBone = CBone::Create(szName, iParentBone, hFile);
+        m_Bones.push_back(pBone);
+    }
+
+
+    ReadFile(hFile, &m_iNumMeshes, sizeof(size_t), &dwByte, nullptr);
+
+    //ReadyMeshes
+    for (size_t i = 0; i < m_iNumMeshes; i++) {
+
+        shared_ptr<CMesh> pMesh = CMesh::Create(m_eModelType, m_pDevice, m_pContext, hFile, dynamic_pointer_cast<CModel>(shared_from_this()), XMLoadFloat4x4(&m_PivotMatrix));   
+     
+        if (!pMesh)
+            return E_FAIL;
+         
+        m_Meshes22.push_back(pMesh);
+    }
+
+    ReadFile(hFile, &m_iNumMaterials, sizeof(size_t), &dwByte, nullptr);
+
+    if (FAILED(ReadyMaterials(hFile)))
         return E_FAIL;
 
-    if (FAILED(ReadyMeshes()))
+      if (FAILED(ReadyAnimations(hFile)))
         return E_FAIL;
 
-    if (FAILED(ReadyMaterials(pModelFilePath)))
-        return E_FAIL;
-
-    if (FAILED(ReadyAnimations()))
-        return E_FAIL;
-
-    m_iCurrentAnimation = 12;
+    CloseHandle(hFile);
 
     return S_OK;
 }
@@ -65,8 +89,8 @@ HRESULT CModel::InitializeClone()
 HRESULT CModel::Render(_uint _iMeshIndex)
 {
 
-    m_Meshes[_iMeshIndex]->BindBuffers();
-    m_Meshes[_iMeshIndex]->Render();
+    m_Meshes22[_iMeshIndex]->BindBuffers();
+    m_Meshes22[_iMeshIndex]->Render();
 
     return S_OK;
 }
@@ -95,7 +119,7 @@ _int CModel::GetBoneIndex(const _char* _pBoneName) const
 
 HRESULT CModel::BindMaterialShaderResource(shared_ptr<class CShader> _pShader, _uint _iMeshIndex, aiTextureType _eMaterialType, const _char* _pConstantName)
 {
-    _uint iMaterialIndex = m_Meshes[_iMeshIndex]->GetMaterialIndex();
+    _uint iMaterialIndex = m_Meshes22[_iMeshIndex]->GetMaterialIndex();
     shared_ptr<CTexture> pTexture =  m_Materials[iMaterialIndex]->GetTextures()[_eMaterialType];
     return pTexture->BindShaderResource(_pShader, _pConstantName, 0);
 }
@@ -104,7 +128,7 @@ HRESULT CModel::BindBoneMatrices(shared_ptr<class CShader> _pShader, const _char
 {
     _float4x4 BoneMatirces[MAX_BONE];
 
-    m_Meshes[_iMeshIndex]->SetUpBoneMatrices(BoneMatirces, m_Bones);
+    m_Meshes22[_iMeshIndex]->SetUpBoneMatrices(BoneMatirces, m_Bones);
 
     return _pShader->BindMatrices(_pConstName, BoneMatirces, MAX_BONE) ;
 } 
@@ -187,43 +211,29 @@ HRESULT CModel::ReadyMeshes()
     return S_OK;
 }
 
-HRESULT CModel::ReadyMaterials(const _char* _pModelFilePath)
+HRESULT CModel::ReadyMaterials(HANDLE _handle)
 {
-    _char szDrive[MAX_PATH] = "";
-    _char szDirectory[MAX_PATH] = "";
-
-    _splitpath_s(_pModelFilePath, szDrive, MAX_PATH, szDirectory, MAX_PATH, nullptr, 0, nullptr, 0);
-
-    m_iNumMaterials = m_pAIScene->mNumMaterials;
+    _ulong dwByte = 0;
 
     for (size_t i = 0; i < m_iNumMaterials; i++) {
 
-        map<aiTextureType, shared_ptr<class CTexture>> Textures;
+        map<_uint, shared_ptr<class CTexture>> Textures;
+        
+        size_t iTotTextureIdx = 0;
+        ReadFile(_handle, &iTotTextureIdx, sizeof(size_t), &dwByte, nullptr);
 
-        aiMaterial* pAIMateral = m_pAIScene->mMaterials[i];
+        for (size_t j = 0; j < iTotTextureIdx; j++) {
 
-        for (size_t j = 0; j < AI_TEXTURE_TYPE_MAX; j++) {
+            char* szTexName = new char[MAX_PATH];
+            _uint iTextureType;
 
-            aiString strTextureFilePath;
-
-            if (FAILED(pAIMateral->GetTexture(aiTextureType(j), 0, &strTextureFilePath)))
-                continue;
-
-            _char szFileName[MAX_PATH] = "";
-            _char szExt[MAX_PATH] = "";
-
-            _splitpath_s(strTextureFilePath.data, nullptr, 0, nullptr, 0, szFileName, MAX_PATH, szExt, MAX_PATH);
-
-            _char szTmp[MAX_PATH] = "";
-            strcpy_s(szTmp, szDrive);
-            strcat_s(szTmp, szDirectory);
-            strcat_s(szTmp, szFileName);
-            strcat_s(szTmp, szExt);
+            ReadFile(_handle, szTexName, sizeof(char) * MAX_PATH, &dwByte, nullptr);
+            ReadFile(_handle, &iTextureType, sizeof(_uint), &dwByte, nullptr);
 
             _tchar szFullPath[MAX_PATH] = TEXT("");
-            MultiByteToWideChar(CP_ACP, 0, szFileName, (_int)strlen(szTmp), szFullPath, MAX_PATH);
+            MultiByteToWideChar(CP_ACP, 0, szTexName, (_int)strlen(szTexName), szFullPath, MAX_PATH);
 
-            Textures.emplace(aiTextureType(j), CGameInstance::GetInstance()->GetTexture(szFullPath));
+            Textures.emplace(iTextureType, CGameInstance::GetInstance()->GetTexture(szFullPath));
         }
         
         m_Materials.push_back(CMaterial::Create(Textures));
@@ -233,40 +243,37 @@ HRESULT CModel::ReadyMaterials(const _char* _pModelFilePath)
     return S_OK;
 }
 
-HRESULT CModel::ReadyBones(aiNode* _pNode, _int _iParentBoneIndex)
+HRESULT CModel::ReadyBones(char* _pName, _int _iParentBoneIndex, HANDLE _handle)
 {
-    shared_ptr<CBone> pBone= CBone::Create(_pNode, _iParentBoneIndex);
-    
-    if (!pBone)
-        return E_FAIL;
+    //shared_ptr<CBone> pBone= CBone::Create(_pName, _iParentBoneIndex, _handle);
+    //
+    //if (!pBone)
+    //    return E_FAIL;
 
-    m_Bones.push_back(pBone);
+    //m_Bones.push_back(pBone);
 
-    const char* ddname = pBone->GetBoneName();
+    //const char* ddname = pBone->GetBoneName();
 
-    if (!strcmp("root", ddname)) {
-        m_RootBoneIdx = (_uint)(m_Bones.size() - 1);
-    }
+    //_uint iParentIndex = (_uint)(m_Bones.size() - 1);
 
-    _uint iParentIndex = (_uint)(m_Bones.size() - 1);
-
-    //재귀함수로 가장 최하단 노드까지 순회한다
-    for (size_t i = 0; i < _pNode->mNumChildren; i++) {
-        ReadyBones(_pNode->mChildren[i], iParentIndex);
-    }
+    ////재귀함수로 가장 최하단 노드까지 순회한다
+    //for (size_t i = 0; i < _pNode->mNumChildren; i++) {
+    //    ReadyBones(_pNode->mChildren[i], iParentIndex);
+    //}
 
     return S_OK;
 }
 
-HRESULT CModel::ReadyAnimations()
+HRESULT CModel::ReadyAnimations(HANDLE _handle)
 {
-    m_iNumAnimations = m_pAIScene->mNumAnimations;
+    _ulong dwByte = 0;
+    ReadFile(_handle, &m_iNumAnimations, sizeof(size_t), &dwByte, nullptr);
 
     shared_ptr<CModel> pModel = dynamic_pointer_cast<CModel>(shared_from_this());
 
     for (size_t i = 0; i < m_iNumAnimations; i++) {
 
-        shared_ptr<CAnimation> pAnimation = CAnimation::Create(m_pAIScene->mAnimations[i], pModel);
+        shared_ptr<CAnimation> pAnimation = CAnimation::Create(_handle, pModel);
 
         if (!pAnimation)
             return E_FAIL;
@@ -277,11 +284,11 @@ HRESULT CModel::ReadyAnimations()
     return S_OK;
 }
 
-shared_ptr<CModel> CModel::Create(wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID3D11DeviceContext> _pContext, TYPE eModelType, const _char* pModelFilePath, _fmatrix PivotMatrix)
+shared_ptr<CModel> CModel::Create(wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID3D11DeviceContext> _pContext, TYPE eModelType, const _char* pModelFilePath, const _tchar* _DatFilePath, _fmatrix PivotMatrix)
 {
     shared_ptr<CModel> pInstance = make_shared<CModel>(_pDevice, _pContext);
 
-    if (FAILED(pInstance->Initialize(eModelType, pModelFilePath, PivotMatrix)))
+    if (FAILED(pInstance->Initialize(eModelType, pModelFilePath, _DatFilePath, PivotMatrix)))
         MSG_BOX("Failed to Create : CModel");
 
     return pInstance;

@@ -36,7 +36,13 @@ public:
 
 private:
 	shared_ptr<CShader> m_pShader = nullptr;
+
+	//기본
 	shared_ptr<CModel> m_pModelCom = nullptr;
+	//버스트모드
+	shared_ptr<CModel> m_pBurstModelCom = nullptr;
+	//전투모드
+	shared_ptr<CModel> m_pBattleModelCom = nullptr;
 
 private:
 	HRESULT AddComponent();
@@ -49,7 +55,7 @@ private:
 private:
 	HEROSTATE m_eCurrentState = HEROSTATE::ENUM_END;
 
-	_uint m_iCurrentAnimIdx = 1;
+	_uint m_iCurrentAnimIdx = 0;
 	_bool m_isAnimLoop = true;
 
 
