@@ -27,12 +27,11 @@ HRESULT CPlayer::Initialize()
 
     m_pShader = CGameInstance::GetInstance()->GetShader(TEXT("Shader_VtxAnim"));
 
-    m_pModelCom = CGameInstance::GetInstance()->GetModel(TEXT("Hero1Walk"));
+    m_pModelCom = CGameInstance::GetInstance()->GetModel(TEXT("Hero1_BattleMode_3Anim"));
     m_Components.emplace(TEXT("Com_Model"), m_pModelCom);
 
-    m_eCurrentState = HEROSTATE::IDLE;
-    m_iCurrentAnimIdx = 0;
-    m_pModelCom->SetAnimNum(0);
+    m_eCurrentState = HEROSTATE::STATE_IDLE;
+    m_pModelCom->SetAnimNum(17);
 
     return S_OK;
 }
@@ -48,7 +47,7 @@ void CPlayer::Tick(_float _fTimeDelta)
 
         m_fDebTime += _fTimeDelta;
 
-        if (m_fDebTime > 0.1f) {
+        if (m_fDebTime > 0.6f) {
             m_fDebTime = 0.f;
             m_IsMouseDeb = false;
         }
@@ -57,10 +56,10 @@ void CPlayer::Tick(_float _fTimeDelta)
     }
 
     //MouseInput(_fTimeDelta);
-   // KeyInput(_fTimeDelta);
+    KeyInput(_fTimeDelta);
     if(m_pModelCom->PlayAnimation(_fTimeDelta, m_isAnimLoop, &m_vCurretnAnimPos)){
 
-        if (HEROSTATE::ATTACK == m_eCurrentState) {
+        if (HEROSTATE::STATE_COMBO_ATTACK1 == m_eCurrentState) {
             if (5 == m_CurrentCombo) {
                 FinishCombo();
             }
@@ -75,7 +74,7 @@ void CPlayer::Tick(_float _fTimeDelta)
         }
         else {
 
-            m_eCurrentState = HEROSTATE::IDLE;
+            m_eCurrentState = HEROSTATE::STATE_IDLE;
             ChangeAnim(0, true);
         }
     }
@@ -160,9 +159,7 @@ void CPlayer::ChangeAnim(_uint _iAnimNum, _bool _isLoop)
     if (!m_pModelCom->ChangeAnimation(_iAnimNum))
         return;
 
-    //if문으로 제한걸기->attack중이라던가 뭐 그런거면 못 바꾸게 
-
-    if (HEROSTATE::ATTACK != m_eCurrentState) {
+    if (HEROSTATE::STATE_COMBO_ATTACK1 != m_eCurrentState) {
         m_vPrevAnimPos = { 0.f, 0.f, 0.f };
         m_vCurretnAnimPos = { 0.f, 0.f, 0.f };
     }
@@ -181,7 +178,7 @@ void CPlayer::FinishCombo()
 
     m_CurrentCombo = -1;
 
-    m_eCurrentState = HEROSTATE::IDLE;
+    m_eCurrentState = HEROSTATE::STATE_IDLE;
     ChangeAnim(0, true);
 }
 
@@ -209,8 +206,92 @@ void CPlayer::CalcAnimMoveDistance()
 
 void CPlayer::KeyInput(_float _fTimeDelta)
 {
+
+    if (HEROSTATE::STATE_COMBO_ATTACK1 == m_eCurrentState)
+        return;
+
+    _bool IsKeyInput = false;
+
+    if (GetKeyState('W') & 0x8000)
+    {
+        _float4 vLook = CCameraMgr::GetInstance()->GetCamLook();
+        _vector vLookVec = XMLoadFloat4(&vLook);
+
+        _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+        vPos += vLookVec;
+        m_pTransformCom->LookAt(vPos);
+
+        m_pTransformCom->GoStraight(_fTimeDelta);
+        m_eCurrentState = HEROSTATE::STATE_WALK;
+        ChangeAnim(24, true);
+        IsKeyInput = true;
+
+    }
+
+    if (GetKeyState('A') & 0x8000)
+    {
+       // m_pTransformCom->GoLeft(_fTimeDelta);
+//m_eCurrentState = HEROSTATE::WALK;
+
+      //  m_pTransformCom->GoStraight(_fTimeDelta);
+        ChangeAnim(1, true);
+     //   IsKeyInput = true;
+
+    }
+
+    if (GetKeyState('D') & 0x8000)
+    {
+        if (m_IsMouseDeb)
+            return;
+
+
+        m_IsMouseDeb = true;
+        //m_pTransformCom->GoRight(_fTimeDelta);
+
+        //m_eCurrentState = HEROSTATE::WALK;
+
+        //m_pTransformCom->GoStraight(_fTimeDelta);
+        ChangeAnim(++m_iCurrentAnimIdx, true);
+      //  IsKeyInput = true;
+
+    //    m_pModelCom->ChangeAnimation(m_iCurrentAnimIdx);
+
+        return;
+
+    }
+
+    if (GetKeyState('S') & 0x8000) {
+
+        _float4 vLook = CCameraMgr::GetInstance()->GetCamLook();
+        _vector vLookVec = XMLoadFloat4(&vLook) * -1.f;
+
+        _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+        vPos += vLookVec;
+
+        m_pTransformCom->LookAt(vPos);
+
+        m_pTransformCom->GoStraight(_fTimeDelta);
+        m_eCurrentState = HEROSTATE::STATE_WALK;
+
+        m_pTransformCom->GoStraight(_fTimeDelta);
+        ChangeAnim(24, true);
+        IsKeyInput = true;
+    }
+
+    ////////////////Camera/////////////////////////
+
+    if (GetKeyState('1') & 0x8000) {
+
+        CCameraMgr::GetInstance()->SwitchingCamera(CCameraMgr::ECAMERATYPE::FREE);
+    }
+
+    if (HEROSTATE::STATE_WALK == m_eCurrentState) {
+            m_eCurrentState = HEROSTATE::STATE_IDLE;
+            ChangeAnim(17, true);
     
+    }
 }
+
 
 void CPlayer::MouseInput(_float _fTimeDelta)
 {

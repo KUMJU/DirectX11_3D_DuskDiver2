@@ -15,13 +15,27 @@ class CPlayer : public CGameObject
 {
 public:
 	enum class HEROSTATE {
-		IDLE, 
-		WALK, 
-		ATTACK, 
-		HEAVY_ATTACK,
-		ENUM_END
+		STATE_IDLE,
+		STATE_WALK,
+		STATE_RUN,
+		STATE_JUMP,
+		STATE_COMBO_ATTACK1,
+		STATE_COMBO_ATTACK2,
+		STATE_COMBO_ATTACK3,
+		STATE_COMBO_ATTACK4,
+		STATE_COMBO_ATTACK5,
+		STATE_HEAVY_ATTACK,
+		STATE_SKILL_A,
+		STATE_SKILL_S,
+		STATE_SKILL_D,
+		STATE_SKILL_F,
+		STATE_SKILL_DASH,
+		STATE_COLLECT,
+		STATE_HIT,
+		STATE_DODGE,
+		STATE_SPECIAL_ATTACK,
+		STATE_END
 	};
-
 
 public:
 	CPlayer();
@@ -53,7 +67,7 @@ private:
 	void FinishCombo();
 
 private:
-	HEROSTATE m_eCurrentState = HEROSTATE::ENUM_END;
+	HEROSTATE m_eCurrentState = HEROSTATE::STATE_END;
 
 	_uint m_iCurrentAnimIdx = 0;
 	_bool m_isAnimLoop = true;
@@ -80,6 +94,8 @@ private:
 	_float3 m_vPrevAnimPos = { 0.f, 0.f, 0.f };
 
 private:
+
+	_int m_iCurrentAnim = 0;
 
 	_int m_iMaxHp = 100;
 	_int m_iHp = 100;

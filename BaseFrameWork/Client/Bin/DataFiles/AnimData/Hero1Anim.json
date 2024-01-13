@@ -1,0 +1,257 @@
+{
+	"0" : 
+	{
+		"AnimName" : "Armature|A_Combat_attack_1",
+		"LerpTime" : 0.050000000000000003
+	},
+	"1" : 
+	{
+		"AnimName" : "Armature|A_Combat_attack_2",
+		"LerpTime" : 0.050000000000000003
+	},
+	"10" : 
+	{
+		"AnimName" : "Armature|A_Combat_finish_normal",
+		"LerpTime" : 0.050000000000000003
+	},
+	"11" : 
+	{
+		"AnimName" : "Armature|A_Combat_getup",
+		"LerpTime" : 0.050000000000000003
+	},
+	"12" : 
+	{
+		"AnimName" : "Armature|A_Combat_heavy_attack_1",
+		"LerpTime" : 0.050000000000000003
+	},
+	"13" : 
+	{
+		"AnimName" : "Armature|A_Combat_helping",
+		"LerpTime" : 0.050000000000000003
+	},
+	"14" : 
+	{
+		"AnimName" : "Armature|A_Combat_hurt_back",
+		"LerpTime" : 0.050000000000000003
+	},
+	"15" : 
+	{
+		"AnimName" : "Armature|A_Combat_hurt_fly",
+		"LerpTime" : 0.050000000000000003
+	},
+	"16" : 
+	{
+		"AnimName" : "Armature|A_Combat_hurt_front",
+		"LerpTime" : 0.050000000000000003
+	},
+	"17" : 
+	{
+		"AnimName" : "Armature|A_Combat_idle1",
+		"LerpTime" : 0.050000000000000003
+	},
+	"18" : 
+	{
+		"AnimName" : "Armature|A_Combat_idle2",
+		"LerpTime" : 0.050000000000000003
+	},
+	"19" : 
+	{
+		"AnimName" : "Armature|A_Combat_jump_loop",
+		"LerpTime" : 0.050000000000000003
+	},
+	"2" : 
+	{
+		"AnimName" : "Armature|A_Combat_attack_3",
+		"LerpTime" : 0.050000000000000003
+	},
+	"20" : 
+	{
+		"AnimName" : "Armature|A_Combat_jump_loop1",
+		"LerpTime" : 0.050000000000000003
+	},
+	"21" : 
+	{
+		"AnimName" : "Armature|A_Combat_jump_up",
+		"LerpTime" : 0.050000000000000003
+	},
+	"22" : 
+	{
+		"AnimName" : "Armature|A_Combat_landing",
+		"LerpTime" : 0.050000000000000003
+	},
+	"23" : 
+	{
+		"AnimName" : "Armature|A_Combat_QStand_f",
+		"LerpTime" : 0.050000000000000003
+	},
+	"24" : 
+	{
+		"AnimName" : "Armature|A_Combat_run",
+		"LerpTime" : 0.050000000000000003
+	},
+	"25" : 
+	{
+		"AnimName" : "Armature|A_Combat_skill_1",
+		"LerpTime" : 0.050000000000000003
+	},
+	"26" : 
+	{
+		"AnimName" : "Armature|A_Combat_skill_2",
+		"LerpTime" : 0.050000000000000003
+	},
+	"27" : 
+	{
+		"AnimName" : "Armature|A_Combat_skill_3",
+		"LerpTime" : 0.050000000000000003
+	},
+	"28" : 
+	{
+		"AnimName" : "Armature|A_Combat_skill_4_1",
+		"LerpTime" : 0.050000000000000003
+	},
+	"29" : 
+	{
+		"AnimName" : "Armature|A_Combat_skill_5",
+		"LerpTime" : 0.050000000000000003
+	},
+	"3" : 
+	{
+		"AnimName" : "Armature|A_Combat_broken",
+		"LerpTime" : 0.050000000000000003
+	},
+	"30" : 
+	{
+		"AnimName" : "Armature|A_Combat_skill_6_raise",
+		"LerpTime" : 0.050000000000000003
+	},
+	"31" : 
+	{
+		"AnimName" : "Armature|A_Combat_skill_7",
+		"LerpTime" : 0.050000000000000003
+	},
+	"32" : 
+	{
+		"AnimName" : "Armature|A_Combat_skill_6_slapdown_ed",
+		"LerpTime" : 0.050000000000000003
+	},
+	"33" : 
+	{
+		"AnimName" : "Armature|A_Combat_skill_6_slapdown_lp",
+		"LerpTime" : 0.050000000000000003
+	},
+	"34" : 
+	{
+		"AnimName" : "Armature|A_Combat_skill_6_slapdown_st",
+		"LerpTime" : 0.050000000000000003
+	},
+	"35" : 
+	{
+		"AnimName" : "Armature|A_Combat_skill_8",
+		"LerpTime" : 0.050000000000000003
+	},
+	"36" : 
+	{
+		"AnimName" : "Armature|A_Combat_slapdown",
+		"LerpTime" : 0.050000000000000003
+	},
+	"37" : 
+	{
+		"AnimName" : "Armature|A_Combat_special_2",
+		"LerpTime" : 0.050000000000000003
+	},
+	"38" : 
+	{
+		"AnimName" : "Armature|A_Combat_special_4",
+		"LerpTime" : 0.050000000000000003
+	},
+	"39" : 
+	{
+		"AnimName" : "Armature|A_Combat_special_5",
+		"LerpTime" : 0.050000000000000003
+	},
+	"4" : 
+	{
+		"AnimName" : "Armature|A_combat_burst",
+		"LerpTime" : 0.050000000000000003
+	},
+	"40" : 
+	{
+		"AnimName" : "Armature|A_Combat_sprint_ed",
+		"LerpTime" : 0.050000000000000003
+	},
+	"41" : 
+	{
+		"AnimName" : "Armature|A_Combat_sprint_lp",
+		"LerpTime" : 0.050000000000000003
+	},
+	"42" : 
+	{
+		"AnimName" : "Armature|A_Combat_sprint_st",
+		"LerpTime" : 0.050000000000000003
+	},
+	"43" : 
+	{
+		"AnimName" : "Armature|A_Combat_step_back",
+		"LerpTime" : 0.050000000000000003
+	},
+	"44" : 
+	{
+		"AnimName" : "Armature|A_Combat_thrown_up",
+		"LerpTime" : 0.050000000000000003
+	},
+	"45" : 
+	{
+		"AnimName" : "Armature|A_Combat_walk",
+		"LerpTime" : 0.050000000000000003
+	},
+	"46" : 
+	{
+		"AnimName" : "Armature|A_Combat_walk_back",
+		"LerpTime" : 0.050000000000000003
+	},
+	"47" : 
+	{
+		"AnimName" : "Armature|A_Combat_Atk_Jc_lp",
+		"LerpTime" : 0.050000000000000003
+	},
+	"48" : 
+	{
+		"AnimName" : "Armature|A_Combat_Atk_Jc_st",
+		"LerpTime" : 0.050000000000000003
+	},
+	"49" : 
+	{
+		"AnimName" : "Armature|A_Combat_air_heavy_attack_1",
+		"LerpTime" : 0.050000000000000003
+	},
+	"5" : 
+	{
+		"AnimName" : "Armature|A_Combat_dash",
+		"LerpTime" : 0.050000000000000003
+	},
+	"50" : 
+	{
+		"AnimName" : "Armature|A_Combat_Atk_Jc_ed",
+		"LerpTime" : 0.050000000000000003
+	},
+	"6" : 
+	{
+		"AnimName" : "Armature|A_Combat_dodge",
+		"LerpTime" : 0.050000000000000003
+	},
+	"7" : 
+	{
+		"AnimName" : "Armature|A_Combat_dodge_air",
+		"LerpTime" : 0.050000000000000003
+	},
+	"8" : 
+	{
+		"AnimName" : "Armature|A_Combat_dodge_attack",
+		"LerpTime" : 0.050000000000000003
+	},
+	"9" : 
+	{
+		"AnimName" : "Armature|A_Combat_FinalBurst",
+		"LerpTime" : 0.050000000000000003
+	}
+}

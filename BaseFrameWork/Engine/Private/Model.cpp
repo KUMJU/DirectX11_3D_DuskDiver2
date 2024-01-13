@@ -1,12 +1,15 @@
 #include "Model.h"
-#include "Mesh.h"
 #include "ModelMaterial.h"
 #include "Texture.h"
 #include "Bone.h"
 #include "Shader.h"
 #include "Animation.h"
 
+#include "Mesh.h"
 #include "GameInstance.h"
+
+#include <fstream>
+#include <iostream>
 
 CModel::CModel(wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID3D11DeviceContext> _pContext)
     :CComponent(_pDevice, _pContext)
@@ -17,7 +20,6 @@ CModel::CModel(const CModel& _rhs)
     :CComponent(_rhs.m_pDevice, _rhs.m_pContext)
     , m_PivotMatrix(_rhs.m_PivotMatrix)
     , m_iNumMeshes(_rhs.m_iNumMeshes)
-    , m_Meshes(_rhs.m_Meshes)
     , m_iNumMaterials(_rhs.m_iNumMaterials)
     , m_Materials(_rhs.m_Materials)
     , m_Bones(_rhs.m_Bones)
@@ -26,56 +28,48 @@ CModel::CModel(const CModel& _rhs)
 
 HRESULT CModel::Initialize(TYPE eModelType, const _char* pModelFilePath, const _tchar* _DatFilePath, _fmatrix PivotMatrix)
 {
-
     m_eModelType = eModelType;
     const _tchar* szName = _DatFilePath;
-    _ulong dwByte = 0;
-    HANDLE hFile = CreateFile(szName, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
-    //파일x
-    if (0 == hFile)
-        return E_FAIL;
+    std::ifstream ifs;
+    ifs.open(pModelFilePath, std::ios::binary);
+
+    std::ifstream AnimIfs;
+    AnimIfs.open(_DatFilePath, std::ios::binary);
+
+    m_PivotMatrix = _float4x4();
 
     //본갯수
     size_t iBoneNumSize;
-    ReadFile(hFile, &iBoneNumSize, sizeof(size_t), &dwByte, nullptr);
+    ifs.read((char*)&iBoneNumSize, sizeof(size_t));
 
     //ReadyBone
     for (size_t i = 0; i < iBoneNumSize; ++i) {
      
         char* szName = new char[MAX_PATH];
-        ReadFile(hFile, szName, MAX_PATH * sizeof(char), &dwByte, nullptr);
+        ifs.read(szName, MAX_PATH * sizeof(char));
 
         _int iParentBone;
-        ReadFile(hFile, &iParentBone, sizeof(_int), &dwByte, nullptr);
+        ifs.read((char*)&iParentBone, sizeof(_int));
 
-        shared_ptr<CBone> pBone = CBone::Create(szName, iParentBone, hFile);
+        shared_ptr<CBone> pBone = CBone::Create(szName, iParentBone, ifs);
+
         m_Bones.push_back(pBone);
     }
 
-
-    ReadFile(hFile, &m_iNumMeshes, sizeof(size_t), &dwByte, nullptr);
-
-    //ReadyMeshes
-    for (size_t i = 0; i < m_iNumMeshes; i++) {
-
-        shared_ptr<CMesh> pMesh = CMesh::Create(m_eModelType, m_pDevice, m_pContext, hFile, dynamic_pointer_cast<CModel>(shared_from_this()), XMLoadFloat4x4(&m_PivotMatrix));   
-     
-        if (!pMesh)
-            return E_FAIL;
-         
-        m_Meshes22.push_back(pMesh);
-    }
-
-    ReadFile(hFile, &m_iNumMaterials, sizeof(size_t), &dwByte, nullptr);
-
-    if (FAILED(ReadyMaterials(hFile)))
+    if (FAILED(ReadyMeshes(ifs)))
         return E_FAIL;
 
-      if (FAILED(ReadyAnimations(hFile)))
+    ifs.read((char*)&m_iNumMaterials, sizeof(size_t));
+
+    if (FAILED(ReadyMaterials(ifs)))
         return E_FAIL;
 
-    CloseHandle(hFile);
+     if (FAILED(ReadyAnimations(AnimIfs)))
+        return E_FAIL;
+
+    ifs.close();
+    AnimIfs.close();
 
     return S_OK;
 }
@@ -88,9 +82,8 @@ HRESULT CModel::InitializeClone()
 
 HRESULT CModel::Render(_uint _iMeshIndex)
 {
-
-    m_Meshes22[_iMeshIndex]->BindBuffers();
-    m_Meshes22[_iMeshIndex]->Render();
+   m_Meshes[_iMeshIndex]->BindBuffers();
+   m_Meshes[_iMeshIndex]->Render();
 
     return S_OK;
 }
@@ -119,7 +112,7 @@ _int CModel::GetBoneIndex(const _char* _pBoneName) const
 
 HRESULT CModel::BindMaterialShaderResource(shared_ptr<class CShader> _pShader, _uint _iMeshIndex, aiTextureType _eMaterialType, const _char* _pConstantName)
 {
-    _uint iMaterialIndex = m_Meshes22[_iMeshIndex]->GetMaterialIndex();
+    _uint iMaterialIndex = m_Meshes[_iMeshIndex]->GetMaterialIndex();
     shared_ptr<CTexture> pTexture =  m_Materials[iMaterialIndex]->GetTextures()[_eMaterialType];
     return pTexture->BindShaderResource(_pShader, _pConstantName, 0);
 }
@@ -128,7 +121,7 @@ HRESULT CModel::BindBoneMatrices(shared_ptr<class CShader> _pShader, const _char
 {
     _float4x4 BoneMatirces[MAX_BONE];
 
-    m_Meshes22[_iMeshIndex]->SetUpBoneMatrices(BoneMatirces, m_Bones);
+    m_Meshes[_iMeshIndex]->SetUpBoneMatrices(BoneMatirces, m_Bones);
 
     return _pShader->BindMatrices(_pConstName, BoneMatirces, MAX_BONE) ;
 } 
@@ -194,13 +187,13 @@ _bool CModel::ChangeAnimation(_uint _iAnimNum)
     return true;
 }
 
-HRESULT CModel::ReadyMeshes()
+HRESULT CModel::ReadyMeshes(ifstream& _ifs)
 {
-    m_iNumMeshes = m_pAIScene->mNumMeshes;
+    _ifs.read((char*)&m_iNumMeshes, sizeof(size_t));
 
     for (size_t i = 0; i < m_iNumMeshes; i++) {
 
-        shared_ptr<CMesh> pMesh = CMesh::Create(m_eModelType, m_pDevice, m_pContext, m_pAIScene->mMeshes[i], dynamic_pointer_cast<CModel>(shared_from_this()),  XMLoadFloat4x4(&m_PivotMatrix));
+        shared_ptr<CMesh> pMesh = CMesh::Create(m_eModelType, m_pDevice, m_pContext, _ifs, XMLoadFloat4x4(&m_PivotMatrix));
 
         if (!pMesh)
             return E_FAIL;
@@ -211,7 +204,7 @@ HRESULT CModel::ReadyMeshes()
     return S_OK;
 }
 
-HRESULT CModel::ReadyMaterials(HANDLE _handle)
+HRESULT CModel::ReadyMaterials(ifstream& _ifs)
 {
     _ulong dwByte = 0;
 
@@ -220,15 +213,15 @@ HRESULT CModel::ReadyMaterials(HANDLE _handle)
         map<_uint, shared_ptr<class CTexture>> Textures;
         
         size_t iTotTextureIdx = 0;
-        ReadFile(_handle, &iTotTextureIdx, sizeof(size_t), &dwByte, nullptr);
+        _ifs.read((char*)&iTotTextureIdx, sizeof(size_t));
 
         for (size_t j = 0; j < iTotTextureIdx; j++) {
 
             char* szTexName = new char[MAX_PATH];
             _uint iTextureType;
 
-            ReadFile(_handle, szTexName, sizeof(char) * MAX_PATH, &dwByte, nullptr);
-            ReadFile(_handle, &iTextureType, sizeof(_uint), &dwByte, nullptr);
+            _ifs.read((char*)szTexName, sizeof(char) * MAX_PATH);
+            _ifs.read((char*)&iTextureType, sizeof(_uint));
 
             _tchar szFullPath[MAX_PATH] = TEXT("");
             MultiByteToWideChar(CP_ACP, 0, szTexName, (_int)strlen(szTexName), szFullPath, MAX_PATH);
@@ -243,37 +236,17 @@ HRESULT CModel::ReadyMaterials(HANDLE _handle)
     return S_OK;
 }
 
-HRESULT CModel::ReadyBones(char* _pName, _int _iParentBoneIndex, HANDLE _handle)
+
+
+HRESULT CModel::ReadyAnimations(ifstream& _ifs)
 {
-    //shared_ptr<CBone> pBone= CBone::Create(_pName, _iParentBoneIndex, _handle);
-    //
-    //if (!pBone)
-    //    return E_FAIL;
-
-    //m_Bones.push_back(pBone);
-
-    //const char* ddname = pBone->GetBoneName();
-
-    //_uint iParentIndex = (_uint)(m_Bones.size() - 1);
-
-    ////재귀함수로 가장 최하단 노드까지 순회한다
-    //for (size_t i = 0; i < _pNode->mNumChildren; i++) {
-    //    ReadyBones(_pNode->mChildren[i], iParentIndex);
-    //}
-
-    return S_OK;
-}
-
-HRESULT CModel::ReadyAnimations(HANDLE _handle)
-{
-    _ulong dwByte = 0;
-    ReadFile(_handle, &m_iNumAnimations, sizeof(size_t), &dwByte, nullptr);
+    _ifs.read((char*)&m_iNumAnimations, sizeof(size_t));
 
     shared_ptr<CModel> pModel = dynamic_pointer_cast<CModel>(shared_from_this());
 
     for (size_t i = 0; i < m_iNumAnimations; i++) {
 
-        shared_ptr<CAnimation> pAnimation = CAnimation::Create(_handle, pModel);
+        shared_ptr<CAnimation> pAnimation = CAnimation::Create(_ifs, pModel);
 
         if (!pAnimation)
             return E_FAIL;

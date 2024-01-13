@@ -28,12 +28,8 @@ public:
 	}
 
 public:
-	HRESULT Initialize(char* _pName, _int _iParentBoneIndex, HANDLE _handle);
+	HRESULT Initialize(char* _pName, _int _iParentBoneIndex, ifstream& _ifs);
 	void InvalidateCombinedTransformationMatrix(const vector<shared_ptr<CBone>>& _Bones, _float3* _vRootPos, _bool _IsLinearState);
-
-
-public:
-	void ParsingBone(HANDLE _handle);
 
 private:
 	_char m_szName[MAX_PATH] = "";
@@ -45,7 +41,7 @@ private:
 	_matrix m_PrevTransformationMatrix = XMMatrixIdentity();
 
 public:
-	static shared_ptr<CBone> Create(char* _pName, _int _iParentBoneIndex, HANDLE _handle);
+	static shared_ptr<CBone> Create(char* _pName, _int _iParentBoneIndex, ifstream& _ifs);
 
 };
 

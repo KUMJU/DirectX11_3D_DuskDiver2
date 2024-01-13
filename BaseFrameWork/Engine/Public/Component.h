@@ -8,7 +8,7 @@ class ENGINE_DLL CComponent abstract : public std::enable_shared_from_this<CComp
 public:
 	CComponent(wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID3D11DeviceContext> _pContext);
 	CComponent(const CComponent& rhs);
-	virtual ~CComponent();
+	virtual ~CComponent() = default;
 
 public:
 	virtual HRESULT Initialize();

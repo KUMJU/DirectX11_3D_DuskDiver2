@@ -1,25 +1,25 @@
 #include "Animation.h"
 #include "Channel.h"
 
+#include <iostream>
+#include <fstream>
+
 CAnimation::CAnimation()
 {
 }
 
-HRESULT CAnimation::Initialize(HANDLE _handle, shared_ptr<class CModel> _pModel)
+HRESULT CAnimation::Initialize(ifstream& _ifs, shared_ptr<class CModel> _pModel)
 {
-    _ulong dwByte = 0;
-
-    ReadFile(_handle, m_szName, sizeof(char) * MAX_PATH, &dwByte, nullptr);
-
-    ReadFile(_handle, &m_Duration, sizeof(_double), &dwByte, nullptr);
-    ReadFile(_handle, &m_TickPerSecond, sizeof(_double), &dwByte, nullptr);
-    ReadFile(_handle, &m_iNumChannels, sizeof(_uint), &dwByte, nullptr);
+    _ifs.read(m_szName, sizeof(char) * MAX_PATH);
+    _ifs.read((char*)&m_Duration, sizeof(_double));
+    _ifs.read((char*)&m_TickPerSecond, sizeof(_double));
+    _ifs.read((char*)&m_iNumChannels, sizeof(_uint));
 
     m_iCurrentKeyFrames.resize(m_iNumChannels);
     
-    for (size_t i = 0; i < m_iNumChannels; i++) {
-
-        shared_ptr<CChannel> pChannel = CChannel::Create(_handle, _pModel);
+    for (_int i = 0; i < m_iNumChannels; ++i) {
+        
+        shared_ptr<CChannel> pChannel = CChannel::Create(_ifs, _pModel);
 
         if (!pChannel)
             return E_FAIL;
@@ -75,11 +75,11 @@ void CAnimation::ChangeAnimation(shared_ptr<CAnimation> _pNextAnim, const vector
     }
 }
 
-shared_ptr<CAnimation> CAnimation::Create(HANDLE _handle, shared_ptr<CModel> _pModel)
+shared_ptr<CAnimation> CAnimation::Create(ifstream& _ifs, shared_ptr<CModel> _pModel)
 {
     shared_ptr<CAnimation> pInstance = make_shared<CAnimation>();
 
-    if (FAILED(pInstance->Initialize(_handle, _pModel)))
+    if (FAILED(pInstance->Initialize(_ifs, _pModel)))
         MSG_BOX("Faile to Create : CAnimation");
 
     return pInstance;

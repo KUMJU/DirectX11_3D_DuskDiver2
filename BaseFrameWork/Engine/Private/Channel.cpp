@@ -1,24 +1,61 @@
 #include "Channel.h"
 
+#include <iostream>
+#include <fstream>
 
 CChannel::CChannel()
 {
 }
 
-HRESULT CChannel::Initialize(HANDLE _handle, shared_ptr<Engine::CModel> _pModel)
+HRESULT CChannel::Initialize(ifstream& _ifs, shared_ptr<Engine::CModel> _pModel)
 {
-	_ulong dwByte = 0;
-
-	ReadFile(_handle, m_szName, sizeof(char) * MAX_PATH, &dwByte, nullptr);
+	_ifs.read(m_szName, sizeof(char) * MAX_PATH);
 	m_iBoneIndex = _pModel->GetBoneIndex(m_szName);
 
-	ReadFile(_handle, &m_iNumKeyFrames, sizeof(_uint), &dwByte, nullptr);
+	_ifs.read((char*)&m_iNumKeyFrames, sizeof(_uint));
 
-	for (size_t i = 0; i < m_iNumKeyFrames; i++) {
+
+	for (_uint i = 0; i < m_iNumKeyFrames; i++) {
 
 		KEYFRAME KeyFrame = {};
+	
+		//if (iScaleNum > i) {
+		//	_ifs.read((char*)&KeyFrame.vScale.x, sizeof(_float));
+		//	_ifs.read((char*)&KeyFrame.vScale.y, sizeof(_float));
+		//	_ifs.read((char*)&KeyFrame.vScale.z, sizeof(_float));
+		//}
 
-		ReadFile(_handle, &KeyFrame, sizeof(KEYFRAME), &dwByte, nullptr);
+		//if (iRotationNum > i) {
+		//	_ifs.read((char*)&KeyFrame.vRotation.x, sizeof(_float));
+		//	_ifs.read((char*)&KeyFrame.vRotation.y, sizeof(_float));
+		//	_ifs.read((char*)&KeyFrame.vRotation.z, sizeof(_float));
+		//	_ifs.read((char*)&KeyFrame.vRotation.w, sizeof(_float));
+
+		//}
+
+		//if (iPositionNum > i) {
+		//	_ifs.read((char*)&KeyFrame.vPosition.x, sizeof(_float));
+		//	_ifs.read((char*)&KeyFrame.vPosition.y, sizeof(_float));
+		//	_ifs.read((char*)&KeyFrame.vPosition.z, sizeof(_float));
+
+		//}
+
+		//_ifs.read((char*)&KeyFrame.Time, sizeof(_double));
+
+		//_int a = 5;
+		////_ifs.read((char*)&KeyFrame.vPosition.x, sizeof(_float));
+		////_ifs.read((char*)&KeyFrame.vPosition.y, sizeof(_float));
+		////_ifs.read((char*)&KeyFrame.vPosition.z, sizeof(_float));
+
+		////_ifs.read((char*)&KeyFrame.vRotation.x, sizeof(_float));
+		////_ifs.read((char*)&KeyFrame.vRotation.y, sizeof(_float));
+		////_ifs.read((char*)&KeyFrame.vRotation.z, sizeof(_float));
+		////_ifs.read((char*)&KeyFrame.vRotation.w, sizeof(_float));
+
+		////_ifs.read((char*)&KeyFrame.Time, sizeof(_double));
+
+
+		_ifs.read((char*)&KeyFrame, sizeof(KEYFRAME));
 		m_KeyFrames.push_back(KeyFrame);
 
 	}
@@ -29,9 +66,8 @@ HRESULT CChannel::Initialize(HANDLE _handle, shared_ptr<Engine::CModel> _pModel)
 void CChannel::InvalidateTransformationMatrix(_double _TrackPosition, _uint* _pCurrentKeyFrame, const vector<shared_ptr<Engine::CBone>>& Bones)
 {
 
-	if (0.0 == _TrackPosition)
+  	if (0.0 == _TrackPosition)
 		*_pCurrentKeyFrame = 0;
-
 
 	KEYFRAME LastKeyFrame = m_KeyFrames.back();
 	_matrix TransformationMatrix;
@@ -48,13 +84,16 @@ void CChannel::InvalidateTransformationMatrix(_double _TrackPosition, _uint* _pC
 	}
 	else 
 	{
+
 		//다음 키 프레임으로 넘어감
 		if (_TrackPosition >= m_KeyFrames[*_pCurrentKeyFrame + 1].Time)
 			++*_pCurrentKeyFrame;
 
+
 		//현재 프레임 진행 정도
 		_double Ratio = (_TrackPosition - m_KeyFrames[*_pCurrentKeyFrame].Time) /
 			(m_KeyFrames[*_pCurrentKeyFrame + 1].Time - m_KeyFrames[*_pCurrentKeyFrame].Time);
+
 
 		vScale = XMVectorLerp(XMLoadFloat3(&m_KeyFrames[*_pCurrentKeyFrame].vScale), XMLoadFloat3(&m_KeyFrames[*_pCurrentKeyFrame + 1].vScale), (_float)Ratio);
 		vTranslation = XMVectorSetW(XMVectorLerp(XMLoadFloat3(&m_KeyFrames[*_pCurrentKeyFrame].vPosition), XMLoadFloat3(&m_KeyFrames[*_pCurrentKeyFrame + 1].vPosition), (_float)Ratio), 1.f);
@@ -82,11 +121,11 @@ _matrix CChannel::LinearInterpolation(_uint _iCurFrame, KEYFRAME _NextKeyFrame, 
 	return TransformationMatrix;
 }
 
-shared_ptr<CChannel> CChannel::Create(HANDLE _handle, shared_ptr<CModel> _pModel)
+shared_ptr<CChannel> CChannel::Create(ifstream& _ifs, shared_ptr<CModel> _pModel)
 {
 	shared_ptr<CChannel> pInstance = make_shared<CChannel>();
 
-	if (FAILED(pInstance->Initialize(_handle, _pModel)))
+	if (FAILED(pInstance->Initialize(_ifs, _pModel)))
 		MSG_BOX("Failed to Create : CChannel");
 
 	return pInstance;

@@ -1,24 +1,59 @@
 #include "Bone.h"
 
+#include <iostream>
+#include <fstream>
+
 CBone::CBone()
 {
 }
 
-HRESULT CBone::Initialize(char* _pName, _int _iParentBoneIndex, HANDLE _handle)
+HRESULT CBone::Initialize(char* _pName, _int _iParentBoneIndex, ifstream& _ifs)
 {
-    _ulong dwByte = 0; 
     strcpy_s(m_szName, _pName);
 
-    //AIscene에서 바로 읽어오면 col-major Matrix로 읽어지기 때문에 전치해주는 과정이 필요하다
-   // memcpy(&m_TransformationMatrix, &_pAIBone->mTransformation, sizeof(_float4x4));
+	_float a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16 = 0.f;
 
-    ReadFile(_handle, &m_TransformationMatrix, sizeof(_float4x4), &dwByte, nullptr);
 
-   /* if(-1 != m_iParentBoneIndex)
-        XMStoreFloat4x4(&m_TransformationMatrix, XMMatrixTranspose(XMLoadFloat4x4(&m_TransformationMatrix)));
-    else
-        XMStoreFloat4x4(&m_TransformationMatrix, XMMatrixTranspose(XMLoadFloat4x4(&m_TransformationMatrix)));*/
+	_ifs.read((char*)&a1, sizeof(_float));
+	_ifs.read((char*)&a2, sizeof(_float));
+	_ifs.read((char*)&a3, sizeof(_float));
+	_ifs.read((char*)&a4, sizeof(_float));
+	_ifs.read((char*)&a5, sizeof(_float));
+	_ifs.read((char*)&a6, sizeof(_float));
+	_ifs.read((char*)&a7, sizeof(_float));
+	_ifs.read((char*)&a8, sizeof(_float));
+	_ifs.read((char*)&a9, sizeof(_float));
+	_ifs.read((char*)&a10, sizeof(_float));
+	_ifs.read((char*)&a11, sizeof(_float));
+	_ifs.read((char*)&a12, sizeof(_float));
+	_ifs.read((char*)&a13, sizeof(_float));
+	_ifs.read((char*)&a14, sizeof(_float));
+	_ifs.read((char*)&a15, sizeof(_float));
+	_ifs.read((char*)&a16, sizeof(_float));
 
+
+
+	m_TransformationMatrix._11 = a1;
+	m_TransformationMatrix._12 = a2;
+	m_TransformationMatrix._13 = a3;
+	m_TransformationMatrix._14 = a4;
+	m_TransformationMatrix._21 = a5;
+	m_TransformationMatrix._22 = a6;
+	m_TransformationMatrix._23 = a7;
+	m_TransformationMatrix._24 = a8;
+	m_TransformationMatrix._31 = a9;
+	m_TransformationMatrix._32 = a10;
+	m_TransformationMatrix._33 = a11;
+	m_TransformationMatrix._34 = a12;
+	m_TransformationMatrix._41 = a13;
+	m_TransformationMatrix._42 = a14;
+	m_TransformationMatrix._43 = a15;
+	m_TransformationMatrix._44 = a16;
+
+
+
+   // _ifs.read((char*)&m_TransformationMatrix, sizeof(_float4x4));
+   
     //초기에는 값을 세팅할 수 없기에 identity를 넣어둔다
     XMStoreFloat4x4(&m_CombinedTransformationMatrix, XMMatrixIdentity());
 
@@ -50,36 +85,12 @@ void CBone::InvalidateCombinedTransformationMatrix(const vector<shared_ptr<CBone
 
 }
 
-void CBone::ParsingBone(HANDLE _handle)
-{
-    _ulong dwByte = 0;
 
-    
-    size_t NameSize = sizeof(m_szName);
-
-    //다음에 읽을 이름 Char 배열의 크기
-    WriteFile(_handle, &NameSize, sizeof(size_t), &dwByte, nullptr);
-    WriteFile(_handle, m_szName, sizeof(m_szName), &dwByte, nullptr);
-
-    WriteFile(_handle, &m_iParentBoneIndex, sizeof(_int), &dwByte, nullptr);
-
-    for (_int i = 0; i < 16; ++i) {
-
-        _int iRow = i / 4;
-        _int iCol = i % 4;
-
-        _float fValue = m_TransformationMatrix.m[iRow][iCol];
-        WriteFile(_handle, &fValue, sizeof(_float), &dwByte, nullptr);
-    }
-
-}
-
-
-shared_ptr<CBone> CBone::Create(char* _pName, _int _iParentBoneIndex, HANDLE _handle)
+shared_ptr<CBone> CBone::Create(char* _pName, _int _iParentBoneIndex, ifstream& _ifs)
 {
     shared_ptr<CBone> pInstance = make_shared<CBone>();
 
-    if (FAILED(pInstance->Initialize(_pName, _iParentBoneIndex,_handle)))
+    if (FAILED(pInstance->Initialize(_pName, _iParentBoneIndex, _ifs)))
         MSG_BOX("Failed to Create : CBone");
 
     return pInstance;

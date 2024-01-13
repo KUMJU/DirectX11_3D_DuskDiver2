@@ -23,7 +23,7 @@ public:
 	~CChannel() = default;
 
 public:
-	HRESULT Initialize(HANDLE _handle, shared_ptr<Engine::CModel> _pModel);
+	HRESULT Initialize(ifstream& _ifs, shared_ptr<Engine::CModel> _pModel);
 	void InvalidateTransformationMatrix(_double _TrackPosition, _uint* _pCurrentKeyFrame,  const vector<shared_ptr<Engine::CBone>>& Bones);
 
 public:
@@ -43,7 +43,7 @@ private:
 	_uint m_iBoneIndex = { 0 };
 
 public:
-	static shared_ptr<CChannel> Create(HANDLE _handle, shared_ptr<CModel> _pModel);
+	static shared_ptr<CChannel> Create(ifstream& _ifs, shared_ptr<CModel> _pModel);
 
 
 };

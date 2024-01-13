@@ -1,20 +1,25 @@
 #include "Mesh.h"
 #include "Bone.h"
 
+#include <iostream>
+#include <fstream>
+
 CMesh::CMesh(wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID3D11DeviceContext> _pContext)
 	:CVIBuffer(_pDevice, _pContext)
 {
 }
 
-HRESULT CMesh::Initialize(CModel::TYPE _eType, HANDLE _handle, shared_ptr<CModel> _pModel, _fmatrix PivotMatrix)
+CMesh::~CMesh()
 {
 
-	_ulong dwByte = 0;
+}
 
-	ReadFile(_handle, m_szName, sizeof(char) * MAX_PATH, &dwByte, nullptr);
-	ReadFile(_handle, &m_iMaterialIndex, sizeof(_uint), &dwByte, nullptr);
-	ReadFile(_handle, &m_iNumVertices, sizeof(_uint), &dwByte, nullptr);
-	ReadFile(_handle, &m_iNumIndices, sizeof(_uint), &dwByte, nullptr);
+HRESULT CMesh::Initialize(CModel::TYPE _eType, ifstream& _ifs, _fmatrix PivotMatrix)
+{
+	_ifs.read(m_szName, sizeof(char) * MAX_PATH);
+	_ifs.read((char*)&m_iMaterialIndex, sizeof(_uint));
+	_ifs.read((char*)&m_iNumVertices, sizeof(_uint));
+	_ifs.read((char*)&m_iNumIndices, sizeof(_uint));
 
 	m_iNumVertexBuffers = 1;
 
@@ -24,7 +29,7 @@ HRESULT CMesh::Initialize(CModel::TYPE _eType, HANDLE _handle, shared_ptr<CModel
 	m_ePrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
 	/////////////Vertex Buffer///////////////
-	HRESULT hr = _eType == CModel::TYPE_NONANIM ? ReadyVertexBufferNonAnim(_handle, PivotMatrix) : ReadyVertexBufferAnim(_handle, _pModel);
+	HRESULT hr = _eType == CModel::TYPE_NONANIM ? ReadyVertexBufferNonAnim(_ifs, PivotMatrix) : ReadyVertexBufferAnim(_ifs);
 
 	if (FAILED(hr))
 		return E_FAIL;
@@ -42,18 +47,18 @@ HRESULT CMesh::Initialize(CModel::TYPE _eType, HANDLE _handle, shared_ptr<CModel
 
 	_uint iNumIndices = { 0 };
 
-	
 	_uint iFaceNum;
+	_ifs.read((char*)&iFaceNum, sizeof(_uint));
 
-	ReadFile(_handle, &iFaceNum, sizeof(_uint), &dwByte, nullptr);
+
+	_uint iIndex1, iIndex2, iIndex3;
 
 
 	for (size_t i = 0; i < iFaceNum; i++) {
 
-		_uint iIndex1, iIndex2, iIndex3;
-		ReadFile(_handle, &iIndex1, sizeof(_uint), &dwByte, nullptr);
-		ReadFile(_handle, &iIndex2, sizeof(_uint), &dwByte, nullptr);
-		ReadFile(_handle, &iIndex3, sizeof(_uint), &dwByte, nullptr);
+		_ifs.read((char*)&iIndex1, sizeof(_uint));
+		_ifs.read((char*)&iIndex2, sizeof(_uint));
+		_ifs.read((char*)&iIndex3, sizeof(_uint));
 
 		pIndices[iNumIndices++] = iIndex1;
 		pIndices[iNumIndices++] = iIndex2;
@@ -80,9 +85,8 @@ void CMesh::SetUpBoneMatrices(_float4x4* _pBoneMatirces, vector<shared_ptr<class
 	}
 } 
 
-HRESULT CMesh::ReadyVertexBufferNonAnim(HANDLE _handle, _fmatrix PivotMatrix)
+HRESULT CMesh::ReadyVertexBufferNonAnim(ifstream& _ifs, _fmatrix PivotMatrix)
 {
-	_ulong dwByte = 0;
 	m_iVertexStride = sizeof(VTXMESH);
 
 	m_BufferDesc.ByteWidth = m_iVertexStride * m_iNumVertices;
@@ -97,10 +101,11 @@ HRESULT CMesh::ReadyVertexBufferNonAnim(HANDLE _handle, _fmatrix PivotMatrix)
 
 	for (size_t i = 0; i < m_iNumVertices; i++) {
 
-		ReadFile(_handle, &pVertices[i].vPosition, sizeof(_float3) , &dwByte, nullptr);
-		ReadFile(_handle, &pVertices[i].vNormal, sizeof(_float3) , &dwByte, nullptr);
-		ReadFile(_handle, &pVertices[i].vTexcoord, sizeof(_float2) , &dwByte, nullptr);
-		ReadFile(_handle, &pVertices[i].vTangent, sizeof(_float3) , &dwByte, nullptr);
+		_ifs.read((char*)&pVertices[i].vPosition, sizeof(_float3));
+		_ifs.read((char*)&pVertices[i].vNormal, sizeof(_float3));
+		_ifs.read((char*)&pVertices[i].vTexcoord, sizeof(_float2));
+		_ifs.read((char*)&pVertices[i].vTangent, sizeof(_float3));
+
 	}
 
 	m_InitialData.pSysMem = pVertices;
@@ -108,16 +113,14 @@ HRESULT CMesh::ReadyVertexBufferNonAnim(HANDLE _handle, _fmatrix PivotMatrix)
 	if (FAILED(__super::CreateBuffer(&m_pVB)))
 		return E_FAIL;
 
-	Safe_Delete_Array(pVertices);
+	delete[] pVertices;
 
 
 	return S_OK;
 }
 
-HRESULT CMesh::ReadyVertexBufferAnim(HANDLE _handle, shared_ptr<CModel> _pModel)
+HRESULT CMesh::ReadyVertexBufferAnim(ifstream& _ifs )
 {
-	_ulong dwByte = 0;
-
 	m_iVertexStride = sizeof(VTXANIMMESH);
 
 	m_BufferDesc.ByteWidth = m_iVertexStride * m_iNumVertices;
@@ -131,38 +134,71 @@ HRESULT CMesh::ReadyVertexBufferAnim(HANDLE _handle, shared_ptr<CModel> _pModel)
 	ZeroMemory(pVertices, sizeof(VTXANIMMESH) * m_iNumVertices);
 
 	for (size_t i = 0; i < m_iNumVertices; i++) {
-
-		ReadFile(_handle, &pVertices[i].vPosition, sizeof(_float3), &dwByte, nullptr);
-		ReadFile(_handle, &pVertices[i].vNormal, sizeof(_float3), &dwByte, nullptr);
-		ReadFile(_handle, &pVertices[i].vTexcoord, sizeof(_float2), &dwByte, nullptr);
-		ReadFile(_handle, &pVertices[i].vTangent, sizeof(_float3), &dwByte, nullptr);
+		_ifs.read((char*)&pVertices[i].vPosition, sizeof(_float3));
+		_ifs.read((char*)&pVertices[i].vNormal, sizeof(_float3));
+		_ifs.read((char*)&pVertices[i].vTexcoord, sizeof(_float2));
+		_ifs.read((char*)&pVertices[i].vTangent, sizeof(_float3));
 
 	}
 
 	//메시의 정점들의 상태에 영향을 주는 뼈들을 가져옴
 
-	ReadFile(_handle, &m_iNumBones, sizeof(_uint), &dwByte, nullptr);
+	_ifs.read((char*)&m_iNumBones, sizeof(_uint));
 
-
+	_float a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16 = 0.f;
 
 	for (size_t i = 0; i < m_iNumBones; i++) {
 
 		_float4x4 OffsetMatrix = {};
-		ReadFile(_handle, &OffsetMatrix, sizeof(_float4x4), &dwByte, nullptr);
+
+		_ifs.read((char*)&a1, sizeof(_float));
+		_ifs.read((char*)&a2, sizeof(_float));
+		_ifs.read((char*)&a3, sizeof(_float));
+		_ifs.read((char*)&a4, sizeof(_float));
+		_ifs.read((char*)&a5, sizeof(_float));
+		_ifs.read((char*)&a6, sizeof(_float));
+		_ifs.read((char*)&a7, sizeof(_float));
+		_ifs.read((char*)&a8, sizeof(_float));
+		_ifs.read((char*)&a9, sizeof(_float));
+		_ifs.read((char*)&a10, sizeof(_float));
+		_ifs.read((char*)&a11, sizeof(_float));
+		_ifs.read((char*)&a12, sizeof(_float));
+		_ifs.read((char*)&a13, sizeof(_float));
+		_ifs.read((char*)&a14, sizeof(_float));
+		_ifs.read((char*)&a15, sizeof(_float));
+		_ifs.read((char*)&a16, sizeof(_float));
+
+
+
+		OffsetMatrix._11 = a1;
+		OffsetMatrix._12 = a2;
+		OffsetMatrix._13 = a3;
+		OffsetMatrix._14 = a4;
+		OffsetMatrix._21 = a5;
+		OffsetMatrix._22 = a6;
+		OffsetMatrix._23 = a7;
+		OffsetMatrix._24 = a8;
+		OffsetMatrix._31 = a9;
+		OffsetMatrix._32 = a10;
+		OffsetMatrix._33 = a11;
+		OffsetMatrix._34 = a12;
+		OffsetMatrix._41 = a13;
+		OffsetMatrix._42 = a14;
+		OffsetMatrix._43 = a15;
+		OffsetMatrix._44 = a16;
+
+
 		m_OffsetMatrices.push_back(OffsetMatrix);
 
 		_int iIdxNum;
-
-		ReadFile(_handle, &iIdxNum, sizeof(_int), &dwByte, nullptr);
+		_ifs.read((char*)&iIdxNum, sizeof(_int));
 
 		m_BoneIndices.push_back(iIdxNum);
 
 	}
 
 	for (size_t i = 0; i < m_iNumVertices; i++) {
-
-		ReadFile(_handle, &pVertices[i], sizeof(VTXANIMMESH), &dwByte, nullptr);
-
+		_ifs.read((char*)&pVertices[i], sizeof(VTXANIMMESH));
 	}
 
 	m_InitialData.pSysMem = pVertices;
@@ -170,16 +206,18 @@ HRESULT CMesh::ReadyVertexBufferAnim(HANDLE _handle, shared_ptr<CModel> _pModel)
 	if (FAILED(__super::CreateBuffer(&m_pVB)))
 		return E_FAIL;
 
-	Safe_Delete_Array(pVertices);
+	//Safe_Delete_Array(pVertices);
+
+	delete[] pVertices;
 
 	return S_OK;
 }
 
-shared_ptr<CMesh> CMesh::Create(CModel::TYPE _eType, wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID3D11DeviceContext> _pContext, HANDLE _handle, shared_ptr<CModel> _pModel, _fmatrix PivotMatrix)
+shared_ptr<CMesh> CMesh::Create(CModel::TYPE _eType, wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID3D11DeviceContext> _pContext, ifstream& _ifs, _fmatrix PivotMatrix)
 {
 	shared_ptr<CMesh> pInstance = make_shared<CMesh>(_pDevice, _pContext);
 
-	if (FAILED(pInstance->Initialize(_eType, _handle, _pModel, PivotMatrix)))
+	if (FAILED(pInstance->Initialize(_eType, _ifs, PivotMatrix)))
 		MSG_BOX("Failed to Create : CMesh");
 
 	return pInstance;

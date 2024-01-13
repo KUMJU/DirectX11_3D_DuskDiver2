@@ -255,11 +255,12 @@ void CResourceMgr::ReadAnimMeshFile(const wstring& _strBaseFilepath, const wstri
             char strMultiByte[MAX_PATH] = { 0 };
             WideCharToMultiByte(CP_ACP, 0, strPath.c_str(), lstrlenW(strPath.c_str()), strMultiByte, MAX_PATH, NULL, NULL);
 
-            if (TEXT(".fbx") == FindExt(strName)) {
-                
-                const _tchar* filePath = TEXT("../../Client/Bin/Resources/Base/Models/Anim/Hero1/Hero1Walk.dat");
+            if (TEXT(".dat") == FindExt(strName)) {
 
-                ResourceDesc<CModel> tmp = { CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM , strMultiByte ,filePath) ,m_iCurrentLevel };
+                wstring AnimFilePath =  TEXT("../../Client/Bin/DataFiles/AnimData/Anim_");
+                AnimFilePath = AnimFilePath + strName;
+
+                ResourceDesc<CModel> tmp = { CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM , strMultiByte ,AnimFilePath.c_str()) ,m_iCurrentLevel };
                 m_Models.emplace(EraseExt(strName), tmp);
             }
         }
@@ -295,7 +296,7 @@ void CResourceMgr::ReadNonAnimMeshFile(const wstring& _strBaseFilepath, const ws
             WideCharToMultiByte(CP_ACP, 0, strPath.c_str(),lstrlenW(strPath.c_str()), strMultiByte, MAX_PATH , NULL, NULL);
             const _tchar* filePath = TEXT("../../Client/Bin/Resources/Base/Models/Anim/Hero1/Hero1Walk.dat");
 
-            if (TEXT(".fbx") == FindExt(strName)) {
+            if (TEXT(".dat") == FindExt(strName)) {
                 ResourceDesc<CModel> tmp = { CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM , strMultiByte,filePath, XMMatrixIdentity()) , m_iCurrentLevel };
                 m_Models.emplace(EraseExt(strName), tmp);
             }
