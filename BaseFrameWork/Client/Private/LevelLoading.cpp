@@ -47,7 +47,7 @@ void CLevelLoading::Tick(_float _fTimeDelta)
 		}
 		else {
 			//이걸 loader안으로 옮겨야할듯
-			if (GetKeyState(VK_SPACE) & 0x8000)
+			if (GetKeyState(VK_RETURN) & 0x8000)
 			{
 				OpenLevel();
 			}

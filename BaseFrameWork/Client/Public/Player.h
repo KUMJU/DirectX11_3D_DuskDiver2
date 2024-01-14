@@ -14,6 +14,12 @@ BEGIN(Client)
 class CPlayer : public CGameObject
 {
 public:
+	struct ANIMINFO {
+		_uint iNextAnimNum;
+		_bool IsLoop;
+	};
+
+public:
 	enum class HEROSTATE {
 		STATE_IDLE,
 		STATE_WALK,
@@ -29,8 +35,7 @@ public:
 		STATE_SKILL_S,
 		STATE_SKILL_D,
 		STATE_SKILL_F,
-		STATE_SKILL_DASH,
-		STATE_COLLECT,
+		STATE_DASH,
 		STATE_HIT,
 		STATE_DODGE,
 		STATE_SPECIAL_ATTACK,
@@ -63,19 +68,17 @@ private:
 	HRESULT BindShaderResources();
 
 	void ChangeAnim(_uint _iAnimNum, _bool _isLoop);
-
+	void CheckReserveAnimList();
+		
 	void FinishCombo();
 
 private:
 	HEROSTATE m_eCurrentState = HEROSTATE::STATE_END;
 
 	_uint m_iCurrentAnimIdx = 0;
+	//진짜 state가 loop
 	_bool m_isAnimLoop = true;
 
-
-	_bool m_ComboArr[5] = {false, false, false, false, false};
-	_uint m_ComboAnimKeyArr[5] = { 0, 1, 3, 5, 7 };
-	_int m_CurrentCombo = -1;
 private:
 	//애니메이션 root 이동거리를 측정해서 플레이어 움직임에 직접 더해준다 
 	void CalcAnimMoveDistance();
@@ -95,7 +98,7 @@ private:
 
 private:
 
-	_int m_iCurrentAnim = 0;
+	_int m_iCurrentAnim = 17;
 
 	_int m_iMaxHp = 100;
 	_int m_iHp = 100;
@@ -103,6 +106,41 @@ private:
 	_int m_iBurstGage = 100;
 	_int m_iSkillGage = 3;
 
+
+private:
+
+	_bool m_bAttack = false;
+	_bool m_bSuperArmor = false;
+	_bool m_bJump = false;
+	_bool m_bDash = false;
+
+	_float fDashSpeed = false;
+	
+	_bool m_bActiveCoolTime = false;
+
+private:
+
+	list<ANIMINFO> m_NextAnimIndex;
+
+	//LoopAnimation
+	_float m_fLoopTotalTime = 0.2;
+	_bool m_IsLoopMotion = false;
+	_float m_fCurLoopTime = 0.f;
+
+
+
+//ComboSystem
+private:
+
+	_bool m_ComboArr[5] = { false, false, false, false, false };
+	_uint m_ComboAnimKeyArr[5] = { 0, 1, 3, 5, 7 };
+	_int m_CurrentCombo = -1;
+
+	//idle로 돌아오고 몇초간 콤보 연계 가능
+	_bool m_bComboAble = false;
+	_double m_ComboAbleTime = 0.0;
+
+	_bool m_bReserveCombo = false;
 
 public:
 	static shared_ptr<CPlayer> Create();

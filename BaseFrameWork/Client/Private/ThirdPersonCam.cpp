@@ -110,7 +110,7 @@ void CThirdPersonCam::LateTick(_float fTimeDelta)
 	//선형 보간
 	XMStoreFloat3(&m_vCameraEye, vCamPos);
 	vCamPos = XMVectorSetW(vCamPos, 1.f);
-	vCamPos = XMVectorLerp(XMLoadFloat4(&m_vPreCamPos), vCamPos , 0.5f);
+	vCamPos = XMVectorLerp(XMLoadFloat4(&m_vPreCamPos), vCamPos , 0.2f);
 	XMStoreFloat4(&m_vPreCamPos, vCamPos);
 
 	m_pTransformCom->SetState(CTransform::STATE_POSITION, vCamPos);

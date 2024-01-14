@@ -127,6 +127,11 @@ HRESULT CArcadeMap::ReadyLayerPlayer(const wstring& _strLayerTag)
 
 	CGameMgr::GetInstance()->SetPlayer(pPlayer);
 
+	shared_ptr<CGameObject> pDummy = CDummy::Create(TEXT("PlatformA"));
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pDummy)))
+		return E_FAIL;
+
+
 	return S_OK;
 }
 

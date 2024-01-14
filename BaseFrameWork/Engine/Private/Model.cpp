@@ -34,27 +34,28 @@ HRESULT CModel::Initialize(TYPE eModelType, const _char* pModelFilePath, const _
     std::ifstream ifs;
     ifs.open(pModelFilePath, std::ios::binary);
 
-    std::ifstream AnimIfs;
-    AnimIfs.open(_DatFilePath, std::ios::binary);
 
     m_PivotMatrix = _float4x4();
 
-    //º»°¹¼ö
-    size_t iBoneNumSize;
-    ifs.read((char*)&iBoneNumSize, sizeof(size_t));
+    if (TYPE_ANIM == m_eModelType) {
 
-    //ReadyBone
-    for (size_t i = 0; i < iBoneNumSize; ++i) {
-     
-        char* szName = new char[MAX_PATH];
-        ifs.read(szName, MAX_PATH * sizeof(char));
+        //º»°¹¼ö
+        size_t iBoneNumSize;
+        ifs.read((char*)&iBoneNumSize, sizeof(size_t));
 
-        _int iParentBone;
-        ifs.read((char*)&iParentBone, sizeof(_int));
+        //ReadyBone
+        for (size_t i = 0; i < iBoneNumSize; ++i) {
 
-        shared_ptr<CBone> pBone = CBone::Create(szName, iParentBone, ifs);
+            char* szName = new char[MAX_PATH];
+            ifs.read(szName, MAX_PATH * sizeof(char));
 
-        m_Bones.push_back(pBone);
+            _int iParentBone;
+            ifs.read((char*)&iParentBone, sizeof(_int));
+
+            shared_ptr<CBone> pBone = CBone::Create(szName, iParentBone, ifs);
+
+            m_Bones.push_back(pBone);
+        }
     }
 
     if (FAILED(ReadyMeshes(ifs)))
@@ -65,11 +66,18 @@ HRESULT CModel::Initialize(TYPE eModelType, const _char* pModelFilePath, const _
     if (FAILED(ReadyMaterials(ifs)))
         return E_FAIL;
 
-     if (FAILED(ReadyAnimations(AnimIfs)))
-        return E_FAIL;
+    if (TYPE_ANIM == m_eModelType) {
+
+        std::ifstream AnimIfs;
+        AnimIfs.open(_DatFilePath, std::ios::binary);
+
+        if (FAILED(ReadyAnimations(AnimIfs)))
+            return E_FAIL;
+
+        AnimIfs.close();
+    }
 
     ifs.close();
-    AnimIfs.close();
 
     return S_OK;
 }
