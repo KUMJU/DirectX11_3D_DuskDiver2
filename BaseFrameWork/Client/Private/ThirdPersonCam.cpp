@@ -40,8 +40,8 @@ HRESULT CThirdPersonCam::Initialize()
 	if(FAILED(__super::Initialize(&pCamDesc, &TransformDesc)))
 		return E_FAIL;
 
-	m_fRadius = 3.f;
-	m_fMinRad = 2.f;
+	m_fRadius = 2.8f;
+	m_fMinRad = 2.8f;
 	m_fMaxRad = 3.5f;
 	m_fMinAzimuth = 0.f;
 	m_fMaxAzimuth = 360.f;
@@ -50,7 +50,7 @@ HRESULT CThirdPersonCam::Initialize()
 	m_fMaxElevation = 30.f;
 
 	m_fMouseSensor = 0.2f;
-	m_fHeight = 0.3f;
+	m_fHeight = 0.6f;
 
 	return S_OK;
 }

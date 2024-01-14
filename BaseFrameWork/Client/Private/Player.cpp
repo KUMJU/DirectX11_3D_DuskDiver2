@@ -42,17 +42,28 @@ void CPlayer::PriorityTick(_float _fTimeDelta)
 
 void CPlayer::Tick(_float _fTimeDelta)
 {
+    //공격모션이 idle로 전환되는 과정까지 포함되어있어서 스피드한 콤보 공격을 위해 중간에 끊어 진행
+    if (m_bComboAttackStart) {
+        m_fComboTime += _fTimeDelta;
+        if (m_bReserveCombo && m_fComboTime > 0.5f) {
+            _uint iNextCombo = m_NextAnimIndex.front().iNextAnimNum;
+            m_NextAnimIndex.pop_front();
+            ChangeAnim(iNextCombo, false);
+            m_fComboTime = 0.f;
+            m_bReserveCombo = false;
+        }
+    }
 
     //마우스 debounce
     if (m_IsMouseDeb) {
         m_fDebTime += _fTimeDelta;
 
-        if (m_fDebTime > 0.2f) {
+        if (m_fDebTime > 0.1f) {
             m_fDebTime = 0.f;
             m_IsMouseDeb = false;
         }
     }
-
+     
     //루프 애니메이션 제어
     if (m_IsLoopMotion) {
 
@@ -77,6 +88,12 @@ void CPlayer::Tick(_float _fTimeDelta)
 
 void CPlayer::LateTick(_float _fTimeDelta)
 {
+    //if (m_eCurrentState == HEROSTATE::STATE_JUMP) {
+
+
+    //}
+
+
     if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_NONBLEND, shared_from_this())))
         return;
 }
@@ -149,14 +166,20 @@ HRESULT CPlayer::BindShaderResources()
 
 void CPlayer::ChangeAnim(_uint _iAnimNum, _bool _isLoop)
 {
+
+    m_iCurrentAnimIdx;
     if (19 == _iAnimNum) {
         m_IsLoopMotion = true;
     }
-    else if(1 == _iAnimNum){
+    else if (1 == _iAnimNum) {
         m_eCurrentState = HEROSTATE::STATE_COMBO_ATTACK2;
     }
     else if (2 == _iAnimNum) {
         m_eCurrentState = HEROSTATE::STATE_COMBO_ATTACK3;
+    }
+    else if (22 == _iAnimNum) {
+        //Jump Landing 
+        m_bJump = false;
     }
 
     if (!m_pModelCom->ChangeAnimation(_iAnimNum))
@@ -173,17 +196,24 @@ void CPlayer::ChangeAnim(_uint _iAnimNum, _bool _isLoop)
     m_iCurrentAnimIdx = _iAnimNum;
     m_isAnimLoop = _isLoop;
 
-    //초기화
-    m_bReserveCombo = false;
-
 }
 
+//미리 예약해둔 애니메이션을 확인하고, 있으면 그 애니메이션을 돌리고 없으면 기본 idle 상태로 돌아옵니다
 void CPlayer::CheckReserveAnimList()
 {
     if (m_NextAnimIndex.empty()) {
+
+        if (m_bComboAttackStart) {
+            ResetComboState();
+        }
+
+        if (m_IsUsingSkill)
+            m_IsUsingSkill = false;
+
         //IDLE로 돌아감
         m_eCurrentState = HEROSTATE::STATE_IDLE;
         ChangeAnim(18, true);
+
     }
     else {
 
@@ -191,23 +221,13 @@ void CPlayer::CheckReserveAnimList()
         _bool isLoop = m_NextAnimIndex.front().IsLoop;
 
         m_NextAnimIndex.pop_front();
-
         ChangeAnim(iNextAnim, isLoop);
     }
 }
 
 void CPlayer::FinishCombo()
 {
-    m_IsKeyDeb = true;
 
-    for (_uint i = 0; i < 5; ++i) {
-        m_ComboArr[i] = false;
-    }
-
-    m_CurrentCombo = -1;
-
-    m_eCurrentState = HEROSTATE::STATE_IDLE;
-    ChangeAnim(0, true);
 }
 
 void CPlayer::CalcAnimMoveDistance()
@@ -233,14 +253,55 @@ void CPlayer::CalcAnimMoveDistance()
 }
 
 void CPlayer::KeyInput(_float _fTimeDelta)
-{
+{ 
+    if (m_bComboAttackStart)
+        return;
 
-    if (HEROSTATE::STATE_COMBO_ATTACK1 == m_eCurrentState)
+    if (m_IsUsingSkill)
+        return;
+
+    if (HEROSTATE::STATE_HEAVY_ATTACK == m_eCurrentState)
         return;
 
     _bool IsKeyInput = false;
     _uint FinalAnimNum = 0;
     _bool IsLoop = false;
+
+    ////////////////////////Skill////////////////////////
+
+    //Skill1
+    if (GetKeyState('Q') & 0x8000)
+    {
+
+        m_eCurrentState = HEROSTATE::STATE_SKILL_A;
+        IsKeyInput = true;
+        ChangeAnim(25, false);
+        m_IsUsingSkill = true;
+
+    }
+
+    //Skill2
+    if (GetKeyState('E') & 0x8000)
+    {
+        m_eCurrentState = HEROSTATE::STATE_SKILL_A;
+        IsKeyInput = true;
+        ChangeAnim(26, false);
+        m_IsUsingSkill = true;
+
+    }
+
+    if (GetKeyState('Z') & 0x8000)
+    {
+        m_eCurrentState = HEROSTATE::STATE_SKILL_A;
+        IsKeyInput = true;
+        ChangeAnim(27, false);
+        m_IsUsingSkill = true;
+
+    }
+
+
+    ///////////////////Walk////////////////////////
+
 
     if (GetKeyState('W') & 0x8000)
     {
@@ -285,8 +346,6 @@ void CPlayer::KeyInput(_float _fTimeDelta)
 
         FinalAnimNum = 24;
         IsLoop = true;
-
-
     }
 
     if (GetKeyState('S') & 0x8000) {
@@ -307,9 +366,13 @@ void CPlayer::KeyInput(_float _fTimeDelta)
     }
 
     if (m_eCurrentState == HEROSTATE::STATE_JUMP ||
-        m_eCurrentState == HEROSTATE::STATE_DASH) {
+        m_eCurrentState == HEROSTATE::STATE_DASH ||
+        m_eCurrentState == HEROSTATE::STATE_HEAVY_ATTACK) {
         return;
     }
+
+
+    ////////////////////////Dash + Jump ////////////////////////
 
     //Dash
     if (GetKeyState('R') & 0x8000)
@@ -343,6 +406,7 @@ void CPlayer::KeyInput(_float _fTimeDelta)
 
         FinalAnimNum = 21;
         IsLoop = false;
+        m_bJump = true;
         ChangeAnim(21, false);
 
 
@@ -374,8 +438,8 @@ void CPlayer::KeyInput(_float _fTimeDelta)
 
 void CPlayer::MouseInput(_float _fTimeDelta)
 {
-    //combo1 = 12 combo2 = 1 combo3 = 2 
-
+    if (m_IsUsingSkill)
+        return;
 
     if (m_eCurrentState == HEROSTATE::STATE_HEAVY_ATTACK ||
         m_eCurrentState == HEROSTATE::STATE_COMBO_ATTACK5 ||
@@ -388,16 +452,17 @@ void CPlayer::MouseInput(_float _fTimeDelta)
 
         if (m_bJump) {
             m_eCurrentState = HEROSTATE::STATE_HEAVY_ATTACK;
+            m_NextAnimIndex.clear();
             ChangeAnim(49, false);
         }
         else {
             m_eCurrentState = HEROSTATE::STATE_HEAVY_ATTACK;
-            //21
-            ChangeAnim(49, false);
+            ChangeAnim(12, false);
         }
         return;
     }
 
+    //Nomal Combo Attack
     if (CGameInstance::GetInstance()->GetDIMouseState(MOUSEKEYSTATE::DIM_LB)) {
 
         if (m_bReserveCombo)
@@ -416,19 +481,18 @@ void CPlayer::MouseInput(_float _fTimeDelta)
         case Client::CPlayer::HEROSTATE::STATE_COMBO_ATTACK3:
             break;
         case Client::CPlayer::HEROSTATE::STATE_COMBO_ATTACK4:
+
+            //attack5 Call + mouseDeb 
             break;
         case Client::CPlayer::HEROSTATE::STATE_COMBO_ATTACK5:
             break;
         default:
-
-            if (m_eCurrentState != CPlayer::HEROSTATE::STATE_COMBO_ATTACK1 ||
-                m_eCurrentState != CPlayer::HEROSTATE::STATE_COMBO_ATTACK2||
-                m_eCurrentState != CPlayer::HEROSTATE::STATE_COMBO_ATTACK3||
-                m_eCurrentState != CPlayer::HEROSTATE::STATE_COMBO_ATTACK4||
-                m_eCurrentState != CPlayer::HEROSTATE::STATE_COMBO_ATTACK5)
+            if (m_bComboAttackStart)
+                return;
 
             ChangeAnim(0, false);
             m_eCurrentState = HEROSTATE::STATE_COMBO_ATTACK1;
+            m_bComboAttackStart = true;
             break;
         }
 
@@ -436,6 +500,14 @@ void CPlayer::MouseInput(_float _fTimeDelta)
 
     }
    
+}
+
+void CPlayer::ResetComboState()  
+{
+    m_NextAnimIndex.clear();
+    m_bReserveCombo = false;
+    m_bComboAttackStart = false;
+    m_fComboTime = 0.f;
 }
 
 shared_ptr<CPlayer> CPlayer::Create()

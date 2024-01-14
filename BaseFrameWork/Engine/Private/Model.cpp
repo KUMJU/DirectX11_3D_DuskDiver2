@@ -182,6 +182,14 @@ _bool CModel::ChangeAnimation(_uint _iAnimNum)
     m_IsLinearState = true;
     m_NextAnim = m_Animations[_iAnimNum];
     m_iNextAnimation = _iAnimNum;
+
+    if(_iAnimNum != 1 && _iAnimNum != 2){
+        m_fLinearTotalTime = 0.06f;
+    }
+    else {
+        m_fLinearTotalTime = 0.02f;
+    }
+
   
     //m_Animations[m_iCurrentAnimation]->AnimStateReset();
     //m_iCurrentAnimation = _iAnimNum;

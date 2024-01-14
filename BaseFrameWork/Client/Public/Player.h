@@ -98,14 +98,11 @@ private:
 
 private:
 
-	_int m_iCurrentAnim = 17;
-
 	_int m_iMaxHp = 100;
 	_int m_iHp = 100;
 
 	_int m_iBurstGage = 100;
 	_int m_iSkillGage = 3;
-
 
 private:
 
@@ -128,6 +125,8 @@ private:
 	_float m_fCurLoopTime = 0.f;
 
 
+private:
+	void ResetComboState();
 
 //ComboSystem
 private:
@@ -136,11 +135,16 @@ private:
 	_uint m_ComboAnimKeyArr[5] = { 0, 1, 3, 5, 7 };
 	_int m_CurrentCombo = -1;
 
-	//idle로 돌아오고 몇초간 콤보 연계 가능
-	_bool m_bComboAble = false;
-	_double m_ComboAbleTime = 0.0;
-
 	_bool m_bReserveCombo = false;
+	_bool m_bComboAttackStart = false;
+
+	_float m_fComboTime = 0.f;
+
+
+//SkillSystem
+private:
+	_bool m_IsUsingSkill = false;
+
 
 public:
 	static shared_ptr<CPlayer> Create();

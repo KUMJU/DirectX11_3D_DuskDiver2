@@ -18,42 +18,6 @@ HRESULT CChannel::Initialize(ifstream& _ifs, shared_ptr<Engine::CModel> _pModel)
 	for (_uint i = 0; i < m_iNumKeyFrames; i++) {
 
 		KEYFRAME KeyFrame = {};
-	
-		//if (iScaleNum > i) {
-		//	_ifs.read((char*)&KeyFrame.vScale.x, sizeof(_float));
-		//	_ifs.read((char*)&KeyFrame.vScale.y, sizeof(_float));
-		//	_ifs.read((char*)&KeyFrame.vScale.z, sizeof(_float));
-		//}
-
-		//if (iRotationNum > i) {
-		//	_ifs.read((char*)&KeyFrame.vRotation.x, sizeof(_float));
-		//	_ifs.read((char*)&KeyFrame.vRotation.y, sizeof(_float));
-		//	_ifs.read((char*)&KeyFrame.vRotation.z, sizeof(_float));
-		//	_ifs.read((char*)&KeyFrame.vRotation.w, sizeof(_float));
-
-		//}
-
-		//if (iPositionNum > i) {
-		//	_ifs.read((char*)&KeyFrame.vPosition.x, sizeof(_float));
-		//	_ifs.read((char*)&KeyFrame.vPosition.y, sizeof(_float));
-		//	_ifs.read((char*)&KeyFrame.vPosition.z, sizeof(_float));
-
-		//}
-
-		//_ifs.read((char*)&KeyFrame.Time, sizeof(_double));
-
-		//_int a = 5;
-		////_ifs.read((char*)&KeyFrame.vPosition.x, sizeof(_float));
-		////_ifs.read((char*)&KeyFrame.vPosition.y, sizeof(_float));
-		////_ifs.read((char*)&KeyFrame.vPosition.z, sizeof(_float));
-
-		////_ifs.read((char*)&KeyFrame.vRotation.x, sizeof(_float));
-		////_ifs.read((char*)&KeyFrame.vRotation.y, sizeof(_float));
-		////_ifs.read((char*)&KeyFrame.vRotation.z, sizeof(_float));
-		////_ifs.read((char*)&KeyFrame.vRotation.w, sizeof(_float));
-
-		////_ifs.read((char*)&KeyFrame.Time, sizeof(_double));
-
 
 		_ifs.read((char*)&KeyFrame, sizeof(KEYFRAME));
 		m_KeyFrames.push_back(KeyFrame);
