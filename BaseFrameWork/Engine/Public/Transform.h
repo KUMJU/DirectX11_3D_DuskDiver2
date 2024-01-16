@@ -59,6 +59,9 @@ public:
 		m_WorldMatrix = _worldMat;
 	}
 
+	void SetSpeed(_float _fSpeed) {
+		m_fSpeedPerSec = _fSpeed;
+	}
 
 public:
 

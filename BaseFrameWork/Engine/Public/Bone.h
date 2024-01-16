@@ -4,7 +4,7 @@
 
 BEGIN(Engine)
 
-class CBone final
+class CBone final : public std::enable_shared_from_this<CBone>
 {
 public:
 	CBone();
@@ -42,6 +42,7 @@ private:
 
 public:
 	static shared_ptr<CBone> Create(char* _pName, _int _iParentBoneIndex, ifstream& _ifs);
+	shared_ptr<CBone> Clone();
 
 };
 

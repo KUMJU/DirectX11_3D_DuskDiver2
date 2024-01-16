@@ -7,7 +7,7 @@
 
 BEGIN(Engine)
 
-class CAnimation
+class CAnimation : public std::enable_shared_from_this<CAnimation>
 {
 public:
 	CAnimation();
@@ -27,9 +27,20 @@ public:
 	_uint GetCurrentKeyFrame() { return m_iCurrentKeyFrames.front(); }
 	_uint GetChannelNum() { return m_iNumChannels; }
 
+	_char* GetAnimName() { return m_szName;}
+
+
+public:
+	void SetAnimSpeed(_float _fSpeed) { m_AnimSpeed = _fSpeed; }
+
+
+	 
+private:
+	_float m_AnimSpeed = 1.f;
+
+
 
 private:
-	_uint m_iNumAnimations = { 0 };
 	_char m_szName[MAX_PATH] = "";
 
 	_double m_Duration = { 0.0 };
@@ -44,6 +55,7 @@ private:
 
 public:
 	static shared_ptr<CAnimation> Create(ifstream& _ifs, shared_ptr<CModel> _pModel);
+	shared_ptr<CAnimation> Clone();
 
 };
 

@@ -82,3 +82,11 @@ _float4 CCameraMgr::GetCamLook()
 
 	return m_pDefualtCam->GetCamLookVector();
 }
+
+_vector CCameraMgr::GetCamPos()
+{
+	if (!m_pDefualtCam)
+		return _vector();
+
+	return dynamic_pointer_cast<CTransform>(m_pDefualtCam->GetComponent(TEXT("Com_Transform")))->GetState(CTransform::STATE_POSITION);
+}

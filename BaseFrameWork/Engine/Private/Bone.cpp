@@ -95,3 +95,8 @@ shared_ptr<CBone> CBone::Create(char* _pName, _int _iParentBoneIndex, ifstream& 
 
     return pInstance;
 }
+
+shared_ptr<CBone> CBone::Clone()
+{
+	return make_shared<CBone>(*(shared_from_this().get()));
+}

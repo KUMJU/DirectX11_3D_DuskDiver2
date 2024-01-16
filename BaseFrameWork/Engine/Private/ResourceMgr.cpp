@@ -94,9 +94,9 @@ shared_ptr<class CModel> CResourceMgr::GetModel(const wstring& _strModelKey)
 
     if (iter != m_Models.end()) {
 
-    /*    if (CModel::TYPE::TYPE_ANIM == (*iter).second.pRes->GetModelType()) {
+       if (CModel::TYPE::TYPE_ANIM == (*iter).second.pRes->GetModelType()) {
             return CModel::Clone(((*iter).second.pRes));
-        }*/
+       }
 
         return (*iter).second.pRes;
     }

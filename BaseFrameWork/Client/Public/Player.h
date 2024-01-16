@@ -8,7 +8,6 @@ class CShader;
 class CModel;
 END
 
-
 BEGIN(Client)
 
 class CPlayer : public CGameObject
@@ -31,10 +30,10 @@ public:
 		STATE_COMBO_ATTACK4,
 		STATE_COMBO_ATTACK5,
 		STATE_HEAVY_ATTACK,
-		STATE_SKILL_A,
-		STATE_SKILL_S,
-		STATE_SKILL_D,
-		STATE_SKILL_F,
+		STATE_SKILL_Q,
+		STATE_SKILL_E,
+		STATE_SKILL_R,
+		STATE_BURST_TRANS,
 		STATE_DASH,
 		STATE_HIT,
 		STATE_DODGE,
@@ -56,6 +55,8 @@ public:
 private:
 	shared_ptr<CShader> m_pShader = nullptr;
 
+	shared_ptr<CModel> m_pMainModelCom = nullptr;
+
 	//기본
 	shared_ptr<CModel> m_pModelCom = nullptr;
 	//버스트모드
@@ -64,10 +65,13 @@ private:
 	shared_ptr<CModel> m_pBattleModelCom = nullptr;
 
 private:
+	void SetAnimSpeed();
+
+private:
 	HRESULT AddComponent();
 	HRESULT BindShaderResources();
-
-	void ChangeAnim(_uint _iAnimNum, _bool _isLoop);
+	   
+	_bool ChangeAnim(_uint _iAnimNum, _bool _isLoop);
 	void CheckReserveAnimList();
 		
 	void FinishCombo();
@@ -79,9 +83,22 @@ private:
 	//진짜 state가 loop
 	_bool m_isAnimLoop = true;
 
+	_float m_eCurrentDegree = 90.f;
+
+
+//변신~~~~~~~~~!!!!!
+private:
+	_float m_fransformTime = 0.f;
+
+private:
+
+	_float m_fLinearTime = 0.06f;
+
 private:
 	//애니메이션 root 이동거리를 측정해서 플레이어 움직임에 직접 더해준다 
 	void CalcAnimMoveDistance();
+	//LookVector가 카메라를 기준으로 갱신
+	void CalcLookVector(_float _fDir);
 
 private:
 	void KeyInput(_float _fTimeDelta);
@@ -96,6 +113,8 @@ private:
 	_float3 m_vCurretnAnimPos = { 0.f, 0.f , 0.f };
 	_float3 m_vPrevAnimPos = { 0.f, 0.f, 0.f };
 
+	_float m_fCurrentDir = 1.f;
+
 private:
 
 	_int m_iMaxHp = 100;
@@ -104,12 +123,24 @@ private:
 	_int m_iBurstGage = 100;
 	_int m_iSkillGage = 3;
 
+
+	_bool m_bBurstMode = false;
+
 private:
 
+	_bool m_bAirBorneAtk = false;
+
+	_bool m_bRunning = false;
 	_bool m_bAttack = false;
 	_bool m_bSuperArmor = false;
+
+	_bool m_bAtkDeb = false;
+
 	_bool m_bJump = false;
+	_bool m_bDrop = false;
+
 	_bool m_bDash = false;
+	_bool m_bDodge = false;
 
 	_float fDashSpeed = false;
 	
@@ -120,10 +151,9 @@ private:
 	list<ANIMINFO> m_NextAnimIndex;
 
 	//LoopAnimation
-	_float m_fLoopTotalTime = 0.2;
+	_float m_fLoopTotalTime = 0.2f;
 	_bool m_IsLoopMotion = false;
 	_float m_fCurLoopTime = 0.f;
-
 
 private:
 	void ResetComboState();
@@ -139,6 +169,15 @@ private:
 	_bool m_bComboAttackStart = false;
 
 	_float m_fComboTime = 0.f;
+	_float m_fMinComboAnimTime = 0.5f;
+
+//Jump
+private:
+	_float m_fJumpSpeed = 0.f;
+	_float m_fTotalHeight = 0.f;
+
+private:
+	_float AttackCoolTime = 0.f;
 
 
 //SkillSystem

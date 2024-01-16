@@ -16,6 +16,8 @@
 #include "CameraMgr.h"
 
 #include "UIBackGround.h"
+#include "Enemy01.h"
+#include "Enemy02.h"
 
 
 
@@ -126,6 +128,22 @@ HRESULT CArcadeMap::ReadyLayerPlayer(const wstring& _strLayerTag)
 		return E_FAIL;
 
 	CGameMgr::GetInstance()->SetPlayer(pPlayer);
+
+	//enemy1
+	
+	//shared_ptr<CGameObject> pMonster = CEnemy01::Create();
+	//if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pMonster)))
+	//	return E_FAIL;
+	
+	//모델 복제 테스트 -> ok!
+	
+	//shared_ptr<CGameObject> pMonster2 = CEnemy01::Create();
+	//if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pMonster2)))
+	//	return E_FAIL;
+
+	shared_ptr<CGameObject> pMonster3 = CEnemy02::Create();
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pMonster3)))
+		return E_FAIL;
 
 	shared_ptr<CGameObject> pDummy = CDummy::Create(TEXT("PlatformA"));
 	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pDummy)))

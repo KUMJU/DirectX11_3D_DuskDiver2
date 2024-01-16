@@ -162,6 +162,8 @@
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Dummy.h" />
     <ClInclude Include="..\Public\Edit.h" />
+    <ClInclude Include="..\Public\Enemy01.h" />
+    <ClInclude Include="..\Public\Enemy02.h" />
     <ClInclude Include="..\Public\GameMgr.h" />
     <ClInclude Include="..\Public\imconfig.h" />
     <ClInclude Include="..\Public\imgui.h" />
@@ -181,8 +183,11 @@
     <ClInclude Include="..\Public\MainApp.h" />
     <ClInclude Include="..\Public\MapLoader.h" />
     <ClInclude Include="..\Public\MapObject.h" />
+    <ClInclude Include="..\Public\MiddleBoss.h" />
+    <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\Public\pch.h" />
     <ClInclude Include="..\Public\Player.h" />
+    <ClInclude Include="..\Public\Skill.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\ThirdPersonCam.h" />
     <ClInclude Include="..\Public\UI.h" />
@@ -200,6 +205,8 @@
     <ClCompile Include="..\Private\CameraMgr.cpp" />
     <ClCompile Include="..\Private\Dummy.cpp" />
     <ClCompile Include="..\Private\Edit.cpp" />
+    <ClCompile Include="..\Private\Enemy01.cpp" />
+    <ClCompile Include="..\Private\Enemy02.cpp" />
     <ClCompile Include="..\Private\GameMgr.cpp" />
     <ClCompile Include="..\Private\imgui.cpp" />
     <ClCompile Include="..\Private\ImguiMgr.cpp" />
@@ -216,7 +223,10 @@
     <ClCompile Include="..\Private\MainApp.cpp" />
     <ClCompile Include="..\Private\MapLoader.cpp" />
     <ClCompile Include="..\Private\MapObject.cpp" />
+    <ClCompile Include="..\Private\MiddleBoss.cpp" />
+    <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
+    <ClCompile Include="..\Private\Skill.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\ThirdPersonCam.cpp" />
     <ClCompile Include="..\Private\UI.cpp" />

@@ -29,6 +29,8 @@ void CMainApp::PreInit()
 
 HRESULT CMainApp::Initialize()
 {
+	srand((unsigned)time(NULL));
+
 	GRAPHIC_DESC GraphicDesc = {};
 
 	GraphicDesc.hWnd = g_hWnd;

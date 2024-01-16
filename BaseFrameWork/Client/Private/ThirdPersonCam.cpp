@@ -3,6 +3,7 @@
 
 #include "GameInstance.h"
 #include "GameMgr.h"
+#include "Player.h"
 
 CThirdPersonCam::CThirdPersonCam()
 {
@@ -14,6 +15,8 @@ CThirdPersonCam::~CThirdPersonCam()
 
 HRESULT CThirdPersonCam::Initialize()
 {
+	ShowCursor(false);
+
 	CTransform::TRANSFORM_DESC		TransformDesc;
 	ZeroMemory(&TransformDesc, sizeof(CTransform::TRANSFORM_DESC));
 
@@ -40,17 +43,17 @@ HRESULT CThirdPersonCam::Initialize()
 	if(FAILED(__super::Initialize(&pCamDesc, &TransformDesc)))
 		return E_FAIL;
 
-	m_fRadius = 2.8f;
-	m_fMinRad = 2.8f;
-	m_fMaxRad = 3.5f;
+	m_fRadius = 2.4f;
+	m_fMinRad = 2.2f;
+	m_fMaxRad = 3.1f;
 	m_fMinAzimuth = 0.f;
 	m_fMaxAzimuth = 360.f;
 
 	m_fMinElevation = 0.f;
-	m_fMaxElevation = 30.f;
+	m_fMaxElevation = 70.f;
 
-	m_fMouseSensor = 0.2f;
-	m_fHeight = 0.6f;
+	m_fMouseSensor = 0.1f;
+	m_fHeight = 0.9f;
 
 	return S_OK;
 }
@@ -69,7 +72,7 @@ void CThirdPersonCam::PriorityTick(_float fTimeDelta)
 		m_fAzimuth = XMConvertToRadians(-90.f);   //
 		m_fElevation = XMConvertToRadians(38.5f);
 		
-		m_fRadius = 6.f;
+		//m_fRadius = 6.f;
 
 		_vector vCameraPos = ToCartesian() + vPlayerPos;
 
@@ -110,12 +113,13 @@ void CThirdPersonCam::LateTick(_float fTimeDelta)
 	//선형 보간
 	XMStoreFloat3(&m_vCameraEye, vCamPos);
 	vCamPos = XMVectorSetW(vCamPos, 1.f);
-	vCamPos = XMVectorLerp(XMLoadFloat4(&m_vPreCamPos), vCamPos , 0.2f);
+	vCamPos = XMVectorLerp(XMLoadFloat4(&m_vPreCamPos), vCamPos , 0.3f);
 	XMStoreFloat4(&m_vPreCamPos, vCamPos);
 
-	m_pTransformCom->SetState(CTransform::STATE_POSITION, vCamPos);
-
 	CalcLookVectors(vCamPos, vPlayerPos);
+	m_pTransformCom->SetState(CTransform::STATE_POSITION, vCamPos);
+	
+	//+ XMLoadFloat4(&m_vLookPlr) * 2.f 
 
 	m_pTransformCom->LookAt(XMVectorSetY(vPlayerPos, XMVectorGetY(vPlayerPos) + m_fHeight));
 

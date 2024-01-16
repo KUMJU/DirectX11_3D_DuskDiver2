@@ -25,6 +25,10 @@ public:
 	TYPE GetModelType() { return m_eModelType; }
 
 public:
+	void SetSpecificAnimSpeed(_uint _iAnimIdx, _float _fSpeed);
+	void SetLinearTime(_float _fTime) { m_fLinearTotalTime = _fTime; }
+
+public:
 	_uint GetNumMeshes() const {
 		return m_iNumMeshes;
 	}
@@ -36,8 +40,11 @@ public:
 	_bool PlayAnimation(_float _fTimeDelta, _bool _isLoop, _float3* _vRootPos);
 
 public:
+	_bool IsLinearInterpolation() { return m_IsLinearState; }
+
+public:
 	void SetAnimNum(_uint _iAnimNum) { _iAnimNum = _iAnimNum; }
-	_bool ChangeAnimation(_uint _iAnimNum);
+	_bool ChangeAnimation(_uint _iAnimNum , _float _LinearTime = 0.06f);
 
 private:
 	_float4x4 m_PivotMatrix;

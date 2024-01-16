@@ -133,6 +133,18 @@
     <Filter Include="01. Utility\04. Component\03. Model\Animation\Channel">
       <UniqueIdentifier>{3b8f40d5-a85a-408b-a4ec-4f7d6594f7c8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\04. Component\04. Collider\Manager">
+      <UniqueIdentifier>{dc5f675e-630b-4c2b-ab7c-a1c967aab191}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\04. Component\05. Navigation">
+      <UniqueIdentifier>{cbc01ff8-bc2f-4cf4-a48b-785502cf1e28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\04. Component\05. Navigation\Cell">
+      <UniqueIdentifier>{28f0eb17-d4e2-40ca-8856-72d159fb6d70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\04. Component\00. VIBuffer\02. Cell">
+      <UniqueIdentifier>{9670bb42-2940-414e-8a40-e476739f2879}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Engine_Defines.h">
@@ -249,6 +261,13 @@
     <ClInclude Include="..\Public\Animation.h">
       <Filter>01. Utility\04. Component\03. Model\Animation</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Navigation.h">
+      <Filter>01. Utility\04. Component\05. Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Cell.h">
+      <Filter>01. Utility\04. Component\05. Navigation\Cell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBufferCell.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\GraphicDev.cpp">
@@ -353,5 +372,12 @@
     <ClCompile Include="..\Private\Animation.cpp">
       <Filter>01. Utility\04. Component\03. Model\Animation</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Navigation.cpp">
+      <Filter>01. Utility\04. Component\05. Navigation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Cell.cpp">
+      <Filter>01. Utility\04. Component\05. Navigation\Cell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBufferCell.cpp" />
   </ItemGroup>
 </Project>

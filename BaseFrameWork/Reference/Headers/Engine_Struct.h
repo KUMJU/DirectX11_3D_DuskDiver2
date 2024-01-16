@@ -27,6 +27,16 @@ namespace Engine
 	
 	}LIGHT_DESC;
 
+
+	typedef struct ENGINE_DLL VTXPOS
+	{
+		XMFLOAT3		vPosition;
+
+		static const unsigned int	iNumElements = { 1 };
+		static const D3D11_INPUT_ELEMENT_DESC		Elements[1];
+	}VTXPOS;
+
+
 	typedef struct ENGINE_DLL VTXPOSTEX
 	{
 		XMFLOAT3 vPositon;

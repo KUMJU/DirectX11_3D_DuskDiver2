@@ -30,6 +30,9 @@ public:
 	_matrix LinearInterpolation(_uint _iCurFrame, KEYFRAME _NextKeyFrame, const vector<shared_ptr<CBone>>& _Bones, _float _fRatio);
 
 public:
+	_uint GetBoneIndex() { return m_iBoneIndex; }
+
+public:
 	KEYFRAME GetKeyFrame(_uint _iCurrentFrame) { 
 		return m_KeyFrames[_iCurrentFrame];
 	}

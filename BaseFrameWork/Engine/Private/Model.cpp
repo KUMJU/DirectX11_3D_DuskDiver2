@@ -20,10 +20,16 @@ CModel::CModel(const CModel& _rhs)
     :CComponent(_rhs.m_pDevice, _rhs.m_pContext)
     , m_PivotMatrix(_rhs.m_PivotMatrix)
     , m_iNumMeshes(_rhs.m_iNumMeshes)
+    ,m_Meshes(_rhs.m_Meshes)
     , m_iNumMaterials(_rhs.m_iNumMaterials)
     , m_Materials(_rhs.m_Materials)
-    , m_Bones(_rhs.m_Bones)
+    ,m_iNumAnimations(_rhs.m_iNumAnimations)
 {
+    for (auto& pBone : _rhs.m_Bones)
+        m_Bones.push_back(pBone->Clone());
+
+    for (auto& pAnim : _rhs.m_Animations)
+        m_Animations.push_back(pAnim->Clone());
 }
 
 HRESULT CModel::Initialize(TYPE eModelType, const _char* pModelFilePath, const _tchar* _DatFilePath, _fmatrix PivotMatrix)
@@ -94,6 +100,16 @@ HRESULT CModel::Render(_uint _iMeshIndex)
    m_Meshes[_iMeshIndex]->Render();
 
     return S_OK;
+}
+
+void CModel::SetSpecificAnimSpeed(_uint _iAnimIdx, _float _fSpeed)
+{
+    if (m_Animations.size() < _iAnimIdx) {
+        return;
+    }
+
+    m_Animations[_iAnimIdx]->SetAnimSpeed(_fSpeed);
+
 }
 
 _int CModel::GetBoneIndex(const _char* _pBoneName) const
@@ -174,7 +190,7 @@ _bool CModel::PlayAnimation(_float _fTimeDelta , _bool _isLoop, _float3* _vRootP
     return m_IsFinish;
 }
 
-_bool CModel::ChangeAnimation(_uint _iAnimNum)
+_bool CModel::ChangeAnimation(_uint _iAnimNum, _float _LinearTime)
 {
     if (_iAnimNum == m_iCurrentAnimation || m_IsLinearState)
         return false;
@@ -183,13 +199,7 @@ _bool CModel::ChangeAnimation(_uint _iAnimNum)
     m_NextAnim = m_Animations[_iAnimNum];
     m_iNextAnimation = _iAnimNum;
 
-    if(_iAnimNum != 1 && _iAnimNum != 2){
-        m_fLinearTotalTime = 0.06f;
-    }
-    else {
-        m_fLinearTotalTime = 0.02f;
-    }
-
+    m_fLinearTotalTime = _LinearTime;
   
     //m_Animations[m_iCurrentAnimation]->AnimStateReset();
     //m_iCurrentAnimation = _iAnimNum;
@@ -285,7 +295,7 @@ shared_ptr<CModel> CModel::Create(wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPt
 
 shared_ptr<CModel> CModel::Clone(shared_ptr<CModel> _rhs)
 {   
-    shared_ptr<CModel> pInstance = _rhs;
+    shared_ptr<CModel> pInstance = make_shared<CModel>(*(_rhs.get()));
 
     if (FAILED(pInstance->InitializeClone())) {
         MSG_BOX("Failed to Clone : CModel");

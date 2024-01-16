@@ -34,7 +34,7 @@ public:
 
 public:
 	_float4 GetCamLook();
-
+	_vector GetCamPos();
 
 private:
 	ECAMERATYPE m_eCurrentCamType = ECAMERATYPE::THIRDPERSON;

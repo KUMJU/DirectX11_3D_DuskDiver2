@@ -34,7 +34,7 @@ HRESULT CAnimation::Initialize(ifstream& _ifs, shared_ptr<class CModel> _pModel)
 _bool CAnimation::InvalidateTransformationMatrix(_float _fTimeDelta, const vector<shared_ptr<CBone>>& _Bones , _bool _isLoop)
 {
     //m_TrackPosition : 약간 재생바에 현재 진행 알려주는 그 네모 같은걸로 생각하면 편한듯..
-    m_TrackPosition += m_TickPerSecond * _fTimeDelta;
+    m_TrackPosition += m_TickPerSecond * _fTimeDelta * m_AnimSpeed;
 
     if (m_TrackPosition >= m_Duration) {
 
@@ -70,8 +70,15 @@ void CAnimation::ChangeAnimation(shared_ptr<CAnimation> _pNextAnim, const vector
     _uint iCurrentKeyFrame = _pNextAnim->GetCurrentKeyFrame();
 
     for (size_t i = 0; i < m_iNumChannels; ++i) {
-        CChannel::KEYFRAME nextKey = pChannels[i]->GetKeyFrame(0);
-        m_Channels[i]->LinearInterpolation(m_iCurrentKeyFrames[i], nextKey, _Bones, _fRatio);
+        for (size_t j = 0; i < _pNextAnim->GetChannelNum(); ++j) {
+
+            if (m_Channels[i]->GetBoneIndex() == pChannels[j]->GetBoneIndex()) {
+                CChannel::KEYFRAME nextKey = pChannels[j]->GetKeyFrame(0);
+                m_Channels[i]->LinearInterpolation(m_iCurrentKeyFrames[i], nextKey, _Bones, _fRatio);
+
+                break;
+            }
+        }
     }
 }
 
@@ -83,4 +90,10 @@ shared_ptr<CAnimation> CAnimation::Create(ifstream& _ifs, shared_ptr<CModel> _pM
         MSG_BOX("Faile to Create : CAnimation");
 
     return pInstance;
+}
+
+shared_ptr<CAnimation> CAnimation::Clone()
+{
+    shared_ptr<CAnimation> pAnim = make_shared<CAnimation>(*(shared_from_this().get()));
+    return pAnim;
 }

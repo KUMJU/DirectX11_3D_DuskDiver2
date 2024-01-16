@@ -1,7 +1,10 @@
 #pragma once
 
 #include "Client_Defines.h"
-#include "Player.h"
+
+BEGIN(Client)
+
+class CPlayer;
 
 class CGameMgr
 {
@@ -39,3 +42,5 @@ private:
 
 };
 
+
+END

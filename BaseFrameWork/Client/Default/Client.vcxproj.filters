@@ -46,9 +46,6 @@
     <Filter Include="96. Imgui\03. ImguiGizmo">
       <UniqueIdentifier>{2294b1a6-c2fb-453c-8132-c9613443bed9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\00. Player">
-      <UniqueIdentifier>{f655f074-168d-47b9-ae8e-d187db6b456b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\01. UI">
       <UniqueIdentifier>{275c41ca-57ec-45b2-8480-314b137cf678}</UniqueIdentifier>
     </Filter>
@@ -96,6 +93,36 @@
     </Filter>
     <Filter Include="02. GameObject\01. UI\01.UI_PlayerHUD">
       <UniqueIdentifier>{56162f41-41e5-4634-9dbd-c31e1887f936}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\00.Creature">
+      <UniqueIdentifier>{ad9d5b15-9bcb-47c4-a5f9-fa3e1e4395bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\00.Creature\00. Player">
+      <UniqueIdentifier>{f655f074-168d-47b9-ae8e-d187db6b456b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\00.Creature\01. Monster">
+      <UniqueIdentifier>{4160b83c-54c4-4568-be92-ce486a87a3fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\00.Creature\01. Monster\00. Enemy01">
+      <UniqueIdentifier>{6ffb9d7a-df31-4635-8210-2eb315b0ff47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Skill">
+      <UniqueIdentifier>{0d565514-a811-4e53-a587-0fc5937fe529}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. Trigger">
+      <UniqueIdentifier>{5a63cd4a-bdac-428f-aadd-7319dc34f934}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Skill\00. BasicAttack">
+      <UniqueIdentifier>{57cc7aa7-eb11-48dd-a88e-903fee2e5d07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\00.Creature\01. Monster\01. Enemy02">
+      <UniqueIdentifier>{4d15fcf7-c5bd-4d28-9d60-8b9fcaa44c80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\00.Creature\01. Monster\02. MiddleBoss">
+      <UniqueIdentifier>{f94656db-269f-4948-b908-bb2a19dc7ce4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Camera\02. EventCamera">
+      <UniqueIdentifier>{7de383d3-0594-4398-abdf-20fad54b0677}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -190,7 +217,7 @@
       <Filter>03. Manager\01. UIMgr</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player.h">
-      <Filter>02. GameObject\00. Player</Filter>
+      <Filter>02. GameObject\00.Creature\00. Player</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Json\json.h">
       <Filter>95. Helper</Filter>
@@ -206,6 +233,21 @@
     </ClInclude>
     <ClInclude Include="..\Public\CameraMgr.h">
       <Filter>03. Manager\03. CameraMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Skill.h">
+      <Filter>02. GameObject\05. Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Monster.h">
+      <Filter>02. GameObject\00.Creature\01. Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Enemy01.h">
+      <Filter>02. GameObject\00.Creature\01. Monster\00. Enemy01</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MiddleBoss.h">
+      <Filter>02. GameObject\00.Creature\01. Monster\02. MiddleBoss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Enemy02.h">
+      <Filter>02. GameObject\00.Creature\01. Monster\01. Enemy02</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -285,7 +327,7 @@
       <Filter>03. Manager\01. UIMgr</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player.cpp">
-      <Filter>02. GameObject\00. Player</Filter>
+      <Filter>02. GameObject\00.Creature\00. Player</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\jsoncpp.cpp">
       <Filter>95. Helper</Filter>
@@ -298,6 +340,21 @@
     </ClCompile>
     <ClCompile Include="..\Private\CameraMgr.cpp">
       <Filter>03. Manager\03. CameraMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Skill.cpp">
+      <Filter>02. GameObject\05. Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Monster.cpp">
+      <Filter>02. GameObject\00.Creature\01. Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Enemy01.cpp">
+      <Filter>02. GameObject\00.Creature\01. Monster\00. Enemy01</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MiddleBoss.cpp">
+      <Filter>02. GameObject\00.Creature\01. Monster\02. MiddleBoss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Enemy02.cpp">
+      <Filter>02. GameObject\00.Creature\01. Monster\01. Enemy02</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
