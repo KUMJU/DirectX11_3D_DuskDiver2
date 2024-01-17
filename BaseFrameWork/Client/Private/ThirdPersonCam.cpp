@@ -52,7 +52,7 @@ HRESULT CThirdPersonCam::Initialize()
 	m_fMinElevation = 0.f;
 	m_fMaxElevation = 70.f;
 
-	m_fMouseSensor = 0.1f;
+	m_fMouseSensor = 0.08f;
 	m_fHeight = 0.9f;
 
 	return S_OK;
@@ -68,6 +68,8 @@ void CThirdPersonCam::PriorityTick(_float fTimeDelta)
 		SphericalCoordinates(vPlayerPos);
 		m_IsInitDone = true;
 
+		m_fLastYPos = vPlayerPos.m128_f32[1];
+
 		//카메라 position 세팅
 		m_fAzimuth = XMConvertToRadians(-90.f);   //
 		m_fElevation = XMConvertToRadians(38.5f);
@@ -81,6 +83,7 @@ void CThirdPersonCam::PriorityTick(_float fTimeDelta)
 		XMStoreFloat3(&m_vCameraEye, vPlayerPos);
 		m_pTransformCom->LookAt(XMVectorSetY(vPlayerPos, XMVectorGetY(vPlayerPos) + m_fHeight));
 		XMStoreFloat3(&m_vCamAt, XMVectorSetY(vPlayerPos, XMVectorGetY(vPlayerPos)));
+
 	}
 
 	//CCamera::SetUpTransformMatices();
@@ -88,7 +91,7 @@ void CThirdPersonCam::PriorityTick(_float fTimeDelta)
 
 void CThirdPersonCam::Tick(_float fTimeDelta)
 {
-	if (!m_IsEnabled)
+	if (!m_IsEnabled )
 		return;
 	//플레이어가 움직임
 }
@@ -108,6 +111,8 @@ void CThirdPersonCam::LateTick(_float fTimeDelta)
 
 	SphericalRotate(fTimeDelta * (_float)MouseMoveX * m_fMouseSensor, fTimeDelta * (_float)MouseMoveY * m_fMouseSensor);
 	vCamPos = ToCartesian();
+
+	XMVectorSetY(vPlayerPos, m_fLastYPos);
 	vCamPos += vPlayerPos;
 
 	//선형 보간
@@ -117,13 +122,9 @@ void CThirdPersonCam::LateTick(_float fTimeDelta)
 	XMStoreFloat4(&m_vPreCamPos, vCamPos);
 
 	CalcLookVectors(vCamPos, vPlayerPos);
+
 	m_pTransformCom->SetState(CTransform::STATE_POSITION, vCamPos);
-	
-	//+ XMLoadFloat4(&m_vLookPlr) * 2.f 
-
 	m_pTransformCom->LookAt(XMVectorSetY(vPlayerPos, XMVectorGetY(vPlayerPos) + m_fHeight));
-
-	//campos에 player pos 빼서 lookvector 만든거 매번 갱신해줬다가 필요할 때 get으로 빼주기 
 
 	CCamera::SetUpTransformMatices();
 

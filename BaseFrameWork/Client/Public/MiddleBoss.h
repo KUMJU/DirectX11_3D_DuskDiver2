@@ -11,15 +11,28 @@ public:
 	virtual ~CMiddleBoss() = default;
 
 public:
-	virtual HRESULT Initialize(CTransform::TRANSFORM_DESC* _pDesc);
+	virtual HRESULT Initialize();
 	virtual void PriorityTick(_float _fTimeDelta);
 	virtual void Tick(_float _fTimeDelta);
 	virtual void LateTick(_float _fTimeDelta);
 	virtual HRESULT Render();
 
-public:
+private:
 	virtual void AttackPattern(_uint _iAtkNum) override;
 	virtual void IfEmptyAnimList() override;
+	virtual void CalcDistanceOption() override;
+
+	void WalkPattern();
+
+	_uint test= 0;
+
+private:
+
+
+
+public:
+
+	static shared_ptr<CMiddleBoss> Create();
 
 };
 

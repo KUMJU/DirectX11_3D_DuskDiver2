@@ -62,6 +62,8 @@ private:
 	//플레이어 기준으로 얼만큼 더 위에 있을건지
 	_float m_fHeight = 0.f;
 
+	_float m_fLastYPos = 0.f;
+
 private:
 	_float3 m_vCameraAt;
 	_float3 m_vCameraEye;

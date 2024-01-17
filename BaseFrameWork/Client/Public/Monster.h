@@ -36,6 +36,7 @@ public:
 		STATE_HIT,
 		STATE_DIE,
 		STATE_DOWN,
+		STATE_STUN,
 		STATE_END
 	};
 
@@ -54,6 +55,7 @@ protected:
 	void ChasePlayer();
 	void CalcPlayerDistance();
 	void CalcAnimationDistance();
+	_float CalcPlayerDistanceReturn();
 
 	virtual void AttackPattern(_uint _iAtkNum) = 0;
 
@@ -78,10 +80,18 @@ protected:
 	_float AttackDistance = 0.f; // 몬스터 사거리
 	_float m_bAttackCoolTime = 0.f;
 
+	_uint m_iCurrentAtkNum = 0;
+	_uint m_iNextAtkNum = 0;
+
+
 	_uint m_iTotalAtkNum = 0;
 	_uint m_iTestNum = 0; //애니메이션 확인하려고 넣음
 
 	_bool m_IsLinearInterpolation = false;
+
+	_bool m_bStun = false;
+	_float m_fStunTime = 0.f;
+
 
 protected:
 

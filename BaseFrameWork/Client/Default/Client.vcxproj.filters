@@ -118,11 +118,17 @@
     <Filter Include="02. GameObject\00.Creature\01. Monster\01. Enemy02">
       <UniqueIdentifier>{4d15fcf7-c5bd-4d28-9d60-8b9fcaa44c80}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\00.Creature\01. Monster\02. MiddleBoss">
-      <UniqueIdentifier>{f94656db-269f-4948-b908-bb2a19dc7ce4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\02. Camera\02. EventCamera">
       <UniqueIdentifier>{7de383d3-0594-4398-abdf-20fad54b0677}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. EventCutScene">
+      <UniqueIdentifier>{3395bed2-1640-4b3f-a64c-bc8c4e3d75b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\00.Creature\01. Monster\02. Enemy03">
+      <UniqueIdentifier>{676ea72a-d90f-4e06-8fdc-015f85e26bef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\00.Creature\01. Monster\03. MiddleBoss">
+      <UniqueIdentifier>{f94656db-269f-4948-b908-bb2a19dc7ce4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -243,11 +249,17 @@
     <ClInclude Include="..\Public\Enemy01.h">
       <Filter>02. GameObject\00.Creature\01. Monster\00. Enemy01</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\MiddleBoss.h">
-      <Filter>02. GameObject\00.Creature\01. Monster\02. MiddleBoss</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Enemy02.h">
       <Filter>02. GameObject\00.Creature\01. Monster\01. Enemy02</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MiddleBoss.h">
+      <Filter>02. GameObject\00.Creature\01. Monster\03. MiddleBoss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Enemy03.h">
+      <Filter>02. GameObject\00.Creature\01. Monster\02. Enemy03</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EventCamera.h">
+      <Filter>02. GameObject\02. Camera\02. EventCamera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -350,11 +362,17 @@
     <ClCompile Include="..\Private\Enemy01.cpp">
       <Filter>02. GameObject\00.Creature\01. Monster\00. Enemy01</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\MiddleBoss.cpp">
-      <Filter>02. GameObject\00.Creature\01. Monster\02. MiddleBoss</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Enemy02.cpp">
       <Filter>02. GameObject\00.Creature\01. Monster\01. Enemy02</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MiddleBoss.cpp">
+      <Filter>02. GameObject\00.Creature\01. Monster\03. MiddleBoss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Enemy03.cpp">
+      <Filter>02. GameObject\00.Creature\01. Monster\02. Enemy03</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EventCamera.cpp">
+      <Filter>02. GameObject\02. Camera\02. EventCamera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

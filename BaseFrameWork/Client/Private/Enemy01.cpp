@@ -30,6 +30,7 @@ HRESULT CEnemy01::Initialize()
     m_eMonsterType = EMONSTER_TYPE::MONSTER_NORMAL;
 
     m_iTotalAtkNum = 4;
+    m_iCurrentAtkNum = 0;
 
     return S_OK;
 }

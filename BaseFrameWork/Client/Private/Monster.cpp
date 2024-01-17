@@ -57,8 +57,8 @@ void CMonster::ChasePlayer()
 
         if (fLength < AttackDistance) {
             m_IsNearPlr = true;
-            AttackPattern(m_iTestNum % m_iTotalAtkNum);
-            ++m_iTestNum;
+            AttackPattern(m_iCurrentAtkNum%m_iTotalAtkNum);
+            ++m_iCurrentAtkNum;
         }
     }
 }
@@ -96,6 +96,16 @@ void CMonster::CalcAnimationDistance()
 
 }
 
+_float CMonster::CalcPlayerDistanceReturn()
+{
+    _vector vPlrPos = m_pTargetTransCom->GetState(CTransform::STATE_POSITION);
+    _vector vCurrentActPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+
+    _float fLength = XMVector3Length(vPlrPos - vCurrentActPos).m128_f32[0];
+
+    return fLength;
+}
+
 _bool CMonster::CheckReserveAnimList()
 {
     if (m_NextAnimIndex.empty()) {
@@ -105,11 +115,11 @@ _bool CMonster::CheckReserveAnimList()
     }
     else
     {
-        _uint iNextAnim = m_NextAnimIndex.front().iNextAnimNum;
-        _bool isLoop = m_NextAnimIndex.front().IsLoop;
+        m_iAnimNum = m_NextAnimIndex.front().iNextAnimNum;
+        m_bLoop = m_NextAnimIndex.front().IsLoop;
 
         m_NextAnimIndex.pop_front();
-        m_pModelCom->ChangeAnimation(iNextAnim);
+        m_pModelCom->ChangeAnimation(m_iAnimNum);
 
         return true;
     }

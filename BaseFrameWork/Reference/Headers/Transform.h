@@ -70,6 +70,9 @@ public:
 	void GoLeft(_float _fTimeDelta);
 	void GoRight(_float _fTimeDelta);
 	void Turn(_fvector _vAxis, _float _fTimeDelta);
+
+	void TurnPlayer(_vector _vAxis, _float _fAngle, _float _fTimeDelta);
+		
 	void Rotation(_fvector _vAxis, _float _fRadian);
 	void MoveTo(_fvector _vPoint, _float _fLimit, _float _fTimeDelta);
 	void LookAt(_fvector _vPoint);

@@ -17,7 +17,7 @@ HRESULT CPlayer::Initialize()
 
     CTransform::TRANSFORM_DESC TransformDesc = {};
     TransformDesc.fSpeedPerSet = 7.f;
-    TransformDesc.fRotationPerSet = 27.f;
+    TransformDesc.fRotationPerSet = 45.f;
 
     if (FAILED(__super::Initialize(&TransformDesc)))
         return E_FAIL;
@@ -39,9 +39,6 @@ HRESULT CPlayer::Initialize()
 
 
     m_eCurrentState = HEROSTATE::STATE_IDLE;
-    //44
- //   14 15 다 잘나옴
-   //     그럼 로직문제?
     m_pModelCom->ChangeAnimation(44);
 
     return S_OK;
@@ -275,6 +272,10 @@ void CPlayer::CheckReserveAnimList()
 
     if (m_NextAnimIndex.empty()) {
 
+        if (81 == m_iCurrentAnimIdx && m_bSprint == false) {
+            m_bDash = false;
+        }
+
         if (m_bComboAttackStart && m_bJump) {
             m_eCurrentState = HEROSTATE::STATE_JUMP;
             ChangeAnim(53, false);
@@ -389,8 +390,7 @@ void CPlayer::KeyInput(_float _fTimeDelta)
     if (m_IsMouseDeb)
         return;
 
-    if (HEROSTATE::STATE_HEAVY_ATTACK == m_eCurrentState || 
-        HEROSTATE::STATE_DASH == m_eCurrentState)
+    if (HEROSTATE::STATE_HEAVY_ATTACK == m_eCurrentState)
         return;
 
     _bool IsKeyInput = false;
@@ -453,7 +453,6 @@ void CPlayer::KeyInput(_float _fTimeDelta)
 
         if (m_bBurstMode) {
             ChangeAnim(73, false);
-            //76
             //m_NextAnimIndex.push_back({ 52 , false });
             //m_NextAnimIndex.push_back({ 70 , false });
             //m_NextAnimIndex.push_back({ 69 , true });
@@ -497,7 +496,17 @@ void CPlayer::KeyInput(_float _fTimeDelta)
 
     }
 
+
+    if (GetKeyState('7') & 0x8000) {
+
+        m_pTransformCom->SetState(CTransform::STATE_POSITION, { 0.f, 0.f, 1.f ,1.f });
+    }
+
     ///////////////////Walk////////////////////////
+
+    _bool bInputW = false;
+    _bool bInputS = false;
+    m_bSprint = false;
 
     if (GetKeyState('W') & 0x8000)
     {
@@ -508,6 +517,7 @@ void CPlayer::KeyInput(_float _fTimeDelta)
         m_pTransformCom->GoStraight(_fTimeDelta);
 
         if (m_bDash) {
+            m_bSprint = true;
             FinalAnimNum = 80;
             m_bDash = true;
         }
@@ -516,17 +526,72 @@ void CPlayer::KeyInput(_float _fTimeDelta)
         }
 
         IsLoop = true;
-
-
+        bInputW = true; 
         IsKeyInput = true;
+    }
+
+    if (GetKeyState('S') & 0x8000) {
+
+        if (!bInputW) {
+
+            CalcLookVector(-1.f);
+
+            m_bRunning = true;
+            m_fCurrentDir = -1.f;
+            m_pTransformCom->GoStraight(_fTimeDelta);
+
+            if (m_bDash) {
+                m_bSprint = true;
+                FinalAnimNum = 80;
+                m_bDash = true;
+            }
+            else {
+                FinalAnimNum = 59;
+            }
+
+            bInputS = true;
+            IsLoop = true;
+            IsKeyInput = true;
+        }
     }
 
     if (GetKeyState('A') & 0x8000)
     {
-        m_pTransformCom->GoLeft(_fTimeDelta);    
-        m_pTransformCom->GoStraight(_fTimeDelta);
-        
-        FinalAnimNum = 59;
+        _float4 vCamLook = CCameraMgr::GetInstance()->GetCamLook();
+        _vector vTemp = XMVector4Normalize(XMLoadFloat4(&vCamLook));
+
+        _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+        _vector vRight = XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vTemp);
+        _vector vLeft = vRight * -1.f;
+
+        if (bInputW) {
+
+            _vector SideVector = vTemp + vLeft;
+            vPos += SideVector;
+
+            m_pTransformCom->LookAt(vPos);
+        }
+        else if (bInputS) {
+            _vector SideVector = (vTemp * -1.f) + vLeft;
+            vPos += SideVector;
+
+            m_pTransformCom->LookAt(vPos);
+        }
+        else {
+            vPos += vLeft;
+            m_pTransformCom->LookAt(vPos);
+
+        }
+
+        if (m_bDash) {
+            m_bSprint = true;
+            FinalAnimNum = 80;
+            m_bDash = true;
+        }
+        else {
+            FinalAnimNum = 59;
+        }
+
         IsLoop = true;
 
         IsKeyInput = true;
@@ -536,36 +601,35 @@ void CPlayer::KeyInput(_float _fTimeDelta)
 
     if (GetKeyState('D') & 0x8000)
     {
-        
-        CalcLookVector(1.f);
 
-        _vector vLook = m_pTransformCom->GetState(CTransform::STATE_LOOK);
-        _vector OriginLook = { 0.f, 0.f, 1.f};
-        
-        XMVector3Normalize(vLook);
-        XMVector3Normalize(OriginLook);
+        _float4 vCamLook = CCameraMgr::GetInstance()->GetCamLook();
+        _vector vTemp = XMVector4Normalize(XMLoadFloat4(&vCamLook));
 
-        _float Radian = acosf(XMVector3Dot(vLook, OriginLook).m128_f32[0]);
-        
-        _float degree = XMConvertToDegrees(Radian);
-        m_pTransformCom->Rotation({ 0.f, 1.f , 0.f }, Radian);
+        _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+        _vector vRight = XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vTemp);
 
-     //  m_pTransformCom->GoStraight(_fTimeDelta);
-        IsKeyInput = true;
+        if (bInputW) {
+            
+            _vector SideVector = vTemp + vRight;
+            vPos += SideVector;
 
-        FinalAnimNum = 59;
-        IsLoop = true;
-    }
+            m_pTransformCom->LookAt(vPos);
+        }
+        else if (bInputS) {
+            _vector SideVector = (vTemp * -1.f) + vRight;
+            vPos += SideVector;
 
-    if (GetKeyState('S') & 0x8000) {
+            m_pTransformCom->LookAt(vPos);
+        }
+        else {
+            vPos += vRight;
+            m_pTransformCom->LookAt(vPos);
 
-        CalcLookVector(-1.f);
-      
-        m_bRunning = true;
-        m_fCurrentDir = -1.f;
-        m_pTransformCom->GoStraight(_fTimeDelta);
+        }
+
 
         if (m_bDash) {
+            m_bSprint = true;
             FinalAnimNum = 80;
             m_bDash = true;
         }
@@ -573,9 +637,12 @@ void CPlayer::KeyInput(_float _fTimeDelta)
             FinalAnimNum = 59;
         }
 
-
-        IsLoop = true;
         IsKeyInput = true;
+        IsLoop = true;
+    }
+
+    if (IsKeyInput) {
+        m_pTransformCom->GoStraight(_fTimeDelta);
     }
 
     if (m_eCurrentState == HEROSTATE::STATE_JUMP ||
@@ -584,21 +651,11 @@ void CPlayer::KeyInput(_float _fTimeDelta)
         return;
     }
 
-
     ////////////////////////Dash + Jump + Dodge ////////////////////////
 
     //Dodge 
     if (GetKeyState(VK_SHIFT) & 0x8000)
     {
-        CalcLookVector(m_fCurrentDir);
-
-        //_float4 vLook = CCameraMgr::GetInstance()->GetCamLook();
-        //_vector vLookVec = XMLoadFloat4(&vLook);
-
-        //_vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
-        //vPos += vLookVec;
-        //m_pTransformCom->LookAt(vPos);
-
         m_pTransformCom->GoStraight(_fTimeDelta);
         m_eCurrentState = HEROSTATE::STATE_DODGE;
 
@@ -620,14 +677,6 @@ void CPlayer::KeyInput(_float _fTimeDelta)
     // key input이 되어있다면 바로 대쉬 사용 가능 or Idle 전환 안 하고 run 가능 
     if (GetKeyState('F') & 0x8000)
     {
-
-        /*_float4 vLook = CCameraMgr::GetInstance()->GetCamLook();
-        _vector vLookVec = XMLoadFloat4(&vLook);
-
-        _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
-        vPos += vLookVec;
-        m_pTransformCom->LookAt(vPos);*/
-
         m_pTransformCom->GoStraight(_fTimeDelta);
         m_eCurrentState = HEROSTATE::STATE_DASH;
 

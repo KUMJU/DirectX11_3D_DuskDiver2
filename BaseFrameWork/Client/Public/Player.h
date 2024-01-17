@@ -83,9 +83,6 @@ private:
 	//진짜 state가 loop
 	_bool m_isAnimLoop = true;
 
-	_float m_eCurrentDegree = 90.f;
-
-
 //변신~~~~~~~~~!!!!!
 private:
 	_float m_fransformTime = 0.f;
@@ -140,12 +137,15 @@ private:
 	_bool m_bDrop = false;
 
 	_bool m_bDash = false;
+	_bool m_bSprint = false;
+
 	_bool m_bDodge = false;
 
 	_float fDashSpeed = false;
 	
 	_bool m_bActiveCoolTime = false;
 
+	_float m_fCurrentDegree = 0.f;
 private:
 
 	list<ANIMINFO> m_NextAnimIndex;
@@ -173,6 +173,7 @@ private:
 
 //Jump
 private:
+
 	_float m_fJumpSpeed = 0.f;
 	_float m_fTotalHeight = 0.f;
 

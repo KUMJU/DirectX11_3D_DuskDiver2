@@ -80,6 +80,17 @@ void CTransform::Turn(_fvector _vAxis, _float _fTimeDelta)
     }
 }
 
+void CTransform::TurnPlayer(_vector _vAxis, _float _fAngle, _float _fTimeDelta)
+{
+    _matrix RotationMatrix = XMMatrixRotationAxis(_vAxis, _fAngle * _fTimeDelta);
+
+    for (size_t i = STATE_RIGHT; i < STATE_POSITION; i++) {
+
+        _vector vStateDir = GetState(STATE(i));
+        SetState(STATE(i), XMVector4Transform(vStateDir, RotationMatrix));
+    }
+}
+
 void CTransform::Rotation(_fvector _vAxis, _float _fRadian)
 {
     _matrix RotationMatrix = XMMatrixRotationAxis(_vAxis, _fRadian);
