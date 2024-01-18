@@ -52,6 +52,7 @@ public:
 	virtual void LateTick(_float _fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+
 private:
 	shared_ptr<CShader> m_pShader = nullptr;
 
@@ -63,6 +64,7 @@ private:
 	shared_ptr<CModel> m_pBurstModelCom = nullptr;
 	//전투모드
 	shared_ptr<CModel> m_pBattleModelCom = nullptr;
+
 
 private:
 	void SetAnimSpeed();
@@ -101,10 +103,18 @@ private:
 	void KeyInput(_float _fTimeDelta);
 	void MouseInput(_float _fTimeDelta);
 
+	void TurnLerp(_vector _vSrc, _vector _vDst, _float _fDeltaTime, _vector _vPos, unsigned char _flag);
+
+	_vector m_vPrevLook = { 0.f, 0.f , 0.f, };
+
 	_bool m_IsMouseDeb = false;
 	_bool m_IsKeyDeb = false;
 	
 	_float m_fDebTime = 0.f;
+	_float m_fSlerpFlat = 0.f;
+
+	unsigned char m_MoveFlag = 0x0000;
+	unsigned char m_LastMoveFlag = 0x0000;
 
 private:
 	_float3 m_vCurretnAnimPos = { 0.f, 0.f , 0.f };
@@ -112,6 +122,7 @@ private:
 
 	_float m_fCurrentDir = 1.f;
 
+	_float m_fSkillRJumpCool = 0.f;
 private:
 
 	_int m_iMaxHp = 100;
@@ -140,8 +151,9 @@ private:
 	_bool m_bSprint = false;
 
 	_bool m_bDodge = false;
+	 
+	_float m_fDashSpeed = 0.f;
 
-	_float fDashSpeed = false;
 	
 	_bool m_bActiveCoolTime = false;
 
@@ -151,7 +163,7 @@ private:
 	list<ANIMINFO> m_NextAnimIndex;
 
 	//LoopAnimation
-	_float m_fLoopTotalTime = 0.2f;
+	_float m_fLoopTotalTime = 0.14f;
 	_bool m_IsLoopMotion = false;
 	_float m_fCurLoopTime = 0.f;
 
@@ -174,7 +186,7 @@ private:
 //Jump
 private:
 
-	_float m_fJumpSpeed = 0.f;
+	_float m_fJumpSpeed = 4.f;
 	_float m_fTotalHeight = 0.f;
 
 private:

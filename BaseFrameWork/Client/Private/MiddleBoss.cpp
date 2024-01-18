@@ -42,6 +42,15 @@ void CMiddleBoss::PriorityTick(_float _fTimeDelta)
 
 void CMiddleBoss::Tick(_float _fTimeDelta)
 {
+    if (!m_IsEnabled)
+        return;
+
+    if (m_eCurrentState == EMONSTER_STATE::STATE_IDLE) {
+
+        if (47 == m_iAnimNum) {
+            m_pTransformCom->GoStraight(_fTimeDelta);
+        }
+    }
 
     //공격 쿨타임일때
     if (m_IsAtkCool) {
@@ -56,7 +65,7 @@ void CMiddleBoss::Tick(_float _fTimeDelta)
         ChasePlayer();
 
         if (!m_IsNearPlr) {
-           // ChangeAnim(47, true);
+            ChangeAnim(47, true);
             EMONSTER_STATE::STATE_WALK;
             m_pTransformCom->GoStraight(_fTimeDelta);
         }
@@ -76,6 +85,9 @@ void CMiddleBoss::Tick(_float _fTimeDelta)
 
 void CMiddleBoss::LateTick(_float _fTimeDelta)
 {
+    if (!m_IsEnabled)
+        return;
+
 
     if (m_IsAtkCool) {
         m_bAttackCoolTime += _fTimeDelta;
@@ -95,6 +107,10 @@ void CMiddleBoss::LateTick(_float _fTimeDelta)
 
 HRESULT CMiddleBoss::Render()
 {
+
+    if (!m_IsEnabled)
+        return S_OK;
+
     if (FAILED(BindShaderResources()))
         return E_FAIL;
 
@@ -188,7 +204,8 @@ void CMiddleBoss::WalkPattern()
     if (2 == m_iAtkPattern || 3 == m_iAtkPattern) {
 
         if (CurrentLenth > AttackDistance) {
-            ChangeAnim(47, true);
+           // ChangeAnim(47, true);
+            m_IsAtkCool = false;
         }
     }
     else {

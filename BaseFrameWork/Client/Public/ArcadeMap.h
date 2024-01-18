@@ -3,6 +3,12 @@
 #include "Client_Defines.h"
 #include "Level.h"
 
+BEGIN(Engine)
+class CGameObject;
+
+END
+
+
 BEGIN(Client)
 
 class CArcadeMap : public CLevel
@@ -24,6 +30,18 @@ public:
 	HRESULT ReadyLayerMonster(const wstring& _strLayerTag);
 	HRESULT ReadyLayerUI(const wstring& _strLayerTag);
 	HRESULT ReadyLight();
+
+private:
+	void KeyInput();
+
+	shared_ptr<CGameObject> pMonster1;
+	shared_ptr<CGameObject> pMonster2;
+	shared_ptr<CGameObject> pMonster3;
+	shared_ptr<CGameObject> pMonster4;
+
+private:
+	_bool m_bKeyDeb = false;
+	_float m_fTime = 0.f;
 
 public:
 	static shared_ptr<CArcadeMap> Create();

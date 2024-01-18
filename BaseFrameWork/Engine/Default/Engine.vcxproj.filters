@@ -112,9 +112,6 @@
     <Filter Include="01. Utility\04. Component\04. Collider">
       <UniqueIdentifier>{49c210ec-7dc1-4888-8247-f245f12121ba}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Utility\04. Component\04. Collider\Sphere Collider">
-      <UniqueIdentifier>{3d6d9f8e-a8da-44d1-b06c-53649f1fec97}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Utility\09. Manager\00. ResourceMgr\Shader">
       <UniqueIdentifier>{069828e2-eab1-41a9-b258-e3c62a4513db}</UniqueIdentifier>
     </Filter>
@@ -133,9 +130,6 @@
     <Filter Include="01. Utility\04. Component\03. Model\Animation\Channel">
       <UniqueIdentifier>{3b8f40d5-a85a-408b-a4ec-4f7d6594f7c8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Utility\04. Component\04. Collider\Manager">
-      <UniqueIdentifier>{dc5f675e-630b-4c2b-ab7c-a1c967aab191}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Utility\04. Component\05. Navigation">
       <UniqueIdentifier>{cbc01ff8-bc2f-4cf4-a48b-785502cf1e28}</UniqueIdentifier>
     </Filter>
@@ -144,6 +138,18 @@
     </Filter>
     <Filter Include="01. Utility\04. Component\00. VIBuffer\02. Cell">
       <UniqueIdentifier>{9670bb42-2940-414e-8a40-e476739f2879}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\04. Component\04. Collider\Bounding">
+      <UniqueIdentifier>{c67650d3-de3a-4729-8544-cbf4126a7467}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\04. Component\04. Collider\Bounding\AABB">
+      <UniqueIdentifier>{0dc45e09-6995-49a6-a002-de273a40fad1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\04. Component\04. Collider\Bounding\Sphere">
+      <UniqueIdentifier>{3d6d9f8e-a8da-44d1-b06c-53649f1fec97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\04. Component\04. Collider\Bounding\OBB">
+      <UniqueIdentifier>{579e5701-ede5-4bb3-8f4d-bd21cb2bc7d8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -268,6 +274,7 @@
       <Filter>01. Utility\04. Component\05. Navigation\Cell</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\VIBufferCell.h" />
+    <ClInclude Include="..\Public\Collider.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\GraphicDev.cpp">
@@ -379,5 +386,6 @@
       <Filter>01. Utility\04. Component\05. Navigation\Cell</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\VIBufferCell.cpp" />
+    <ClCompile Include="..\Private\Collider.cpp" />
   </ItemGroup>
 </Project>

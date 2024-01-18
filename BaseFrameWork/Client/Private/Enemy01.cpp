@@ -20,7 +20,6 @@ HRESULT CEnemy01::Initialize()
 
     m_pShader = CGameInstance::GetInstance()->GetShader(TEXT("Shader_VtxAnim"));
 
-    m_pTransformCom->SetState(CTransform::STATE_POSITION, { 5.f, 0.f, 5.f });
     m_pTransformCom->SetScaling(0.5f, 0.5f, 0.5f);
 
     m_pModelCom = m_pGameInstance->GetModel(TEXT("Enemy01"));
@@ -41,6 +40,10 @@ void CEnemy01::PriorityTick(_float _fTimeDelta)
 
 void CEnemy01::Tick(_float _fTimeDelta)
 {
+    if (!m_IsEnabled)
+        return;
+
+
     //공격 쿨타임일때
     if (m_IsAtkCool) {
         m_IsNearPlr = false;
@@ -92,6 +95,9 @@ void CEnemy01::Tick(_float _fTimeDelta)
 void CEnemy01::LateTick(_float _fTimeDelta)
 {
 
+    if (!m_IsEnabled)
+        return;
+
     if (m_IsAtkCool) {
         m_bAttackCoolTime += _fTimeDelta;
 
@@ -111,6 +117,9 @@ void CEnemy01::LateTick(_float _fTimeDelta)
 
 HRESULT CEnemy01::Render()
 {
+    if (!m_IsEnabled)
+        return S_OK;
+
     if (FAILED(BindShaderResources()))
         return E_FAIL;
 

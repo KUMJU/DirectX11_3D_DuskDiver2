@@ -117,6 +117,7 @@ void CPlayer::Tick(_float _fTimeDelta)
 
     //애니메이션 재생
     if(m_pModelCom->PlayAnimation(_fTimeDelta, m_isAnimLoop, &m_vCurretnAnimPos)){
+
         CheckReserveAnimList();
     }
 
@@ -128,6 +129,61 @@ void CPlayer::Tick(_float _fTimeDelta)
 
 void CPlayer::LateTick(_float _fTimeDelta)
 {
+
+    if (m_iCurrentAnimIdx == 133) {
+
+        m_fSkillRJumpCool += _fTimeDelta;
+        if (m_fSkillRJumpCool > 1.1f) {
+
+            m_fJumpSpeed = 15.f;
+
+            m_fTotalHeight += m_fJumpSpeed * _fTimeDelta;
+            _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+            vPos.m128_f32[1] += m_fJumpSpeed * _fTimeDelta;
+
+            m_pTransformCom->SetState(CTransform::STATE_POSITION, vPos);
+        }
+
+    }
+    else if (m_iCurrentAnimIdx == 52 && !m_bJump) {
+
+        m_fJumpSpeed = 5.f;
+
+        m_fTotalHeight += m_fJumpSpeed * _fTimeDelta;
+        _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+        vPos.m128_f32[1] += m_fJumpSpeed * _fTimeDelta;
+
+        m_pTransformCom->SetState(CTransform::STATE_POSITION, vPos);
+    }
+    else if (m_iCurrentAnimIdx == 50 && !m_bJump) {
+
+        if(m_fSkillRJumpCool == 0.f)
+            m_fJumpSpeed = 10.f;
+        else
+            m_fJumpSpeed = 25.f;
+
+        m_fTotalHeight -= m_fJumpSpeed * _fTimeDelta;
+        _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+
+        if (m_fTotalHeight < 0) {
+            vPos.m128_f32[1] += ((m_fTotalHeight * -1) + m_fJumpSpeed * _fTimeDelta);
+            m_fTotalHeight = 0;
+            ChangeAnim(53, false);
+            m_bJump = false;
+            m_fSkillRJumpCool = 0.f;
+        }
+        else {
+            vPos.m128_f32[1] -= m_fJumpSpeed * _fTimeDelta;
+        }
+
+        m_pTransformCom->SetState(CTransform::STATE_POSITION, vPos);
+
+
+    }
+
+
+
+
     if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_NONBLEND, shared_from_this())))
         return;
 }
@@ -156,6 +212,7 @@ HRESULT CPlayer::Render()
 
     return S_OK;
 }
+
 
 void CPlayer::SetAnimSpeed()
 {
@@ -222,9 +279,9 @@ HRESULT CPlayer::BindShaderResources()
 
 _bool CPlayer::ChangeAnim(_uint _iAnimNum, _bool _isLoop)
 {
-
+   // 52 == _iAnimNum ||
     m_iCurrentAnimIdx;
-    if (50 == _iAnimNum || 69 == _iAnimNum) {
+    if (m_bJump && 51 == _iAnimNum) {
         m_IsLoopMotion = true;
     }
     else if (1 == _iAnimNum || 12 == _iAnimNum) {
@@ -253,7 +310,11 @@ _bool CPlayer::ChangeAnim(_uint _iAnimNum, _bool _isLoop)
         HEROSTATE::STATE_COMBO_ATTACK2 != m_eCurrentState &&
         HEROSTATE::STATE_COMBO_ATTACK3 != m_eCurrentState &&
         HEROSTATE::STATE_COMBO_ATTACK4 != m_eCurrentState &&
-        HEROSTATE::STATE_COMBO_ATTACK5 != m_eCurrentState) {
+        HEROSTATE::STATE_COMBO_ATTACK5 != m_eCurrentState &&
+        m_iCurrentAnimIdx != 63 && m_iCurrentAnimIdx != 64 &&
+        m_iCurrentAnimIdx != 44 && m_iCurrentAnimIdx != 133 &&
+        m_iCurrentAnimIdx != 135 && m_iCurrentAnimIdx != 137)
+        {
         m_vPrevAnimPos = { 0.f, 0.f, 0.f };
         m_vCurretnAnimPos = { 0.f, 0.f, 0.f };
     }
@@ -269,6 +330,7 @@ _bool CPlayer::ChangeAnim(_uint _iAnimNum, _bool _isLoop)
 //미리 예약해둔 애니메이션을 확인하고, 있으면 그 애니메이션을 돌리고 없으면 기본 idle 상태로 돌아옵니다
 void CPlayer::CheckReserveAnimList()
 {
+
 
     if (m_NextAnimIndex.empty()) {
 
@@ -390,7 +452,8 @@ void CPlayer::KeyInput(_float _fTimeDelta)
     if (m_IsMouseDeb)
         return;
 
-    if (HEROSTATE::STATE_HEAVY_ATTACK == m_eCurrentState)
+    if (HEROSTATE::STATE_HEAVY_ATTACK == m_eCurrentState || 
+        HEROSTATE::STATE_DODGE == m_eCurrentState)
         return;
 
     _bool IsKeyInput = false;
@@ -411,6 +474,9 @@ void CPlayer::KeyInput(_float _fTimeDelta)
         m_pBurstModelCom->ChangeAnimation(30);
         m_isAnimLoop = false;
 
+        //Event_Burst
+        CCameraMgr::GetInstance()->StartEvent(TEXT("Event_Burst"));
+
         m_IsUsingSkill = true;
 
     }
@@ -425,7 +491,6 @@ void CPlayer::KeyInput(_float _fTimeDelta)
     {   
         if (m_bBurstMode) {
             m_eCurrentState = HEROSTATE::STATE_SKILL_Q;
-            IsKeyInput = true;
             ChangeAnim(91, false);
             m_IsUsingSkill = true;
         }
@@ -437,7 +502,6 @@ void CPlayer::KeyInput(_float _fTimeDelta)
     {
         if (m_bBurstMode) {
             m_eCurrentState = HEROSTATE::STATE_SKILL_Q;
-            IsKeyInput = true;
             ChangeAnim(92, false);
             m_IsUsingSkill = true;
         }
@@ -449,15 +513,11 @@ void CPlayer::KeyInput(_float _fTimeDelta)
     if (GetKeyState('Q') & 0x8000)
     {
         m_eCurrentState = HEROSTATE::STATE_SKILL_Q;
-        IsKeyInput = true;
 
         if (m_bBurstMode) {
-            ChangeAnim(73, false);
-            //m_NextAnimIndex.push_back({ 52 , false });
-            //m_NextAnimIndex.push_back({ 70 , false });
-            //m_NextAnimIndex.push_back({ 69 , true });
-            //m_NextAnimIndex.push_back({ 68 , false });
-            //m_fLoopTotalTime = 0.2f;
+            ChangeAnim(63, false);
+            m_NextAnimIndex.push_back({ 64 , false });
+            m_NextAnimIndex.push_back({ 65 , false });
         }
         else {
             ChangeAnim(60, false);
@@ -470,7 +530,6 @@ void CPlayer::KeyInput(_float _fTimeDelta)
     if (GetKeyState('E') & 0x8000)
     {
         m_eCurrentState = HEROSTATE::STATE_SKILL_E;
-        IsKeyInput = true;
 
 
         if (m_bBurstMode)
@@ -485,10 +544,13 @@ void CPlayer::KeyInput(_float _fTimeDelta)
     if (GetKeyState('R') & 0x8000)
     {
         m_eCurrentState = HEROSTATE::STATE_SKILL_R;
-        IsKeyInput = true;
 
-        if (m_bBurstMode)
-            ChangeAnim(72, false);
+        if (m_bBurstMode) {
+            ChangeAnim(133, false);
+            m_NextAnimIndex.push_back({ 136, false });
+            m_NextAnimIndex.push_back({ 50 , true});
+
+        }
         else
             ChangeAnim(62, false);
 
@@ -496,25 +558,35 @@ void CPlayer::KeyInput(_float _fTimeDelta)
 
     }
 
-
-    if (GetKeyState('7') & 0x8000) {
-
-        m_pTransformCom->SetState(CTransform::STATE_POSITION, { 0.f, 0.f, 1.f ,1.f });
-    }
-
     ///////////////////Walk////////////////////////
 
-    _bool bInputW = false;
-    _bool bInputS = false;
     m_bSprint = false;
+
+    m_MoveFlag = 0x0000;
+
+    _vector vPlrPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+    _vector vDir = {0.f, 0.f, 0.f, 0.f};
+    _float4 vCamFloat = CCameraMgr::GetInstance()->GetCamLook();
+    _vector vCamLookDir = XMLoadFloat4(&vCamFloat);
+    _vector vPlrLook = m_pTransformCom->GetState(CTransform::STATE_LOOK);
+
+    _vector vSrc = { 0.f, 0.f ,0.f };
+    _vector vDst = { 0.f, 0.f, 0.f };
+
+    ///////////////////////부드러운 방향전환을 위한 변수/////////////////////
 
     if (GetKeyState('W') & 0x8000)
     {
-        CalcLookVector(1.f);
+        /*CalcLookVector(1.f);
+*/
         m_bRunning = true;
         m_fCurrentDir = 1.f;
 
-        m_pTransformCom->GoStraight(_fTimeDelta);
+        vDst = vCamLookDir;
+        vSrc = m_pTransformCom->GetState(CTransform::STATE_LOOK);
+        
+        m_MoveFlag |= 0x0001;
+       // m_pTransformCom->GoStraight(_fTimeDelta);
 
         if (m_bDash) {
             m_bSprint = true;
@@ -526,19 +598,20 @@ void CPlayer::KeyInput(_float _fTimeDelta)
         }
 
         IsLoop = true;
-        bInputW = true; 
         IsKeyInput = true;
     }
 
     if (GetKeyState('S') & 0x8000) {
 
-        if (!bInputW) {
+        if (m_MoveFlag != 0x0001) {
 
-            CalcLookVector(-1.f);
+            vSrc = vPlrLook;
+            vDst = -1.f * vCamLookDir;
 
             m_bRunning = true;
             m_fCurrentDir = -1.f;
-            m_pTransformCom->GoStraight(_fTimeDelta);
+            m_MoveFlag |= 0x0010;
+
 
             if (m_bDash) {
                 m_bSprint = true;
@@ -549,7 +622,6 @@ void CPlayer::KeyInput(_float _fTimeDelta)
                 FinalAnimNum = 59;
             }
 
-            bInputS = true;
             IsLoop = true;
             IsKeyInput = true;
         }
@@ -557,31 +629,23 @@ void CPlayer::KeyInput(_float _fTimeDelta)
 
     if (GetKeyState('A') & 0x8000)
     {
-        _float4 vCamLook = CCameraMgr::GetInstance()->GetCamLook();
-        _vector vTemp = XMVector4Normalize(XMLoadFloat4(&vCamLook));
-
-        _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
-        _vector vRight = XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vTemp);
+        _vector vRight = XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vCamLookDir);
         _vector vLeft = vRight * -1.f;
 
-        if (bInputW) {
-
-            _vector SideVector = vTemp + vLeft;
-            vPos += SideVector;
-
-            m_pTransformCom->LookAt(vPos);
-        }
-        else if (bInputS) {
-            _vector SideVector = (vTemp * -1.f) + vLeft;
-            vPos += SideVector;
-
-            m_pTransformCom->LookAt(vPos);
+        if (m_MoveFlag == 0x0001) {
+            vSrc = vPlrLook;
+            vDst = vCamLookDir + vLeft;
+        }else if(m_MoveFlag == 0x0010) {
+            vSrc = vPlrLook;
+            vDst += vLeft;
         }
         else {
-            vPos += vLeft;
-            m_pTransformCom->LookAt(vPos);
-
+            vSrc = vPlrLook;
+            vDst = vLeft;
         }
+
+        m_MoveFlag |= 0x0100;
+
 
         if (m_bDash) {
             m_bSprint = true;
@@ -601,32 +665,26 @@ void CPlayer::KeyInput(_float _fTimeDelta)
 
     if (GetKeyState('D') & 0x8000)
     {
+        _vector vRight = XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vCamLookDir);
 
-        _float4 vCamLook = CCameraMgr::GetInstance()->GetCamLook();
-        _vector vTemp = XMVector4Normalize(XMLoadFloat4(&vCamLook));
 
-        _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
-        _vector vRight = XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vTemp);
+        vSrc = vPlrLook;
 
-        if (bInputW) {
-            
-            _vector SideVector = vTemp + vRight;
-            vPos += SideVector;
+        if (m_MoveFlag == 0x0001) {
+            vSrc = vPlrLook;
+            vDst = vCamLookDir + vRight;
 
-            m_pTransformCom->LookAt(vPos);
-        }
-        else if (bInputS) {
-            _vector SideVector = (vTemp * -1.f) + vRight;
-            vPos += SideVector;
 
-            m_pTransformCom->LookAt(vPos);
+        }else if(m_MoveFlag == 0x0010) {
+            vSrc = vPlrLook;
+            vDst += vRight;
         }
         else {
-            vPos += vRight;
-            m_pTransformCom->LookAt(vPos);
-
+            vSrc = vPlrLook;
+            vDst = vRight;
         }
 
+        m_MoveFlag |= 0x1000;
 
         if (m_bDash) {
             m_bSprint = true;
@@ -642,6 +700,7 @@ void CPlayer::KeyInput(_float _fTimeDelta)
     }
 
     if (IsKeyInput) {
+        TurnLerp(vSrc, vDst, _fTimeDelta, vPlrPos, m_MoveFlag);
         m_pTransformCom->GoStraight(_fTimeDelta);
     }
 
@@ -699,7 +758,8 @@ void CPlayer::KeyInput(_float _fTimeDelta)
 
         m_eCurrentState = HEROSTATE::STATE_JUMP;
          
-        m_NextAnimIndex.push_back({ 50, true });
+        m_NextAnimIndex.push_back({ 51, true });
+      //  m_NextAnimIndex.push_back({ 50, true });
         m_NextAnimIndex.push_back({ 53, false });
 
         FinalAnimNum = 52;
@@ -873,6 +933,41 @@ void CPlayer::MouseInput(_float _fTimeDelta)
     }
 
    
+}
+
+void CPlayer::TurnLerp(_vector _vSrc, _vector _vDst , _float _fDeltaTime, _vector _vPos, unsigned char _flag)
+{
+    if (m_MoveFlag != m_LastMoveFlag) {
+
+        if ((m_MoveFlag == 0x0001 && m_LastMoveFlag == 0x0010) ||
+            (m_LastMoveFlag == 0x0001 && m_MoveFlag == 0x0010)) {
+            
+            m_fSlerpFlat = 0.5f;
+        }
+        else {
+            m_fSlerpFlat = 0.f;
+
+        }
+    }
+
+
+    if (!XMVector4Equal(_vSrc, XMVector4Normalize(_vDst))) {
+
+        if ((m_MoveFlag != m_LastMoveFlag) || m_fSlerpFlat <= 1.f) {
+
+            m_fSlerpFlat += 1.f * _fDeltaTime;
+            if (m_fSlerpFlat > 1.f)
+                m_fSlerpFlat = 1.f;
+        }
+            
+        _vDst = XMVectorLerp(_vSrc, _vDst, m_fSlerpFlat / 1.f);
+      //  _vDst = XMQuaternionSlerp(_vSrc, _vDst, m_fSlerpFlat / 1.5f);
+    }
+
+    m_LastMoveFlag = m_MoveFlag;
+    _vPos += _vDst;
+    m_pTransformCom->LookAt(_vPos);
+
 }
 
 void CPlayer::ResetComboState()  

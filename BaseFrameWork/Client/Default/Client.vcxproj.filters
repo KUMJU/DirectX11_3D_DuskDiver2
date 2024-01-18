@@ -130,6 +130,9 @@
     <Filter Include="02. GameObject\00.Creature\01. Monster\03. MiddleBoss">
       <UniqueIdentifier>{f94656db-269f-4948-b908-bb2a19dc7ce4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\00.Creature\01. Monster\04. FinalBoss">
+      <UniqueIdentifier>{719ba536-5e79-4c03-bc04-ed1a3167b66a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -261,6 +264,9 @@
     <ClInclude Include="..\Public\EventCamera.h">
       <Filter>02. GameObject\02. Camera\02. EventCamera</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\FinalBoss.h">
+      <Filter>02. GameObject\00.Creature\01. Monster\04. FinalBoss</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -373,6 +379,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\EventCamera.cpp">
       <Filter>02. GameObject\02. Camera\02. EventCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\FinalBoss.cpp">
+      <Filter>02. GameObject\00.Creature\01. Monster\04. FinalBoss</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

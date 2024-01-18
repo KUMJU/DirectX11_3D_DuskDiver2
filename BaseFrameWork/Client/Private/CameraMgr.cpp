@@ -39,6 +39,15 @@ void CCameraMgr::SwitchingCamera(ECAMERATYPE _eType)
 
 		break;
 	case Client::CCameraMgr::ECAMERATYPE::EVENT:
+
+		if (!m_pEventCam)
+			break;
+
+		m_pMainCam->SetEnable(false);
+		m_pEventCam->SetEnable(true);
+
+		m_pMainCam = m_pEventCam;
+
 		break;
 	case Client::CCameraMgr::ECAMERATYPE::ENUM_END:
 		break;
@@ -66,6 +75,7 @@ void CCameraMgr::SetCamObject(ECAMERATYPE _eType, shared_ptr<CGameObject> _pInst
 		m_pFreeCam = dynamic_pointer_cast<CCameraFree>(_pInstance);
 		break;
 	case Client::CCameraMgr::ECAMERATYPE::EVENT:
+		m_pEventCam = dynamic_pointer_cast<CEventCamera>(_pInstance);
 		break;
 	case Client::CCameraMgr::ECAMERATYPE::ENUM_END:
 		break;
@@ -89,4 +99,15 @@ _vector CCameraMgr::GetCamPos()
 		return _vector();
 
 	return dynamic_pointer_cast<CTransform>(m_pDefualtCam->GetComponent(TEXT("Com_Transform")))->GetState(CTransform::STATE_POSITION);
+}
+
+void CCameraMgr::AddEventPreset(const wstring& _strName, vector<CEventCamera::EVENT_INFO> _info)
+{
+	m_pEventCam->AddPreset(_strName, _info);
+}
+
+void CCameraMgr::StartEvent(const wstring& _strName)
+{
+	m_pEventCam->StartEvent(_strName);
+	SwitchingCamera(ECAMERATYPE::EVENT);
 }

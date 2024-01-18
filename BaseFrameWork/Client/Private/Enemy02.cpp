@@ -29,7 +29,7 @@ HRESULT CEnemy02::Initialize()
     m_iTotalAtkNum = 3;
     m_fTotalCoolTime = 2.f;
 
-    m_pModelCom->ChangeAnimation(20);
+    m_pModelCom->SetAnimNum(20);
 
     // 0 = 사거리 중, 1 = 사거리 짧음 2= 사거리 길다 
 
@@ -44,7 +44,9 @@ void CEnemy02::PriorityTick(_float _fTimeDelta)
 
 void CEnemy02::Tick(_float _fTimeDelta)
 {
-    
+    if (!m_IsEnabled)
+        return;
+
     //공격 쿨타임일때
     if (m_IsAtkCool) {
 
@@ -105,6 +107,9 @@ void CEnemy02::Tick(_float _fTimeDelta)
 
 void CEnemy02::LateTick(_float _fTimeDelta)
 {
+    if (!m_IsEnabled)
+        return;
+
     if (m_bWait) {
         m_fWaitTime += _fTimeDelta;
         if (m_fWaitTime > 2.f) {
@@ -158,6 +163,9 @@ void CEnemy02::LateTick(_float _fTimeDelta)
 
 HRESULT CEnemy02::Render()
 {
+    if (!m_IsEnabled)
+        return S_OK;
+
     if (FAILED(BindShaderResources()))
         return E_FAIL;
 

@@ -29,6 +29,7 @@ public:
 
 public:
 	enum class EMONSTER_STATE {
+		STATE_SPAWN,
 		STATE_IDLE,
 		STATE_WALK,
 		STATE_RUN,
@@ -91,7 +92,8 @@ protected:
 
 	_bool m_bStun = false;
 	_float m_fStunTime = 0.f;
-
+	
+	_bool m_IsStartMotionCom = false;
 
 protected:
 

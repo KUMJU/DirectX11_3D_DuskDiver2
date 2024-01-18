@@ -3,8 +3,10 @@
 
 #include "GameInstance.h"
 #include "Terrain.h"
+
 #include "CameraFree.h"
 #include "ThirdPersonCam.h"
+#include "EventCamera.h"
 
 #include "Dummy.h"
 #include "Player.h"
@@ -20,7 +22,9 @@
 #include "Enemy01.h"
 #include "Enemy02.h"
 #include "MiddleBoss.h"
+#include "FinalBoss.h"
 
+#include "GameObject.h"
 
 
 CArcadeMap::CArcadeMap()
@@ -62,6 +66,14 @@ HRESULT CArcadeMap::Initialize()
 
 void CArcadeMap::Tick(_float _fTimeDelta)
 {
+	if (m_bKeyDeb) {
+		m_fTime += _fTimeDelta;
+		if (m_fTime > 10.f) {
+			m_bKeyDeb = false;
+		}
+	}
+
+	KeyInput();
 }
  
 HRESULT CArcadeMap::Render()
@@ -77,9 +89,6 @@ HRESULT CArcadeMap::ReadyLayerBackGround(const wstring& _strLayerTag)
 {
 	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, CTerrain::Create(TEXT("../Bin/Resources/Base/Textures/Terrain/Height1.bmp")))))
 		return E_FAIL;
-
-
-	//hud_status_bg_He01
 
 	return S_OK;
 }
@@ -121,6 +130,15 @@ HRESULT CArcadeMap::ReadyLayerCamera(const wstring& _strLayerTag)
 		return E_FAIL;
 
 
+	//////////////////////////////////////////////////EventCamera//////////////////////////////////////////////////
+
+
+	pCam = CEventCamera::Create();
+	CCameraMgr::GetInstance()->SetCamObject(CCameraMgr::ECAMERATYPE::EVENT, pCam);
+
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pCam)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -153,17 +171,44 @@ HRESULT CArcadeMap::ReadyLayerMonster(const wstring& _strLayerTag)
 
 	//pMonster3->SetPosition({ 4.f , 0.f, 0.f ,1.f });
 
-	shared_ptr<CGameObject> pMonster4 = CMiddleBoss::Create();
-	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pMonster4)))
-		return E_FAIL;
+	//-----------------Middle Boss--------------------------------//
+	//shared_ptr<CGameObject> pMonster4 = CMiddleBoss::Create();
+	//if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pMonster4)))
+	//	return E_FAIL;
 
+	//-----------------Final Boss--------------------------------//
+
+	//shared_ptr<CGameObject> pMonster5 = CFinalBoss::Create();
+	//if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pMonster5)))
+	//	return E_FAIL;
+
+	pMonster1 = CEnemy01::Create();
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Monster"), pMonster1)))
+		return E_FAIL;
+	pMonster1->SetEnable(false);
+
+	pMonster2 = CEnemy02::Create();
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Monster"), pMonster2)))
+		return E_FAIL;
+	pMonster2->SetEnable(false);
+	
+
+	pMonster3 = CFinalBoss::Create();
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Monster"), pMonster3)))
+		return E_FAIL;
+	pMonster3->SetEnable(false);
+
+
+	pMonster4 = CMiddleBoss::Create();
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Monster"), pMonster4)))
+		return E_FAIL;
+	pMonster4->SetEnable(false);
 
 	return S_OK;
 }
 
 HRESULT CArcadeMap::ReadyLayerUI(const wstring& _strLayerTag)
 {
-
 
 	CUIBackGround::tagUIInfo UITagInfo;
 	UITagInfo.fSizeX = 463.f * 0.85f;
@@ -199,6 +244,48 @@ HRESULT CArcadeMap::ReadyLight()
 		return E_FAIL;
 
 	return S_OK;
+}
+                                                                                                                                                            
+void CArcadeMap::KeyInput()
+{
+	if (m_bKeyDeb)
+		return;
+
+
+	if (GetKeyState('7') & 0x8000) {
+		pMonster1->SetEnable(true);
+
+		m_bKeyDeb = true;
+	}
+
+	if (GetKeyState('8') & 0x8000) {
+		
+		pMonster1->SetEnable(false);
+		pMonster2->SetEnable(true);
+
+		m_bKeyDeb = true;
+
+	}
+
+	if (GetKeyState('9') & 0x8000) {
+
+		pMonster2->SetEnable(false);
+		pMonster3->SetEnable(true);
+
+		m_bKeyDeb = true;
+
+	}
+
+
+	if (GetKeyState('0') & 0x8000) {
+
+		pMonster3->SetEnable(false);
+		pMonster4->SetEnable(true);
+
+		m_bKeyDeb = true;
+
+	}
+
 }
 
 shared_ptr<CArcadeMap> CArcadeMap::Create()

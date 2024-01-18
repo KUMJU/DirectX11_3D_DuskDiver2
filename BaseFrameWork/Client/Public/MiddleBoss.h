@@ -26,6 +26,8 @@ private:
 
 	_uint test= 0;
 
+
+	void TurnToPlayer();
 private:
 
 

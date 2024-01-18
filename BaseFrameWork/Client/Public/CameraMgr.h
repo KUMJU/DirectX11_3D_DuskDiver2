@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Client_Defines.h"
+#include "EventCamera.h"
+
 
 BEGIN(Engine)
 
@@ -36,6 +38,12 @@ public:
 	_float4 GetCamLook();
 	_vector GetCamPos();
 
+
+////////////////////////////이벤트 카메라////////////////////////////
+public:
+	void AddEventPreset(const wstring& _strName, vector<CEventCamera::EVENT_INFO> _info);
+	void StartEvent(const wstring& _strName);
+
 private:
 	ECAMERATYPE m_eCurrentCamType = ECAMERATYPE::THIRDPERSON;
 
@@ -44,8 +52,8 @@ private:
 
 	shared_ptr<class CThirdPersonCam> m_pDefualtCam = nullptr;
 	shared_ptr<class CCameraFree> m_pFreeCam = nullptr;
-
-
+	shared_ptr<class CEventCamera> m_pEventCam = nullptr;
+		
 };
 
 END
