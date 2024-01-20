@@ -20,6 +20,7 @@ public:
 	virtual HRESULT Render();
 
 public:
+	HRESULT ReadyLayerBackGround(const wstring& _strLayerTag);
 	HRESULT ReadyLayerCamera(const wstring& _strLayerTag);
 	HRESULT ReadyLayerPlayer(const wstring& _strLayerTag);
 	HRESULT ReadyLight();

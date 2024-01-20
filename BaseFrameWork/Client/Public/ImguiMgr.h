@@ -35,13 +35,15 @@ private:
 	void SelectObjectInfo();
 	void ImgZmoUpdate();
 
+	void DrawNaviMesh();
+
 	void SaveData();
 
 private:
 	void SetObjectList();
 
 private:
-	void GetMouse();
+	POINT GetMouse();
 	void TransFloat4x4ToFloatArray(_float4x4 _baseMat, _float* _pOut);
 
 private:
@@ -60,6 +62,9 @@ private:
 
 	_char m_SaveFileName[256]= "";
 
+public:
+	void SetMapObject(shared_ptr<CGameObject> _pMapObj) { m_pMapMesh = _pMapObj;}
+
 private:
 	//현재 레벨에서 생성 가능한 오브젝트 리스트
 	vector<char*> m_ObjectList;
@@ -72,6 +77,7 @@ private:
 
 	//현재 내가 선택하고 있는 오브젝트 -> imguizmo 사용하려고 따로 저장해둠
 	shared_ptr<CGameObject> m_pCurrentSelectObj = nullptr;
+	shared_ptr<CGameObject> m_pMapMesh = nullptr;
 
 ///////////SelectObjectInfo////////////
 private:
@@ -79,6 +85,15 @@ private:
 	_float m_vObjectTranslate[3] = { 0.f , 0.f, 0.f };
 	_float m_vObjectRotate[3] = {0.f , 0.f, 0.f};
 	
+
+/////////////Picking ////////
+
+private:
+	_bool m_KeyDeb = false;
+	_float3 m_vCurrentPicking = _float3();
+
+	_float m_fDebTime = 0.f;
+
 ////////ImguiZmo Option/////////
 private:
 	ImGuizmo::OPERATION m_CurrentGizmoOperation;

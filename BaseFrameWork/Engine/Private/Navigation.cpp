@@ -2,11 +2,20 @@
 #include "Cell.h"
 
 #include "GameInstance.h"
+#include "Shader.h"
 
 _float4x4 CNavigation::m_WorldMatrix = {};
 
 CNavigation::CNavigation(wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID3D11DeviceContext> _pContext)
 	:CComponent(_pDevice, _pContext)
+{
+}
+
+CNavigation::CNavigation(const CNavigation& _rhs, _uint _iStartIdx)
+	:CComponent(_rhs),
+	m_Cells(_rhs.m_Cells),
+	m_iCurrentIndex(_iStartIdx),
+	m_pShader(_rhs.m_pShader)
 {
 }
 
@@ -43,7 +52,7 @@ HRESULT CNavigation::Initialize(const wstring& _strNavigationDataFilePath)
 		return E_FAIL;
 
 #ifdef _DEBUG
-	//m_pShader = 
+	m_pShader = CGameInstance::GetInstance()->GetShader(TEXT("Shader_Cell"));
 //	if (nullptr == m_pShader)
 	//	return E_FAIL;
 #endif
@@ -56,12 +65,17 @@ void CNavigation::Tick(_fmatrix _TerrainWorldMatrix)
 	XMStoreFloat4x4(&m_WorldMatrix, _TerrainWorldMatrix);
 }
 
-_bool CNavigation::IsMove(_fvector vPosition)
+_bool CNavigation::IsMove(_fvector vPosition, _float& _fHeight)
 {
 	_int		iNeighborIndex = { -1 };
 
-	if (m_Cells[m_iCurrentIndex]->isIn(vPosition, &iNeighborIndex))
+	_matrix WorldInverse =  XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_WorldMatrix));
+	_vector vPos = XMVector3TransformCoord(vPosition, WorldInverse);
+
+	if (m_Cells[m_iCurrentIndex]->isIn(vPos, &iNeighborIndex)) {
+		_fHeight = m_Cells[m_iCurrentIndex]->ComputeCellHeight(vPos);
 		return true;
+	}
 
 	else
 	{
@@ -72,9 +86,10 @@ _bool CNavigation::IsMove(_fvector vPosition)
 				if (-1 == iNeighborIndex)
 					return false;
 
-				if (true == m_Cells[iNeighborIndex]->isIn(vPosition, &iNeighborIndex))
+				if (true == m_Cells[iNeighborIndex]->isIn(vPos, &iNeighborIndex))
 				{
 					m_iCurrentIndex = iNeighborIndex;
+					_fHeight = m_Cells[iNeighborIndex]->ComputeCellHeight(vPos);
 					return true;
 				}
 			}
@@ -87,7 +102,62 @@ _bool CNavigation::IsMove(_fvector vPosition)
 
 HRESULT CNavigation::Render()
 {
+	_float4x4 identity;
+
+	_matrix temp = XMMatrixIdentity();
+
+
+	XMStoreFloat4x4(&identity, temp);
+
+	if (FAILED(m_pShader->BindMatrix("g_WorldMatrix", &m_WorldMatrix)))
+		return E_FAIL;
+
+	_float4x4 ViewMat = CGameInstance::GetInstance()->GetTransformFloat4x4(CPipeLine::D3DTS_VIEW);
+
+	if (FAILED(m_pShader->BindMatrix("g_ViewMatrix", &ViewMat)))
+		return E_FAIL;
+
+	_float4x4 ProjMat = CGameInstance::GetInstance()->GetTransformFloat4x4(CPipeLine::D3DTS_PROJ);
+
+	if (FAILED(m_pShader->BindMatrix("g_ProjMatrix", &ProjMat)))
+		return E_FAIL;
+
+	_float4 CamPos = CGameInstance::GetInstance()->GetCamPosition();
+	_float4 vColor = _float4(0.f, 1.f, 0.f, 1.f);
+
+	if (FAILED(m_pShader->BindRawValue("g_vColor", &vColor, sizeof(_float4))))
+		return E_FAIL;
+
+	m_pShader->Begin(0);
+
+
+	//for (auto& pCell : m_Cells)
+	//{
+	//	if (nullptr != pCell)
+	//		pCell->Render();
+	//}
+
+
+	m_Cells[m_iCurrentIndex]->Render();
+
+	//if (-1 == m_iCurrentIndex)
+	//{
+	//	for (auto& pCell : m_Cells)
+	//	{
+	//		if (nullptr != pCell)
+	//			pCell->Render();
+	//	}
+	//}
+	//else
+	//	m_Cells[m_iCurrentIndex]->Render();
+
 	return S_OK;
+}
+
+_float CNavigation::ComputeHeight(_fvector vPosition)
+{
+
+	return _float();
 }
 
 HRESULT CNavigation::MakeNeighbors()
@@ -117,6 +187,13 @@ shared_ptr<CNavigation> CNavigation::Create(wrl::ComPtr<ID3D11Device> _pDevice, 
 	if (FAILED(pInstance->Initialize(_strNavigationDataFilePath)))
 		MSG_BOX("Failed to Create : CNavigation");
 
+
+	return pInstance;
+}
+
+shared_ptr<CNavigation> CNavigation::Clone(shared_ptr<CNavigation> _rhs, _uint _startIndex)
+{
+	shared_ptr<CNavigation> pInstance = make_shared<CNavigation>(*(_rhs.get()), _startIndex);
 
 	return pInstance;
 }

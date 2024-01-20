@@ -4,7 +4,7 @@
 
 BEGIN(Engine)
 
-class CCell final
+class ENGINE_DLL CCell final
 {
 public:
 	enum POINTS { POINT_A, POINT_B, POINT_C, POINT_END };
@@ -19,6 +19,10 @@ public:
 		return m_vPoints[_ePoint];
 	}
 
+	_float3* GetPoints() { return m_vPoints; }
+	_uint GetIndex() { return m_iIndex; }
+	_int* GetNeighbor() { return m_iNeighborIndices; }
+
 	void SetNeighbor(LINES _eLine, const shared_ptr<CCell> _pNeighbor) {
 
 		m_iNeighborIndices[_eLine] = _pNeighbor->m_iIndex;
@@ -28,6 +32,7 @@ public:
 	HRESULT Initialize(const _float3* _pPonints, _uint _iCellIndex);
 	_bool ComparePoints(const _float3& _vSourPoint, const _float3& _vDestPoint);
 	_bool isIn(_fvector _vPosition, _int* _pNeighborIndex);
+
 
 #ifdef _DEBUG
 
@@ -46,10 +51,15 @@ private:
 
 	_int m_iNeighborIndices[LINE_END] = { -1, -1, -1 };
 
+//높이 계산
+public:
+	_float ComputeCellHeight(_fvector _vPos);
+
 #ifdef _DEBUG
 private:
 	shared_ptr<class CVIBufferCell> m_pVIBuffer = { nullptr };
 #endif
+
 
 public:
 	static shared_ptr<CCell> Create(wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID3D11DeviceContext> _pContext, const _float3* pPoints, _uint iCellIndex);

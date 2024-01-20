@@ -2,11 +2,13 @@
 #include "Player.h"
 #include "GameInstance.h"
 #include "GameMgr.h"
+#include "MapLoader.h"
 
 #include "Model.h"
 #include "Shader.h"
 
 #include "CameraMgr.h"
+#include "Navigation.h"
 
 CPlayer::CPlayer()
 {
@@ -36,6 +38,9 @@ HRESULT CPlayer::Initialize()
 
     m_Components.emplace(TEXT("Com_BattleModel"), m_pBattleModelCom);
     m_Components.emplace(TEXT("Com_BurstModel"), m_pBurstModelCom);
+
+    m_pNavigationCom = CMapLoader::GetInstance()->GetCurrentNavi(0);
+    m_Components.emplace(TEXT("Com_Navigation"), m_pBurstModelCom);
 
 
     m_eCurrentState = HEROSTATE::STATE_IDLE;
@@ -190,6 +195,8 @@ void CPlayer::LateTick(_float _fTimeDelta)
 
 HRESULT CPlayer::Render()
 {
+    m_pNavigationCom->Render();
+
     if (FAILED(BindShaderResources()))
         return E_FAIL;
 
@@ -701,7 +708,7 @@ void CPlayer::KeyInput(_float _fTimeDelta)
 
     if (IsKeyInput) {
         TurnLerp(vSrc, vDst, _fTimeDelta, vPlrPos, m_MoveFlag);
-        m_pTransformCom->GoStraight(_fTimeDelta);
+        m_pTransformCom->GoStraight(_fTimeDelta, m_pNavigationCom);
     }
 
     if (m_eCurrentState == HEROSTATE::STATE_JUMP ||
@@ -715,7 +722,7 @@ void CPlayer::KeyInput(_float _fTimeDelta)
     //Dodge 
     if (GetKeyState(VK_SHIFT) & 0x8000)
     {
-        m_pTransformCom->GoStraight(_fTimeDelta);
+        m_pTransformCom->GoStraight(_fTimeDelta, m_pNavigationCom);
         m_eCurrentState = HEROSTATE::STATE_DODGE;
 
         if (m_bJump) {
@@ -736,7 +743,7 @@ void CPlayer::KeyInput(_float _fTimeDelta)
     // key input이 되어있다면 바로 대쉬 사용 가능 or Idle 전환 안 하고 run 가능 
     if (GetKeyState('F') & 0x8000)
     {
-        m_pTransformCom->GoStraight(_fTimeDelta);
+        m_pTransformCom->GoStraight(_fTimeDelta, m_pNavigationCom);
         m_eCurrentState = HEROSTATE::STATE_DASH;
 
         FinalAnimNum = 81;

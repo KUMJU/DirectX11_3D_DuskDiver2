@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 
 #include "Dummy.h"
+#include "Navigation.h"
 
 IMPLEMENT_SINGLETON(CMapLoader)
 
@@ -59,6 +60,21 @@ void CMapLoader::LoadMapData(const char* _filePath, vector<char*>* _ObjectNameLi
 		ClassifyObject(strModelName, &CurrentMatrix, _ObjectList);
 	}
 
+}
+
+void CMapLoader::LoadCellData(const wstring& _strPath)
+{
+
+	shared_ptr<CNavigation> pNavigation = CNavigation::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), _strPath);
+	pNavigation->Tick(XMLoadFloat4x4(&m_WorldMatrix));
+	m_pNavigationCom = pNavigation;
+
+
+}
+
+shared_ptr<CNavigation> CMapLoader::GetCurrentNavi(_uint _iStartIdx)
+{
+	return CNavigation::Clone(m_pNavigationCom, _iStartIdx);;
 }
 
 void CMapLoader::ClassifyObject(const wstring& _strKeyName, _float4x4* _fWorldMat, list<shared_ptr<CGameObject>>* _ObjectList)

@@ -53,6 +53,8 @@ HRESULT CMesh::Initialize(CModel::TYPE _eType, ifstream& _ifs, _fmatrix PivotMat
 
 	_uint iIndex1, iIndex2, iIndex3;
 
+	m_vIndicesNum.reserve(iFaceNum);
+	m_iFaceNum = iFaceNum;
 
 	for (size_t i = 0; i < iFaceNum; i++) {
 
@@ -63,6 +65,10 @@ HRESULT CMesh::Initialize(CModel::TYPE _eType, ifstream& _ifs, _fmatrix PivotMat
 		pIndices[iNumIndices++] = iIndex1;
 		pIndices[iNumIndices++] = iIndex2;
 		pIndices[iNumIndices++] = iIndex3;
+
+		m_vIndicesNum.push_back(iIndex1);
+		m_vIndicesNum.push_back(iIndex2);
+		m_vIndicesNum.push_back(iIndex3);
 
 	}
 
@@ -99,12 +105,16 @@ HRESULT CMesh::ReadyVertexBufferNonAnim(ifstream& _ifs, _fmatrix PivotMatrix)
 	VTXMESH* pVertices = new VTXMESH[m_iNumVertices];
 	ZeroMemory(pVertices, sizeof(VTXMESH) * m_iNumVertices);
 
+	m_verticesPos.reserve(m_iNumVertices);
+
 	for (size_t i = 0; i < m_iNumVertices; i++) {
 
 		_ifs.read((char*)&pVertices[i].vPosition, sizeof(_float3));
 		_ifs.read((char*)&pVertices[i].vNormal, sizeof(_float3));
 		_ifs.read((char*)&pVertices[i].vTexcoord, sizeof(_float2));
 		_ifs.read((char*)&pVertices[i].vTangent, sizeof(_float3));
+
+		m_verticesPos.push_back(pVertices[i].vPosition);
 
 	}
 
@@ -115,6 +125,7 @@ HRESULT CMesh::ReadyVertexBufferNonAnim(ifstream& _ifs, _fmatrix PivotMatrix)
 
 	delete[] pVertices;
 
+	m_verticesPos;
 
 	return S_OK;
 }
@@ -211,6 +222,11 @@ HRESULT CMesh::ReadyVertexBufferAnim(ifstream& _ifs )
 	delete[] pVertices;
 
 	return S_OK;
+}
+
+_bool CMesh::PickingMesh(_float3& _fPickingPos)
+{
+	return _bool();
 }
 
 shared_ptr<CMesh> CMesh::Create(CModel::TYPE _eType, wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID3D11DeviceContext> _pContext, ifstream& _ifs, _fmatrix PivotMatrix)

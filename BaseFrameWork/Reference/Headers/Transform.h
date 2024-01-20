@@ -65,7 +65,7 @@ public:
 
 public:
 
-	void GoStraight(_float _fTimeDelta);
+	void GoStraight(_float _fTimeDelta, shared_ptr<class CNavigation> _pNavigation);
 	void GoBackward(_float _fTimeDelta);
 	void GoLeft(_float _fTimeDelta);
 	void GoRight(_float _fTimeDelta);

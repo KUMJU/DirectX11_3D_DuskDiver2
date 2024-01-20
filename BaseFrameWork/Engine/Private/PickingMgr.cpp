@@ -4,6 +4,9 @@
 #include "VITerrain.h"
 #include "Transform.h"
 
+#include "Mesh.h"
+#include "Model.h"
+
 CPickingMgr::CPickingMgr()
 {
 }
@@ -24,10 +27,12 @@ void CPickingMgr::SetRay(POINT _ptMouse)
 	vMousePos = XMVector3TransformCoord(vMousePos, ProjMatInverse);
 
 	_float4 CamPos = CGameInstance::GetInstance()->GetCamPosition();
-	_vector vRayPos = XMLoadFloat4(&CamPos);
+	_vector vRayPos = { 0.f, 0.f, 0.f };
+	//_vector vRayPos = XMLoadFloat4(&CamPos);
 
-	_vector vRayDir = vMousePos;
+	_vector vRayDir = vMousePos - vRayPos;
 
+	vRayPos = XMVector3TransformCoord(vRayPos, ViewMatInverse);
 	vRayDir = XMVector3TransformNormal(vRayDir, ViewMatInverse);
 
 	XMStoreFloat3(&m_tRay.vRayPos, vRayPos);
@@ -45,8 +50,7 @@ _float4 CPickingMgr::TerrainPicking(POINT _ptMouse, shared_ptr<class CVITerrain>
 	_float fDist = 0.f;
 
 	//ray를 local로 내리기
-	_matrix worldMatrix = _pTransCom->GetWorldMatrix();
-	worldMatrix = XMMatrixInverse(nullptr, worldMatrix);
+	_matrix worldMatrix = _pTransCom->GetWorldMatrixInverse();
 
 	vector<_float3> verticesPos = _pTerrainCom->GetVerticesPos();
 
@@ -88,6 +92,64 @@ _float4 CPickingMgr::TerrainPicking(POINT _ptMouse, shared_ptr<class CVITerrain>
 	}
 
 	return _float4();
+}
+
+_float3 CPickingMgr::MeshPicking(POINT _ptMouse, shared_ptr<class CModel> _pMeshCom, shared_ptr<class CTransform> _pTransCom)
+{
+	SetRay(_ptMouse);
+
+	_float fDist = 0.f;
+
+	//ray를 local로 내리기
+	_matrix worldMatrix = _pTransCom->GetWorldMatrixInverse();
+
+	_vector vRayPos = XMLoadFloat3(&m_tRay.vRayPos);
+	_vector vRayDir = XMLoadFloat3(&m_tRay.vRayDir);
+
+	vRayPos = XMVector3TransformCoord(vRayPos, worldMatrix);
+	vRayDir = XMVector3TransformNormal(vRayDir, worldMatrix);
+
+	vector<shared_ptr<CMesh>> vMeshes = _pMeshCom->GetMeshes();
+
+		
+	_ulong iIndex = 0;
+
+	_float fMinDistance = 99999.f;
+	_float3 NearPickPos = _float3(0.f, 0.f, 0.f);
+
+	_float4 OriginCamPos = CGameInstance::GetInstance()->GetCamPosition();
+	_vector CamPos = { OriginCamPos.x, OriginCamPos.y, OriginCamPos.z };
+
+	_vector dd = XMVector3TransformCoord(CamPos, worldMatrix);
+
+	for (auto& iter : vMeshes) {
+
+		vector<_float3> verticesPos = iter->GetVerticesPos();
+		_uint iFaceNum = iter->GetFaceNum();
+		vector<_uint> vIndicesVector = iter->GetIndicesNumVector();
+
+		iter;
+		iIndex = 0;
+
+		for (_uint i = 0; i < vIndicesVector.size();) {
+			if (DirectX::TriangleTests::Intersects(vRayPos, vRayDir, XMLoadFloat3(&verticesPos[vIndicesVector[i++]]), XMLoadFloat3(&verticesPos[vIndicesVector[i++]]), XMLoadFloat3(&verticesPos[vIndicesVector[i++]]), fDist)) {
+
+				_float3 pickPos = _float3(vRayPos.m128_f32[0] + vRayDir.m128_f32[0] * fDist, vRayPos.m128_f32[1] + vRayDir.m128_f32[1] * fDist, vRayPos.m128_f32[2] + vRayDir.m128_f32[2] * fDist);
+				_float fDistance = XMVector3Length(XMLoadFloat3(&pickPos) - dd).m128_f32[0];
+
+
+				if (fDistance < fMinDistance) {
+					fMinDistance = fDistance;
+					NearPickPos = pickPos;
+
+					NearPickPos.y += 0.003f;
+				}
+			}
+		}
+	}
+
+
+	return NearPickPos;
 }
 
 _bool CPickingMgr::ObjectPicking()

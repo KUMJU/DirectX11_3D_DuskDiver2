@@ -12,7 +12,7 @@ HRESULT CCollider::Initialize()
 
 shared_ptr<CCollider> CCollider::Create(wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID3D11DeviceContext> _pContext)
 {
-	shared_ptr<CCollider> pInstance = make_shared<CCollider>();
+	shared_ptr<CCollider> pInstance = make_shared<CCollider>(_pDevice, _pContext);
 
 	if (FAILED(pInstance->Initialize()))
 		MSG_BOX("Failed to Create : CCollider");

@@ -1,12 +1,16 @@
 #include "pch.h"
 #include "ImguiMgr.h"
 #include "GameInstance.h"
+#include "NaviToolMgr.h"
 
 #include "Terrain.h"
 #include "Dummy.h"
 
 #include "GameObject.h"
 #include "MapLoader.h"
+
+#include "Mesh.h"
+#include "Model.h"
 
 IMPLEMENT_SINGLETON(CImguiMgr)
 
@@ -46,6 +50,8 @@ HRESULT CImguiMgr::Initialize()
     SetObjectList();
 
     CMapLoader::GetInstance()->SetLoadStateImgui();
+    shared_ptr<CTransform> pTransform =  dynamic_pointer_cast<CTransform>(m_pMapMesh->GetComponent(TEXT("Com_Transform")));
+    CNaviToolMgr::GetInstance()->SetTerrainTransform(pTransform);
 
     return S_OK;
 }
@@ -61,6 +67,18 @@ HRESULT CImguiMgr::StartFrame()
 
 HRESULT CImguiMgr::Render(void)
 {
+
+    if (m_KeyDeb) {
+        m_fDebTime += 0.01f;
+        
+        if (m_fDebTime > 0.6f) {
+            m_KeyDeb = false;
+            m_fDebTime = 0.f;
+        }
+
+    }
+
+
     StartFrame();
 
     ObjectLoader();
@@ -69,6 +87,7 @@ HRESULT CImguiMgr::Render(void)
         ImgZmoUpdate();
 
     SelectObjectInfo();
+    DrawNaviMesh();
 
     //Reset
     if (-1 == m_iCurrentObjIdx) {
@@ -264,6 +283,55 @@ void CImguiMgr::ImgZmoUpdate()
     }
 }
 
+void CImguiMgr::DrawNaviMesh()
+{
+    ImGui::Begin("NaviMesh");
+
+
+    if (!m_KeyDeb) {
+
+
+        if (CGameInstance::GetInstance()->GetDIMouseState(MOUSEKEYSTATE::DIM_LB)) {
+
+            POINT pt = GetMouse();
+
+            if (m_pMapMesh) {
+                m_KeyDeb = true;
+                shared_ptr<CModel> pModel = dynamic_pointer_cast<CModel>(m_pMapMesh->GetComponent(TEXT("Com_Model")));
+                vector<shared_ptr<CMesh>> Meshes = pModel->GetMeshes();
+
+                shared_ptr<CTransform> pTransform = dynamic_pointer_cast<CTransform>(m_pMapMesh->GetComponent(TEXT("Com_Transform")));
+
+
+                _float3 vPickingPos = CGameInstance::GetInstance()->MeshPicking(pt, pModel, pTransform);
+
+                if (vPickingPos.x != 0 && vPickingPos.y != 0 && vPickingPos.z != 0) {
+                    m_vCurrentPicking = vPickingPos;
+                    CNaviToolMgr::GetInstance()->PickPoint(vPickingPos);
+                }
+  
+            }
+
+        }
+    }
+
+
+    ImGui::Text("X : %f", m_vCurrentPicking.x);
+    ImGui::Text("Y : %f", m_vCurrentPicking.y);
+    ImGui::Text("Z : %f", m_vCurrentPicking.z);
+
+
+    if (ImGui::Button("Save Cells")) {
+
+        CNaviToolMgr::GetInstance()->ParsingCell(TEXT("CellTest.dat"));
+
+    }
+
+
+    ImGui::End();
+
+}
+
 void CImguiMgr::SaveData()
 {
     _int iSize = m_Objects.size();
@@ -367,11 +435,13 @@ void CImguiMgr::SetObjectList()
     }
 }
 
-void CImguiMgr::GetMouse()
+POINT CImguiMgr::GetMouse()
 {
     POINT pt;
     ::GetCursorPos(&pt);
     ::ScreenToClient(g_hWnd, &pt);
+
+    return pt;
 
 }
 

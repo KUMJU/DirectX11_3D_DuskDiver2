@@ -3,6 +3,8 @@
 #include "Engine_Defines.h"
 #include "Component.h"
 
+#include "Model.h"
+
 BEGIN(Engine)
 
 
@@ -41,6 +43,9 @@ public:
 
 public:
 	_bool IsLinearInterpolation() { return m_IsLinearState; }
+
+public:
+	vector<shared_ptr<class CMesh>> GetMeshes() { return m_Meshes; }
 
 public:
 	void SetAnimNum(_uint _iAnimNum) { _iAnimNum = _iAnimNum; }

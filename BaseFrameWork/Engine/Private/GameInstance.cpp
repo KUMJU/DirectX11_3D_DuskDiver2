@@ -25,6 +25,9 @@ HRESULT CGameInstance::InitializeEngine(HINSTANCE hInst, _uint iNumLevels, _uint
 	if (nullptr == m_pGraphicDev)
 		return E_FAIL;
 
+
+
+
 	m_pInputDev = CInputDevice::Create(hInst, _GraphicDesc.hWnd);
 	if (!m_pInputDev)
 		return E_FAIL;
@@ -245,6 +248,14 @@ _float4 CGameInstance::TerrainPicking(POINT _ptMouse, shared_ptr<class CVITerrai
 		return _float4();
 
 	return m_pPickingMgr->TerrainPicking(_ptMouse, _pTerrainCom, _pTransCom);
+}
+
+_float3 CGameInstance::MeshPicking(POINT _ptMouse, shared_ptr<class CModel> _pModelCom, shared_ptr<class CTransform> _pTransCom)
+{
+	if (!m_pPickingMgr)
+		return _float3();
+
+	return m_pPickingMgr->MeshPicking(_ptMouse, _pModelCom, _pTransCom);
 }
 
 HRESULT CGameInstance::AddLight(const LIGHT_DESC& _LightDesc)

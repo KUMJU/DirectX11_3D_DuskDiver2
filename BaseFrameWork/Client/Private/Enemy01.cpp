@@ -66,7 +66,7 @@ void CEnemy01::Tick(_float _fTimeDelta)
         }
         else if (29 == m_iAnimNum) {
             m_pTransformCom->SetSpeed(0.5f);
-            m_pTransformCom->GoStraight(_fTimeDelta);
+            m_pTransformCom->GoStraight(_fTimeDelta, nullptr);
         }
     }
 
@@ -78,7 +78,7 @@ void CEnemy01::Tick(_float _fTimeDelta)
 
         if (!m_IsNearPlr) {
             WalkPattern(m_iWalkPatternNum);
-            m_pTransformCom->GoStraight(_fTimeDelta);
+            m_pTransformCom->GoStraight(_fTimeDelta, nullptr);
         }
     }
     

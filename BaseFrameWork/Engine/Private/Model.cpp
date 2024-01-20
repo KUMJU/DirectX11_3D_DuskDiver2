@@ -41,7 +41,7 @@ HRESULT CModel::Initialize(TYPE eModelType, const _char* pModelFilePath, const _
     ifs.open(pModelFilePath, std::ios::binary);
 
 
-    m_PivotMatrix = _float4x4();
+     XMStoreFloat4x4(&m_PivotMatrix,XMMatrixIdentity());
 
     if (TYPE_ANIM == m_eModelType) {
 

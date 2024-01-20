@@ -123,9 +123,14 @@ void CResourceMgr::AddBuffer(const wstring& _strKeyName, shared_ptr<class CCompo
 HRESULT CResourceMgr::LoadShader()
 {
     const wstring& strBasePath = TEXT("../../Client/Bin/ShaderFiles/");
+
     const wstring& strFlag = TEXT("*.*");
    
     ReadShaderFile(strBasePath, strFlag);
+
+    const wstring& strBasePath2 = TEXT("../../Engine/Bin/ShaderFiles/");
+    ReadShaderFile(strBasePath2, strFlag);
+
 
     return S_OK;
 }
@@ -165,6 +170,10 @@ void CResourceMgr::ReadShaderFile(const wstring& _strBaseFilepath, const wstring
             }
             else if (wstring::npos != strName.find(TEXT("Anim"))) {
                 pShader = CShader::Create(m_pDevice, m_pContext, strPath, VTXANIMMESH::Elements, VTXANIMMESH::iNumElements);
+            }
+            else if (wstring::npos != strName.find(TEXT("Cell"))) {
+                pShader = CShader::Create(m_pDevice, m_pContext, strPath, VTXPOS::Elements, VTXPOS::iNumElements);
+
             }
 
             if (pShader) {

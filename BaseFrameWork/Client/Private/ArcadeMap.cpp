@@ -46,9 +46,6 @@ HRESULT CArcadeMap::Initialize()
 	if (FAILED(ReadyLight()))
 		return E_FAIL;
 
-	//CMapLoader::GetInstance()->LoadMapData("../Bin/DataFiles/TestMap.json");
-
-
 	if (FAILED(ReadyLayerPlayer(TEXT("Layer_Player"))))
 		return E_FAIL;
 
@@ -87,8 +84,7 @@ HRESULT CArcadeMap::Render()
 
 HRESULT CArcadeMap::ReadyLayerBackGround(const wstring& _strLayerTag)
 {
-	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, CTerrain::Create(TEXT("../Bin/Resources/Base/Textures/Terrain/Height1.bmp")))))
-		return E_FAIL;
+
 
 	return S_OK;
 }
@@ -144,17 +140,26 @@ HRESULT CArcadeMap::ReadyLayerCamera(const wstring& _strLayerTag)
 
 HRESULT CArcadeMap::ReadyLayerPlayer(const wstring& _strLayerTag)
 {
-	shared_ptr<CPlayer> pPlayer = CPlayer::Create();
+
+	shared_ptr<CGameObject> pDummy = CDummy::Create(TEXT("Map_Arcade"));
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pDummy)))
+		return E_FAIL;
+
+	pDummy->SetPosition({ -565.f, 40.5f, -100.f , 1.f });
+
+	_float4x4 worldMat;
+	_matrix dd =pDummy->GetWorldMatrix();
+	XMStoreFloat4x4(&worldMat, dd);
+	CMapLoader::GetInstance()->SetWorldMatrix(worldMat);
+	CMapLoader::GetInstance()->LoadCellData(TEXT("CellTest.dat"));
+
+
+ 	shared_ptr<CPlayer> pPlayer = CPlayer::Create();
 
 	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pPlayer)))
 		return E_FAIL;
 
 	CGameMgr::GetInstance()->SetPlayer(pPlayer);
-
-	shared_ptr<CGameObject> pDummy = CDummy::Create(TEXT("PlatformA"));
-	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pDummy)))
-		return E_FAIL;
-
 
 	return S_OK;
 }

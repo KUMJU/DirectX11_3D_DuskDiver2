@@ -133,6 +133,9 @@
     <Filter Include="02. GameObject\00.Creature\01. Monster\04. FinalBoss">
       <UniqueIdentifier>{719ba536-5e79-4c03-bc04-ed1a3167b66a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="96. Imgui\02. NaviToolMgr">
+      <UniqueIdentifier>{45741892-a085-4f4a-b5b8-3872addac695}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -267,6 +270,9 @@
     <ClInclude Include="..\Public\FinalBoss.h">
       <Filter>02. GameObject\00.Creature\01. Monster\04. FinalBoss</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\NaviToolMgr.h">
+      <Filter>96. Imgui\02. NaviToolMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -382,6 +388,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\FinalBoss.cpp">
       <Filter>02. GameObject\00.Creature\01. Monster\04. FinalBoss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\NaviToolMgr.cpp">
+      <Filter>96. Imgui\02. NaviToolMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

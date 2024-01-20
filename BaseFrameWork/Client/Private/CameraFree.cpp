@@ -42,7 +42,7 @@ void CCameraFree::PriorityTick(_float fTimeDelta)
 
 	if (GetKeyState(VK_UP) & 0x8000)
 	{
-		m_pTransformCom->GoStraight(fTimeDelta);
+		m_pTransformCom->GoStraight(fTimeDelta, nullptr);
 	}
 
 	if (GetKeyState(VK_DOWN) & 0x8000)

@@ -188,6 +188,7 @@
     <ClInclude Include="..\Public\MapObject.h" />
     <ClInclude Include="..\Public\MiddleBoss.h" />
     <ClInclude Include="..\Public\Monster.h" />
+    <ClInclude Include="..\Public\NaviToolMgr.h" />
     <ClInclude Include="..\Public\pch.h" />
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\Public\Skill.h" />
@@ -231,6 +232,7 @@
     <ClCompile Include="..\Private\MapObject.cpp" />
     <ClCompile Include="..\Private\MiddleBoss.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
+    <ClCompile Include="..\Private\NaviToolMgr.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\Skill.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />

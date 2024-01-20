@@ -6,6 +6,7 @@
 BEGIN(Engine)
 class CShader;
 class CModel;
+class CNavigation;
 END
 
 BEGIN(Client)
@@ -64,6 +65,8 @@ private:
 	shared_ptr<CModel> m_pBurstModelCom = nullptr;
 	//전투모드
 	shared_ptr<CModel> m_pBattleModelCom = nullptr;
+
+	shared_ptr<CNavigation> m_pNavigationCom = nullptr;
 
 
 private:

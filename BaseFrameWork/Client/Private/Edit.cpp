@@ -5,6 +5,7 @@
 #include "Dummy.h"
 
 #include "GameInstance.h"
+#include "NaviToolMgr.h"
 
 CEdit::CEdit()
 {
@@ -16,8 +17,15 @@ void CEdit::PreInit()
 
 HRESULT CEdit::Initialize()
 {
+	CNaviToolMgr::GetInstance()->Initialize();
+
 	if (FAILED(ReadyLight()))
 		return E_FAIL;
+
+	
+	if (FAILED(ReadyLayerBackGround(TEXT("Layer_BackGround"))))
+		return E_FAIL;
+
 
 	if (FAILED(ReadyLayerCamera(TEXT("Layer_Camera"))))
 		return E_FAIL;
@@ -34,6 +42,20 @@ void CEdit::Tick(_float _fTimeDelta)
 
 HRESULT CEdit::Render()
 {
+	CNaviToolMgr::GetInstance()->Render();
+
+	return S_OK;
+}
+
+HRESULT CEdit::ReadyLayerBackGround(const wstring& _strLayerTag)
+{
+	shared_ptr<CGameObject> pDummy = CDummy::Create(TEXT("Map_Arcade"));
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pDummy)))
+		return E_FAIL;
+
+	pDummy->SetPosition({ -565.f, 40.5f, -100.f , 1.f });
+	CImguiMgr::GetInstance()->SetMapObject(pDummy);
+
 	return S_OK;
 }
 

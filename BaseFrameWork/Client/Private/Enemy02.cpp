@@ -92,7 +92,7 @@ void CEnemy02::Tick(_float _fTimeDelta)
            {
                m_eCurrentState = EMONSTER_STATE::STATE_WALK;
                ChangeAnim(62, true);
-               m_pTransformCom->GoStraight(_fTimeDelta);
+               m_pTransformCom->GoStraight(_fTimeDelta, nullptr);
            }
        }
     }

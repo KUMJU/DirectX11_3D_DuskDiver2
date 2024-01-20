@@ -5,6 +5,7 @@
 
 BEGIN(Engine)
 class CGameObject;
+class CNavigation;
 END
 
 
@@ -21,6 +22,8 @@ private:
 
 public:
 	void LoadMapData(const char* _filePath, vector<char*>* _ObjectNameList = nullptr, list<shared_ptr<CGameObject>>* _ObjectList = nullptr);
+	void LoadCellData(const wstring& _strPath);
+	shared_ptr<CNavigation> GetCurrentNavi(_uint _iStartIdx);
 
 private:
 	void ClassifyObject(const wstring& _strKeyName, _float4x4* _fWorldMat, list<shared_ptr<CGameObject>>* _ObjectList = nullptr);
@@ -30,9 +33,16 @@ public:
 	Json::Value JsonFileReader(const char* _filePath);
 
 	void SetLoadStateImgui() { m_IsImguiLoad = true; }
-
+	void SetWorldMatrix(_float4x4 _MapMat) {
+		m_WorldMatrix = _MapMat;
+	}
+	
 private:
 	_bool m_IsImguiLoad = false;
+
+	_float4x4 m_WorldMatrix;
+
+	shared_ptr<CNavigation> m_pNavigationCom = nullptr;
 
 };
 
