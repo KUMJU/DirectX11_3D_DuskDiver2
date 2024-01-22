@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 
 #include "Dummy.h"
+#include "Model.h"
 
 IMPLEMENT_SINGLETON(CMapLoader)
 
@@ -12,7 +13,7 @@ CMapLoader::CMapLoader()
 }
 
 
-void CMapLoader::LoadMapData(const char* _filePath, vector<char*>* _ObjectNameList , list<shared_ptr<CGameObject>>* _ObjectList)
+void CMapLoader::LoadMapData(const char* _filePath, vector<char*>* _ObjectNameList , list<shared_ptr<CGameObject>>* _ObjectList, vector<shared_ptr<CModel>>* _modelList)
 {
 
     Json::Value root;
@@ -54,6 +55,8 @@ void CMapLoader::LoadMapData(const char* _filePath, vector<char*>* _ObjectNameLi
 			char* szKeyName = new char[KeyName.size()+1];
 			memcpy(szKeyName, KeyName.c_str(), KeyName.size() + 1);
 			_ObjectNameList->push_back(szKeyName);
+			
+		
 		}
 
 		ClassifyObject(strModelName, &CurrentMatrix, _ObjectList);

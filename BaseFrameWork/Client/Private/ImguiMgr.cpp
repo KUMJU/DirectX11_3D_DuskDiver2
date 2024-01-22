@@ -12,6 +12,10 @@
 #include "Mesh.h"
 #include "Model.h"
 
+#include <fstream>
+
+#include "Escalator.h"
+
 IMPLEMENT_SINGLETON(CImguiMgr)
 
 static const float identityMatrix[16] =
@@ -50,8 +54,32 @@ HRESULT CImguiMgr::Initialize()
     SetObjectList();
 
     CMapLoader::GetInstance()->SetLoadStateImgui();
-    shared_ptr<CTransform> pTransform =  dynamic_pointer_cast<CTransform>(m_pMapMesh->GetComponent(TEXT("Com_Transform")));
-    CNaviToolMgr::GetInstance()->SetTerrainTransform(pTransform);
+    m_pMapTransform =  dynamic_pointer_cast<CTransform>(m_pMapMesh->GetComponent(TEXT("Com_Transform")));
+    
+    m_PickingModelList.push_back((m_pMapMesh));
+    CNaviToolMgr::GetInstance()->SetTerrainTransform(m_pMapTransform);
+
+
+    //shared_ptr<CEscalator> pInst1 = CEscalator::Create(0);
+
+    //_vector v1 = { 1.f, 0.f, 0.f, 0.f };
+    //_vector v2 = { 0.f, 1.f, 0.f, 0.f };
+    //_vector v3 = { 0.f, 0.f, 1.f, 0.f };
+    //_vector v4 = { 4.27f, -7.8f, -20.f, 1.f };
+
+
+    //_matrix World1 = { v1 ,v2,v3,v4};
+    //shared_ptr<CTransform> pTrans =  dynamic_pointer_cast<CTransform>(pInst1->GetComponent(TEXT("Com_Transform")));
+    //pTrans->SetState(CTransform::STATE_POSITION, { 4.2f, -7.8f, -20.f, 1.f });
+    //pTrans->SetScaling(1.5f, 1.8f, 1.8f);
+    ////_float4x4 WorldFloat;
+    ////XMStoreFloat4x4(&WorldFloat, World1);
+    ////pTrans->SetWorldMatrix(WorldFloat);
+    //CGameInstance::GetInstance()->AddObject(LEVEL_EDIT, TEXT("Layer_BackGround"), pInst1);
+
+    //m_PickingModelList.push_back(pInst1);
+
+
 
     return S_OK;
 }
@@ -71,7 +99,7 @@ HRESULT CImguiMgr::Render(void)
     if (m_KeyDeb) {
         m_fDebTime += 0.01f;
         
-        if (m_fDebTime > 0.6f) {
+        if (m_fDebTime > 1.f) {
             m_KeyDeb = false;
             m_fDebTime = 0.f;
         }
@@ -140,6 +168,7 @@ void CImguiMgr::ObjectLoader()
         CGameInstance::GetInstance()->AddObject(LEVEL_EDIT, TEXT("Layer_BackGround"), pDummy);
         m_CurrentObjectList.push_back(m_ObjectList[m_ObjListIdx]);
         m_Objects.push_back(pDummy);
+        m_PickingModelList.push_back(pDummy);
     }
 
     ImGui::Dummy(ImVec2(0.f, 6.f));
@@ -211,9 +240,17 @@ void CImguiMgr::ObjectLoader()
     if (ImGui::Button("Load")) {
         string strBasePath = "../Bin/DataFiles/";
         string fileName = m_SaveFileName;
-        string fullPathName = strBasePath + fileName + ".json";
+        string fullPathName = strBasePath + fileName + ".dat";
 
         CMapLoader::GetInstance()->LoadMapData(fullPathName.c_str(), &m_CurrentObjectList, &m_Objects);
+
+
+        for (auto& iter : m_Objects) {
+
+           m_PickingModelList.push_back(iter);
+
+        }
+
     }
 
     if (m_Objects.empty())
@@ -291,25 +328,57 @@ void CImguiMgr::DrawNaviMesh()
     if (!m_KeyDeb) {
 
 
-        if (CGameInstance::GetInstance()->GetDIMouseState(MOUSEKEYSTATE::DIM_LB)) {
+        if (CGameInstance::GetInstance()->GetDIMouseState(MOUSEKEYSTATE::DIM_RB)) {
 
             POINT pt = GetMouse();
 
             if (m_pMapMesh) {
                 m_KeyDeb = true;
-                shared_ptr<CModel> pModel = dynamic_pointer_cast<CModel>(m_pMapMesh->GetComponent(TEXT("Com_Model")));
-                vector<shared_ptr<CMesh>> Meshes = pModel->GetMeshes();
 
-                shared_ptr<CTransform> pTransform = dynamic_pointer_cast<CTransform>(m_pMapMesh->GetComponent(TEXT("Com_Transform")));
+                _int iIdxNum = -1;
+                _float fNearest = 9999.f;
+                _float fDistance = 0.f;
+                m_vCurrentPicking = _float3();
+
+                _int iPickingNum = -1;
+
+                for (auto& iter : m_PickingModelList) {
+                    ++iIdxNum;
+                    shared_ptr<CModel> Models = dynamic_pointer_cast<CModel>(iter->GetComponent(TEXT("Com_Model")));
+
+                    vector<shared_ptr<CMesh>> Meshes = Models->GetMeshes();
+                    shared_ptr<CTransform> pTransform = dynamic_pointer_cast<CTransform>(iter->GetComponent(TEXT("Com_Transform")));
 
 
-                _float3 vPickingPos = CGameInstance::GetInstance()->MeshPicking(pt, pModel, pTransform);
+                    _float3 vPickingPos = CGameInstance::GetInstance()->MeshPicking(pt, Models, pTransform, fDistance);
 
-                if (vPickingPos.x != 0 && vPickingPos.y != 0 && vPickingPos.z != 0) {
-                    m_vCurrentPicking = vPickingPos;
-                    CNaviToolMgr::GetInstance()->PickPoint(vPickingPos);
+                    if ((vPickingPos.x != 0 && vPickingPos.y != 0 && vPickingPos.z != 0)&&
+                        fDistance < fNearest) {
+                        fNearest = fDistance;
+                        m_vCurrentPicking = vPickingPos;
+                        iPickingNum = iIdxNum;
+                    }
+
                 }
-  
+
+                if ((m_vCurrentPicking.x != 0 && m_vCurrentPicking.y != 0 && m_vCurrentPicking.z != 0)) {
+                    //각 오브젝트의 좌표계를 통맵좌표계로 치환
+                    if (iPickingNum != 0) {
+                        //m_vCurrentPicking
+                        
+                        
+                        shared_ptr<CTransform> pTransform = dynamic_pointer_cast<CTransform>(m_PickingModelList[iPickingNum]->GetComponent(TEXT("Com_Transform")));
+                        _matrix OriginWorld = pTransform->GetWorldMatrix();
+                        _vector PickWorldPos = XMVector3TransformCoord(XMLoadFloat3(&m_vCurrentPicking), OriginWorld);
+                        
+                        _matrix MapInverseWorldMat = m_pMapTransform->GetWorldMatrixInverse();
+                        PickWorldPos =  XMVector3TransformCoord(PickWorldPos, MapInverseWorldMat);
+                        XMStoreFloat3(&m_vCurrentPicking, PickWorldPos);
+
+                    }
+
+                    CNaviToolMgr::GetInstance()->PickPoint(m_vCurrentPicking);
+                }
             }
 
         }
@@ -319,6 +388,13 @@ void CImguiMgr::DrawNaviMesh()
     ImGui::Text("X : %f", m_vCurrentPicking.x);
     ImGui::Text("Y : %f", m_vCurrentPicking.y);
     ImGui::Text("Z : %f", m_vCurrentPicking.z);
+
+
+    if (ImGui::Button("Delete Last")) {
+
+        CNaviToolMgr::GetInstance()->CancleLast();
+
+    }
 
 
     if (ImGui::Button("Save Cells")) {
@@ -343,7 +419,11 @@ void CImguiMgr::SaveData()
 
     string strBasePath = "../Bin/DataFiles/";
     string fileName = m_SaveFileName;
-    string fullPathName = strBasePath + fileName + ".json";
+    string fullPathName = strBasePath + fileName + ".dat";
+
+    ofstream fp(fullPathName , ios::binary);
+
+    fp.write((char*)&iSize, sizeof(_int));
 
     //World Matrix 통째 저장 버전 
     for (_int i = 0; i < iSize; ++i) {
@@ -352,28 +432,34 @@ void CImguiMgr::SaveData()
         Json::Value ValueData;
 
         float* WorldObj = (*iter2)->GetWoldMatFloatArr();
+        
+        fp.write((char*)WorldObj, sizeof(_float) * 16);
+        
+        /*WorldMatrix["v0"] = to_string(WorldObj[0]);
+        WorldMatrix["v1"] = to_string(WorldObj[1]);
+        WorldMatrix["v2"] = to_string(WorldObj[2]);
+        WorldMatrix["v3"] = to_string(WorldObj[3]);
+        WorldMatrix["v4"] = to_string(WorldObj[4]);
+        WorldMatrix["v5"] = to_string(WorldObj[5]);
+        WorldMatrix["v6"] =  to_string(WorldObj[6]);
+        WorldMatrix["v7"] =  to_string(WorldObj[7]);
+        WorldMatrix["v8"] =  to_string(WorldObj[8]);
+        WorldMatrix["v9"] = to_string(WorldObj[9]);
+        WorldMatrix["v10"] = to_string(WorldObj[10]);
+        WorldMatrix["v11"] = to_string(WorldObj[11]);
+        WorldMatrix["v12"] = to_string(WorldObj[12]);
+        WorldMatrix["v13"] = to_string(WorldObj[13]);
+        WorldMatrix["v14"] = to_string(WorldObj[14]);
+        WorldMatrix["v15"] = to_string(WorldObj[15]);
 
-        WorldMatrix["v0"] = WorldObj[0];
-        WorldMatrix["v1"] = WorldObj[1];
-        WorldMatrix["v2"] = WorldObj[2];
-        WorldMatrix["v3"] = WorldObj[3];
-        WorldMatrix["v4"] = WorldObj[4];
-        WorldMatrix["v5"] = WorldObj[5];
-        WorldMatrix["v6"] =  WorldObj[6];
-        WorldMatrix["v7"] =  WorldObj[7];
-        WorldMatrix["v8"] =  WorldObj[8];
-        WorldMatrix["v9"] = WorldObj[9];
-        WorldMatrix["v10"] = WorldObj[10];
-        WorldMatrix["v11"] = WorldObj[11];
-        WorldMatrix["v12"] = WorldObj[12];
-        WorldMatrix["v13"] = WorldObj[13];
-        WorldMatrix["v14"] = WorldObj[14];
-        WorldMatrix["v15"] = WorldObj[15];
+        Json::Value IDKey;*/
 
-        Json::Value IDKey;
+        fp.write((char*)*iter, sizeof(char) * MAX_PATH);
 
-        IDKey["WorldMatrix"] = WorldMatrix;
-        root[(*iter)] = IDKey;
+
+        //IDKey["WorldMatrix"] = WorldMatrix;
+        //IDKey["ModelName"] = *iter;
+        //root[i] = IDKey;
 
         ++iter;
         ++iter2;
@@ -417,7 +503,8 @@ void CImguiMgr::SaveData()
         ++iter2;
     }*/
 
-    CMapLoader::GetInstance()->JsonFileWriter(root, fullPathName.c_str());
+    fp.close();
+  //  CMapLoader::GetInstance()->JsonFileWriter(root, fullPathName.c_str());
 }
 
 void CImguiMgr::SetObjectList()

@@ -29,7 +29,10 @@ void CNaviToolMgr::Initialize()
 
 void CNaviToolMgr::AddNewCell()
 {
+	//점과 점의 비교로 1차 sort
 	SortPoint();
+	//외적을 통한 면의 방향벡터로 2차 sort
+	SortCross();
 	 
 	shared_ptr<CCell> pCell = CCell::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), m_pPoints, (_uint)m_Cells.size());
 	m_Cells.push_back(pCell);
@@ -149,14 +152,28 @@ void CNaviToolMgr::SortPoint()
 
 }
 
+void CNaviToolMgr::SortCross()
+{
+	_float3 fTempPosition[3];
+	memcpy(fTempPosition, m_pPoints, sizeof(_float3) * 3);
+
+	//첫번째 두번째
+	_vector vLineAB = XMVectorSetY(XMLoadFloat3(&fTempPosition[1]),0.f) - XMVectorSetY(XMLoadFloat3(&fTempPosition[0]), 0.f);
+	//세번째 첫번째
+	_vector vLineAC = XMVectorSetY(XMLoadFloat3(&fTempPosition[2]), 0.f) - XMVectorSetY(XMLoadFloat3(&fTempPosition[0]), 0.f);
+	_vector Cross = XMVector3Cross(vLineAB, vLineAC);
+
+	//음수가 나올 경우 바꿔준다 
+	if (Cross.m128_f32[1] <  0) {
+		m_pPoints[1] = fTempPosition[2];
+		m_pPoints[2] = fTempPosition[1];
+	}
+}
+
 void CNaviToolMgr::CancleLast()
 {
 	shared_ptr<CCell> LastCell =  m_Cells.back();
-
 	m_Cells.pop_back();
-
-	//이웃 지워주기 
-
 	m_eCurrentOrder = EORDER::ORDER_FIRST;
 }
 

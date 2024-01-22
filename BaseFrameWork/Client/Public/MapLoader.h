@@ -6,6 +6,7 @@
 BEGIN(Engine)
 class CGameObject;
 class CNavigation;
+class CModel;
 END
 
 
@@ -21,12 +22,12 @@ private:
 
 
 public:
-	void LoadMapData(const char* _filePath, vector<char*>* _ObjectNameList = nullptr, list<shared_ptr<CGameObject>>* _ObjectList = nullptr);
+	void LoadMapData(const char* _filePath, vector<char*>* _ObjectNameList = nullptr, list<shared_ptr<CGameObject>>* _ObjectList = nullptr, vector<shared_ptr<CModel>>* _modelList = nullptr );
 	void LoadCellData(const wstring& _strPath);
 	shared_ptr<CNavigation> GetCurrentNavi(_uint _iStartIdx);
 
 private:
-	void ClassifyObject(const wstring& _strKeyName, _float4x4* _fWorldMat, list<shared_ptr<CGameObject>>* _ObjectList = nullptr);
+	void ClassifyObject(const wstring& _strKeyName, _float4x4* _fWorldMat, list<shared_ptr<CGameObject>>* _ObjectList = nullptr, vector<shared_ptr<CModel>>*_modelList = nullptr);
 
 public:
 	HRESULT JsonFileWriter(Json::Value _root, const char* _filePath);

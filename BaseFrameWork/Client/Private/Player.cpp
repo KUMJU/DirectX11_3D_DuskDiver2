@@ -39,8 +39,8 @@ HRESULT CPlayer::Initialize()
     m_Components.emplace(TEXT("Com_BattleModel"), m_pBattleModelCom);
     m_Components.emplace(TEXT("Com_BurstModel"), m_pBurstModelCom);
 
-    m_pNavigationCom = CMapLoader::GetInstance()->GetCurrentNavi(0);
-    m_Components.emplace(TEXT("Com_Navigation"), m_pBurstModelCom);
+    m_pNavigationCom = CMapLoader::GetInstance()->GetCurrentNavi(1);
+    m_Components.emplace(TEXT("Com_Navigation"), m_pNavigationCom);
 
 
     m_eCurrentState = HEROSTATE::STATE_IDLE;
@@ -427,8 +427,7 @@ void CPlayer::CalcAnimMoveDistance()
     _vector vCurrentPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
     vCurrentPos += vLook;
 
-    m_pTransformCom->SetState(CTransform::STATE_POSITION, vCurrentPos);
-
+    m_pTransformCom->CheckingMove(vCurrentPos, m_pNavigationCom);
     m_vPrevAnimPos = m_vCurretnAnimPos;
        
 }

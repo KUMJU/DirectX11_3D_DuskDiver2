@@ -94,7 +94,7 @@ _float4 CPickingMgr::TerrainPicking(POINT _ptMouse, shared_ptr<class CVITerrain>
 	return _float4();
 }
 
-_float3 CPickingMgr::MeshPicking(POINT _ptMouse, shared_ptr<class CModel> _pMeshCom, shared_ptr<class CTransform> _pTransCom)
+_float3 CPickingMgr::MeshPicking(POINT _ptMouse, shared_ptr<class CModel> _pMeshCom, shared_ptr<class CTransform> _pTransCom, _float& _pDistance)
 {
 	SetRay(_ptMouse);
 
@@ -109,9 +109,10 @@ _float3 CPickingMgr::MeshPicking(POINT _ptMouse, shared_ptr<class CModel> _pMesh
 	vRayPos = XMVector3TransformCoord(vRayPos, worldMatrix);
 	vRayDir = XMVector3TransformNormal(vRayDir, worldMatrix);
 
+	vRayDir = XMVector3Normalize(vRayDir);
+
 	vector<shared_ptr<CMesh>> vMeshes = _pMeshCom->GetMeshes();
 
-		
 	_ulong iIndex = 0;
 
 	_float fMinDistance = 99999.f;
@@ -128,9 +129,6 @@ _float3 CPickingMgr::MeshPicking(POINT _ptMouse, shared_ptr<class CModel> _pMesh
 		_uint iFaceNum = iter->GetFaceNum();
 		vector<_uint> vIndicesVector = iter->GetIndicesNumVector();
 
-		iter;
-		iIndex = 0;
-
 		for (_uint i = 0; i < vIndicesVector.size();) {
 			if (DirectX::TriangleTests::Intersects(vRayPos, vRayDir, XMLoadFloat3(&verticesPos[vIndicesVector[i++]]), XMLoadFloat3(&verticesPos[vIndicesVector[i++]]), XMLoadFloat3(&verticesPos[vIndicesVector[i++]]), fDist)) {
 
@@ -141,6 +139,7 @@ _float3 CPickingMgr::MeshPicking(POINT _ptMouse, shared_ptr<class CModel> _pMesh
 				if (fDistance < fMinDistance) {
 					fMinDistance = fDistance;
 					NearPickPos = pickPos;
+					_pDistance = fDistance;
 
 					NearPickPos.y += 0.003f;
 				}

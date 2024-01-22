@@ -74,6 +74,9 @@ _bool CNavigation::IsMove(_fvector vPosition, _float& _fHeight)
 
 	if (m_Cells[m_iCurrentIndex]->isIn(vPos, &iNeighborIndex)) {
 		_fHeight = m_Cells[m_iCurrentIndex]->ComputeCellHeight(vPos);
+		_vector vTemp = { 0.f,_fHeight, 0.f};
+		vTemp = XMVector3TransformCoord(vTemp, XMLoadFloat4x4(&m_WorldMatrix));
+		_fHeight = vTemp.m128_f32[1];
 		return true;
 	}
 
@@ -90,6 +93,11 @@ _bool CNavigation::IsMove(_fvector vPosition, _float& _fHeight)
 				{
 					m_iCurrentIndex = iNeighborIndex;
 					_fHeight = m_Cells[iNeighborIndex]->ComputeCellHeight(vPos);
+
+					_vector vTemp = { 0.f,_fHeight, 0.f };
+					vTemp = XMVector3TransformCoord(vTemp, XMLoadFloat4x4(&m_WorldMatrix));
+					_fHeight = vTemp.m128_f32[1];
+
 					return true;
 				}
 			}
@@ -131,14 +139,14 @@ HRESULT CNavigation::Render()
 	m_pShader->Begin(0);
 
 
-	//for (auto& pCell : m_Cells)
-	//{
-	//	if (nullptr != pCell)
-	//		pCell->Render();
-	//}
+	for (auto& pCell : m_Cells)
+	{
+		if (nullptr != pCell)
+			pCell->Render();
+	}
 
 
-	m_Cells[m_iCurrentIndex]->Render();
+	//m_Cells[m_iCurrentIndex]->Render();
 
 	//if (-1 == m_iCurrentIndex)
 	//{

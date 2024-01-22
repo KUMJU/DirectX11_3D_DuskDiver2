@@ -6,6 +6,15 @@
 #include "Dummy.h"
 #include "Navigation.h"
 
+#include "Escalator.h"
+#include "Model.h"
+
+#include "imgui.h"
+#include "imgui_impl_win32.h"
+#include "imgui_impl_dx11.h"
+
+#include "ImGuizmo.h"
+
 IMPLEMENT_SINGLETON(CMapLoader)
 
 CMapLoader::CMapLoader()
@@ -13,53 +22,40 @@ CMapLoader::CMapLoader()
 }
 
 
-void CMapLoader::LoadMapData(const char* _filePath, vector<char*>* _ObjectNameList , list<shared_ptr<CGameObject>>* _ObjectList)
+void CMapLoader::LoadMapData(const char* _filePath, vector<char*>* _ObjectNameList , list<shared_ptr<CGameObject>>* _ObjectList, vector<shared_ptr<CModel>>* _modelList)
 {
 
-    Json::Value root;
-    root = JsonFileReader(_filePath);
-    _int iJsonSize = root.size();
+  //  Json::Value root;
+   // root = JsonFileReader(_filePath);
+  //  _int iJsonSize = root.size();
 
-	for (auto iter = root.begin(); iter != root.end(); ++iter) {
-		string KeyName = iter.key().asString();
+	ifstream fp(_filePath, ios::binary);
+
+	_int iIndex = 0;
+
+	fp.read((char*)&iIndex, sizeof(_int));
+
+	for (_int i = 0; i < iIndex; ++i) {
 
 		_float4x4 CurrentMatrix;
+		fp.read((char*)&CurrentMatrix, sizeof(_float) * 16);
+		char* szKeyName = new char[MAX_PATH];
 
-		Json::Value vId = root[KeyName];
-		Json::Value WorldMatrix = vId["WorldMatrix"];
+		fp.read((char*)szKeyName, sizeof(char) * MAX_PATH);
 
-		CurrentMatrix._11 = WorldMatrix["v0"].asFloat();
-		CurrentMatrix._12 = WorldMatrix["v1"].asFloat();
-		CurrentMatrix._13 = WorldMatrix["v2"].asFloat();
-		CurrentMatrix._14 = WorldMatrix["v3"].asFloat();
-		CurrentMatrix._21 = WorldMatrix["v4"].asFloat();
-		CurrentMatrix._22 = WorldMatrix["v5"].asFloat();
-		CurrentMatrix._23 = WorldMatrix["v6"].asFloat();
-		CurrentMatrix._24 = WorldMatrix["v7"].asFloat();
-		CurrentMatrix._31 = WorldMatrix["v8"].asFloat();
-		CurrentMatrix._32 = WorldMatrix["v9"].asFloat();
-		CurrentMatrix._33 = WorldMatrix["v10"].asFloat();
-		CurrentMatrix._34 = WorldMatrix["v11"].asFloat();
-		CurrentMatrix._41 = WorldMatrix["v12"].asFloat();
-		CurrentMatrix._42 = WorldMatrix["v13"].asFloat();
-		CurrentMatrix._43 = WorldMatrix["v14"].asFloat();
-		CurrentMatrix._44 = WorldMatrix["v15"].asFloat();
+		string strModelName = szKeyName;
 
-		wstring strModelName;
-		strModelName.assign(KeyName.begin(), KeyName.end());
+		wstring wstrModelName;
+		wstrModelName.assign(strModelName.begin(), strModelName.end());
 		
 		if (m_IsImguiLoad) {
-			char* ddd = (char*)(KeyName.c_str());
-			_int a = 4;
-
-			char* szKeyName = new char[KeyName.size()+1];
-			memcpy(szKeyName, KeyName.c_str(), KeyName.size() + 1);
 			_ObjectNameList->push_back(szKeyName);
 		}
 
-		ClassifyObject(strModelName, &CurrentMatrix, _ObjectList);
+		ClassifyObject(wstrModelName, &CurrentMatrix, _ObjectList);
 	}
 
+	fp.close();
 }
 
 void CMapLoader::LoadCellData(const wstring& _strPath)
@@ -77,7 +73,7 @@ shared_ptr<CNavigation> CMapLoader::GetCurrentNavi(_uint _iStartIdx)
 	return CNavigation::Clone(m_pNavigationCom, _iStartIdx);;
 }
 
-void CMapLoader::ClassifyObject(const wstring& _strKeyName, _float4x4* _fWorldMat, list<shared_ptr<CGameObject>>* _ObjectList)
+void CMapLoader::ClassifyObject(const wstring& _strKeyName, _float4x4* _fWorldMat, list<shared_ptr<CGameObject>>* _ObjectList, vector<shared_ptr<CModel>>*  _modelList)
 {
 	//if문으로 별도로 생성해야하는건 구분하기
 	shared_ptr<CGameObject> pInstance;
@@ -85,15 +81,35 @@ void CMapLoader::ClassifyObject(const wstring& _strKeyName, _float4x4* _fWorldMa
 	if (TEXT("MonsterTower") == _strKeyName) {
 
 	}
-	else {
+	else if (TEXT("Escalator_Base") == _strKeyName) {
+
+		pInstance = CEscalator::Create(0);
+		CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Object"), pInstance);
+
+
+
+	}else {
 
 		pInstance = CDummy::Create(_strKeyName);
 		CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Object"), pInstance);
 	}
+
+
+	//_float3 fScale, fRotation, fPostion;
+
+	//ImGuizmo::DecomposeMatrixToComponents(&_fWorldMat->m[0][0], &fPostion.x, &fRotation.x, &fScale.x);
+
+	//shared_ptr<CTransform> pTransform = dynamic_pointer_cast<CTransform>(pInstance->GetComponent(TEXT("Com_Transform")));
+
+	//pTransform->SetScaling(fScale.x, fScale.y, fScale.z);
+	//pTransform->Rotation({0.f,1.f, 0.f}, XMConvertToRadians(180));
+	//pTransform->SetState(CTransform::STATE_POSITION, XMLoadFloat3(&fPostion));
+
 	pInstance->SetWorldMatrix(*_fWorldMat);
 
 	if (m_IsImguiLoad) {
 		_ObjectList->push_back(pInstance);
+			
 	}
 
 }

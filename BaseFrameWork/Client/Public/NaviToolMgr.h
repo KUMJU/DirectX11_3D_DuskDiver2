@@ -41,7 +41,9 @@ public:
 	//지금 피킹한 포인트의 가장 가까운 셀을 찾아 보정해준다
 	_float3 FindNearestPoint(_float3 _fPickPoint);
 	//시계방향 정렬
+	
 	void SortPoint();
+	void SortCross();
 
 	void CancleLast();
 

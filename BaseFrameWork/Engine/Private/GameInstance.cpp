@@ -250,12 +250,12 @@ _float4 CGameInstance::TerrainPicking(POINT _ptMouse, shared_ptr<class CVITerrai
 	return m_pPickingMgr->TerrainPicking(_ptMouse, _pTerrainCom, _pTransCom);
 }
 
-_float3 CGameInstance::MeshPicking(POINT _ptMouse, shared_ptr<class CModel> _pModelCom, shared_ptr<class CTransform> _pTransCom)
+_float3 CGameInstance::MeshPicking(POINT _ptMouse, shared_ptr<class CModel> _pModelCom, shared_ptr<class CTransform> _pTransCom, _float& _pDistance)
 {
 	if (!m_pPickingMgr)
 		return _float3();
 
-	return m_pPickingMgr->MeshPicking(_ptMouse, _pModelCom, _pTransCom);
+	return m_pPickingMgr->MeshPicking(_ptMouse, _pModelCom, _pTransCom, _pDistance);
 }
 
 HRESULT CGameInstance::AddLight(const LIGHT_DESC& _LightDesc)

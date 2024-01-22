@@ -26,6 +26,9 @@
 
 #include "GameObject.h"
 
+#include "MapObject.h"
+#include "Escalator.h"
+
 
 CArcadeMap::CArcadeMap()
 	:CLevel()
@@ -141,17 +144,22 @@ HRESULT CArcadeMap::ReadyLayerCamera(const wstring& _strLayerTag)
 HRESULT CArcadeMap::ReadyLayerPlayer(const wstring& _strLayerTag)
 {
 
+	//¸Ê ¼³Ä¡ 
 	shared_ptr<CGameObject> pDummy = CDummy::Create(TEXT("Map_Arcade"));
 	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pDummy)))
 		return E_FAIL;
 
 	pDummy->SetPosition({ -565.f, 40.5f, -100.f , 1.f });
 
+	//¸Ê ³×ºñ°ÔÀÌ¼Ç ¸Þ½¬ ¼¿ Á¤º¸ ÆÄ½Ì
 	_float4x4 worldMat;
 	_matrix dd =pDummy->GetWorldMatrix();
 	XMStoreFloat4x4(&worldMat, dd);
 	CMapLoader::GetInstance()->SetWorldMatrix(worldMat);
 	CMapLoader::GetInstance()->LoadCellData(TEXT("CellTest.dat"));
+
+	//¸Ê ¿ÀºêÁ§Æ® ÆÄ½ÌÁ¤º¸ ºÒ·¯¿À±â
+	CMapLoader::GetInstance()->LoadMapData("../Bin/DataFiles/ArcadeMap_Object.dat");
 
 
  	shared_ptr<CPlayer> pPlayer = CPlayer::Create();

@@ -15,7 +15,6 @@ public:
 		OWNER_END
 	};
 
-
 public:
 	CSkill();
 	~CSkill() = default;
@@ -51,7 +50,12 @@ private:
 
 private:
 	_bool m_bAirBorne = false; //에어본 공격인지 판별
+	_bool m_SlowTime = 0.f; //느려지는 효과가 있으면 시간보정값? 
+
+	wstring m_strCutSceneName = TEXT(""); // 이벤트 카메라에 넘겨줄 이벤트씬 이름
+
 	
+
 };
 
 END

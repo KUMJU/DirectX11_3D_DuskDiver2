@@ -23,7 +23,7 @@ public:
 	virtual void LateTick(_float _fTimeDelta) override;
 	virtual HRESULT Render() override;
 
-private:
+protected:
 	shared_ptr<CShader> m_pShader = nullptr;
 	shared_ptr<CModel> m_pModelCom = nullptr;
 

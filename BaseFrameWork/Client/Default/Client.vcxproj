@@ -165,6 +165,7 @@
     <ClInclude Include="..\Public\Enemy01.h" />
     <ClInclude Include="..\Public\Enemy02.h" />
     <ClInclude Include="..\Public\Enemy03.h" />
+    <ClInclude Include="..\Public\Escalator.h" />
     <ClInclude Include="..\Public\EventCamera.h" />
     <ClInclude Include="..\Public\FinalBoss.h" />
     <ClInclude Include="..\Public\GameMgr.h" />
@@ -212,6 +213,7 @@
     <ClCompile Include="..\Private\Enemy01.cpp" />
     <ClCompile Include="..\Private\Enemy02.cpp" />
     <ClCompile Include="..\Private\Enemy03.cpp" />
+    <ClCompile Include="..\Private\Escalator.cpp" />
     <ClCompile Include="..\Private\EventCamera.cpp" />
     <ClCompile Include="..\Private\FinalBoss.cpp" />
     <ClCompile Include="..\Private\GameMgr.cpp" />

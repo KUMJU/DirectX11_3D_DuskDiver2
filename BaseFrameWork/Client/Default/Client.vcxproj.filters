@@ -273,6 +273,7 @@
     <ClInclude Include="..\Public\NaviToolMgr.h">
       <Filter>96. Imgui\02. NaviToolMgr</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Escalator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -392,6 +393,7 @@
     <ClCompile Include="..\Private\NaviToolMgr.cpp">
       <Filter>96. Imgui\02. NaviToolMgr</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Escalator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">

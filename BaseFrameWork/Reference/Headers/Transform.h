@@ -63,8 +63,12 @@ public:
 		m_fSpeedPerSec = _fSpeed;
 	}
 
+	//모든 이동에 가능여부 확인
+	void CheckingMove(_fvector _vPosition, shared_ptr<class CNavigation> _pNavigation);
+
 public:
 
+	//이동 + 이동 제한 확인
 	void GoStraight(_float _fTimeDelta, shared_ptr<class CNavigation> _pNavigation);
 	void GoBackward(_float _fTimeDelta);
 	void GoLeft(_float _fTimeDelta);

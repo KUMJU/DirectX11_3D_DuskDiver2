@@ -24,7 +24,7 @@ public:
 	//터레인, 버퍼 피킹
 	_float4 TerrainPicking(POINT _ptMouse, shared_ptr<class CVITerrain> _pTerrainCom, shared_ptr<class CTransform> _pTransCom);
 	//오브젝트 피킹(메쉬)
-	_float3 MeshPicking(POINT _ptMouse, shared_ptr<class CModel> _pMeshCom, shared_ptr<class CTransform> _pTransCom);
+	_float3 MeshPicking(POINT _ptMouse, shared_ptr<class CModel> _pMeshCom, shared_ptr<class CTransform> _pTransCom, _float& _pDistance);
 	
 	_bool ObjectPicking();
 

@@ -18,6 +18,24 @@ void CTransform::SetScaling(_float _fX, _float _fY, _float _fZ)
     SetState(STATE_LOOK, XMVector3Normalize(GetState(STATE_LOOK)) * _fZ);
 }
 
+void CTransform::CheckingMove(_fvector _vPosition, shared_ptr<CNavigation> _pNavigation)
+{
+    _float fHeight = 0.f;
+
+    _vector vNewPos = _vPosition;
+
+    if (nullptr == _pNavigation) {
+        SetState(STATE_POSITION, vNewPos);
+
+    }
+    else if (true == _pNavigation->IsMove(vNewPos, fHeight)) {
+        vNewPos.m128_f32[1] = fHeight;
+        SetState(STATE_POSITION, vNewPos);
+    }
+
+
+}
+
 void CTransform::GoStraight(_float _fTimeDelta, shared_ptr<CNavigation> _pNavigation)
 {
     _vector vPosition = GetState(STATE_POSITION);

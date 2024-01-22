@@ -150,6 +150,9 @@ HRESULT CMesh::ReadyVertexBufferAnim(ifstream& _ifs )
 		_ifs.read((char*)&pVertices[i].vTexcoord, sizeof(_float2));
 		_ifs.read((char*)&pVertices[i].vTangent, sizeof(_float3));
 
+		m_verticesPos.push_back(pVertices[i].vPosition);
+
+
 	}
 
 	//메시의 정점들의 상태에 영향을 주는 뼈들을 가져옴

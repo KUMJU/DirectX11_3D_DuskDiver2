@@ -11,6 +11,11 @@
 
 #include "GameObject.h"
 
+
+BEGIN(Engine)
+class CModel;
+END
+
 BEGIN(Client)
 
 class CImguiMgr
@@ -79,6 +84,8 @@ private:
 	shared_ptr<CGameObject> m_pCurrentSelectObj = nullptr;
 	shared_ptr<CGameObject> m_pMapMesh = nullptr;
 
+	shared_ptr<CTransform> m_pMapTransform = nullptr;
+
 ///////////SelectObjectInfo////////////
 private:
 	_float m_vObjectScale[3] = { 0.f , 0.f, 0.f };
@@ -87,6 +94,8 @@ private:
 	
 
 /////////////Picking ////////
+
+	vector<shared_ptr<CGameObject>> m_PickingModelList;
 
 private:
 	_bool m_KeyDeb = false;
