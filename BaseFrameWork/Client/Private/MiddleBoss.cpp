@@ -48,7 +48,8 @@ void CMiddleBoss::Tick(_float _fTimeDelta)
     if (m_eCurrentState == EMONSTER_STATE::STATE_IDLE) {
 
         if (47 == m_iAnimNum) {
-            m_pTransformCom->GoStraight(_fTimeDelta, nullptr);
+            _bool jump = false;
+            m_pTransformCom->GoStraight(_fTimeDelta, nullptr, jump);
         }
     }
 
@@ -67,7 +68,7 @@ void CMiddleBoss::Tick(_float _fTimeDelta)
         if (!m_IsNearPlr) {
             ChangeAnim(47, true);
             EMONSTER_STATE::STATE_WALK;
-            m_pTransformCom->GoStraight(_fTimeDelta, nullptr);
+            m_pTransformCom->GoStraight(_fTimeDelta, nullptr, m_bJump);
         }
     }
 

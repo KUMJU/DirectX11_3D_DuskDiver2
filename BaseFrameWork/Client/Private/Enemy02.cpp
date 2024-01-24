@@ -4,6 +4,8 @@
 #include "GameInstance.h"
 #include "Model.h"
 #include "Shader.h"
+#include "Collider.h"
+#include "MapLoader.h"
 
 CEnemy02::CEnemy02()
 {
@@ -30,10 +32,23 @@ HRESULT CEnemy02::Initialize()
     m_fTotalCoolTime = 2.f;
 
     m_pModelCom->SetAnimNum(20);
+   // m_pTransformCom->SetState(CTransform::STATE_POSITION, { 0.3f, 0.f, 0.7f });
 
     // 0 = 사거리 중, 1 = 사거리 짧음 2= 사거리 길다 
 
     /* rand and pick attackNum -> and Setting Attack Distance*/
+
+    m_pNavigation = CMapLoader::GetInstance()->GetCurrentNavi(0);
+
+        /*********Collider*************/
+
+    CCollider::COLLIDER_DESC ColliderDesc = {};
+    ColliderDesc.fRadius = 0.9f;
+    ColliderDesc.vCenter = _float3(0.f, 0.6f, 0.f);
+
+    m_pCollider = CCollider::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), CCollider::TYPE_SPHERE, ColliderDesc);
+    m_Components.emplace(TEXT("Com_Collider"), m_pCollider);
+    m_pCollider->SetOwner(shared_from_this());
 
     return S_OK;
 }
@@ -81,9 +96,8 @@ void CEnemy02::Tick(_float _fTimeDelta)
 
     //공격하는 중이 아니고 공격 쿨타임이 아닐때(행동 결정)
     if(EMONSTER_STATE::STATE_ATTACK != m_eCurrentState && !m_IsAtkCool&& !m_bDefenceMode &&
-        EMONSTER_STATE::STATE_STUN != m_eCurrentState) {
+        EMONSTER_STATE::STATE_STUN != m_eCurrentState && !m_bHit) {
 
-        CalcPlayerDistance();
         ChasePlayer();
 
        if (!m_IsNearPlr) {
@@ -92,9 +106,15 @@ void CEnemy02::Tick(_float _fTimeDelta)
            {
                m_eCurrentState = EMONSTER_STATE::STATE_WALK;
                ChangeAnim(62, true);
-               m_pTransformCom->GoStraight(_fTimeDelta, nullptr);
+               _bool jump = false;
+
+               m_pTransformCom->GoStraight(_fTimeDelta, m_pNavigation, jump);
            }
        }
+    }
+
+    if (m_bHit) {
+        m_pModelCom->SetLinearTime(0.02f);
     }
 
     if (m_pModelCom->PlayAnimation(_fTimeDelta, m_bLoop, &m_vCurrentAnimPos)) {
@@ -103,12 +123,35 @@ void CEnemy02::Tick(_float _fTimeDelta)
 
    CalcAnimationDistance();
 
+   m_pCollider->Tick(m_pTransformCom->GetWorldMatrix());
+   CGameInstance::GetInstance()->AddCollider(CCollisionMgr::COL_MONSTER, m_pCollider);
+
 }
 
 void CEnemy02::LateTick(_float _fTimeDelta)
 {
     if (!m_IsEnabled)
         return;
+
+    if (m_bJump) {
+
+        _float fDir = 1.f;
+        m_JumpTimeCheck += _fTimeDelta;
+        if (m_JumpTimeCheck > 0.8f) {
+            fDir = -1.f;
+        }
+
+        _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+        _vector vUp = m_pTransformCom->GetState(CTransform::STATE_UP);
+        vPos += vUp * (8.f * fDir * _fTimeDelta);
+
+        m_pTransformCom->CheckingMove(vPos, m_pNavigation, m_bJump);
+
+    }
+
+
+    CalcPlayerDistance();
+
 
     if (m_bWait) {
         m_fWaitTime += _fTimeDelta;
@@ -166,8 +209,12 @@ HRESULT CEnemy02::Render()
     if (!m_IsEnabled)
         return S_OK;
 
+    m_pCollider->Render();
+
+
     if (FAILED(BindShaderResources()))
         return E_FAIL;
+
 
     _uint iNumMeshes = m_pModelCom->GetNumMeshes();
 
@@ -264,6 +311,19 @@ void CEnemy02::WalkPattern(_uint _iWalkNum)
 
 void CEnemy02::IfEmptyAnimList()
 {
+    if (m_bHit) {
+        m_bHit = false;
+        m_eCurrentState = EMONSTER_STATE::STATE_IDLE;
+        m_IsAtkCool = true;
+        m_bAttackCoolTime = 0.f;
+      
+        ChangeAnim(20, false);
+        m_iLastHitIndex = 100;
+        ResetState();
+        
+    }
+
+
     if (EMONSTER_STATE::STATE_ATTACK == m_eCurrentState) {
         m_eCurrentState = EMONSTER_STATE::STATE_IDLE;
         m_IsAtkCool = true;
@@ -274,8 +334,9 @@ void CEnemy02::IfEmptyAnimList()
 
 void CEnemy02::CalcDistanceOption()
 {
+
     if (48 == m_iAnimNum || 20 == m_iAnimNum || 22 == m_iAnimNum || 24 == m_iAnimNum || 26 == m_iAnimNum ||
-        62 == m_iAnimNum || 32 == m_iAnimNum) {
+        62 == m_iAnimNum || 32 == m_iAnimNum || 50 == m_iAnimNum) {
         m_vPrevAnimPos = { 0.f, 0.f, 0.f };
         m_vCurrentAnimPos = { 0.f, 0.f, 0.f };
         return;
@@ -283,6 +344,39 @@ void CEnemy02::CalcDistanceOption()
 
 }
 
+void CEnemy02::ResetState()
+{
+    m_fWaitTime = 0.f;
+    IdlePattern(0);
+}
+
+
+void CEnemy02::OnHit()
+{
+    m_eCurrentState = EMONSTER_STATE::STATE_HIT;
+    m_bHit = true;
+
+    if (m_bDownAttack) {
+        ChangeAnim(54, false);
+        m_NextAnimIndex.push_back({ 50, false });
+        m_NextAnimIndex.push_back({ 12, false });
+
+    }else if (m_bKnockUp) {
+        ChangeAnim(16, false);
+        m_NextAnimIndex.push_back({ 50, false });
+        m_bJump = true;
+    }
+    else {
+
+        if (18 == m_iAnimNum) {
+            ChangeAnim(19, false);
+        }
+        else {
+            ChangeAnim(18, false);
+        }
+    }
+
+}
 
 shared_ptr<CEnemy02> CEnemy02::Create()
 {

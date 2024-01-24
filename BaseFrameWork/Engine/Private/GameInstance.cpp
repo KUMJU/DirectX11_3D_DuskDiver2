@@ -25,9 +25,6 @@ HRESULT CGameInstance::InitializeEngine(HINSTANCE hInst, _uint iNumLevels, _uint
 	if (nullptr == m_pGraphicDev)
 		return E_FAIL;
 
-
-
-
 	m_pInputDev = CInputDevice::Create(hInst, _GraphicDesc.hWnd);
 	if (!m_pInputDev)
 		return E_FAIL;
@@ -66,6 +63,10 @@ HRESULT CGameInstance::InitializeEngine(HINSTANCE hInst, _uint iNumLevels, _uint
 	if (nullptr == m_pResMgr)
 		return E_FAIL;
 
+	m_pCollisionMgr = CCollisionMgr::Create();
+	if (nullptr == m_pCollisionMgr)
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -83,10 +84,11 @@ void CGameInstance::TickEngine(_float _fTimeDelta)
 
 	m_pObjectMgr->Tick(_fTimeDelta);
 
+	m_pCollisionMgr->LateTick();
+
 	m_pObjectMgr->LateTick(_fTimeDelta);
 
 	m_pLevelMgr->Tick(_fTimeDelta);
-
 }
 
 HRESULT CGameInstance::Draw()
@@ -178,6 +180,14 @@ HRESULT CGameInstance::AddObject(_uint _iLevelIndex, const wstring& _strLayerTag
 		return E_FAIL;
 
 	return m_pObjectMgr->AddObject(_iLevelIndex, _strLayerTag, _pGameObject);
+}
+
+shared_ptr<CLayers> CGameInstance::FindLayer(const wstring& _strLayerName)
+{
+	if (!m_pObjectMgr)
+		return nullptr;
+
+	return m_pObjectMgr->FindLayer(m_pLevelMgr->GetCurrentLevel(),_strLayerName);
 }
 
 _float CGameInstance::ComputeTimeDelta(const wstring& pTimer)
@@ -312,6 +322,16 @@ map<wstring, CResourceMgr::ResourceDesc<class CModel>>* CGameInstance::GetModels
 void CGameInstance::LoadResourceForTool()
 {
 	m_pResMgr->LoaderForTool();
+}
+
+void CGameInstance::AddCollider(CCollisionMgr::COLTYPE_GROUP _eColGroup, shared_ptr<CCollider> _pCollider)
+{
+
+	if (!m_pCollisionMgr)
+		return;
+
+	m_pCollisionMgr->AddColliderList(_eColGroup, _pCollider);
+
 }
 
 wrl::ComPtr<ID3D11Device> CGameInstance::GetDeviceInfo()

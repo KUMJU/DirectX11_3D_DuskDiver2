@@ -51,17 +51,6 @@ void CObjectManager::LateTick(_float fTimeDelta)
 	}
 }
 
-HRESULT CObjectManager::AddPrototype(const wstring& strProtoTag, shared_ptr<class CGameObject> _pGameObject)
-{
-	if (nullptr != FindPrototype(strProtoTag))
-		return E_FAIL;
-
-	m_Protortypes.emplace(strProtoTag, _pGameObject);
-
-	return S_OK;
-}
-
-
 HRESULT CObjectManager::AddObject(_uint iLevelIndex, const wstring& strLayerTag, shared_ptr<CGameObject> _pGameObject)
 {
 	if (!_pGameObject)
@@ -88,15 +77,7 @@ HRESULT CObjectManager::AddObject(_uint iLevelIndex, const wstring& strLayerTag,
 	return S_OK;
 }
 
-shared_ptr<class CGameObject> CObjectManager::FindPrototype(const wstring& _strProtoTag)
-{
-	auto iter = m_Protortypes.find(_strProtoTag);
 
-	if (m_Protortypes.end() == iter)
-		return nullptr;
-
-	return iter->second;
-}
 
 shared_ptr<class CLayers> CObjectManager::FindLayer(_uint _iLevelIndex, const wstring& _strLayerTag)
 {

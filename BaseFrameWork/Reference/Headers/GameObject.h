@@ -5,10 +5,12 @@
 
 BEGIN(Engine)
 
+class CCollider;
+
 class ENGINE_DLL CGameObject abstract : public std::enable_shared_from_this<CGameObject>
 {
 public:
-	enum EObjType{ OBJ_PLAYER, OBJ_MONSTER, OBJ_UI, OBJ_ENV, OBJ_END };
+	enum EObjType{ OBJ_PLAYER, OBJ_MONSTER, OBJ_UI, OBJ_ENV, OBJ_PROJ, OBJ_END };
 
 public:
 	CGameObject();
@@ -62,6 +64,10 @@ protected:
 
 	wstring strObjectKeyName = TEXT("");
 
+public:
+	//충돌이 필요한 객체들은 각 객체 내에서 재정의해서 사용한다 
+	virtual void OnCollide(EObjType _eObjType, shared_ptr<CCollider> _pCollider) {};
+		
 };
 
 END

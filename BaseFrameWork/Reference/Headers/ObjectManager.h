@@ -4,6 +4,8 @@
 
 BEGIN(Engine)
 
+class CGameObject;
+
 class CObjectManager
 {
 public:
@@ -17,17 +19,12 @@ public:
 	void LateTick(_float fTimeDelta);
 
 public:
-	HRESULT AddPrototype(const wstring& strProtoTag, shared_ptr<class CGameObject> _pGameObject);
-
 	HRESULT AddObject(_uint iLevelIndex, const wstring& strLayerTag, shared_ptr<CGameObject> _pGameObject);
 
-private:
-	shared_ptr<class CGameObject> FindPrototype(const wstring& _strProtoTag);
+public:
 	shared_ptr<class CLayers> FindLayer(_uint _iLevelIndex, const wstring& _strLayerTag);
 
 private:
-	map<const wstring, shared_ptr<class CGameObject>> m_Protortypes;
-
 	_uint m_iNumLevels = { 0 };
 	map<const wstring, class shared_ptr<class CLayers>>* m_pLayers = { nullptr };
 	typedef map<const wstring, shared_ptr<class CLayers>> LAYERS;

@@ -64,12 +64,12 @@ public:
 	}
 
 	//모든 이동에 가능여부 확인
-	void CheckingMove(_fvector _vPosition, shared_ptr<class CNavigation> _pNavigation);
+	void CheckingMove(_fvector _vPosition, shared_ptr<class CNavigation> _pNavigation , _bool& _IsJump);
 
 public:
 
 	//이동 + 이동 제한 확인
-	void GoStraight(_float _fTimeDelta, shared_ptr<class CNavigation> _pNavigation);
+	void GoStraight(_float _fTimeDelta, shared_ptr<class CNavigation> _pNavigation, _bool& _bJump);
 	void GoBackward(_float _fTimeDelta);
 	void GoLeft(_float _fTimeDelta);
 	void GoRight(_float _fTimeDelta);

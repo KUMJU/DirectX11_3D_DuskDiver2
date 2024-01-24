@@ -154,6 +154,12 @@
     <Filter Include="97. ShaderFiles">
       <UniqueIdentifier>{62d59a40-b2be-4e7c-8f62-09bf1868c636}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\04. Component\04. Collider\DebugDraw">
+      <UniqueIdentifier>{0e08b7fd-1e54-45d4-b851-6059983c5d0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\09. Manager\02. CollisionMgr">
+      <UniqueIdentifier>{18238eec-7eb1-4fd8-ba36-36db47866868}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Engine_Defines.h">
@@ -282,6 +288,18 @@
     <ClInclude Include="..\Public\VIBufferCell.h">
       <Filter>01. Utility\04. Component\00. VIBuffer\02. Cell</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\BoundingSphere.h">
+      <Filter>01. Utility\04. Component\04. Collider\Bounding\Sphere</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bounding.h">
+      <Filter>01. Utility\04. Component\04. Collider\Bounding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DebugDraw.h">
+      <Filter>01. Utility\04. Component\04. Collider\DebugDraw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CollisionMgr.h">
+      <Filter>01. Utility\09. Manager\02. CollisionMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\GraphicDev.cpp">
@@ -397,6 +415,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\VIBufferCell.cpp">
       <Filter>01. Utility\04. Component\00. VIBuffer\02. Cell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BoundingSphere.cpp">
+      <Filter>01. Utility\04. Component\04. Collider\Bounding\Sphere</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bounding.cpp">
+      <Filter>01. Utility\04. Component\04. Collider\Bounding</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\DebugDraw.cpp">
+      <Filter>01. Utility\04. Component\04. Collider\DebugDraw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CollisionMgr.cpp">
+      <Filter>01. Utility\09. Manager\02. CollisionMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -5,6 +5,8 @@
 #include "Model.h"
 #include "Shader.h"
 
+#include "Collider.h"
+
 CEnemy01::CEnemy01()
 {
 }
@@ -30,6 +32,16 @@ HRESULT CEnemy01::Initialize()
 
     m_iTotalAtkNum = 4;
     m_iCurrentAtkNum = 0;
+
+
+    /*********Collider*************/
+
+    CCollider::COLLIDER_DESC ColliderDesc = {};
+    ColliderDesc.fRadius = 0.5f;
+    ColliderDesc.vCenter = { 0.f, 0.5f, 0.f };
+
+    m_pCollider = CCollider::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), CCollider::TYPE_SPHERE, ColliderDesc);
+    m_Components.emplace(TEXT("Com_Collider"), m_pCollider);
 
     return S_OK;
 }
@@ -66,7 +78,9 @@ void CEnemy01::Tick(_float _fTimeDelta)
         }
         else if (29 == m_iAnimNum) {
             m_pTransformCom->SetSpeed(0.5f);
-            m_pTransformCom->GoStraight(_fTimeDelta, nullptr);
+            _bool jump = false;
+
+            m_pTransformCom->GoStraight(_fTimeDelta, nullptr, jump);
         }
     }
 
@@ -78,7 +92,7 @@ void CEnemy01::Tick(_float _fTimeDelta)
 
         if (!m_IsNearPlr) {
             WalkPattern(m_iWalkPatternNum);
-            m_pTransformCom->GoStraight(_fTimeDelta, nullptr);
+            m_pTransformCom->GoStraight(_fTimeDelta, nullptr, m_bJump);
         }
     }
     

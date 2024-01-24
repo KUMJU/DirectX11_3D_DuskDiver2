@@ -112,9 +112,6 @@
     <Filter Include="02. GameObject\06. Trigger">
       <UniqueIdentifier>{5a63cd4a-bdac-428f-aadd-7319dc34f934}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\05. Skill\00. BasicAttack">
-      <UniqueIdentifier>{57cc7aa7-eb11-48dd-a88e-903fee2e5d07}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\00.Creature\01. Monster\01. Enemy02">
       <UniqueIdentifier>{4d15fcf7-c5bd-4d28-9d60-8b9fcaa44c80}</UniqueIdentifier>
     </Filter>
@@ -135,6 +132,21 @@
     </Filter>
     <Filter Include="96. Imgui\02. NaviToolMgr">
       <UniqueIdentifier>{45741892-a085-4f4a-b5b8-3872addac695}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Skill\SkillSet">
+      <UniqueIdentifier>{b4a9211a-c24b-40f1-968b-b1395239ea60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Skill\00. PlayerSkill">
+      <UniqueIdentifier>{57cc7aa7-eb11-48dd-a88e-903fee2e5d07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Skill\00. PlayerSkill\NormalAtk">
+      <UniqueIdentifier>{3f88882c-ffe8-4a61-9c9c-6b80ef3a2e2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Skill\SkillSet\PlayerSkillSet">
+      <UniqueIdentifier>{83ec6d90-f5ea-4aac-bc08-cd277c7a520e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Skill\00. PlayerSkill\BasicSkill">
+      <UniqueIdentifier>{75733f45-ac48-48b7-bb75-f04abbd6821a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -246,9 +258,6 @@
     <ClInclude Include="..\Public\CameraMgr.h">
       <Filter>03. Manager\03. CameraMgr</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Skill.h">
-      <Filter>02. GameObject\05. Skill</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Monster.h">
       <Filter>02. GameObject\00.Creature\01. Monster</Filter>
     </ClInclude>
@@ -274,6 +283,15 @@
       <Filter>96. Imgui\02. NaviToolMgr</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Escalator.h" />
+    <ClInclude Include="..\Public\Skill.h">
+      <Filter>02. GameObject\05. Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlrNormalAtk.h">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\NormalAtk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SkillSet.h">
+      <Filter>02. GameObject\05. Skill\SkillSet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -366,9 +384,6 @@
     <ClCompile Include="..\Private\CameraMgr.cpp">
       <Filter>03. Manager\03. CameraMgr</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Skill.cpp">
-      <Filter>02. GameObject\05. Skill</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Monster.cpp">
       <Filter>02. GameObject\00.Creature\01. Monster</Filter>
     </ClCompile>
@@ -394,6 +409,15 @@
       <Filter>96. Imgui\02. NaviToolMgr</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Escalator.cpp" />
+    <ClCompile Include="..\Private\Skill.cpp">
+      <Filter>02. GameObject\05. Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlrNormalAtk.cpp">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\NormalAtk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SkillSet.cpp">
+      <Filter>02. GameObject\05. Skill\SkillSet</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">

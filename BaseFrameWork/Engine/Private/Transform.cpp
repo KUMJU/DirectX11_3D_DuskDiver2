@@ -18,7 +18,7 @@ void CTransform::SetScaling(_float _fX, _float _fY, _float _fZ)
     SetState(STATE_LOOK, XMVector3Normalize(GetState(STATE_LOOK)) * _fZ);
 }
 
-void CTransform::CheckingMove(_fvector _vPosition, shared_ptr<CNavigation> _pNavigation)
+void CTransform::CheckingMove(_fvector _vPosition, shared_ptr<CNavigation> _pNavigation, _bool& _IsJump)
 {
     _float fHeight = 0.f;
 
@@ -27,16 +27,29 @@ void CTransform::CheckingMove(_fvector _vPosition, shared_ptr<CNavigation> _pNav
     if (nullptr == _pNavigation) {
         SetState(STATE_POSITION, vNewPos);
 
+
     }
     else if (true == _pNavigation->IsMove(vNewPos, fHeight)) {
-        vNewPos.m128_f32[1] = fHeight;
-        SetState(STATE_POSITION, vNewPos);
+
+        if (_IsJump) {
+            if (fHeight >= vNewPos.m128_f32[1]) {
+                vNewPos.m128_f32[1] = fHeight;
+                _IsJump = false;
+            }
+
+            SetState(STATE_POSITION, vNewPos);
+
+        }
+        else {
+            vNewPos.m128_f32[1] = fHeight;
+            SetState(STATE_POSITION, vNewPos);
+        }
     }
 
 
 }
 
-void CTransform::GoStraight(_float _fTimeDelta, shared_ptr<CNavigation> _pNavigation)
+void CTransform::GoStraight(_float _fTimeDelta, shared_ptr<CNavigation> _pNavigation, _bool& _bJump)
 {
     _vector vPosition = GetState(STATE_POSITION);
     _vector vLook = GetState(STATE_LOOK);
@@ -44,13 +57,16 @@ void CTransform::GoStraight(_float _fTimeDelta, shared_ptr<CNavigation> _pNaviga
     vPosition += XMVector3Normalize(vLook) * m_fSpeedPerSec * _fTimeDelta;
     _float fHeight = 0.f;
 
-    if(nullptr == _pNavigation) {
-        SetState(STATE_POSITION, vPosition);
+    CheckingMove(vPosition, _pNavigation, _bJump);
 
-    }else if(true == _pNavigation->IsMove(vPosition, fHeight)) {
-        vPosition.m128_f32[1] = fHeight;
-        SetState(STATE_POSITION, vPosition);
-    }
+    //if(nullptr == _pNavigation) {
+    //    SetState(STATE_POSITION, vPosition);
+
+    //}else if(true == _pNavigation->IsMove(vPosition, fHeight)) {
+    //    vPosition.m128_f32[1] = fHeight;
+    //    SetState(STATE_POSITION, vPosition);
+    //}
+
 }
 
 void CTransform::GoBackward(_float _fTimeDelta)

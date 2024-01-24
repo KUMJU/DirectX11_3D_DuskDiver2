@@ -26,6 +26,11 @@ private:
 	void IfEmptyAnimList() override;
 	void CalcDistanceOption() override;
 
+
+private:
+
+	void ResetState();
+
 private:
 
 	_uint m_iNextPattern = 0;
@@ -36,11 +41,18 @@ private:
 
 	_int m_iDefenceGage = 50;
 
+	_float m_JumpTimeCheck = 0.f;
+
 	/////////무조건 플레이어 추적x , 랜덤하게 자리에서 대기 ///////
 
 	_bool m_bWait = false;
 	_float m_fWaitTime = 0.f;
 
+	_bool m_bHit = false;
+
+protected:
+
+	virtual void OnHit() override;
 
 public:
 	static shared_ptr<CEnemy02> Create();

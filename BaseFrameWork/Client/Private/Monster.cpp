@@ -7,6 +7,8 @@
 #include "Player.h"
 
 #include "Model.h"
+#include "Skill.h"
+#include "Collider.h"
 
 CMonster::CMonster()
 {
@@ -75,27 +77,50 @@ void CMonster::CalcPlayerDistance()
 
 void CMonster::CalcAnimationDistance()
 {   
+    
     CalcDistanceOption();
 
     _vector vDistance = XMLoadFloat3(&m_vCurrentAnimPos) - XMLoadFloat3(&m_vPrevAnimPos);
 
+    _vector vDir = XMLoadFloat3(&m_vCurrentAnimPos) - XMLoadFloat3(&m_vPrevAnimPos);
+
+    vDir = XMVector3Normalize(vDir);
+
     _vector vLook = m_pTransformCom->GetState(CTransform::STATE_LOOK);
     _matrix WorldMat = m_pTransformCom->GetWorldMatrix();
+    _vector vHeight = { 0.f, 0.f,0.f };
+    _bool m_bJump = false;
+
+    if (vDir.m128_f32[2] < 0.f) {
+        vLook = vLook * -1.f;
+    }
+
 
     XMVector3TransformCoord(vDistance, WorldMat);
+
+    if (vDistance.m128_f32[1] != 0.f) {
+        _vector vHeight = vDistance.m128_f32[1] * _vector({ 0.f, 1.f, 0.f });
+        _bool m_bJump = true;
+    }
+
+    XMVectorSetY(vDistance, 0.f);
+
     _float vLength = XMVector3Length(vDistance).m128_f32[0];
     vLook = vLength * vLook;
 
     _vector vCurrentPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
     vCurrentPos += vLook;
+    vCurrentPos += vHeight;
 
-    m_pTransformCom->SetState(CTransform::STATE_POSITION, vCurrentPos);
+    m_pTransformCom->CheckingMove(vCurrentPos, m_pNavigation, m_bJump);
+
+   // m_pTransformCom->SetState(CTransform::                                  , vCurrentPos);
     m_vPrevAnimPos = m_vCurrentAnimPos;
 
 
 
 }
-
+                                                                                                                                                                                                                        
 _float CMonster::CalcPlayerDistanceReturn()
 {
     _vector vPlrPos = m_pTargetTransCom->GetState(CTransform::STATE_POSITION);
@@ -108,6 +133,9 @@ _float CMonster::CalcPlayerDistanceReturn()
 
 _bool CMonster::CheckReserveAnimList()
 {
+    m_vPrevAnimPos = { 0.f, 0.f, 0.f };
+    m_vCurrentAnimPos = { 0.f, 0.f, 0.f };
+
     if (m_NextAnimIndex.empty()) {
         //객체 별 별도 애니메이션 제어 선언
         IfEmptyAnimList();
@@ -123,6 +151,7 @@ _bool CMonster::CheckReserveAnimList()
 
         return true;
     }
+
 }
 
 void CMonster::ChangeAnim(_uint _iAnimIdx, _bool _bloop)
@@ -170,4 +199,29 @@ HRESULT CMonster::BindShaderResources()
         return E_FAIL;
 
     return S_OK;
+}
+
+void CMonster::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _pCollider)
+{
+    if (EObjType::OBJ_PROJ == _eObjType) {
+
+        shared_ptr<CSkill> pSkill = dynamic_pointer_cast<CSkill>(_pCollider->GetOwner());
+
+        if (m_iLastHitIndex == pSkill->GetSkillIndex())
+             return;
+
+        m_bKnockUp = pSkill->GetIsKnokUp();
+        m_bKnockBack = pSkill->GetIsKnokBack();
+
+        m_bKnockBackDistance = pSkill->GetKnokBackDistance();
+        m_bKnockUpDistance = pSkill->GetKnokUpDistance();
+
+        m_bDownAttack = pSkill->GetIsDownAttack();
+
+        m_iLastHitIndex = pSkill->GetSkillIndex();
+        m_bCollisionCheck = true;
+        //넉백 여부, 넉업 여부, 
+        OnHit();
+    }
+
 }

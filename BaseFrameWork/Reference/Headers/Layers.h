@@ -17,6 +17,10 @@ public:
 	void Tick(_float _fTimeDelta);
 	void LateTick(_float _fTimeDelta);
 
+public:
+
+	list<shared_ptr<class CGameObject>> GetObjectList() { return m_GameObjects; }
+
 private:
 	list<shared_ptr<class CGameObject>> m_GameObjects;
 

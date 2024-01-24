@@ -178,6 +178,8 @@ HRESULT CArcadeMap::ReadyLayerMonster(const wstring& _strLayerTag)
 	//if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pMonster2)))
 	//	return E_FAIL;
 
+	//pMonster2->SetEnable(true);
+
 	//shared_ptr<CGameObject> pMonster3 = CEnemy02::Create();
 	//if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pMonster3)))
 	//	return E_FAIL;
@@ -195,17 +197,17 @@ HRESULT CArcadeMap::ReadyLayerMonster(const wstring& _strLayerTag)
 	//if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pMonster5)))
 	//	return E_FAIL;
 
-	pMonster1 = CEnemy01::Create();
-	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Monster"), pMonster1)))
-		return E_FAIL;
-	pMonster1->SetEnable(false);
+	//pMonster1 = CEnemy01::Create();
+	//if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Monster"), pMonster1)))
+	//	return E_FAIL;
+	//pMonster1->SetEnable(false);
 
 	pMonster2 = CEnemy02::Create();
 	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Monster"), pMonster2)))
 		return E_FAIL;
 	pMonster2->SetEnable(false);
 	
-
+	/*
 	pMonster3 = CFinalBoss::Create();
 	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Monster"), pMonster3)))
 		return E_FAIL;
@@ -215,7 +217,7 @@ HRESULT CArcadeMap::ReadyLayerMonster(const wstring& _strLayerTag)
 	pMonster4 = CMiddleBoss::Create();
 	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Monster"), pMonster4)))
 		return E_FAIL;
-	pMonster4->SetEnable(false);
+	pMonster4->SetEnable(false);*/
 
 	return S_OK;
 }
@@ -273,7 +275,7 @@ void CArcadeMap::KeyInput()
 
 	if (GetKeyState('8') & 0x8000) {
 		
-		pMonster1->SetEnable(false);
+//		pMonster1->SetEnable(false);
 		pMonster2->SetEnable(true);
 
 		m_bKeyDeb = true;

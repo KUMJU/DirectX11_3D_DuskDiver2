@@ -4,10 +4,12 @@
 #include "Renderer.h"
 #include "PipeLine.h"
 #include "ResourceMgr.h"
+#include "CollisionMgr.h"
 
 BEGIN(Engine)
 
 class CGraphicDev;
+class CLayers;
 
 class ENGINE_DLL CGameInstance
 {
@@ -42,6 +44,7 @@ public:
 /*ObjectManager*/
 public:                                   
 	HRESULT AddObject(_uint _iLevelIndex, const wstring& _strLayerTag, shared_ptr<class CGameObject> _pGameObject);
+	shared_ptr<CLayers> FindLayer(const wstring& _strLayerName);
 
 /*TimeManager*/
 public:
@@ -82,6 +85,11 @@ public:
 
 	void LoadResourceForTool();
 
+/*Collision Mgr*/
+public:
+
+	void AddCollider(CCollisionMgr::COLTYPE_GROUP _eColGroup, shared_ptr<CCollider> _pCollider);
+
 
 private:
 	shared_ptr<class CGraphicDev> m_pGraphicDev = nullptr;
@@ -94,6 +102,8 @@ private:
 	shared_ptr<class CPickingMgr> m_pPickingMgr = nullptr;
 	shared_ptr<class CLightMgr> m_pLightMgr = nullptr;
 	shared_ptr<class CResourceMgr> m_pResMgr = nullptr;
+	shared_ptr<CCollisionMgr> m_pCollisionMgr = nullptr;
+
 
 public:
 	wrl::ComPtr<ID3D11Device> GetDeviceInfo();

@@ -24,11 +24,6 @@ public:
 private:
 	HRESULT OpenLevel(LEVEL _eStartLevel);	 
 
-
-private:
-	void TestFileWrite();
-	void TestFileRead();
-
 private:
 	_bool m_IsImguiOn = true;
 

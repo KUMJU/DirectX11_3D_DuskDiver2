@@ -9,6 +9,12 @@
 
 #include "CameraMgr.h"
 #include "Navigation.h"
+#include "Collider.h"
+
+#include "SkillSet.h"
+
+#include "Bounding.h"
+#include "Layers.h"
 
 CPlayer::CPlayer()
 {
@@ -24,8 +30,8 @@ HRESULT CPlayer::Initialize()
     if (FAILED(__super::Initialize(&TransformDesc)))
         return E_FAIL;
 
-    if (FAILED(AddComponent()))
-        return E_FAIL;
+    //if (FAILED(AddComponent()))
+    //    return E_FAIL;
 
     m_pShader = CGameInstance::GetInstance()->GetShader(TEXT("Shader_VtxAnim"));
 
@@ -33,6 +39,7 @@ HRESULT CPlayer::Initialize()
     m_pBurstModelCom = CGameInstance::GetInstance()->GetModel(TEXT("Hero1_Burst"));
 
     SetAnimSpeed();
+    //Set Models 
 
     m_pModelCom = m_pBattleModelCom;
 
@@ -42,9 +49,38 @@ HRESULT CPlayer::Initialize()
     m_pNavigationCom = CMapLoader::GetInstance()->GetCurrentNavi(1);
     m_Components.emplace(TEXT("Com_Navigation"), m_pNavigationCom);
 
+    //Set Collider
+
+    //*Head*//
+    CCollider::COLLIDER_DESC PlrCollDesc = {};
+   /* PlrCollDesc.fRadius = 0.2f;
+    PlrCollDesc.vCenter = _float3(0.f, 1.5f, 2.f);
+    shared_ptr<CCollider> pCollider = CCollider::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), CCollider::TYPE_SPHERE, PlrCollDesc);
+    m_Colliders.push_back(pCollider);
+    m_Components.emplace(TEXT("Com_Collider_Head"), m_pCollider);*/
+
+    //*Body*//
+    PlrCollDesc.fRadius = 0.3f;
+    PlrCollDesc.vCenter = _float3(0.f, 1.f, 0.f);
+    shared_ptr<CCollider> pCollider = CCollider::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), CCollider::TYPE_SPHERE, PlrCollDesc);
+    m_Colliders.push_back(pCollider);
+    pCollider->SetOwner(shared_from_this());
+    m_Components.emplace(TEXT("Com_Collider_Body"), m_pCollider);
+   
+    //*Leg*//
+    PlrCollDesc.fRadius = 0.3f;
+    PlrCollDesc.vCenter = _float3(0.f, 0.35f, 0.f);
+    pCollider = CCollider::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), CCollider::TYPE_SPHERE, PlrCollDesc);
+    m_Colliders.push_back(pCollider);
+    pCollider->SetOwner(shared_from_this());
+    m_Components.emplace(TEXT("Com_Collider_Leg"), m_pCollider);
+
 
     m_eCurrentState = HEROSTATE::STATE_IDLE;
     m_pModelCom->ChangeAnimation(44);
+
+    m_pPlayerSkillset = CSkillSet::Create();
+    m_pPlayerSkillset->SetPlayerTransform(m_pTransformCom);
 
     return S_OK;
 }
@@ -111,7 +147,9 @@ void CPlayer::Tick(_float _fTimeDelta)
 
     //입력 장치 
     MouseInput(_fTimeDelta);
+
     KeyInput(_fTimeDelta);
+
 
     if (m_bComboAttackStart)
     {
@@ -120,16 +158,35 @@ void CPlayer::Tick(_float _fTimeDelta)
 
     m_pModelCom->SetLinearTime(m_fLinearTime);
 
+
+    if (52 == m_iCurrentAnimIdx) {
+        m_bJump;
+        int a = 5;
+    }
+
+
+    m_bJump;
     //애니메이션 재생
     if(m_pModelCom->PlayAnimation(_fTimeDelta, m_isAnimLoop, &m_vCurretnAnimPos)){
 
         CheckReserveAnimList();
     }
 
+
+    m_bJump;
     m_fLinearTime = 0.06f;
 
     //루트모션 거리계산
     CalcAnimMoveDistance();
+
+    m_pPlayerSkillset->Tick(_fTimeDelta);
+
+
+    m_bJump;
+    for (auto& iter : m_Colliders) {
+        iter->Tick(m_pTransformCom->GetWorldMatrix());
+        CGameInstance::GetInstance()->AddCollider(CCollisionMgr::COL_PLAYER, iter);
+    }
 }
 
 void CPlayer::LateTick(_float _fTimeDelta)
@@ -150,7 +207,7 @@ void CPlayer::LateTick(_float _fTimeDelta)
         }
 
     }
-    else if (m_iCurrentAnimIdx == 52 && !m_bJump) {
+    else if (m_iCurrentAnimIdx == 52) {
 
         m_fJumpSpeed = 5.f;
 
@@ -158,33 +215,32 @@ void CPlayer::LateTick(_float _fTimeDelta)
         _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
         vPos.m128_f32[1] += m_fJumpSpeed * _fTimeDelta;
 
-        m_pTransformCom->SetState(CTransform::STATE_POSITION, vPos);
+        m_pTransformCom->CheckingMove(vPos, m_pNavigationCom, m_bJump);
     }
-    else if (m_iCurrentAnimIdx == 50 && !m_bJump) {
+    else if (m_iCurrentAnimIdx == 50 || m_iCurrentAnimIdx == 51) {
 
         if(m_fSkillRJumpCool == 0.f)
-            m_fJumpSpeed = 10.f;
+            m_fJumpSpeed = 7.f;
         else
             m_fJumpSpeed = 25.f;
 
         m_fTotalHeight -= m_fJumpSpeed * _fTimeDelta;
         _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
 
-        if (m_fTotalHeight < 0) {
-            vPos.m128_f32[1] += ((m_fTotalHeight * -1) + m_fJumpSpeed * _fTimeDelta);
-            m_fTotalHeight = 0;
+        vPos.m128_f32[1] -= m_fJumpSpeed * _fTimeDelta;
+
+
+        m_pTransformCom->CheckingMove(vPos, m_pNavigationCom, m_bJump);
+
+        if (!m_bJump) {
             ChangeAnim(53, false);
-            m_bJump = false;
-            m_fSkillRJumpCool = 0.f;
-        }
-        else {
-            vPos.m128_f32[1] -= m_fJumpSpeed * _fTimeDelta;
         }
 
-        m_pTransformCom->SetState(CTransform::STATE_POSITION, vPos);
+       // m_pTransformCom->SetState(CTransform::STATE_POSITION, vPos);
 
 
     }
+
 
 
 
@@ -196,6 +252,12 @@ void CPlayer::LateTick(_float _fTimeDelta)
 HRESULT CPlayer::Render()
 {
     m_pNavigationCom->Render();
+
+    m_pPlayerSkillset->Render();
+
+
+    for (auto& iter : m_Colliders)
+        iter->Render();
 
     if (FAILED(BindShaderResources()))
         return E_FAIL;
@@ -223,14 +285,14 @@ HRESULT CPlayer::Render()
 
 void CPlayer::SetAnimSpeed()
 {
-    m_pBattleModelCom->SetSpecificAnimSpeed(9, 1.4f);
-    m_pBattleModelCom->SetSpecificAnimSpeed(11, 1.4f);
-    m_pBattleModelCom->SetSpecificAnimSpeed(13, 1.4f);
-    m_pBattleModelCom->SetSpecificAnimSpeed(15, 1.4f);
-    m_pBattleModelCom->SetSpecificAnimSpeed(16, 1.4f);
-    m_pBattleModelCom->SetSpecificAnimSpeed(0, 1.4f);
-    m_pBattleModelCom->SetSpecificAnimSpeed(1, 1.4f);
-    m_pBattleModelCom->SetSpecificAnimSpeed(2, 1.4f);
+    m_pBattleModelCom->SetSpecificAnimSpeed(10, 1.5f);
+    m_pBattleModelCom->SetSpecificAnimSpeed(12, 1.5f);
+    m_pBattleModelCom->SetSpecificAnimSpeed(13, 1.5f);
+    m_pBattleModelCom->SetSpecificAnimSpeed(15, 1.5f);
+    m_pBattleModelCom->SetSpecificAnimSpeed(16, 1.5f);
+    m_pBattleModelCom->SetSpecificAnimSpeed(14, 1.5f);
+    m_pBattleModelCom->SetSpecificAnimSpeed(1, 1.5f);
+    m_pBattleModelCom->SetSpecificAnimSpeed(2, 1.5f);
 
     m_pBurstModelCom->SetSpecificAnimSpeed(9, 2.f);
     m_pBurstModelCom->SetSpecificAnimSpeed(11, 2.f);
@@ -243,10 +305,6 @@ void CPlayer::SetAnimSpeed()
 
 }
 
-HRESULT CPlayer::AddComponent()
-{
-    return S_OK;
-}
 
 HRESULT CPlayer::BindShaderResources()
 {
@@ -289,19 +347,26 @@ _bool CPlayer::ChangeAnim(_uint _iAnimNum, _bool _isLoop)
    // 52 == _iAnimNum ||
     m_iCurrentAnimIdx;
     if (m_bJump && 51 == _iAnimNum) {
-        m_IsLoopMotion = true;
     }
     else if (1 == _iAnimNum || 12 == _iAnimNum) {
         m_eCurrentState = HEROSTATE::STATE_COMBO_ATTACK2;
+        m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_ATK2);
+
     }
     else if (2 == _iAnimNum || 14 == _iAnimNum) {
         m_eCurrentState = HEROSTATE::STATE_COMBO_ATTACK3;
+        m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_ATK3);
+
     }
     else if (15 == _iAnimNum) {
         m_eCurrentState = HEROSTATE::STATE_COMBO_ATTACK4;
+        m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_ATK4);
+
     }
     else if (16 == _iAnimNum) {
         m_eCurrentState = HEROSTATE::STATE_COMBO_ATTACK5;
+        m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_ATK5);
+
     }
     else if (53 == _iAnimNum || 3 == _iAnimNum) {
         //Jump Landing 
@@ -347,7 +412,8 @@ void CPlayer::CheckReserveAnimList()
 
         if (m_bComboAttackStart && m_bJump) {
             m_eCurrentState = HEROSTATE::STATE_JUMP;
-            ChangeAnim(53, false);
+            ChangeAnim(51, false);
+            m_NextAnimIndex.push_back({ 53,false });
         }
 
 
@@ -404,10 +470,10 @@ void CPlayer::FinishCombo()
 
 void CPlayer::CalcAnimMoveDistance()
 {
-    if (79 == m_iCurrentAnimIdx || 76 == m_iCurrentAnimIdx) {
+    if (79 == m_iCurrentAnimIdx || 76 == m_iCurrentAnimIdx ||
+        52 == m_iCurrentAnimIdx) {
         return;
     }
-
 
     _vector vDistance = XMLoadFloat3(&m_vCurretnAnimPos) - XMLoadFloat3(&m_vPrevAnimPos);
 
@@ -427,7 +493,7 @@ void CPlayer::CalcAnimMoveDistance()
     _vector vCurrentPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
     vCurrentPos += vLook;
 
-    m_pTransformCom->CheckingMove(vCurrentPos, m_pNavigationCom);
+    m_pTransformCom->CheckingMove(vCurrentPos, m_pNavigationCom, m_bJump);
     m_vPrevAnimPos = m_vCurretnAnimPos;
        
 }
@@ -707,7 +773,7 @@ void CPlayer::KeyInput(_float _fTimeDelta)
 
     if (IsKeyInput) {
         TurnLerp(vSrc, vDst, _fTimeDelta, vPlrPos, m_MoveFlag);
-        m_pTransformCom->GoStraight(_fTimeDelta, m_pNavigationCom);
+        m_pTransformCom->GoStraight(_fTimeDelta, m_pNavigationCom, m_bJump);
     }
 
     if (m_eCurrentState == HEROSTATE::STATE_JUMP ||
@@ -721,7 +787,7 @@ void CPlayer::KeyInput(_float _fTimeDelta)
     //Dodge 
     if (GetKeyState(VK_SHIFT) & 0x8000)
     {
-        m_pTransformCom->GoStraight(_fTimeDelta, m_pNavigationCom);
+        m_pTransformCom->GoStraight(_fTimeDelta, m_pNavigationCom, m_bJump);
         m_eCurrentState = HEROSTATE::STATE_DODGE;
 
         if (m_bJump) {
@@ -742,7 +808,7 @@ void CPlayer::KeyInput(_float _fTimeDelta)
     // key input이 되어있다면 바로 대쉬 사용 가능 or Idle 전환 안 하고 run 가능 
     if (GetKeyState('F') & 0x8000)
     {
-        m_pTransformCom->GoStraight(_fTimeDelta, m_pNavigationCom);
+        m_pTransformCom->GoStraight(_fTimeDelta, m_pNavigationCom, m_bJump);
         m_eCurrentState = HEROSTATE::STATE_DASH;
 
         FinalAnimNum = 81;
@@ -771,9 +837,11 @@ void CPlayer::KeyInput(_float _fTimeDelta)
         FinalAnimNum = 52;
         IsLoop = false;
         m_bJump = true;
+        IsKeyInput = true;
     }
 
     if (IsKeyInput) {
+
 
         //걷기 충돌 안 나게 조절 
         if (59 == FinalAnimNum && m_bJump)
@@ -896,6 +964,8 @@ void CPlayer::MouseInput(_float _fTimeDelta)
         }
         //Ground Attack
         else {
+            DetectMonster();
+
             switch (m_eCurrentState)
             {
             case Client::CPlayer::HEROSTATE::STATE_COMBO_ATTACK1:
@@ -929,6 +999,7 @@ void CPlayer::MouseInput(_float _fTimeDelta)
                 ChangeAnim(10, false);
                 m_fMinComboAnimTime = 0.5f;
                 m_eCurrentState = HEROSTATE::STATE_COMBO_ATTACK1;
+                m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_ATK1);
                 m_bComboAttackStart = true;
                 break;
             }
@@ -976,12 +1047,73 @@ void CPlayer::TurnLerp(_vector _vSrc, _vector _vDst , _float _fDeltaTime, _vecto
 
 }
 
+void CPlayer::DetectMonster()
+{
+    if (!m_pMonsterLayer.lock()) {
+
+        m_pMonsterLayer = CGameInstance::GetInstance()->FindLayer(TEXT("Layer_Monster"));
+        
+        if (!m_pMonsterLayer.lock())
+            return;
+    }
+
+    list<shared_ptr<CGameObject>> MonsterObejcts =  m_pMonsterLayer.lock()->GetObjectList();
+
+    _vector vPlayer = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+    _float fMinDistance = 99999.f;
+    _vector vTargetPos = { 0.f, 0.f ,0.f };
+
+    for (auto& iter : MonsterObejcts) {
+
+        shared_ptr<CTransform> pTransform = dynamic_pointer_cast<CTransform>(iter->GetComponent(TEXT("Com_Transform")));
+        _vector vMonPos = pTransform->GetState(CTransform::STATE_POSITION);
+
+        _float fLength = XMVector3Length(XMVectorSetY(vPlayer, 0.f) - XMVectorSetY(vMonPos, 0.f)).m128_f32[0];
+        
+        if (fLength < fMinDistance) {
+            fMinDistance = fLength;
+            vTargetPos = vMonPos;
+        }
+    }
+
+    vTargetPos = XMVectorSetY(vTargetPos, vPlayer.m128_f32[1]);
+    m_pTransformCom->LookAt(vTargetPos);
+
+
+}
+
 void CPlayer::ResetComboState()  
 {
     m_NextAnimIndex.clear();
     m_bReserveCombo = false;
     m_bComboAttackStart = false;
     m_fComboTime = 0.f;
+}
+
+void CPlayer::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _pCollider)
+{
+    if (EObjType::OBJ_MONSTER == _eObjType) {
+
+        shared_ptr<CGameObject> pMonster = _pCollider->GetOwner();
+        _float fMonRadius = _pCollider->GetBounding()->GetBoundingSphere()->Radius;
+        _float fPlrRadius = (*m_Colliders.begin())->GetBounding()->GetBoundingSphere()->Radius;
+
+        _float fRadDistance = fMonRadius + fPlrRadius;
+
+        shared_ptr<CTransform> pMonTransform = dynamic_pointer_cast<CTransform>(pMonster->GetComponent(TEXT("Com_Transform")));
+        _vector vMonPos = pMonTransform->GetState(CTransform::STATE_POSITION);
+        _vector vPlrPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+
+        _vector vDir = XMVectorSetW(XMVector3Normalize(vPlrPos - XMVectorSetY(vMonPos, vPlrPos.m128_f32[1])),0.f);
+
+        _vector vNewPos = vMonPos + (vDir *  fRadDistance);
+
+        vNewPos.m128_f32[1] = vPlrPos.m128_f32[1];
+        vNewPos = XMVectorSetW(vNewPos, 1.f);
+        m_pTransformCom->CheckingMove(vNewPos, m_pNavigationCom, m_bJump);
+    }
+
+
 }
 
 shared_ptr<CPlayer> CPlayer::Create()

@@ -7,6 +7,8 @@ BEGIN(Engine)
 class CShader;
 class CModel;
 class CNavigation;
+class CCollider;
+class CLayers;
 END
 
 BEGIN(Client)
@@ -17,6 +19,11 @@ public:
 	struct ANIMINFO {
 		_uint iNextAnimNum;
 		_bool IsLoop;
+	};
+
+public:
+	enum COLLIDER_TYPE {
+		COL_HEAD, COL_BODY, COL_LEG, COL_END
 	};
 
 public:
@@ -53,7 +60,7 @@ public:
 	virtual void LateTick(_float _fTimeDelta) override;
 	virtual HRESULT Render() override;
 
-
+//Component
 private:
 	shared_ptr<CShader> m_pShader = nullptr;
 
@@ -68,6 +75,11 @@ private:
 
 	shared_ptr<CNavigation> m_pNavigationCom = nullptr;
 
+	//플레이어 몸에 붙어있는 충돌 콜라이더
+	vector<shared_ptr<CCollider>> m_Colliders;
+
+	shared_ptr<CCollider> m_pCollider = nullptr;
+	shared_ptr<class CSkillSet> m_pPlayerSkillset = nullptr;
 
 private:
 	void SetAnimSpeed();
@@ -107,6 +119,7 @@ private:
 	void MouseInput(_float _fTimeDelta);
 
 	void TurnLerp(_vector _vSrc, _vector _vDst, _float _fDeltaTime, _vector _vPos, unsigned char _flag);
+	void DetectMonster();
 
 	_vector m_vPrevLook = { 0.f, 0.f , 0.f, };
 
@@ -161,12 +174,15 @@ private:
 	_bool m_bActiveCoolTime = false;
 
 	_float m_fCurrentDegree = 0.f;
+
+	weak_ptr<CLayers> m_pMonsterLayer;
+
 private:
 
 	list<ANIMINFO> m_NextAnimIndex;
 
 	//LoopAnimation
-	_float m_fLoopTotalTime = 0.14f;
+	_float m_fLoopTotalTime = 0.06f;
 	_bool m_IsLoopMotion = false;
 	_float m_fCurLoopTime = 0.f;
 
@@ -200,6 +216,8 @@ private:
 private:
 	_bool m_IsUsingSkill = false;
 
+public:
+	virtual void OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _pCollider) override;
 
 public:
 	static shared_ptr<CPlayer> Create();

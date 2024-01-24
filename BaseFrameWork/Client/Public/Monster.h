@@ -8,6 +8,8 @@ class CModel;
 class CMesh;
 class CShader;
 class CGameInstance;
+class CCollider;
+class CNavigation;
 END
 
 BEGIN(Client)
@@ -84,6 +86,7 @@ protected:
 	_uint m_iCurrentAtkNum = 0;
 	_uint m_iNextAtkNum = 0;
 
+	_bool m_bJump = false;
 
 	_uint m_iTotalAtkNum = 0;
 	_uint m_iTestNum = 0; //애니메이션 확인하려고 넣음
@@ -95,6 +98,15 @@ protected:
 	
 	_bool m_IsStartMotionCom = false;
 
+	_bool m_bKnockUp = false;
+	_bool m_bKnockBack = false;
+	_bool m_bDownAttack = false;
+
+	_float m_bKnockUpDistance = 0.f;
+	_float m_bKnockBackDistance = 0.f;
+
+
+	_uint m_iLastHitIndex = 100; //플레이어 스킬 식별
 protected:
 
 	shared_ptr<CModel> m_pModelCom = nullptr;
@@ -103,6 +115,9 @@ protected:
 
 protected:
 	HRESULT BindShaderResources();
+
+	virtual void OnHit() {};
+
 
 protected:
 	CGameInstance* m_pGameInstance = nullptr;
@@ -123,9 +138,19 @@ protected:
 
 	shared_ptr<class CPlayer> m_pTarget = nullptr;
 	shared_ptr<CTransform> m_pTargetTransCom = nullptr;
+	shared_ptr<CCollider> m_pCollider = nullptr;
+	shared_ptr<CNavigation> m_pNavigation = nullptr;
 
 	EMONSTER_TYPE m_eMonsterType = EMONSTER_TYPE::MONTER_END;
 	EMONSTER_STATE m_eCurrentState = EMONSTER_STATE::STATE_IDLE;
+
+	_bool m_bCollisionCheck = false;
+
+public:
+
+	virtual void OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _pCollider);
+
+
 };
 
 END
