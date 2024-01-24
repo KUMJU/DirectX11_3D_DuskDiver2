@@ -32,7 +32,7 @@ private:
 	void WalkPattern(_uint _iWalkNum);
 
 	void IfEmptyAnimList() override;
-	void CalcDistanceOption() override;
+	_bool CalcDistanceOption() override;
 
 private:
 	_uint m_iWalkPatternNum = 0;

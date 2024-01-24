@@ -240,3 +240,23 @@ HRESULT CNaviToolMgr::ParsingCell(const wstring& _strPath)
 	fp.close();
 	return S_OK;
 }
+
+HRESULT CNaviToolMgr::LoadData(const wstring& _strPath)
+{
+	ifstream fp(_strPath, ios::binary);
+
+	while (true)
+	{
+
+		_float3 pPoint[3];
+		fp.read((char*)pPoint, sizeof(_float3) * 3);
+
+		shared_ptr<CCell> pCell = CCell::Create(m_pDevice, m_pContext, pPoint, m_Cells.size());
+		m_Cells.push_back(pCell);
+
+		if (fp.eof())
+			break;
+	}
+
+	return S_OK;
+}

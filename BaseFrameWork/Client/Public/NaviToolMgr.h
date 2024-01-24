@@ -52,6 +52,7 @@ public:
 	void SetTerrainTransform(shared_ptr<CTransform> _pTransform);
 
 	HRESULT ParsingCell(const wstring& _strPath);
+	HRESULT LoadData(const wstring& _strPath);
 
 private:
 	vector<shared_ptr<class CCell>> m_Cells;

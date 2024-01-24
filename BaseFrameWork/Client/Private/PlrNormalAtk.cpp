@@ -14,33 +14,34 @@ HRESULT CPlrNormalAtk::Initialize(_uint _iComboNum)
     normalAtkDesc.fRadius = 0.4f;
     normalAtkDesc.vCenter = { 0.f, 0.7f, 0.5f };
 
-    m_bKnokBack = true;
-    m_fSkillDuration = 0.5f;
-    m_fKnockBackDistance = 4.f;
-    m_bDownAtk = false;
+
+    SKILLINFO skillDesc = {};
+
+    skillDesc.bDownAtk = false;
+    skillDesc.fSkillDuration = 0.5f;
+    skillDesc.bDownAtk = false;
+    skillDesc.fWeight = 1.f;
+
 
     if (3 == _iComboNum) {
         normalAtkDesc.fRadius = 0.6f;
-        m_bKnokBack = true;
-        m_fStartDelayTime = 0.3f;
-
+        skillDesc.fDelayTime = 0.3f;
     }
     if (4 == _iComboNum) {
         normalAtkDesc.fRadius = 0.6f;
-        m_fStartDelayTime = 0.3f;
-        m_bKnokUp = true;
-        m_fKnockUpDistance = 3.f;
+        skillDesc.bKnockUp = true;
+        skillDesc.fDelayTime = 0.3f;
+        skillDesc.fWeight = 0.7f;
+        skillDesc.fKnockUpDistance = 10.f;
 
     }
     else if (5 == _iComboNum) {
 
         normalAtkDesc.fRadius = 0.6f;
+        skillDesc.fSkillDuration = 1.4f;
+        skillDesc.fDelayTime = 0.8f;
+        skillDesc.bDownAtk = true;
 
-        m_fKnockBackDistance = 1.5f;
-        m_fSkillDuration = 1.4f;
-        m_fStartDelayTime = 0.8f;
-
-        m_bDownAtk = true;
     }
 
     shared_ptr<CCollider> pCollider = CCollider::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), CCollider::TYPE_SPHERE, normalAtkDesc);
@@ -49,6 +50,7 @@ HRESULT CPlrNormalAtk::Initialize(_uint _iComboNum)
 
     m_Colliders.push_back(pCollider);
 
+    m_Infos.push_back(skillDesc);
     return S_OK;
 }
 

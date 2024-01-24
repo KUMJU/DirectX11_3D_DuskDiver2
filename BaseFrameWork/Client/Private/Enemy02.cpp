@@ -32,12 +32,6 @@ HRESULT CEnemy02::Initialize()
     m_fTotalCoolTime = 2.f;
 
     m_pModelCom->SetAnimNum(20);
-   // m_pTransformCom->SetState(CTransform::STATE_POSITION, { 0.3f, 0.f, 0.7f });
-
-    // 0 = 사거리 중, 1 = 사거리 짧음 2= 사거리 길다 
-
-    /* rand and pick attackNum -> and Setting Attack Distance*/
-
     m_pNavigation = CMapLoader::GetInstance()->GetCurrentNavi(0);
 
         /*********Collider*************/
@@ -69,6 +63,11 @@ void CEnemy02::Tick(_float _fTimeDelta)
 
     }
 
+    if (m_bKnockUp) {
+        m_bJump = true;
+        OnHitKnockUp(_fTimeDelta);
+    }
+
     ////플레이어가 가까워지면 방어모드 on 
     if ((EMONSTER_STATE::STATE_IDLE == m_eCurrentState ||
         EMONSTER_STATE::STATE_WALK == m_eCurrentState)&&
@@ -79,6 +78,9 @@ void CEnemy02::Tick(_float _fTimeDelta)
 
         ChangeAnim(10, true);
     }
+
+    _vector posCheck2 = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+
 
     //방어 브레이크 이후 스턴 상태 
     if (EMONSTER_STATE::STATE_STUN == m_eCurrentState) {
@@ -113,6 +115,9 @@ void CEnemy02::Tick(_float _fTimeDelta)
        }
     }
 
+    _vector posCheck3 = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+
+
     if (m_bHit) {
         m_pModelCom->SetLinearTime(0.02f);
     }
@@ -122,6 +127,8 @@ void CEnemy02::Tick(_float _fTimeDelta)
     }
 
    CalcAnimationDistance();
+
+   _vector posCheck4 = m_pTransformCom->GetState(CTransform::STATE_POSITION);
 
    m_pCollider->Tick(m_pTransformCom->GetWorldMatrix());
    CGameInstance::GetInstance()->AddCollider(CCollisionMgr::COL_MONSTER, m_pCollider);
@@ -133,69 +140,56 @@ void CEnemy02::LateTick(_float _fTimeDelta)
     if (!m_IsEnabled)
         return;
 
-    if (m_bJump) {
+    if (!m_bHit) {
 
-        _float fDir = 1.f;
-        m_JumpTimeCheck += _fTimeDelta;
-        if (m_JumpTimeCheck > 0.8f) {
-            fDir = -1.f;
+        CalcPlayerDistance();
+
+
+        if (m_bWait) {
+            m_fWaitTime += _fTimeDelta;
+            if (m_fWaitTime > 2.f) {
+                m_bWait = false;
+                m_fWaitTime = 0.f;
+                IdlePattern(0);
+            }
+
         }
 
-        _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
-        _vector vUp = m_pTransformCom->GetState(CTransform::STATE_UP);
-        vPos += vUp * (8.f * fDir * _fTimeDelta);
+        if (m_bDefenceMode) {
+            m_fDefenceCoolTime += _fTimeDelta;
 
-        m_pTransformCom->CheckingMove(vPos, m_pNavigation, m_bJump);
+            if (0 < m_iDefenceGage && m_fDefenceCoolTime > 4.f) {
 
-    }
+                m_bDefenceMode = false;
+                m_eCurrentState = EMONSTER_STATE::STATE_STUN;
+                ChangeAnim(46, true);
+                m_fDefenceCoolTime = 0.f;
 
+                /* m_bDefenceMode = false;
+                 m_eCurrentState = EMONSTER_STATE::STATE_IDLE;
+                 ChangeAnim(40, false);
+                 m_fDefenceCoolTime = 0.f;
+                 m_IsAtkCool = true;*/
 
-    CalcPlayerDistance();
+            }
+            else if (0 >= m_iDefenceGage || m_fDefenceCoolTime > 4.f) {
 
-
-    if (m_bWait) {
-        m_fWaitTime += _fTimeDelta;
-        if (m_fWaitTime > 2.f) {
-            m_bWait = false;
-            m_fWaitTime = 0.f;
-            IdlePattern(0);
+                m_bDefenceMode = false;
+                m_eCurrentState = EMONSTER_STATE::STATE_STUN;
+                ChangeAnim(46, true);
+                m_fDefenceCoolTime = 0.f;
+            }
         }
 
-    }
+        if (m_IsAtkCool) {
+            m_bAttackCoolTime += _fTimeDelta;
 
-    if (m_bDefenceMode) {
-        m_fDefenceCoolTime += _fTimeDelta;
+            if (m_bAttackCoolTime >= m_fTotalCoolTime) {
+                m_IsAtkCool = false;
+                m_bAttackCoolTime = 0.f;
+            }
 
-        if (0 < m_iDefenceGage && m_fDefenceCoolTime > 4.f) {
-
-            m_bDefenceMode = false;
-            m_eCurrentState = EMONSTER_STATE::STATE_STUN;
-            ChangeAnim(46, true);
-            m_fDefenceCoolTime = 0.f;
-
-           /* m_bDefenceMode = false;
-            m_eCurrentState = EMONSTER_STATE::STATE_IDLE;
-            ChangeAnim(40, false);
-            m_fDefenceCoolTime = 0.f;
-            m_IsAtkCool = true;*/
-
-        }else if (0 >= m_iDefenceGage || m_fDefenceCoolTime > 4.f) {
-            
-            m_bDefenceMode = false;
-            m_eCurrentState = EMONSTER_STATE::STATE_STUN;
-            ChangeAnim(46, true);
-            m_fDefenceCoolTime = 0.f;
         }
-    }
-
-   if (m_IsAtkCool) {
-        m_bAttackCoolTime += _fTimeDelta;
-
-        if (m_bAttackCoolTime >= m_fTotalCoolTime) {
-            m_IsAtkCool = false;
-            m_bAttackCoolTime = 0.f;
-        }
-
     }
 
     if (FAILED(m_pGameInstance->AddRenderGroup(CRenderer::RENDER_NONBLEND, shared_from_this())))
@@ -311,7 +305,18 @@ void CEnemy02::WalkPattern(_uint _iWalkNum)
 
 void CEnemy02::IfEmptyAnimList()
 {
+
+    m_vPrevAnimPos = { 0.f, 0.f, 0.f };
+    m_vCurrentAnimPos = { 0.f, 0.f, 0.f };
+
     if (m_bHit) {
+
+        //녹업종료 
+        if (!m_bKnockUp && (50 == m_iAnimNum)) {
+            ChangeAnim(12, false);
+        }
+
+
         m_bHit = false;
         m_eCurrentState = EMONSTER_STATE::STATE_IDLE;
         m_IsAtkCool = true;
@@ -319,6 +324,7 @@ void CEnemy02::IfEmptyAnimList()
       
         ChangeAnim(20, false);
         m_iLastHitIndex = 100;
+        m_iCurrentSkillOrderIndex = 100;
         ResetState();
         
     }
@@ -332,16 +338,16 @@ void CEnemy02::IfEmptyAnimList()
 
 }
 
-void CEnemy02::CalcDistanceOption()
+_bool CEnemy02::CalcDistanceOption()
 {
-
     if (48 == m_iAnimNum || 20 == m_iAnimNum || 22 == m_iAnimNum || 24 == m_iAnimNum || 26 == m_iAnimNum ||
-        62 == m_iAnimNum || 32 == m_iAnimNum || 50 == m_iAnimNum) {
+        62 == m_iAnimNum || 32 == m_iAnimNum || 50 == m_iAnimNum || 16 == m_iAnimNum || 17 == m_iAnimNum) {
         m_vPrevAnimPos = { 0.f, 0.f, 0.f };
         m_vCurrentAnimPos = { 0.f, 0.f, 0.f };
-        return;
+        return false;
     }
 
+    return true;
 }
 
 void CEnemy02::ResetState()
@@ -353,17 +359,32 @@ void CEnemy02::ResetState()
 
 void CEnemy02::OnHit()
 {
+    if (m_bDefenceMode) {
+
+        return;
+    }
+
+
     m_eCurrentState = EMONSTER_STATE::STATE_HIT;
     m_bHit = true;
 
     if (m_bDownAttack) {
+        m_NextAnimIndex.clear();
         ChangeAnim(54, false);
         m_NextAnimIndex.push_back({ 50, false });
         m_NextAnimIndex.push_back({ 12, false });
 
     }else if (m_bKnockUp) {
-        ChangeAnim(16, false);
-        m_NextAnimIndex.push_back({ 50, false });
+        if (16 == m_iCurrentAtkNum) {
+            m_NextAnimIndex.clear();
+            ChangeAnim(17, false);
+        }
+        else {
+            m_NextAnimIndex.clear();
+            ChangeAnim(16, false);
+        }
+
+        m_NextAnimIndex.push_back({ 50, true });
         m_bJump = true;
     }
     else {

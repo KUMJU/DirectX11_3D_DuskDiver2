@@ -20,7 +20,7 @@ public:
 private:
 	virtual void AttackPattern(_uint _iAtkNum) override;
 	virtual void IfEmptyAnimList() override;
-	virtual void CalcDistanceOption() override;
+	virtual _bool CalcDistanceOption() override;
 
 	void WalkPattern();
 

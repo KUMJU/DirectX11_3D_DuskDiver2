@@ -266,12 +266,13 @@ void CEnemy01::IfEmptyAnimList()
 
 }
 
-void CEnemy01::CalcDistanceOption()
+_bool CEnemy01::CalcDistanceOption()
 {
 
     m_vPrevAnimPos = { 0.f, 0.f, 0.f };
     m_vCurrentAnimPos = { 0.f, 0.f, 0.f };
 
+    return true;
 }
 
 shared_ptr<CEnemy01> CEnemy01::Create()

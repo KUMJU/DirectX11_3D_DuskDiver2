@@ -204,8 +204,9 @@ void CFinalBoss::IfEmptyAnimList()
 
 }
 
-void CFinalBoss::CalcDistanceOption()
+_bool CFinalBoss::CalcDistanceOption()
 {
+    return true;
 }
 
 shared_ptr<CFinalBoss> CFinalBoss::Create()

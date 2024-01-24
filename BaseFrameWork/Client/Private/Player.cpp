@@ -155,17 +155,12 @@ void CPlayer::Tick(_float _fTimeDelta)
     {
         m_fLinearTime = 0.03f;
     }
+    else {
+        m_fLinearTime = 0.07f;
+    }
 
     m_pModelCom->SetLinearTime(m_fLinearTime);
 
-
-    if (52 == m_iCurrentAnimIdx) {
-        m_bJump;
-        int a = 5;
-    }
-
-
-    m_bJump;
     //애니메이션 재생
     if(m_pModelCom->PlayAnimation(_fTimeDelta, m_isAnimLoop, &m_vCurretnAnimPos)){
 
@@ -200,6 +195,7 @@ void CPlayer::LateTick(_float _fTimeDelta)
             m_fJumpSpeed = 15.f;
 
             m_fTotalHeight += m_fJumpSpeed * _fTimeDelta;
+
             _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
             vPos.m128_f32[1] += m_fJumpSpeed * _fTimeDelta;
 
@@ -209,40 +205,77 @@ void CPlayer::LateTick(_float _fTimeDelta)
     }
     else if (m_iCurrentAnimIdx == 52) {
 
-        m_fJumpSpeed = 5.f;
-
-        m_fTotalHeight += m_fJumpSpeed * _fTimeDelta;
         _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+        m_fJumpTime += _fTimeDelta;
+
+        //_float fJumpSpeed = (m_fJumpSpeed * _fTimeDelta) + (0.5f * (m_fGravity / m_fJumpTime) * _fTimeDelta * _fTimeDelta);
+       
+        m_fJumpSpeed = m_fJumpSpeed - (m_fGravity * _fTimeDelta);
         vPos.m128_f32[1] += m_fJumpSpeed * _fTimeDelta;
 
         m_pTransformCom->CheckingMove(vPos, m_pNavigationCom, m_bJump);
+
+        if (m_fJumpTime > 0.2f) {
+            ChangeAnim(50, true);
+        }
+
     }
     else if (m_iCurrentAnimIdx == 50 || m_iCurrentAnimIdx == 51) {
 
-        if(m_fSkillRJumpCool == 0.f)
-            m_fJumpSpeed = 7.f;
-        else
-            m_fJumpSpeed = 25.f;
 
-        m_fTotalHeight -= m_fJumpSpeed * _fTimeDelta;
+       if (!m_bDrop) {
+
+           _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+           m_fJumpTime += _fTimeDelta;
+
+           m_fJumpSpeed = m_fJumpSpeed -(_fTimeDelta * m_fGravity);
+           vPos.m128_f32[1] += m_fJumpSpeed * _fTimeDelta;
+
+           m_pTransformCom->CheckingMove(vPos, m_pNavigationCom, m_bJump);
+
+           if (m_fJumpTime > 0.6f) {
+               m_bDrop = true;
+           }
+
+       }
+       else {
+
+           m_fJumpDelay += _fTimeDelta;
+           if (m_fJumpDelay > 0.f) {
+
+               _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+               m_fJumpSpeed = m_fJumpSpeed + (m_fGravity * _fTimeDelta);         
+
+               vPos.m128_f32[1] -= m_fJumpSpeed * _fTimeDelta;
+
+               m_pTransformCom->CheckingMove(vPos, m_pNavigationCom, m_bJump);
+
+               if (!m_bJump) {
+                   m_fJumpTime = 0.f;
+                   m_eCurrentState = HEROSTATE::STATE_IDLE;
+                   m_bDrop = false;
+                   m_fJumpDelay = 0.f;
+                   ChangeAnim(53, false);
+               }
+           }
+        }
+    }
+    else if (m_iCurrentAnimIdx == 3) {
+
         _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+        m_fJumpSpeed = m_fJumpSpeed + (m_fGravity * _fTimeDelta);
 
         vPos.m128_f32[1] -= m_fJumpSpeed * _fTimeDelta;
-
-
         m_pTransformCom->CheckingMove(vPos, m_pNavigationCom, m_bJump);
 
         if (!m_bJump) {
-            ChangeAnim(53, false);
+            m_fJumpTime = 0.f;
+            m_bDrop = false;
+            m_fJumpDelay = 0.f;
+ 
         }
 
-       // m_pTransformCom->SetState(CTransform::STATE_POSITION, vPos);
-
-
     }
-
-
-
 
 
     if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_NONBLEND, shared_from_this())))
@@ -368,10 +401,6 @@ _bool CPlayer::ChangeAnim(_uint _iAnimNum, _bool _isLoop)
         m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_ATK5);
 
     }
-    else if (53 == _iAnimNum || 3 == _iAnimNum) {
-        //Jump Landing 
-        m_bJump = false;
-    }
 
     if (!m_pModelCom->ChangeAnimation(_iAnimNum))
         return false;
@@ -455,9 +484,6 @@ void CPlayer::CheckReserveAnimList()
         _uint iNextAnim = m_NextAnimIndex.front().iNextAnimNum;
         _bool isLoop = m_NextAnimIndex.front().IsLoop;
 
-        if (14 == iNextAnim)
-            int a = 34;
-
         m_NextAnimIndex.pop_front();
         ChangeAnim(iNextAnim, isLoop);
     }
@@ -471,17 +497,11 @@ void CPlayer::FinishCombo()
 void CPlayer::CalcAnimMoveDistance()
 {
     if (79 == m_iCurrentAnimIdx || 76 == m_iCurrentAnimIdx ||
-        52 == m_iCurrentAnimIdx) {
+        52 == m_iCurrentAnimIdx || 50 == m_iCurrentAnimIdx || 3 == m_iCurrentAnimIdx) {
         return;
-    }
+    } 
 
     _vector vDistance = XMLoadFloat3(&m_vCurretnAnimPos) - XMLoadFloat3(&m_vPrevAnimPos);
-
-    //if (vDistance.m128_f32[0] != 0.f &&
-    //    vDistance.m128_f32[1] != 0.f &&
-    //    vDistance.m128_f32[2] != 0.f){
-    //    CalcLookVector(1.f);
-    //}
 
     _vector vLook = m_pTransformCom->GetState(CTransform::STATE_LOOK);
     _matrix WorldMat = m_pTransformCom->GetWorldMatrix();
@@ -584,6 +604,7 @@ void CPlayer::KeyInput(_float _fTimeDelta)
     //Skill1
     if (GetKeyState('Q') & 0x8000)
     {
+        DetectMonster();
         m_eCurrentState = HEROSTATE::STATE_SKILL_Q;
 
         if (m_bBurstMode) {
@@ -593,6 +614,7 @@ void CPlayer::KeyInput(_float _fTimeDelta)
         }
         else {
             ChangeAnim(60, false);
+            m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_Q);
         }
         m_IsUsingSkill = true;
 
@@ -606,8 +628,10 @@ void CPlayer::KeyInput(_float _fTimeDelta)
 
         if (m_bBurstMode)
             ChangeAnim(71, false);
-        else
+        else {
+            m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_E);
             ChangeAnim(61, false);
+        }
 
         m_IsUsingSkill = true;
 
@@ -623,9 +647,12 @@ void CPlayer::KeyInput(_float _fTimeDelta)
             m_NextAnimIndex.push_back({ 50 , true});
 
         }
-        else
+        else {
+            DetectMonster();
+            m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_R);
             ChangeAnim(62, false);
 
+        }
         m_IsUsingSkill = true;
 
     }
@@ -830,9 +857,12 @@ void CPlayer::KeyInput(_float _fTimeDelta)
 
         m_eCurrentState = HEROSTATE::STATE_JUMP;
          
-        m_NextAnimIndex.push_back({ 51, true });
       //  m_NextAnimIndex.push_back({ 50, true });
-        m_NextAnimIndex.push_back({ 53, false });
+      //  m_NextAnimIndex.push_back({ 50, true });
+       // m_NextAnimIndex.push_back({ 53, false });
+
+
+        m_fJumpSpeed = m_fInitialJumpSpeed;
 
         FinalAnimNum = 52;
         IsLoop = false;
@@ -903,6 +933,7 @@ void CPlayer::MouseInput(_float _fTimeDelta)
         if (m_bJump) {
             m_NextAnimIndex.clear();
             if (ChangeAnim(3, false)) {
+                m_bJump = true;
                 m_eCurrentState = HEROSTATE::STATE_HEAVY_ATTACK;
             }
 

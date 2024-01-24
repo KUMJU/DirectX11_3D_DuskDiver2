@@ -47,6 +47,29 @@ HRESULT CMonster::Render()
     return S_OK;
 }
 
+_bool CMonster::OnHitKnockUp(_float _fTimeDelta)
+{
+
+    _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+    m_fKnockUpTime += _fTimeDelta;
+
+    if(m_fKnockUpTime < 1.f){
+        m_fKnockUpSpeed = m_fKnockUpSpeed - (_fTimeDelta * m_fGravity);
+        vPos.m128_f32[1] += m_fKnockUpSpeed * _fTimeDelta;
+    }
+    else {
+        m_fDropSpeed = m_fDropSpeed + (_fTimeDelta * m_fGravity);
+        vPos.m128_f32[1] -= m_fDropSpeed * _fTimeDelta;
+    }
+
+    m_pTransformCom->CheckingMove(vPos, m_pNavigation, m_bJump);
+
+    if (!m_bJump) {
+        m_bKnockUp = false;
+    }
+    return m_bJump;
+}
+
 //플레이어 추적
 void CMonster::ChasePlayer()
 {
@@ -78,46 +101,46 @@ void CMonster::CalcPlayerDistance()
 void CMonster::CalcAnimationDistance()
 {   
     
-    CalcDistanceOption();
+    if (CalcDistanceOption()) {
 
-    _vector vDistance = XMLoadFloat3(&m_vCurrentAnimPos) - XMLoadFloat3(&m_vPrevAnimPos);
+        _vector vDistance = XMLoadFloat3(&m_vCurrentAnimPos) - XMLoadFloat3(&m_vPrevAnimPos);
 
-    _vector vDir = XMLoadFloat3(&m_vCurrentAnimPos) - XMLoadFloat3(&m_vPrevAnimPos);
+        _vector vDir = XMLoadFloat3(&m_vCurrentAnimPos) - XMLoadFloat3(&m_vPrevAnimPos);
 
-    vDir = XMVector3Normalize(vDir);
+        vDir = XMVector3Normalize(vDir);
 
-    _vector vLook = m_pTransformCom->GetState(CTransform::STATE_LOOK);
-    _matrix WorldMat = m_pTransformCom->GetWorldMatrix();
-    _vector vHeight = { 0.f, 0.f,0.f };
-    _bool m_bJump = false;
+        _vector vLook = m_pTransformCom->GetState(CTransform::STATE_LOOK);
+        _matrix WorldMat = m_pTransformCom->GetWorldMatrix();
+        _vector vHeight = { 0.f, 0.f,0.f };
+        _bool m_bJump = false;
 
-    if (vDir.m128_f32[2] < 0.f) {
-        vLook = vLook * -1.f;
+        if (vDir.m128_f32[2] < 0.f) {
+            vLook = vLook * -1.f;
+        }
+
+
+        XMVector3TransformCoord(vDistance, WorldMat);
+
+        if (vDistance.m128_f32[1] != 0.f) {
+            _vector vHeight = vDistance.m128_f32[1] * _vector({ 0.f, 1.f, 0.f });
+            _bool m_bJump = true;
+        }
+
+        XMVectorSetY(vDistance, 0.f);
+
+        _float vLength = XMVector3Length(vDistance).m128_f32[0];
+        vLook = vLength * vLook;
+
+        _vector vCurrentPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+        vCurrentPos += vLook;
+        vCurrentPos += vHeight;
+
+        m_pTransformCom->CheckingMove(vCurrentPos, m_pNavigation, m_bJump);
+
+        // m_pTransformCom->SetState(CTransform::                                  , vCurrentPos);
+        m_vPrevAnimPos = m_vCurrentAnimPos;
+
     }
-
-
-    XMVector3TransformCoord(vDistance, WorldMat);
-
-    if (vDistance.m128_f32[1] != 0.f) {
-        _vector vHeight = vDistance.m128_f32[1] * _vector({ 0.f, 1.f, 0.f });
-        _bool m_bJump = true;
-    }
-
-    XMVectorSetY(vDistance, 0.f);
-
-    _float vLength = XMVector3Length(vDistance).m128_f32[0];
-    vLook = vLength * vLook;
-
-    _vector vCurrentPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
-    vCurrentPos += vLook;
-    vCurrentPos += vHeight;
-
-    m_pTransformCom->CheckingMove(vCurrentPos, m_pNavigation, m_bJump);
-
-   // m_pTransformCom->SetState(CTransform::                                  , vCurrentPos);
-    m_vPrevAnimPos = m_vCurrentAnimPos;
-
-
 
 }
                                                                                                                                                                                                                         
@@ -164,6 +187,13 @@ void CMonster::ChangeAnim(_uint _iAnimIdx, _bool _bloop)
     m_pModelCom->ChangeAnimation(_iAnimIdx);
 }
 
+void CMonster::KnockUpInfoReset()
+{
+    m_fKnockUpTime = 0.f;
+    m_fDropSpeed = 10.f;
+
+}
+
 
 HRESULT CMonster::BindShaderResources()
 {
@@ -207,18 +237,20 @@ void CMonster::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> 
 
         shared_ptr<CSkill> pSkill = dynamic_pointer_cast<CSkill>(_pCollider->GetOwner());
 
-        if (m_iLastHitIndex == pSkill->GetSkillIndex())
+        if (m_iLastHitIndex == pSkill->GetSkillIndex() && m_iCurrentSkillOrderIndex == pSkill->GetCurrentOrder())
              return;
 
         m_bKnockUp = pSkill->GetIsKnokUp();
-        m_bKnockBack = pSkill->GetIsKnokBack();
-
-        m_bKnockBackDistance = pSkill->GetKnokBackDistance();
-        m_bKnockUpDistance = pSkill->GetKnokUpDistance();
-
         m_bDownAttack = pSkill->GetIsDownAttack();
-
         m_iLastHitIndex = pSkill->GetSkillIndex();
+        m_iCurrentSkillOrderIndex = pSkill->GetCurrentOrder();
+        m_fKnockUpSpeed = pSkill->GetKnokUpDistance();
+        m_fGweight = pSkill->GetGravityWeight();
+
+        if (m_bKnockUp) {
+            KnockUpInfoReset();
+        }
+
         m_bCollisionCheck = true;
         //넉백 여부, 넉업 여부, 
         OnHit();

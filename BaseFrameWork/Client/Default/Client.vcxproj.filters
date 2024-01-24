@@ -292,6 +292,13 @@
     <ClInclude Include="..\Public\SkillSet.h">
       <Filter>02. GameObject\05. Skill\SkillSet</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\SkillQ.h">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\BasicSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SkillR.h">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\BasicSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SkillE.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -418,6 +425,13 @@
     <ClCompile Include="..\Private\SkillSet.cpp">
       <Filter>02. GameObject\05. Skill\SkillSet</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\SkillQ.cpp">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\BasicSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SkillR.cpp">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\BasicSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SkillE.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">

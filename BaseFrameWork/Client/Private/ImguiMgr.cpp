@@ -403,6 +403,11 @@ void CImguiMgr::DrawNaviMesh()
 
     }
 
+    if (ImGui::Button("Load Cells")) {
+
+        CNaviToolMgr::GetInstance()->LoadData(TEXT("CellTest.dat"));
+    }
+
 
     ImGui::End();
 

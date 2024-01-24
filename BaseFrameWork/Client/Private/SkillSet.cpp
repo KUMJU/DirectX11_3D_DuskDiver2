@@ -2,6 +2,9 @@
 #include "SkillSet.h"
 
 #include "PlrNormalAtk.h"
+#include "SkillQ.h"
+#include "SkillR.h"
+#include "SkillE.h"
 #include "Skill.h"
 
 CSkillSet::CSkillSet()
@@ -29,10 +32,22 @@ void CSkillSet::InitializeSkill()
 	m_Skills.push_back(pSkill);
 	//*******************************//
 
+	pSkill = CPlrNormalAtk::Create(5);
+	m_Skills.push_back(pSkill);
+
+	//*************BattleMode Skill***************//
+
+	pSkill = CSkillQ::Create();
+	m_Skills.push_back(pSkill);
+
+	pSkill = CSkillE::Create();
+	m_Skills.push_back(pSkill);
+
+	pSkill = CSkillR::Create();
+	m_Skills.push_back(pSkill);
 
 
-
-
+	//*******************************//
 
 	for (size_t i = 0; i < m_Skills.size(); ++i) {
 		

@@ -194,6 +194,9 @@
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\Public\PlrNormalAtk.h" />
     <ClInclude Include="..\Public\Skill.h" />
+    <ClInclude Include="..\Public\SkillE.h" />
+    <ClInclude Include="..\Public\SkillQ.h" />
+    <ClInclude Include="..\Public\SkillR.h" />
     <ClInclude Include="..\Public\SkillSet.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\ThirdPersonCam.h" />
@@ -240,6 +243,9 @@
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\PlrNormalAtk.cpp" />
     <ClCompile Include="..\Private\Skill.cpp" />
+    <ClCompile Include="..\Private\SkillE.cpp" />
+    <ClCompile Include="..\Private\SkillQ.cpp" />
+    <ClCompile Include="..\Private\SkillR.cpp" />
     <ClCompile Include="..\Private\SkillSet.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\ThirdPersonCam.cpp" />

@@ -186,12 +186,15 @@ void CMiddleBoss::IfEmptyAnimList()
 
 }
 
-void CMiddleBoss::CalcDistanceOption()
+_bool CMiddleBoss::CalcDistanceOption()
 {
     if (47 == m_iAnimNum) {
         m_vPrevAnimPos = { 0.f, 0.f, 0.f };
         m_vCurrentAnimPos = { 0.f, 0.f, 0.f };
+        return false;
     }
+
+    return true;
 
 
 }

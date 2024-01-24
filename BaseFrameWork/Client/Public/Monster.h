@@ -54,6 +54,11 @@ public:
 	virtual void LateTick(_float _fTimeDelta);
 	virtual HRESULT Render();
 
+
+protected:
+
+	_bool OnHitKnockUp(_float _fTimeDelta);
+
 protected:
 	void ChasePlayer();
 	void CalcPlayerDistance();
@@ -69,7 +74,9 @@ protected:
 
 	//애니메이션 리스트가 비어있을때 객체마다 다른 제어를 해주기 위해 순수 가상함수로 작성
 	virtual void IfEmptyAnimList() = 0;
-	virtual void CalcDistanceOption() = 0;
+	virtual _bool CalcDistanceOption() = 0;
+
+	virtual void KnockUpInfoReset();
 
 	list<ANIMINFO> m_NextAnimIndex;
 
@@ -105,8 +112,13 @@ protected:
 	_float m_bKnockUpDistance = 0.f;
 	_float m_bKnockBackDistance = 0.f;
 
+	_float m_fKnockUpTime = 0.f;
+
+	_float m_fGravity = 15.f;
+	_float m_fGweight = 1.f;
 
 	_uint m_iLastHitIndex = 100; //플레이어 스킬 식별
+	_uint m_iCurrentSkillOrderIndex = 100;
 protected:
 
 	shared_ptr<CModel> m_pModelCom = nullptr;
@@ -131,6 +143,9 @@ protected:
 	_uint m_iAtkPattern = 0;
 
 	_bool m_IsSturnState = false;
+
+	_float m_fKnockUpSpeed = 0.f;
+	_float m_fDropSpeed = 15.f;
 
 protected:
 	_uint m_iAnimNum = 0;

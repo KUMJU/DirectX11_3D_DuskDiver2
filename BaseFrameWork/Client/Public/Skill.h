@@ -12,6 +12,17 @@ BEGIN(Client)
 
 class CSkill abstract : public CGameObject
 {
+
+public:
+	struct SKILLINFO {
+		_float fDelayTime;
+		_float fSkillDuration; 
+		_float fKnockUpDistance;
+		_bool bKnockUp;
+		_bool bDownAtk;
+		_float fWeight;
+	};
+
 public:
 	enum class EOWNER_TYPE {
 		OWNER_PLAYER,
@@ -46,8 +57,9 @@ public:
 public:
 	void ActiveSkill();
 	void SkillReset();
-	void SetSkillIndex(_uint _iSkillIdx) { iSkillIndex = _iSkillIdx; }
-	_uint GetSkillIndex() { return iSkillIndex; }
+	void SetSkillIndex(_uint _iSkillIdx) { m_iSkillIndex = _iSkillIdx; }
+	//n번째 스킬 
+	_uint GetSkillIndex() { return m_iSkillIndex; }
 
 protected:
 	_float m_fSkillDuration = 0.f; //스킬 사용시간
@@ -68,13 +80,15 @@ protected:
 	void OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _pCol) override;
 
 public:
-	_bool GetIsKnokUp() { return m_bKnokUp; }
-	_bool GetIsKnokBack() { return m_bKnokBack; }
+	_bool GetIsKnokUp() { return m_Infos[m_iCurrentSkillOrder].bKnockUp; }
+	_bool GetIsDownAttack() { return m_Infos[m_iCurrentSkillOrder].bDownAtk; }
 
-	_bool GetIsDownAttack() { return m_bDownAtk; }
+	_float GetGravityWeight() { return m_Infos[m_iCurrentSkillOrder].fWeight;}
+	_float GetKnokUpDistance() { return m_Infos[m_iCurrentSkillOrder].fKnockUpDistance; }
 
-	_float GetKnokUpDistance() { return m_fKnockUpDistance; }
-	_float GetKnokBackDistance() { return m_fKnockBackDistance; }
+	//n번째 공격
+	_uint GetAttackNum() { return (_uint)m_Infos.size(); }
+	_uint GetCurrentOrder() { return m_iCurrentSkillOrder; }
 
 protected:
 	_bool m_bKnokUp = false; //에어본 공격인지 판별
@@ -83,17 +97,20 @@ protected:
 	_bool m_bCancle = false;
 	_bool m_bDownAtk = false;
 
-	_uint iSkillIndex = 0;
+	_bool m_bMultiAtk = false;
+	_float m_fDelay = 0.f;
+
+	_uint m_iSkillIndex = 0;
+	_uint m_iCurrentSkillOrder = 0;
 
 	_float m_fKnockBackDistance = 0.f;
 	_float m_fKnockUpDistance = 0.f;
-
 
 	wstring m_strCutSceneName = TEXT(""); // 이벤트 카메라에 넘겨줄 이벤트씬 이름
 
 	//충돌체 정보 
 	vector<shared_ptr<class CCollider>> m_Colliders;
-
+	vector<SKILLINFO> m_Infos;
 
 };
 
