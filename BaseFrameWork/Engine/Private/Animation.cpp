@@ -34,7 +34,7 @@ HRESULT CAnimation::Initialize(ifstream& _ifs, shared_ptr<class CModel> _pModel)
 _bool CAnimation::InvalidateTransformationMatrix(_float _fTimeDelta, const vector<shared_ptr<CBone>>& _Bones , _bool _isLoop)
 {
     //m_TrackPosition : 약간 재생바에 현재 진행 알려주는 그 네모 같은걸로 생각하면 편한듯..
-    m_TrackPosition += m_TickPerSecond * _fTimeDelta * m_AnimSpeed;
+    m_TrackPosition += m_TickPerSecond * _fTimeDelta * m_AnimSpeed * g_fSlowWeight;
 
     if (m_TrackPosition >= m_Duration) {
 
@@ -80,6 +80,11 @@ void CAnimation::ChangeAnimation(shared_ptr<CAnimation> _pNextAnim, const vector
             }
         }
     }
+}
+
+_uint CAnimation::GetKeyFramesNum()
+{
+    return m_Channels.back()->GetKeyFramesNum();
 }
 
 shared_ptr<CAnimation> CAnimation::Create(ifstream& _ifs, shared_ptr<CModel> _pModel)

@@ -6,6 +6,7 @@
 
 BEGIN(Engine)
 class CCollider;
+class CAnimation;
 END
 
 BEGIN(Client)
@@ -18,9 +19,13 @@ public:
 		_float fDelayTime;
 		_float fSkillDuration; 
 		_float fKnockUpDistance;
+		_float fWeight;
+		_float fDropSpeed;
+		_double iStartTrackPosition;
+		_double iEndTrackPosition;
 		_bool bKnockUp;
 		_bool bDownAtk;
-		_float fWeight;
+		_bool bDropAtk;
 	};
 
 public:
@@ -90,6 +95,19 @@ public:
 	_uint GetAttackNum() { return (_uint)m_Infos.size(); }
 	_uint GetCurrentOrder() { return m_iCurrentSkillOrder; }
 
+	_bool GetMultiAtk() { return m_bMultiAtk; }
+
+	shared_ptr<CAnimation> GetAnimation() { return m_pAnimation; }
+
+	void SetAnimation(shared_ptr<CAnimation> _pAnim) { 
+		m_pMainAnims = &m_pBattleAnims;
+		m_pBattleAnims.push_back(_pAnim);
+	}
+
+	void SetBurstAnimation(shared_ptr<CAnimation> _pAnim) { m_pBurstAnims.push_back(_pAnim); }
+
+	void SwitchingBurstMode() { m_pMainAnims = &m_pBurstAnims; }
+
 protected:
 	_bool m_bKnokUp = false; //에어본 공격인지 판별
 	_bool m_SlowTime = 0.f; //느려지는 효과가 있으면 시간보정값? 
@@ -108,9 +126,17 @@ protected:
 
 	wstring m_strCutSceneName = TEXT(""); // 이벤트 카메라에 넘겨줄 이벤트씬 이름
 
+	shared_ptr<CAnimation> m_pMainAnimation = nullptr;
+	shared_ptr<CAnimation> m_pAnimation = nullptr;
+	shared_ptr<CAnimation> m_pBurstAnimation = nullptr;
+
 	//충돌체 정보 
-	vector<shared_ptr<class CCollider>> m_Colliders;
+	shared_ptr<class CCollider> m_Collider;
 	vector<SKILLINFO> m_Infos;
+
+	vector<shared_ptr<CAnimation>>* m_pMainAnims;
+	vector<shared_ptr<CAnimation>> m_pBattleAnims;
+	vector<shared_ptr<CAnimation>> m_pBurstAnims;
 
 };
 

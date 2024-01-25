@@ -48,8 +48,6 @@ private:
 	_bool m_bWait = false;
 	_float m_fWaitTime = 0.f;
 
-	_bool m_bHit = false;
-
 protected:
 
 	virtual void OnHit() override;

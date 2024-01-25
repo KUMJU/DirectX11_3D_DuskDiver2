@@ -1,14 +1,17 @@
 #include "pch.h"
-#include "SkillR.h"
+#include "Skill_BurstE.h"
+
 #include "Collider.h"
 #include "GameInstance.h"
 
-CSkillR::CSkillR()
+CSkill_BurstE::CSkill_BurstE()
 {
 }
 
-HRESULT CSkillR::Initialize()
+HRESULT CSkill_BurstE::Initialize()
 {
+
+    //일반공격 1  + 넉업공격 2~3번?
     __super::Initialize();
 
     CCollider::COLLIDER_DESC normalAtkDesc = {};
@@ -18,18 +21,15 @@ HRESULT CSkillR::Initialize()
     ////////////info 1 /////////
     SKILLINFO info = {};
 
-    info.bKnockUp = true;
+    info.bKnockUp = false;
     info.fKnockUpDistance = 5.f;
     info.fWeight = 2.f;
     info.iStartTrackPosition = 21.f;
     info.iEndTrackPosition = 28.f;
 
-
-
     m_bMultiAtk = false;
 
-
-    SKILLINFO info2= {};
+    SKILLINFO info2 = {};
 
     info2.bKnockUp = true;
     info2.fKnockUpDistance = 10.f;
@@ -40,7 +40,7 @@ HRESULT CSkillR::Initialize()
     shared_ptr<CCollider> pCollider = CCollider::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), CCollider::TYPE_SPHERE, normalAtkDesc);
     pCollider->SetOwner(shared_from_this());
     m_bCancle = false;
-   
+
     m_Collider = pCollider;
 
     m_Infos.push_back(info);
@@ -49,33 +49,24 @@ HRESULT CSkillR::Initialize()
     return S_OK;
 }
 
-void CSkillR::PriorityTick(_float _fTimeDelta)
-{
-}
- 
-void CSkillR::Tick(_float _fTimeDelta)
-{
-    __super::Tick(_fTimeDelta);
-
-}
-
-void CSkillR::LateTick(_float _fTimeDelta)
+void CSkill_BurstE::PriorityTick(_float _fTimeDelta)
 {
 }
 
-HRESULT CSkillR::Render()
+void CSkill_BurstE::Tick(_float _fTimeDelta)
 {
-    __super::Render();
-
-    return S_OK;
 }
 
-shared_ptr<CSkillR> CSkillR::Create()
+void CSkill_BurstE::LateTick(_float _fTimeDelta)
 {
-    shared_ptr<CSkillR> pInstance = make_shared<CSkillR>();
+}
 
-    if (FAILED(pInstance->Initialize()))
-        MSG_BOX("Failed to Create : CSkillR");
+HRESULT CSkill_BurstE::Render()
+{
+    return E_NOTIMPL;
+}
 
-    return pInstance;
+shared_ptr<CSkill_BurstE> CSkill_BurstE::Create()
+{
+    return shared_ptr<CSkill_BurstE>();
 }

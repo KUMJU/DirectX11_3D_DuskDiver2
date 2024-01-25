@@ -42,6 +42,8 @@ using namespace Engine;
 #include <wrl.h>
 namespace wrl = Microsoft::WRL;
 
+extern _float g_fSlowWeight;
+
 //SmartPointer
 #include <memory>
 #include <iostream>

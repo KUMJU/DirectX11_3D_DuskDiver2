@@ -38,6 +38,8 @@ HRESULT CPlayer::Initialize()
     m_pBattleModelCom = CGameInstance::GetInstance()->GetModel(TEXT("Hero1_BattleMode_3Anim"));
     m_pBurstModelCom = CGameInstance::GetInstance()->GetModel(TEXT("Hero1_Burst"));
 
+    
+
     SetAnimSpeed();
     //Set Models 
 
@@ -53,11 +55,6 @@ HRESULT CPlayer::Initialize()
 
     //*Head*//
     CCollider::COLLIDER_DESC PlrCollDesc = {};
-   /* PlrCollDesc.fRadius = 0.2f;
-    PlrCollDesc.vCenter = _float3(0.f, 1.5f, 2.f);
-    shared_ptr<CCollider> pCollider = CCollider::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), CCollider::TYPE_SPHERE, PlrCollDesc);
-    m_Colliders.push_back(pCollider);
-    m_Components.emplace(TEXT("Com_Collider_Head"), m_pCollider);*/
 
     //*Body*//
     PlrCollDesc.fRadius = 0.3f;
@@ -79,7 +76,7 @@ HRESULT CPlayer::Initialize()
     m_eCurrentState = HEROSTATE::STATE_IDLE;
     m_pModelCom->ChangeAnimation(44);
 
-    m_pPlayerSkillset = CSkillSet::Create();
+    m_pPlayerSkillset = CSkillSet::Create(m_pBattleModelCom, m_pBurstModelCom);
     m_pPlayerSkillset->SetPlayerTransform(m_pTransformCom);
 
     return S_OK;
@@ -97,6 +94,7 @@ void CPlayer::Tick(_float _fTimeDelta)
         
         if (m_fransformTime > 2.8f) {
             
+            m_pPlayerSkillset->SetBurstMode(true);
             m_pModelCom = m_pBurstModelCom;
 
             m_eCurrentState = HEROSTATE::STATE_IDLE;
@@ -155,6 +153,10 @@ void CPlayer::Tick(_float _fTimeDelta)
     {
         m_fLinearTime = 0.03f;
     }
+    else if (m_iCurrentAnimIdx == 50) {
+        m_fLinearTime = 0.1f;
+
+    }
     else {
         m_fLinearTime = 0.07f;
     }
@@ -209,14 +211,17 @@ void CPlayer::LateTick(_float _fTimeDelta)
         m_fJumpTime += _fTimeDelta;
 
         //_float fJumpSpeed = (m_fJumpSpeed * _fTimeDelta) + (0.5f * (m_fGravity / m_fJumpTime) * _fTimeDelta * _fTimeDelta);
-       
-        m_fJumpSpeed = m_fJumpSpeed - (m_fGravity * _fTimeDelta);
+        m_fWeight += 0.1f;
+
+        m_fJumpSpeed = m_fJumpSpeed - (m_fGravity * _fTimeDelta) +(m_fWeight * _fTimeDelta);
         vPos.m128_f32[1] += m_fJumpSpeed * _fTimeDelta;
 
         m_pTransformCom->CheckingMove(vPos, m_pNavigationCom, m_bJump);
 
         if (m_fJumpTime > 0.2f) {
             ChangeAnim(50, true);
+            m_fLinearTime = 0.1f;
+            m_fWeight = 0.5f;
         }
 
     }
@@ -227,8 +232,10 @@ void CPlayer::LateTick(_float _fTimeDelta)
 
            _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
            m_fJumpTime += _fTimeDelta;
+           
+           m_fWeight += 0.2f;
 
-           m_fJumpSpeed = m_fJumpSpeed -(_fTimeDelta * m_fGravity);
+           m_fJumpSpeed = m_fJumpSpeed -(_fTimeDelta * m_fGravity) - (m_fWeight * _fTimeDelta);
            vPos.m128_f32[1] += m_fJumpSpeed * _fTimeDelta;
 
            m_pTransformCom->CheckingMove(vPos, m_pNavigationCom, m_bJump);
@@ -280,6 +287,8 @@ void CPlayer::LateTick(_float _fTimeDelta)
 
     if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_NONBLEND, shared_from_this())))
         return;
+
+    m_IsCollideMonster = false;
 }
 
 HRESULT CPlayer::Render()
@@ -318,14 +327,14 @@ HRESULT CPlayer::Render()
 
 void CPlayer::SetAnimSpeed()
 {
-    m_pBattleModelCom->SetSpecificAnimSpeed(10, 1.5f);
-    m_pBattleModelCom->SetSpecificAnimSpeed(12, 1.5f);
-    m_pBattleModelCom->SetSpecificAnimSpeed(13, 1.5f);
-    m_pBattleModelCom->SetSpecificAnimSpeed(15, 1.5f);
-    m_pBattleModelCom->SetSpecificAnimSpeed(16, 1.5f);
-    m_pBattleModelCom->SetSpecificAnimSpeed(14, 1.5f);
-    m_pBattleModelCom->SetSpecificAnimSpeed(1, 1.5f);
-    m_pBattleModelCom->SetSpecificAnimSpeed(2, 1.5f);
+    m_pBattleModelCom->SetSpecificAnimSpeed(10, 1.6f);
+    m_pBattleModelCom->SetSpecificAnimSpeed(12, 1.6f);
+    m_pBattleModelCom->SetSpecificAnimSpeed(13, 1.6f);
+    m_pBattleModelCom->SetSpecificAnimSpeed(15, 1.6f);
+    m_pBattleModelCom->SetSpecificAnimSpeed(16, 1.6f);
+    m_pBattleModelCom->SetSpecificAnimSpeed(14, 1.6f);
+    m_pBattleModelCom->SetSpecificAnimSpeed(1, 1.6f);
+    m_pBattleModelCom->SetSpecificAnimSpeed(2, 1.6f);
 
     m_pBurstModelCom->SetSpecificAnimSpeed(9, 2.f);
     m_pBurstModelCom->SetSpecificAnimSpeed(11, 2.f);
@@ -496,10 +505,17 @@ void CPlayer::FinishCombo()
 
 void CPlayer::CalcAnimMoveDistance()
 {
+    if (m_IsCollideMonster) {
+        m_vPrevAnimPos = m_vCurretnAnimPos;
+        return;
+    }
+
     if (79 == m_iCurrentAnimIdx || 76 == m_iCurrentAnimIdx ||
-        52 == m_iCurrentAnimIdx || 50 == m_iCurrentAnimIdx || 3 == m_iCurrentAnimIdx) {
+        52 == m_iCurrentAnimIdx || 51 == m_iCurrentAnimIdx || 3 == m_iCurrentAnimIdx || 136 == m_iCurrentAnimIdx
+        || 50 == m_iCurrentAnimIdx) {
         return;
     } 
+
 
     _vector vDistance = XMLoadFloat3(&m_vCurretnAnimPos) - XMLoadFloat3(&m_vPrevAnimPos);
 
@@ -582,10 +598,12 @@ void CPlayer::KeyInput(_float _fTimeDelta)
     if (GetKeyState('X') & 0x8000)
     {   
         if (m_bBurstMode) {
+            m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_SUPER1);
             m_eCurrentState = HEROSTATE::STATE_SKILL_Q;
             ChangeAnim(91, false);
-            m_IsUsingSkill = true;
+            m_IsUsingSkill = true;        
         }
+
 
     }
 
@@ -608,6 +626,7 @@ void CPlayer::KeyInput(_float _fTimeDelta)
         m_eCurrentState = HEROSTATE::STATE_SKILL_Q;
 
         if (m_bBurstMode) {
+            m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_BURST_Q);
             ChangeAnim(63, false);
             m_NextAnimIndex.push_back({ 64 , false });
             m_NextAnimIndex.push_back({ 65 , false });
@@ -623,8 +642,8 @@ void CPlayer::KeyInput(_float _fTimeDelta)
     //Skill2
     if (GetKeyState('E') & 0x8000)
     {
+        DetectMonster();
         m_eCurrentState = HEROSTATE::STATE_SKILL_E;
-
 
         if (m_bBurstMode)
             ChangeAnim(71, false);
@@ -856,12 +875,6 @@ void CPlayer::KeyInput(_float _fTimeDelta)
             return;
 
         m_eCurrentState = HEROSTATE::STATE_JUMP;
-         
-      //  m_NextAnimIndex.push_back({ 50, true });
-      //  m_NextAnimIndex.push_back({ 50, true });
-       // m_NextAnimIndex.push_back({ 53, false });
-
-
         m_fJumpSpeed = m_fInitialJumpSpeed;
 
         FinalAnimNum = 52;
@@ -1142,6 +1155,8 @@ void CPlayer::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _
         vNewPos.m128_f32[1] = vPlrPos.m128_f32[1];
         vNewPos = XMVectorSetW(vNewPos, 1.f);
         m_pTransformCom->CheckingMove(vNewPos, m_pNavigationCom, m_bJump);
+    
+        m_IsCollideMonster = true;
     }
 
 

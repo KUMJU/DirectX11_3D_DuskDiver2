@@ -37,6 +37,8 @@ public:
 		return m_KeyFrames[_iCurrentFrame];
 	}
 
+	_uint GetKeyFramesNum() { return m_iNumKeyFrames; }
+
 
 private:
 	_char m_szName[MAX_PATH] = "";

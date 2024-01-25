@@ -7,7 +7,6 @@
 
 BEGIN(Engine)
 
-
 class ENGINE_DLL CModel : public CComponent
 {
 public:
@@ -40,12 +39,19 @@ public:
 	HRESULT BindMaterialShaderResource(shared_ptr<class CShader> _pShader, _uint _iMeshIndex, aiTextureType _eMaterialType, const _char* _pConstantName);
 	HRESULT BindBoneMatrices(shared_ptr<class CShader> _pShader, const _char* _pConstName, _uint _iMeshIndex);
 	_bool PlayAnimation(_float _fTimeDelta, _bool _isLoop, _float3* _vRootPos);
+	_bool ReversePlay(_float _fTimeDelta, _bool _isLoop);
 
 public:
 	_bool IsLinearInterpolation() { return m_IsLinearState; }
 
 public:
 	vector<shared_ptr<class CMesh>> GetMeshes() { return m_Meshes; }
+	vector<shared_ptr<class CAnimation>> GetAnimations() { return m_Animations; }
+
+	void SetAnimation(vector<shared_ptr<class CAnimation>> _pAnim) { m_Animations = _pAnim; }
+
+
+	void ChangeMeshes(vector<shared_ptr<class CMesh>> _Meshes) { m_Meshes = _Meshes; }
 
 public:
 	void SetAnimNum(_uint _iAnimNum) { _iAnimNum = _iAnimNum; }

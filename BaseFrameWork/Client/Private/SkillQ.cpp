@@ -11,25 +11,26 @@ CSkillQ::CSkillQ()
 
 HRESULT CSkillQ::Initialize()
 {
+    __super::Initialize();
+
     CCollider::COLLIDER_DESC normalAtkDesc = {};
     normalAtkDesc.fRadius = 0.5f;
     normalAtkDesc.vCenter = { 0.f, 0.8f, 0.7f };
 
-
     SKILLINFO info = {};
 
-    info.fDelayTime = 0.6f;
     info.bKnockUp = true;
     info.bDownAtk = false;
-    info.fSkillDuration = 0.9f;
     info.fKnockUpDistance = 15.f;
     info.fWeight = 2.f;
+    info.iStartTrackPosition = 16.f;
+    info.iEndTrackPosition = 35.f;
 
     shared_ptr<CCollider> pCollider = CCollider::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), CCollider::TYPE_SPHERE, normalAtkDesc);
     pCollider->SetOwner(shared_from_this());
     m_bCancle = false;
 
-    m_Colliders.push_back(pCollider);
+    m_Collider = pCollider;
     m_Infos.push_back(info);
 
 	return S_OK;

@@ -148,6 +148,15 @@
     <Filter Include="02. GameObject\05. Skill\00. PlayerSkill\BasicSkill">
       <UniqueIdentifier>{75733f45-ac48-48b7-bb75-f04abbd6821a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\05. Skill\00. PlayerSkill\BurstSkill">
+      <UniqueIdentifier>{a760f72b-c442-4644-8872-0f7a69e81a6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Skill\00. PlayerSkill\SuperSkill">
+      <UniqueIdentifier>{52db1ceb-d366-4d98-aa52-c7e6adec50a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\03. MapObject\01. Escalator">
+      <UniqueIdentifier>{14824ed2-4ba0-44ed-b71a-9c0783fa5157}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -282,7 +291,6 @@
     <ClInclude Include="..\Public\NaviToolMgr.h">
       <Filter>96. Imgui\02. NaviToolMgr</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Escalator.h" />
     <ClInclude Include="..\Public\Skill.h">
       <Filter>02. GameObject\05. Skill</Filter>
     </ClInclude>
@@ -298,7 +306,21 @@
     <ClInclude Include="..\Public\SkillR.h">
       <Filter>02. GameObject\05. Skill\00. PlayerSkill\BasicSkill</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\SkillE.h" />
+    <ClInclude Include="..\Public\SkillE.h">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\BasicSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Skill_BurstQ.h">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\BurstSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SuperSkillA.h">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\SuperSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Escalator.h">
+      <Filter>02. GameObject\03. MapObject\01. Escalator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Skill_BurstE.h">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\BurstSkill</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -415,7 +437,6 @@
     <ClCompile Include="..\Private\NaviToolMgr.cpp">
       <Filter>96. Imgui\02. NaviToolMgr</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Escalator.cpp" />
     <ClCompile Include="..\Private\Skill.cpp">
       <Filter>02. GameObject\05. Skill</Filter>
     </ClCompile>
@@ -431,7 +452,21 @@
     <ClCompile Include="..\Private\SkillR.cpp">
       <Filter>02. GameObject\05. Skill\00. PlayerSkill\BasicSkill</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\SkillE.cpp" />
+    <ClCompile Include="..\Private\SkillE.cpp">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\BasicSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Skill_BurstQ.cpp">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\BurstSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SuperSkillA.cpp">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\SuperSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Escalator.cpp">
+      <Filter>02. GameObject\03. MapObject\01. Escalator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Skill_BurstE.cpp">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\BurstSkill</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">

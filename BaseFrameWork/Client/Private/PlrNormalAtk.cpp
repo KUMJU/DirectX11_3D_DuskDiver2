@@ -10,6 +10,7 @@ CPlrNormalAtk::CPlrNormalAtk()
 
 HRESULT CPlrNormalAtk::Initialize(_uint _iComboNum)
 {
+    
     CCollider::COLLIDER_DESC normalAtkDesc = {};
     normalAtkDesc.fRadius = 0.4f;
     normalAtkDesc.vCenter = { 0.f, 0.7f, 0.5f };
@@ -18,28 +19,29 @@ HRESULT CPlrNormalAtk::Initialize(_uint _iComboNum)
     SKILLINFO skillDesc = {};
 
     skillDesc.bDownAtk = false;
-    skillDesc.fSkillDuration = 0.5f;
-    skillDesc.bDownAtk = false;
     skillDesc.fWeight = 1.f;
+
+    skillDesc.iStartTrackPosition = 5.0;
+    skillDesc.iEndTrackPosition = 25.0;
 
 
     if (3 == _iComboNum) {
         normalAtkDesc.fRadius = 0.6f;
-        skillDesc.fDelayTime = 0.3f;
     }
     if (4 == _iComboNum) {
         normalAtkDesc.fRadius = 0.6f;
         skillDesc.bKnockUp = true;
-        skillDesc.fDelayTime = 0.3f;
-        skillDesc.fWeight = 0.7f;
-        skillDesc.fKnockUpDistance = 10.f;
+        skillDesc.fWeight = 1.5f;
+        skillDesc.fKnockUpDistance =15.f;
+
 
     }
     else if (5 == _iComboNum) {
 
+        skillDesc.iStartTrackPosition = 28.0;
+        skillDesc.iEndTrackPosition = 55.0;
+
         normalAtkDesc.fRadius = 0.6f;
-        skillDesc.fSkillDuration = 1.4f;
-        skillDesc.fDelayTime = 0.8f;
         skillDesc.bDownAtk = true;
 
     }
@@ -48,7 +50,7 @@ HRESULT CPlrNormalAtk::Initialize(_uint _iComboNum)
     pCollider->SetOwner(shared_from_this());
     m_bCancle = true;
 
-    m_Colliders.push_back(pCollider);
+    m_Collider = pCollider;
 
     m_Infos.push_back(skillDesc);
     return S_OK;
@@ -75,7 +77,7 @@ HRESULT CPlrNormalAtk::Render()
     return S_OK;
 }
 
-shared_ptr<CPlrNormalAtk> CPlrNormalAtk::Create(_uint _iComboNum )
+shared_ptr<CPlrNormalAtk> CPlrNormalAtk::Create(_uint _iComboNum)
 {
     shared_ptr<CPlrNormalAtk> pInstance = make_shared<CPlrNormalAtk>();
 

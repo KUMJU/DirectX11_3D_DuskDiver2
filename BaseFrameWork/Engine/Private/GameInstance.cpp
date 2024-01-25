@@ -8,6 +8,8 @@
 #include "PickingMgr.h"
 #include "LightMgr.h"
 
+_float g_fSlowWeight = 1.f;
+
 IMPLEMENT_SINGLETON(CGameInstance)
 
 CGameInstance::CGameInstance()

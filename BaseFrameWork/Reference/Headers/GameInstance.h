@@ -11,6 +11,7 @@ BEGIN(Engine)
 class CGraphicDev;
 class CLayers;
 
+
 class ENGINE_DLL CGameInstance
 {
 	DECLARE_SINGLETON(CGameInstance)
@@ -104,6 +105,8 @@ private:
 	shared_ptr<class CResourceMgr> m_pResMgr = nullptr;
 	shared_ptr<CCollisionMgr> m_pCollisionMgr = nullptr;
 
+
+private:
 
 public:
 	wrl::ComPtr<ID3D11Device> GetDeviceInfo();

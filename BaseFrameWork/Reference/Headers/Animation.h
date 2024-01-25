@@ -7,7 +7,8 @@
 
 BEGIN(Engine)
 
-class CAnimation : public std::enable_shared_from_this<CAnimation>
+
+class ENGINE_DLL CAnimation : public std::enable_shared_from_this<CAnimation>
 {
 public:
 	CAnimation();
@@ -29,15 +30,13 @@ public:
 
 	_char* GetAnimName() { return m_szName;}
 
-
+	_double GetCurrentTrackPosition() { return m_TrackPosition; }
+	_uint GetKeyFramesNum();
 public:
 	void SetAnimSpeed(_float _fSpeed) { m_AnimSpeed = _fSpeed; }
-
-
 	 
 private:
 	_float m_AnimSpeed = 1.f;
-
 
 
 private:

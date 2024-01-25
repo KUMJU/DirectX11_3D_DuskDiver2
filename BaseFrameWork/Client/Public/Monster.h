@@ -76,6 +76,7 @@ protected:
 	virtual void IfEmptyAnimList() = 0;
 	virtual _bool CalcDistanceOption() = 0;
 
+	virtual void CalcSuperArmorTime(_float _fTimeDelta);
 	virtual void KnockUpInfoReset();
 
 	list<ANIMINFO> m_NextAnimIndex;
@@ -108,6 +109,7 @@ protected:
 	_bool m_bKnockUp = false;
 	_bool m_bKnockBack = false;
 	_bool m_bDownAttack = false;
+	_bool m_bDown = false;
 
 	_float m_bKnockUpDistance = 0.f;
 	_float m_bKnockBackDistance = 0.f;
@@ -117,8 +119,15 @@ protected:
 	_float m_fGravity = 15.f;
 	_float m_fGweight = 1.f;
 
+	_float m_fDownTime = 0.f;
+
 	_uint m_iLastHitIndex = 100; //플레이어 스킬 식별
 	_uint m_iCurrentSkillOrderIndex = 100;
+
+
+	_bool m_bSuperArmor = false;
+	_float m_bSuperArmorCoolTime = 0.f;
+
 protected:
 
 	shared_ptr<CModel> m_pModelCom = nullptr;
@@ -146,8 +155,11 @@ protected:
 
 	_float m_fKnockUpSpeed = 0.f;
 	_float m_fDropSpeed = 15.f;
+	_bool m_bHit = false;
+
 
 protected:
+
 	_uint m_iAnimNum = 0;
 	_bool m_bLoop = false;
 

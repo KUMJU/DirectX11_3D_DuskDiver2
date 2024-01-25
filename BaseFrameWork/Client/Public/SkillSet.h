@@ -3,12 +3,9 @@
 #include "Client_Defines.h"
 
 BEGIN(Engine)
-
 class CTransform;
-
+class CModel;
 END
-
-//이름만 이렇지 SkillState와 하는 일이 같다고 봐도 될듯...???? 
 
 BEGIN(Client)
 
@@ -26,7 +23,7 @@ public:
 	CSkillSet();
 	~CSkillSet() = default;
 public:
-	void InitializeSkill();
+	void InitializeSkill(shared_ptr<CModel> _pBaseModel, shared_ptr<CModel> _pBurstModel);
 	void Tick(_float _fDelatTime);
 	void Render();
 
@@ -36,20 +33,27 @@ public:
 	void InActiveSkill(ESKILLSTATE _ePastSkill);
 
 	void SetPlayerTransform(shared_ptr<CTransform> _pTransform);
+
+	void SetPlayerModel(shared_ptr<CModel> _pBaseModel) { m_pPlrBaseModel = _pBaseModel; }
+	void SetPlayerBurstModel(shared_ptr<CModel> _pBaseModel) { m_pPlrBurstModel = _pBaseModel; }
+
+	void SetBurstMode(_bool _isBurst);
 private:
 	vector<shared_ptr<class CSkill>> m_Skills;
 	ESKILLSTATE m_eCurrentSkill = SKILL_END;
 
 	shared_ptr<CTransform> m_pPlrTransform = nullptr;
 
-	_int m_iCurrentSkill = -1;
+	shared_ptr<CModel> m_pPlrBaseModel = nullptr;
+	shared_ptr<CModel> m_pPlrBurstModel = nullptr;
 
+	_int m_iCurrentSkill = -1;
+	_bool m_isBurstMode = false;
 
 public:
+	static shared_ptr<CSkillSet> Create(shared_ptr<CModel> _pBaseModel, shared_ptr<CModel> _pBurstModel);
 
-	static shared_ptr<CSkillSet> Create();
-
-
+	//플레이어 애ㅐ니메이션 주소를 들고 이"ㅆ어서 스킬 생성할때 하나씩 ㅣ넣어서 프레임키 확인하기
 };
 
 END

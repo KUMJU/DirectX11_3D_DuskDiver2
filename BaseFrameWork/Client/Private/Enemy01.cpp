@@ -104,6 +104,9 @@ void CEnemy01::Tick(_float _fTimeDelta)
 
     CalcAnimationDistance();
 
+    m_pCollider->Tick(m_pTransformCom->GetWorldMatrix());
+    CGameInstance::GetInstance()->AddCollider(CCollisionMgr::COL_MONSTER, m_pCollider);
+
 }
 
 void CEnemy01::LateTick(_float _fTimeDelta)
@@ -133,6 +136,8 @@ HRESULT CEnemy01::Render()
 {
     if (!m_IsEnabled)
         return S_OK;
+
+    m_pCollider->Render();
 
     if (FAILED(BindShaderResources()))
         return E_FAIL;

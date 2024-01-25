@@ -54,11 +54,11 @@ _bool CMonster::OnHitKnockUp(_float _fTimeDelta)
     m_fKnockUpTime += _fTimeDelta;
 
     if(m_fKnockUpTime < 1.f){
-        m_fKnockUpSpeed = m_fKnockUpSpeed - (_fTimeDelta * m_fGravity);
+        m_fKnockUpSpeed = m_fKnockUpSpeed - (_fTimeDelta * m_fGravity * m_fGweight);
         vPos.m128_f32[1] += m_fKnockUpSpeed * _fTimeDelta;
     }
     else {
-        m_fDropSpeed = m_fDropSpeed + (_fTimeDelta * m_fGravity);
+        m_fDropSpeed = m_fDropSpeed + (_fTimeDelta * m_fGravity * m_fGweight);
         vPos.m128_f32[1] -= m_fDropSpeed * _fTimeDelta;
     }
 
@@ -66,6 +66,8 @@ _bool CMonster::OnHitKnockUp(_float _fTimeDelta)
 
     if (!m_bJump) {
         m_bKnockUp = false;
+        m_bDown = true;
+        m_fDownTime = 0.f;
     }
     return m_bJump;
 }
@@ -187,6 +189,18 @@ void CMonster::ChangeAnim(_uint _iAnimIdx, _bool _bloop)
     m_pModelCom->ChangeAnimation(_iAnimIdx);
 }
 
+void CMonster::CalcSuperArmorTime(_float _fTimeDelta)
+{
+    m_bSuperArmorCoolTime += _fTimeDelta;
+
+    if (m_bSuperArmorCoolTime > 0.25f) {
+        m_bSuperArmorCoolTime = 0.f;
+        m_bSuperArmor = false;
+    }
+
+
+}
+
 void CMonster::KnockUpInfoReset()
 {
     m_fKnockUpTime = 0.f;
@@ -237,8 +251,18 @@ void CMonster::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> 
 
         shared_ptr<CSkill> pSkill = dynamic_pointer_cast<CSkill>(_pCollider->GetOwner());
 
-        if (m_iLastHitIndex == pSkill->GetSkillIndex() && m_iCurrentSkillOrderIndex == pSkill->GetCurrentOrder())
-             return;
+
+        if (pSkill->GetMultiAtk()) {
+            if (m_bSuperArmor) {
+                return;
+            }
+        }
+        else {
+
+            if (m_iLastHitIndex == pSkill->GetSkillIndex() && m_iCurrentSkillOrderIndex == pSkill->GetCurrentOrder())
+                return;
+
+        }
 
         m_bKnockUp = pSkill->GetIsKnokUp();
         m_bDownAttack = pSkill->GetIsDownAttack();
@@ -246,6 +270,8 @@ void CMonster::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> 
         m_iCurrentSkillOrderIndex = pSkill->GetCurrentOrder();
         m_fKnockUpSpeed = pSkill->GetKnokUpDistance();
         m_fGweight = pSkill->GetGravityWeight();
+        
+        m_bSuperArmor = true;
 
         if (m_bKnockUp) {
             KnockUpInfoReset();

@@ -190,6 +190,17 @@ _bool CModel::PlayAnimation(_float _fTimeDelta , _bool _isLoop, _float3* _vRootP
     return m_IsFinish;
 }
 
+_bool CModel::ReversePlay(_float _fTimeDelta, _bool _isLoop)
+{
+    //m_IsFinish = m_Animations[m_iCurrentAnimation]->InvalidateTransformationMatrix(_fTimeDelta, m_Bones, _isLoop);
+
+    //for (auto& pBone : m_Bones)
+    //    pBone->InvalidateCombinedTransformationMatrix(m_Bones, _vRootPos, IsSaveRootPos);
+
+
+    return true;
+}
+
 _bool CModel::ChangeAnimation(_uint _iAnimNum, _float _LinearTime)
 {
     if (_iAnimNum == m_iCurrentAnimation || m_IsLinearState)
@@ -271,6 +282,10 @@ HRESULT CModel::ReadyAnimations(ifstream& _ifs)
     shared_ptr<CModel> pModel = dynamic_pointer_cast<CModel>(shared_from_this());
 
     for (size_t i = 0; i < m_iNumAnimations; i++) {
+
+        if (10 == i) {
+            int a = 3;
+        }
 
         shared_ptr<CAnimation> pAnimation = CAnimation::Create(_ifs, pModel);
 

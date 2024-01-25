@@ -9,6 +9,7 @@ class CModel;
 class CNavigation;
 class CCollider;
 class CLayers;
+class CMesh;
 END
 
 BEGIN(Client)
@@ -73,6 +74,10 @@ private:
 	//전투모드
 	shared_ptr<CModel> m_pBattleModelCom = nullptr;
 
+
+	vector<shared_ptr<CMesh>> m_pBaseMesh;
+	vector<shared_ptr<CMesh>> m_pBurstMesh;
+
 	shared_ptr<CNavigation> m_pNavigationCom = nullptr;
 
 	//플레이어 몸에 붙어있는 충돌 콜라이더
@@ -97,6 +102,7 @@ private:
 	HEROSTATE m_eCurrentState = HEROSTATE::STATE_END;
 
 	_uint m_iCurrentAnimIdx = 0;
+	_float m_fWeight = 1.f;
 	//진짜 state가 loop
 	_bool m_isAnimLoop = true;
 
@@ -126,6 +132,8 @@ private:
 	_bool m_IsMouseDeb = false;
 	_bool m_IsKeyDeb = false;
 	
+	_bool m_IsCollideMonster = false;
+
 	_float m_fDebTime = 0.f;
 	_float m_fSlerpFlat = 0.f;
 
