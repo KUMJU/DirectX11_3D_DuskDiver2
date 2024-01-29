@@ -6,6 +6,8 @@
 
 #include "GameInstance.h"
 
+#include "Navigation.h"
+
 IMPLEMENT_SINGLETON(CMonsterPool)
 
 CMonsterPool::CMonsterPool()
@@ -43,6 +45,7 @@ void CMonsterPool::ActiveMonster(list<SPAWN_INFO> _SpawnList)
 			pMonster->SetEnable(true);
 			CGameInstance::GetInstance()->AddObject(CGameInstance::GetInstance()->GetCurrentLevel(), TEXT("Layer_Monster"), pMonster);
 			pMonster->SetPosition(XMVectorSetW(iter.vMonsterPos, 1.f));
+			dynamic_pointer_cast<CNavigation>(pMonster->GetComponent(TEXT("Com_Navigation")))->CalcCurrentPos(iter.vMonsterPos);
 		}
 	}
 }

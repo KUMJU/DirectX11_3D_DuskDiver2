@@ -9,6 +9,8 @@
 #include "Collider.h"
 
 #include "MapLoader.h"
+#include "Navigation.h"
+
 
 CEnemy01::CEnemy01()
 {
@@ -38,6 +40,7 @@ HRESULT CEnemy01::Initialize()
     m_iCurrentAtkNum = 0;
 
     m_pNavigation = CMapLoader::GetInstance()->GetCurrentNavi(0);
+    m_Components.emplace(TEXT("Com_Navigation"), m_pNavigation);
 
 
     /*********Collider*************/

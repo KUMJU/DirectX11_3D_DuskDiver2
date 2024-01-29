@@ -56,6 +56,8 @@ public:
 	virtual void LateTick(_float _fTimeDelta);
 	virtual HRESULT Render();
 
+public:
+	void SetSpawnState();
 
 protected:
 
@@ -178,6 +180,7 @@ protected:
 
 protected:
 	shared_ptr<CMonsterSkillSet> m_pSkillSet = nullptr;
+
 
 public:
 

@@ -9,6 +9,8 @@
 
 #include "MonsterSkillSet.h"
 
+#include "Navigation.h"
+
 CEnemy02::CEnemy02()
 {
 }
@@ -35,6 +37,7 @@ HRESULT CEnemy02::Initialize()
 
     m_pModelCom->SetAnimNum(20);
     m_pNavigation = CMapLoader::GetInstance()->GetCurrentNavi(0);
+    m_Components.emplace(TEXT("Com_Navigation"), m_pNavigation);
 
         /*********Collider*************/
 
@@ -399,7 +402,7 @@ _bool CEnemy02::CalcDistanceOption()
 {
     if (48 == m_iAnimNum || 20 == m_iAnimNum || 22 == m_iAnimNum || 24 == m_iAnimNum || 26 == m_iAnimNum ||
         62 == m_iAnimNum || 32 == m_iAnimNum || 50 == m_iAnimNum || 16 == m_iAnimNum || 17 == m_iAnimNum ||
-        18 == m_iAnimNum || 19 == m_iAnimNum) {
+        18 == m_iAnimNum || 19 == m_iAnimNum || 12 == m_iAnimNum) {
         m_vPrevAnimPos = { 0.f, 0.f, 0.f };
         m_vCurrentAnimPos = { 0.f, 0.f, 0.f };
         return false;

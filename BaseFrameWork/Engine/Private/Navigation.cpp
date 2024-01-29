@@ -111,6 +111,35 @@ _bool CNavigation::IsMove(_fvector vPosition, _float& _fHeight)
 	}
 }
 
+void CNavigation::CalcCurrentPos(_fvector _vPos)
+{
+
+	XMVector3TransformCoord(_vPos,XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_WorldMatrix)));
+	_matrix WorldMat = XMLoadFloat4x4(&m_WorldMatrix);
+
+	for (auto& iter : m_Cells) {
+
+		_float3* _pPoints = iter->GetPoints();
+
+		_vector vPoint1 = XMVector3TransformCoord(XMLoadFloat3(&_pPoints[0]), WorldMat);
+		_vector vPoint2 = XMVector3TransformCoord(XMLoadFloat3(&_pPoints[1]), WorldMat);
+		_vector vPoint3 = XMVector3TransformCoord(XMLoadFloat3(&_pPoints[2]), WorldMat);
+
+		_float fMaxX = max(max(vPoint1.m128_f32[0], vPoint2.m128_f32[0]), vPoint3.m128_f32[0]);
+		_float fMinX = min(min(vPoint1.m128_f32[0], vPoint2.m128_f32[0]), vPoint3.m128_f32[0]);
+
+		_float fMaxZ = max(max(vPoint1.m128_f32[2], vPoint2.m128_f32[2]), vPoint3.m128_f32[2]);
+		_float fMinZ = min(min(vPoint1.m128_f32[2], vPoint2.m128_f32[2]), vPoint3.m128_f32[2]);
+
+		if (_vPos.m128_f32[0] >= fMinX && _vPos.m128_f32[0] <= fMaxX &&
+			_vPos.m128_f32[2] >= fMinZ && _vPos.m128_f32[2] <= fMaxZ) {
+
+			m_iCurrentIndex =  iter->GetIndex();
+			break;
+		}
+	}
+}
+
 HRESULT CNavigation::Render()
 {
 	_float4x4 identity;

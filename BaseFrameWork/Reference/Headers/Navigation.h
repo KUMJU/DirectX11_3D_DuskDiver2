@@ -22,6 +22,9 @@ public:
 	_bool IsMove(_fvector vPosition, _float& _fHeight);
 
 
+public:
+	void CalcCurrentPos(_fvector _vPos);
+
 #ifdef _DEBUG
 public:
 	HRESULT Render();

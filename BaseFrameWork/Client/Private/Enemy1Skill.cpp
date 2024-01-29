@@ -36,14 +36,14 @@ HRESULT CEnemy1Skill::Initialize(_uint _iSkillNum)
     else if (2 == _iSkillNum) {
 
         skillDesc.bKnockUp = false;
-        skillDesc.bDownAtk = true;
+        skillDesc.bDownAtk = false;
         skillDesc.fWeight = 1.f;
 
         skillDesc.fKnockUpDistance = 0.f;
         skillDesc.fDropSpeed = 4.f;
 
 
-        skillDesc.iStartTrackPosition = 15.0;
+        skillDesc.iStartTrackPosition = 14.0;
         skillDesc.iEndTrackPosition = 30.0;
 
 
@@ -51,14 +51,14 @@ HRESULT CEnemy1Skill::Initialize(_uint _iSkillNum)
     else if(3 == _iSkillNum) {
 
         skillDesc.bKnockUp = true;
-        skillDesc.bDownAtk = true;
+        skillDesc.bDownAtk = false;
         skillDesc.fWeight = 1.f;
 
         skillDesc.fKnockUpDistance = 4.f;
         skillDesc.fDropSpeed = 4.f;
 
 
-        skillDesc.iStartTrackPosition = 13.0;
+        skillDesc.iStartTrackPosition = 10.0;
         skillDesc.iEndTrackPosition = 30.0;
 
     }

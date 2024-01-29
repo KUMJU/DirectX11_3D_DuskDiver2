@@ -36,11 +36,15 @@ HRESULT CMonsterTower::Initialize()
 
 	CMonsterPool::SPAWN_INFO info1 = {};
 	info1.iMonsterType = 1;
-	info1.vMonsterPos = _vector({ -1.f, 10.f, -90.f });
+	info1.vMonsterPos = _vector({ -10.f, 20.f, -90.f });
 		//vPos + _vector({2.f, 0.f, 0.f, 0.f});
-	
 	m_SpawnMonsterList.push_back(info1);
 
+	info1.iMonsterType = 0;
+	info1.vMonsterPos = _vector({ 12.f, -20.f, -90.f });
+	m_SpawnMonsterList.push_back(info1);
+
+	
 	return S_OK;
 }
 
