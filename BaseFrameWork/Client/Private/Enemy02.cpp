@@ -366,7 +366,8 @@ void CEnemy02::IfEmptyAnimList()
     //}
 
 
-    if (m_bHit && !m_bKnockUp && m_bDown) {
+    if ((m_bHit && !m_bKnockUp && m_bDown) || 
+        (m_bHit && !m_bKnockUp && !m_bDown)) {
 
         //³ì¾÷Á¾·á 
         m_bHit = false;

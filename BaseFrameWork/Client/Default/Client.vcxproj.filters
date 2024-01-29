@@ -184,6 +184,12 @@
     <Filter Include="02. GameObject\03. MapObject\00. MonsterTower\MonsterSpawner">
       <UniqueIdentifier>{731257b4-c178-47ad-bb48-9a4171a60cf7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05. Minigame\MinigameMole">
+      <UniqueIdentifier>{661a6f88-5912-4b33-bc3d-8e937f45c5fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Minigame\MinigameMole\Mole">
+      <UniqueIdentifier>{7dcc253d-e07c-4352-b493-b04c1bdb1ff0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -366,6 +372,10 @@
     <ClInclude Include="..\Public\MonsterTower.h">
       <Filter>02. GameObject\03. MapObject\00. MonsterTower</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\MinigameMole.h">
+      <Filter>05. Minigame\MinigameMole</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MonsterPool.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -530,6 +540,10 @@
     <ClCompile Include="..\Private\MonsterTower.cpp">
       <Filter>02. GameObject\03. MapObject\00. MonsterTower</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\MinigameMole.cpp">
+      <Filter>05. Minigame\MinigameMole</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MonsterPool.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">

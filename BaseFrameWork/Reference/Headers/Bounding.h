@@ -22,8 +22,8 @@ public:
 //하위에서 재정의해서 사용하기
 public:
 	virtual shared_ptr<BoundingSphere> GetBoundingSphere() { return nullptr; };
-	virtual shared_ptr<BoundingSphere> GetBoundingAABB() { return nullptr; };
-	virtual shared_ptr<BoundingSphere> GetBoundingOBB() { return nullptr; };
+	virtual shared_ptr<BoundingBox> GetBoundingAABB() { return nullptr; };
+	virtual shared_ptr<BoundingBox> GetBoundingOBB() { return nullptr; };
 
 protected:
 

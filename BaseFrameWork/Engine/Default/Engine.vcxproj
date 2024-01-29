@@ -160,6 +160,7 @@
     <ClInclude Include="..\Public\Animation.h" />
     <ClInclude Include="..\Public\Bone.h" />
     <ClInclude Include="..\Public\Bounding.h" />
+    <ClInclude Include="..\Public\BoundingAABB.h" />
     <ClInclude Include="..\Public\BoundingSphere.h" />
     <ClInclude Include="..\Public\Camera.h" />
     <ClInclude Include="..\Public\Cell.h" />
@@ -208,6 +209,7 @@
     <ClCompile Include="..\Private\Animation.cpp" />
     <ClCompile Include="..\Private\Bone.cpp" />
     <ClCompile Include="..\Private\Bounding.cpp" />
+    <ClCompile Include="..\Private\BoundingAABB.cpp" />
     <ClCompile Include="..\Private\BoundingSphere.cpp" />
     <ClCompile Include="..\Private\Camera.cpp" />
     <ClCompile Include="..\Private\Cell.cpp" />

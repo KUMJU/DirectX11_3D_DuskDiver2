@@ -59,13 +59,6 @@ void CTransform::GoStraight(_float _fTimeDelta, shared_ptr<CNavigation> _pNaviga
 
     CheckingMove(vPosition, _pNavigation, _bJump);
 
-    //if(nullptr == _pNavigation) {
-    //    SetState(STATE_POSITION, vPosition);
-
-    //}else if(true == _pNavigation->IsMove(vPosition, fHeight)) {
-    //    vPosition.m128_f32[1] = fHeight;
-    //    SetState(STATE_POSITION, vPosition);
-    //}
 
 }
 
@@ -95,7 +88,7 @@ void CTransform::GoLeft(_float _fTimeDelta)
 
 }
 
-void CTransform::GoRight(_float _fTimeDelta)
+void CTransform::GoRight(_float _fTimeDelta, shared_ptr<CNavigation> _pNavigation, _bool _bJump)
 {
     _vector vPosition = GetState(STATE_POSITION);
 
@@ -106,8 +99,8 @@ void CTransform::GoRight(_float _fTimeDelta)
     _vector vUp = XMVector3Cross(vLook, vRight);
 
     vPosition += XMVector3Normalize(vLook) * m_fSpeedPerSec * _fTimeDelta;
-    SetState(STATE_POSITION, vPosition);
 
+    CheckingMove(vPosition, _pNavigation, _bJump);
 
 }
 

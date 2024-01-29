@@ -20,6 +20,7 @@ public:
 		_float fKnockDownDistance;
 		_float fWeight;
 		_float fDropSpeed;
+		_float fCancleAbleTime;
 		_double iStartTrackPosition;
 		_double iEndTrackPosition;
 		_bool bKnockUp;

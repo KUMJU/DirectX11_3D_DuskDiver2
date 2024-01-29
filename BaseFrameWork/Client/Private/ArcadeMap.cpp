@@ -29,6 +29,10 @@
 #include "MapObject.h"
 #include "Escalator.h"
 
+#include "MonsterTower.h"
+
+#include "MonsterPool.h"
+
 
 CArcadeMap::CArcadeMap()
 	:CLevel()
@@ -174,6 +178,13 @@ HRESULT CArcadeMap::ReadyLayerPlayer(const wstring& _strLayerTag)
 
 HRESULT CArcadeMap::ReadyLayerMonster(const wstring& _strLayerTag)
 {
+
+	CMonsterPool::GetInstance()->Initialize();
+
+	//shared_ptr<CGameObject> pMonsterTower = CMonsterTower::Create();
+	//if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pMonsterTower)))
+	//	return E_FAIL;
+
 	//shared_ptr<CGameObject> pMonster2 = CEnemy01::Create();
 	//if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pMonster2)))
 	//	return E_FAIL;
@@ -197,10 +208,10 @@ HRESULT CArcadeMap::ReadyLayerMonster(const wstring& _strLayerTag)
 	//if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pMonster5)))
 	//	return E_FAIL;
 
-	pMonster1 = CEnemy01::Create();
-	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Monster"), pMonster1)))
-		return E_FAIL;
-	pMonster1->SetEnable(false);
+	//pMonster1 = CEnemy01::Create();
+	//if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Monster"), pMonster1)))
+	//	return E_FAIL;
+	//pMonster1->SetEnable(false);
 
 	//pMonster2 = CEnemy02::Create();
 	//if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Monster"), pMonster2)))

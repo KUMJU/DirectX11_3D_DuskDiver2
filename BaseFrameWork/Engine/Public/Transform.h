@@ -72,7 +72,7 @@ public:
 	void GoStraight(_float _fTimeDelta, shared_ptr<class CNavigation> _pNavigation, _bool& _bJump);
 	void GoBackward(_float _fTimeDelta);
 	void GoLeft(_float _fTimeDelta);
-	void GoRight(_float _fTimeDelta);
+	void GoRight(_float _fTimeDelta, shared_ptr<CNavigation> _pNavigation, _bool _bJump);
 	void Turn(_fvector _vAxis, _float _fTimeDelta);
 
 	void TurnPlayer(_vector _vAxis, _float _fAngle, _float _fTimeDelta);

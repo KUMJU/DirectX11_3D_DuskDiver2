@@ -7,6 +7,7 @@
 #include "Navigation.h"
 
 #include "Escalator.h"
+#include "MonsterTower.h"
 #include "Model.h"
 
 #include "imgui.h"
@@ -78,7 +79,10 @@ void CMapLoader::ClassifyObject(const wstring& _strKeyName, _float4x4* _fWorldMa
 	//if문으로 별도로 생성해야하는건 구분하기
 	shared_ptr<CGameObject> pInstance;
 
-	if (TEXT("MonsterTower") == _strKeyName) {
+	if (TEXT("TowerA") == _strKeyName) {
+
+		pInstance = CMonsterTower::Create();
+		CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Object"), pInstance);
 
 	}
 	else if (TEXT("Escalator_Base") == _strKeyName) {

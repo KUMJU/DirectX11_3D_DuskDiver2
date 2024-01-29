@@ -86,6 +86,9 @@ void CMonsterSkillSet::InActiveSkill(ESKILLSTATE _ePastSkill)
 
 void CMonsterSkillSet::SkillCancle()
 {
+	if (ESKILLSTATE::MON_SKILLEND == m_eCurrentSkill)
+		return;
+
 	m_Skills[m_eCurrentSkill]->SetEnable(false);
 	m_Skills[m_eCurrentSkill]->SkillReset();
 	m_eCurrentSkill = ESKILLSTATE::MON_SKILLEND;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "MapObject.h"
+#include "MonsterPool.h"
 
 BEGIN(Engine)
 class CCollider;
@@ -11,14 +12,6 @@ BEGIN(Client)
 
 class CMonsterTower : public CMapObject
 {
-public:
-	struct tag_MonsterSpawn 
-	{
-		_uint iMonsterType;
-		_float3 vMonsterPos;
-
-	};
-
 
 public:
 	CMonsterTower();
@@ -34,9 +27,19 @@ public:
 public:
 	virtual void OnCollide(EObjType _eObjType, shared_ptr<CCollider> _pCollider) override;
 
+
+public:
+	void TowerActive();
+
+private:
+	_bool m_IsActived = false;
+
 private:
 	shared_ptr<CModel> m_pRingModel = nullptr;
 	shared_ptr<CCollider> m_pCollider = nullptr;
+	shared_ptr<CTransform> m_pRingTransform = nullptr;
+
+	list<CMonsterPool::SPAWN_INFO> m_SpawnMonsterList;
 
 public:
 	static shared_ptr<CMonsterTower> Create();

@@ -42,8 +42,8 @@ _bool CBoundingSphere::Intersect(CCollider::TYPE eType, shared_ptr<CBounding> _p
     case Engine::CCollider::TYPE_AABB:
 
     {
-    //    shared_ptr<BoundingSphere> TagetSphere = _pBounding->GetBoundingSphere();
-      //  m_isColl = m_Sphere->Intersects(*(TagetSphere.get()));
+        shared_ptr<BoundingBox> TargetAABB = _pBounding->GetBoundingAABB();
+        m_isColl = m_Sphere->Intersects(*(TargetAABB.get()));
 
         break;
     }

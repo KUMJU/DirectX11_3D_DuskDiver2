@@ -106,6 +106,8 @@ private:
 	//진짜 state가 loop
 	_bool m_isAnimLoop = true;
 
+	_bool m_IsInBattle = true;
+
 //변신~~~~~~~~~!!!!!
 private:
 	_float m_fransformTime = 0.f;
@@ -216,7 +218,7 @@ private:
 
 	_float m_fJumpSpeed = 4.f; // = JumpPower 
 	_float m_fTotalHeight = 0.f;
-	_float m_fGravity = 9.8f;
+	_float m_fGravity = 6.8f;
 	_float m_fJumpTime = 0.f;
 
 	_float m_fInitialJumpSpeed = 8.f;

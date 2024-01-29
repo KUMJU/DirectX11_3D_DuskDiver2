@@ -43,6 +43,7 @@ private:
 	void CheckPlrBlock();
 	void CheckPlrProjMonster();
 	void CheckPlrMonProj();
+	void CheckMonsterCollide();
 
 
 private:

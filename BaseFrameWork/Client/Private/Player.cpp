@@ -156,7 +156,7 @@ void CPlayer::Tick(_float _fTimeDelta)
     {
         m_fLinearTime = 0.03f;
     }
-    else if (m_iCurrentAnimIdx == 50) {
+    else if (m_iCurrentAnimIdx == 51) {
         m_fLinearTime = 0.1f;
 
     }
@@ -222,7 +222,7 @@ void CPlayer::LateTick(_float _fTimeDelta)
         m_pTransformCom->CheckingMove(vPos, m_pNavigationCom, m_bJump);
 
         if (m_fJumpTime > 0.2f) {
-            ChangeAnim(50, true);
+            ChangeAnim(51, true);
             m_fLinearTime = 0.1f;
            // m_fWeight = 0.5f;
 
@@ -1136,6 +1136,10 @@ void CPlayer::TurnLerp(_vector _vSrc, _vector _vDst , _float _fDeltaTime, _vecto
 
 void CPlayer::DetectMonster()
 {
+    if (!m_IsInBattle)
+        return;
+
+
     if (!m_pMonsterLayer.lock()) {
 
         m_pMonsterLayer = CGameInstance::GetInstance()->FindLayer(TEXT("Layer_Monster"));

@@ -35,14 +35,10 @@ public:
 	void LateTick();
 
 private:
-
-
-	void CheckCollisionGroup(COLTYPE_GROUP _eColGroup1, COLTYPE_GROUP _eColGroup2);
-
-
 	void CheckPlrBlock();
 	void CheckPlrProjMonster();
 	void CheckPlrMonProj();
+	void CheckMonsterCollide();
 
 
 private:

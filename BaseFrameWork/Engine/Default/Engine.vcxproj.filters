@@ -300,6 +300,9 @@
     <ClInclude Include="..\Public\CollisionMgr.h">
       <Filter>01. Utility\09. Manager\02. CollisionMgr</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\BoundingAABB.h">
+      <Filter>01. Utility\04. Component\04. Collider\Bounding\AABB</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\GraphicDev.cpp">
@@ -427,6 +430,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\CollisionMgr.cpp">
       <Filter>01. Utility\09. Manager\02. CollisionMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BoundingAABB.cpp">
+      <Filter>01. Utility\04. Component\04. Collider\Bounding\AABB</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

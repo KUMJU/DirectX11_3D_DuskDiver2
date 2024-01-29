@@ -69,6 +69,24 @@ void CCollisionMgr::CheckPlrMonProj()
 
 }
 
+void CCollisionMgr::CheckMonsterCollide()
+{
+
+	//for (auto iter = m_ColliderList[COL_MONSTER].begin() ; i < m_ColliderList[COL_MONSTER].size() - 1; ++i) {
+
+	//	for (size_t j = i + 1; j < m_ColliderList[COL_MONSTER].size(); ++j) {
+	//	
+	//		if (pPlr->Intersect(pMon->GetColliderType(), pMon->GetBounding())) {
+	//			//Ãæµ¹µÊ
+	//			(pPlr->GetOwner())->OnCollide(CGameObject::OBJ_PROJ, pMon);
+	//			(pMon->GetOwner())->OnCollide(CGameObject::OBJ_PLAYER, pPlr);
+	//		}
+	//	
+	//	}
+	//}
+
+}
+
 void CCollisionMgr::ListClear()
 {
 	for (auto& iter : m_ColliderList) {

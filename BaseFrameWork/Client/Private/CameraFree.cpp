@@ -58,7 +58,8 @@ void CCameraFree::PriorityTick(_float fTimeDelta)
 
 	if (GetKeyState(VK_RIGHT) & 0x8000)
 	{
-		m_pTransformCom->GoRight(fTimeDelta);
+		_bool jump = false;
+		m_pTransformCom->GoRight(fTimeDelta, nullptr, &jump);
 	}
 
 	if (!m_IsCamLock) {

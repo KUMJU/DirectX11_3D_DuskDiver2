@@ -1,6 +1,8 @@
 #include "Collider.h"
 
 #include "BoundingSphere.h"
+#include "BoundingAABB.h"
+
 #include "GameInstance.h"
 
 
@@ -38,6 +40,9 @@ HRESULT CCollider::Initialize(wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID
 		m_pBounding = CBoundingSphere::Create(_pDevice, _pContext, _desc);
 		break;
 	case Engine::CCollider::TYPE_AABB:
+
+		m_pBounding = CBoundingAABB::Create(_pDevice, _pContext, _desc);
+
 		break;
 	case Engine::CCollider::TYPE_OBB:
 		break;
