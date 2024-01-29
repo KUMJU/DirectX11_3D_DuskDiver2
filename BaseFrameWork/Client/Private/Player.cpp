@@ -17,6 +17,8 @@
 #include "Bounding.h"
 #include "Layers.h"
 
+#include "Animation.h"
+
 CPlayer::CPlayer()
 {
 }
@@ -94,6 +96,8 @@ void CPlayer::Tick(_float _fTimeDelta)
             
             m_pPlayerSkillset->SetBurstMode(true);
             m_pModelCom = m_pBurstModelCom;
+
+            m_NextAnimIndex.push_back({ 44, false });
 
             m_eCurrentState = HEROSTATE::STATE_IDLE;
             m_fransformTime = 0.f;
@@ -193,18 +197,17 @@ void CPlayer::LateTick(_float _fTimeDelta)
 {
     if (m_iCurrentAnimIdx == 133) {
 
-
-        m_fSkillRJumpCool += _fTimeDelta;
-        if (m_fSkillRJumpCool > 0.2f) {
-
-            m_fJumpSpeed = 15.f;
-
-            m_fTotalHeight += m_fJumpSpeed * _fTimeDelta;
+        if ((m_pModelCom->GetAnimations()[m_iCurrentAnimIdx])->GetCurrentTrackPosition() > 20.0 &&
+            (m_pModelCom->GetAnimations()[m_iCurrentAnimIdx])->GetCurrentTrackPosition() < 30.0) {
 
             _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+            m_fWeight += 13.f;
+
+            m_fJumpSpeed = m_fJumpSpeed + (m_fWeight * _fTimeDelta);
             vPos.m128_f32[1] += m_fJumpSpeed * _fTimeDelta;
 
-            m_pTransformCom->SetState(CTransform::STATE_POSITION, vPos);
+            m_pTransformCom->CheckingMove(vPos, m_pNavigationCom, m_bJump);
+
         }
 
     }
@@ -224,8 +227,6 @@ void CPlayer::LateTick(_float _fTimeDelta)
         if (m_fJumpTime > 0.2f) {
             ChangeAnim(51, true);
             m_fLinearTime = 0.1f;
-           // m_fWeight = 0.5f;
-
             m_fWeight = 4.f;
         }
 
@@ -267,24 +268,56 @@ void CPlayer::LateTick(_float _fTimeDelta)
                    m_eCurrentState = HEROSTATE::STATE_IDLE;
                    m_bDrop = false;
                    m_fJumpDelay = 0.f;
+                   m_fWeight = 1.f;
                    ChangeAnim(53, false);
                }
            }
         }
     }
-    else if (m_iCurrentAnimIdx == 3) {
+    else if (m_iCurrentAnimIdx == 3 || m_iCurrentAnimIdx == 2) {
 
-        _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
-        m_fJumpSpeed = m_fJumpSpeed + (m_fGravity * _fTimeDelta);
+        if ((m_pModelCom->GetAnimations()[m_iCurrentAnimIdx])->GetCurrentTrackPosition() > 10.0) {
 
-        vPos.m128_f32[1] -= m_fJumpSpeed * _fTimeDelta;
-        m_pTransformCom->CheckingMove(vPos, m_pNavigationCom, m_bJump);
+            m_fWeight += 20.f;
 
-        if (!m_bJump) {
-            m_fJumpTime = 0.f;
-            m_bDrop = false;
-            m_fJumpDelay = 0.f;
- 
+            _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+            m_fJumpSpeed = m_fJumpSpeed + (m_fGravity * _fTimeDelta) + m_fWeight * _fTimeDelta;
+
+            vPos.m128_f32[1] -= m_fJumpSpeed * _fTimeDelta;
+            m_pTransformCom->CheckingMove(vPos, m_pNavigationCom, m_bJump);
+
+            if (!m_bJump) {
+                m_fJumpTime = 0.f;
+                m_bDrop = false;
+                m_fJumpDelay = 0.f;
+                m_fWeight = 1.f;
+
+                m_NextAnimIndex.clear();
+                ChangeAnim(137, false);
+
+                m_eCurrentState = HEROSTATE::STATE_IDLE;
+            }
+        }
+    }
+    else if (m_iCurrentAnimIdx == 136) {
+
+        if ((m_pModelCom->GetAnimations()[m_iCurrentAnimIdx])->GetCurrentTrackPosition() > 10.0) {
+
+
+            m_fWeight += 20.f;
+
+            _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+            m_fJumpSpeed = m_fJumpSpeed + (m_fGravity * _fTimeDelta) + m_fWeight * _fTimeDelta;
+
+            vPos.m128_f32[1] -= m_fJumpSpeed * _fTimeDelta;
+            m_pTransformCom->CheckingMove(vPos, m_pNavigationCom, m_bJump);
+
+            if (!m_bJump) {
+                m_fJumpTime = 0.f;
+                m_bDrop = false;
+                m_fJumpDelay = 0.f;
+
+            }
         }
 
     }
@@ -397,16 +430,16 @@ _bool CPlayer::ChangeAnim(_uint _iAnimNum, _bool _isLoop)
         return false;
 
 
-   // 52 == _iAnimNum ||
+    // 52 == _iAnimNum ||
     m_iCurrentAnimIdx;
     if (m_bJump && 51 == _iAnimNum) {
     }
-    else if (1 == _iAnimNum || 12 == _iAnimNum) {
+    else if (12 == _iAnimNum) {
         m_eCurrentState = HEROSTATE::STATE_COMBO_ATTACK2;
         m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_ATK2);
 
     }
-    else if (2 == _iAnimNum || 14 == _iAnimNum) {
+    else if (14 == _iAnimNum) {
         m_eCurrentState = HEROSTATE::STATE_COMBO_ATTACK3;
         m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_ATK3);
 
@@ -421,10 +454,17 @@ _bool CPlayer::ChangeAnim(_uint _iAnimNum, _bool _isLoop)
         m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_ATK5);
 
     }
+    else if (1 == _iAnimNum) {
+        m_eCurrentState = HEROSTATE::STATE_COMBO_ATTACK2;
+        m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_AIRATK2);
+    }
+    else if (2 == _iAnimNum) {
+        m_eCurrentState = HEROSTATE::STATE_COMBO_ATTACK3;
+        m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_AIRATK3);
+    }
 
     if (!m_pModelCom->ChangeAnimation(_iAnimNum))
         return false;
-
 
 
     if (HEROSTATE::STATE_COMBO_ATTACK1 != m_eCurrentState &&
@@ -455,10 +495,11 @@ void CPlayer::CheckReserveAnimList()
 
 
     if (m_NextAnimIndex.empty()) {
-
         if (81 == m_iCurrentAnimIdx && m_bSprint == false) {
             m_bDash = false;
         }
+
+
 
         if (m_bComboAttackStart && m_bJump) {
             m_eCurrentState = HEROSTATE::STATE_JUMP;
@@ -533,7 +574,10 @@ void CPlayer::CalcAnimMoveDistance()
 
     if (79 == m_iCurrentAnimIdx || 76 == m_iCurrentAnimIdx ||
         52 == m_iCurrentAnimIdx || 51 == m_iCurrentAnimIdx || 3 == m_iCurrentAnimIdx || 136 == m_iCurrentAnimIdx
-        || 50 == m_iCurrentAnimIdx) {
+        || 50 == m_iCurrentAnimIdx || 133 == m_iCurrentAnimIdx || 137 == m_iCurrentAnimIdx || 44 == m_iCurrentAnimIdx||
+        0 == m_iCurrentAnimIdx || 1 == m_iCurrentAnimIdx || 2 == m_iCurrentAnimIdx || 59 == m_iCurrentAnimIdx) {
+        m_vPrevAnimPos = { 0.f, 0.f, 0.f };
+        m_vCurretnAnimPos = { 0.f, 0.f, 0.f };
         return;
     } 
 
@@ -688,6 +732,9 @@ void CPlayer::KeyInput(_float _fTimeDelta)
             ChangeAnim(133, false);
             m_NextAnimIndex.push_back({ 136, false });
             m_NextAnimIndex.push_back({ 137 , false});
+
+            m_fJumpSpeed = 2.f;
+            m_bJump = true;
 
         }
         else {
@@ -971,6 +1018,9 @@ void CPlayer::MouseInput(_float _fTimeDelta)
             if (ChangeAnim(3, false)) {
                 m_bJump = true;
                 m_eCurrentState = HEROSTATE::STATE_HEAVY_ATTACK;
+                m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_AIRHEAVY);
+
+                m_fJumpSpeed = 10.f;
             }
 
         }
@@ -978,6 +1028,7 @@ void CPlayer::MouseInput(_float _fTimeDelta)
             m_eCurrentState = HEROSTATE::STATE_HEAVY_ATTACK;
             if (ChangeAnim(35, false)) {
                 m_eCurrentState = HEROSTATE::STATE_HEAVY_ATTACK;
+                m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_HEAVYATK);
             }
         }
         m_IsMouseDeb = true;
@@ -1007,6 +1058,7 @@ void CPlayer::MouseInput(_float _fTimeDelta)
             case Client::CPlayer::HEROSTATE::STATE_COMBO_ATTACK2:
                 m_fMinComboAnimTime = 0.3f;
                 m_NextAnimIndex.push_back({ 2 , false });
+                m_fJumpSpeed = 10.f;
                 m_bReserveCombo = true;
                 break;
             case Client::CPlayer::HEROSTATE::STATE_COMBO_ATTACK3:
@@ -1021,6 +1073,7 @@ void CPlayer::MouseInput(_float _fTimeDelta)
                 if (ChangeAnim(0, false)) {
                  m_fMinComboAnimTime = 0.3f;
                  m_eCurrentState = HEROSTATE::STATE_COMBO_ATTACK1;
+                 m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_AIRATK1);
                  m_bComboAttackStart = true;
                 }
                 break;

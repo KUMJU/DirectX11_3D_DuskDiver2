@@ -65,9 +65,9 @@ HRESULT CSkill_BurstE::Initialize()
 
     SKILLINFO info6 = {};
 
-    info6.bKnockUp = false;
-    info6.bDownAtk = true;
-    info6.fKnockUpDistance = 0.f;
+    info6.bKnockUp = true;
+    info6.bDownAtk = false;
+    info6.fKnockUpDistance = 16.f;
     info6.fWeight = 2.f;
     info6.iStartTrackPosition = 48.f;
     info6.iEndTrackPosition = 53.f;

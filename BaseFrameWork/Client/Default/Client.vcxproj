@@ -156,6 +156,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\AirAtk.h" />
     <ClInclude Include="..\Public\ArcadeMap.h" />
     <ClInclude Include="..\Public\CameraFree.h" />
     <ClInclude Include="..\Public\CameraMgr.h" />
@@ -221,6 +222,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\..\..\Downloads\ImGuizmo-master\ImGuizmo-master\ImGuizmo.cpp" />
+    <ClCompile Include="..\Private\AirAtk.cpp" />
     <ClCompile Include="..\Private\ArcadeMap.cpp" />
     <ClCompile Include="..\Private\CameraFree.cpp" />
     <ClCompile Include="..\Private\CameraMgr.cpp" />

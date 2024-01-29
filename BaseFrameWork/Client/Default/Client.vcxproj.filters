@@ -190,6 +190,9 @@
     <Filter Include="05. Minigame\MinigameMole\Mole">
       <UniqueIdentifier>{7dcc253d-e07c-4352-b493-b04c1bdb1ff0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\05. Skill\00. PlayerSkill\AirAtk">
+      <UniqueIdentifier>{aa68944d-4d46-40d2-9b4a-bac9739f3f33}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -376,6 +379,7 @@
       <Filter>05. Minigame\MinigameMole</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\MonsterPool.h" />
+    <ClInclude Include="..\Public\AirAtk.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -544,6 +548,7 @@
       <Filter>05. Minigame\MinigameMole</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\MonsterPool.cpp" />
+    <ClCompile Include="..\Private\AirAtk.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">

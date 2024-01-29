@@ -28,6 +28,9 @@ void CSkill::Tick(_float _fTimeDelta)
 
 	CCollisionMgr::COLTYPE_GROUP eCurrentGroup;
 
+	//duration의 일정부분이 지나면 스킬을 중간 취소할 수 있게 코드 추가
+	//스킬이 다 마지막에 idle로 돌아가서 스킬 연계를 할 수가 없다
+
 	if ((*m_pMainAnims).size() != 1) {
 
 		_double temp = (*m_pMainAnims)[m_iCurrentSkillOrder]->GetCurrentTrackPosition();

@@ -62,19 +62,19 @@ void CCollider::Tick(_fmatrix _WorldMatrix)
 
 HRESULT CCollider::Render()
 {
-	//m_pEffect->SetWorld(XMMatrixIdentity());
-	//m_pEffect->SetView(CGameInstance::GetInstance()->GetTransformMatrix(CPipeLine::D3DTS_VIEW));
-	//m_pEffect->SetProjection(CGameInstance::GetInstance()->GetTransformMatrix(CPipeLine::D3DTS_PROJ));
+	m_pEffect->SetWorld(XMMatrixIdentity());
+	m_pEffect->SetView(CGameInstance::GetInstance()->GetTransformMatrix(CPipeLine::D3DTS_VIEW));
+	m_pEffect->SetProjection(CGameInstance::GetInstance()->GetTransformMatrix(CPipeLine::D3DTS_PROJ));
 
-	//m_pContext->IASetInputLayout(m_pInputLayout.Get());
+	m_pContext->IASetInputLayout(m_pInputLayout.Get());
 
-	//m_pEffect->Apply(m_pContext.Get());
+	m_pEffect->Apply(m_pContext.Get());
 
-	//m_pBatch->Begin();
+	m_pBatch->Begin();
 
-	//m_pBounding->Render(m_pBatch.get());
+	m_pBounding->Render(m_pBatch.get());
 
-	//m_pBatch->End();
+	m_pBatch->End();
 
 	return S_OK;
 }

@@ -14,6 +14,7 @@ class CSkillSet
 public:
 	enum ESKILLSTATE {
 		SKILL_ATK1, SKILL_ATK2, SKILL_ATK3, SKILL_ATK4, SKILL_ATK5,SKILL_HEAVYATK,
+		SKILL_AIRATK1, SKILL_AIRATK2, SKILL_AIRATK3, SKILL_AIRHEAVY,
 		SKILL_Q, SKILL_E, SKILL_R, SKILL_BURST_Q, SKILL_BURST_E, SKILL_BURST_R,
 		SKILL_SUPER1, SKILL_SUPER2, SKILL_SPECIAL, SKILL_END
 	};
@@ -52,8 +53,6 @@ private:
 
 public:
 	static shared_ptr<CSkillSet> Create(shared_ptr<CModel> _pBaseModel, shared_ptr<CModel> _pBurstModel);
-
-	//플레이어 애ㅐ니메이션 주소를 들고 이"ㅆ어서 스킬 생성할때 하나씩 ㅣ넣어서 프레임키 확인하기
 };
 
 END

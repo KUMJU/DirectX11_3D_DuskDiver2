@@ -11,6 +11,9 @@
 #include "SuperSkillA.h"
 #include "SuperSkillB.h"
 
+
+#include "AirAtk.h"
+
 #include "Model.h"
 #include "Animation.h"
 
@@ -59,8 +62,34 @@ void CSkillSet::InitializeSkill(shared_ptr<CModel> _pBaseModel, shared_ptr<CMode
 	m_Skills.push_back(pSkill);
 	//*******************************//
 
-	pSkill = CPlrNormalAtk::Create(5);
+	pSkill = CPlrNormalAtk::Create(6);
+	pSkill->SetAnimation(pBaseAnimation[35]);
+	pSkill->SetBurstAnimation(pBurstAnimation[35]);
 	m_Skills.push_back(pSkill);
+
+	//********************AirAttack************************//
+
+
+	pSkill = CAirAtk::Create(1);
+	pSkill->SetAnimation(pBaseAnimation[0]);
+	pSkill->SetBurstAnimation(pBurstAnimation[0]);
+	m_Skills.push_back(pSkill);
+
+	pSkill = CAirAtk::Create(2);
+	pSkill->SetAnimation(pBaseAnimation[1]);
+	pSkill->SetBurstAnimation(pBurstAnimation[1]);
+	m_Skills.push_back(pSkill);
+
+	pSkill = CAirAtk::Create(3);
+	pSkill->SetAnimation(pBaseAnimation[2]);
+	pSkill->SetBurstAnimation(pBurstAnimation[2]);
+	m_Skills.push_back(pSkill);
+
+	pSkill = CAirAtk::Create(4);
+	pSkill->SetAnimation(pBaseAnimation[3]);
+	pSkill->SetBurstAnimation(pBurstAnimation[3]);
+	m_Skills.push_back(pSkill);
+
 
 	//*************BattleMode Skill***************//
 

@@ -49,6 +49,19 @@ HRESULT CPlrNormalAtk::Initialize(_uint _iComboNum)
         skillDesc.bDownAtk = true;
 
     }
+    //Heavy Combo
+    else if (6 == _iComboNum) {
+
+        skillDesc.iStartTrackPosition = 35.0;
+        skillDesc.iEndTrackPosition = 45.0;
+        skillDesc.bKnockUp = true;
+        skillDesc.fWeight = 1.5f;
+        skillDesc.fKnockUpDistance = 15.f;
+
+        normalAtkDesc.fRadius = 0.8f;
+        skillDesc.bDownAtk = true;
+
+    }
 
     shared_ptr<CCollider> pCollider = CCollider::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), CCollider::TYPE_SPHERE, normalAtkDesc);
     pCollider->SetOwner(shared_from_this());
