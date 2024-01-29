@@ -13,6 +13,9 @@ HRESULT CSkillE::Initialize()
 
     __super::Initialize();
 
+    m_eSkillOwner = EOWNER_TYPE::OWNER_PLAYER;
+
+
     CCollider::COLLIDER_DESC normalAtkDesc = {};
     normalAtkDesc.fRadius = 1.f;
     normalAtkDesc.vCenter = { 0.f, 0.8f, 0.7f };

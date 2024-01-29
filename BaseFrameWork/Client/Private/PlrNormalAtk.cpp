@@ -10,11 +10,15 @@ CPlrNormalAtk::CPlrNormalAtk()
 
 HRESULT CPlrNormalAtk::Initialize(_uint _iComboNum)
 {
+
+    m_eSkillOwner = EOWNER_TYPE::OWNER_PLAYER;
     
     CCollider::COLLIDER_DESC normalAtkDesc = {};
     normalAtkDesc.fRadius = 0.4f;
     normalAtkDesc.vCenter = { 0.f, 0.7f, 0.5f };
 
+
+    m_bMultiAtk = false;
 
     SKILLINFO skillDesc = {};
 

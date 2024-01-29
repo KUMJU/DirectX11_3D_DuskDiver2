@@ -16,9 +16,8 @@ class CSkill abstract : public CGameObject
 
 public:
 	struct SKILLINFO {
-		_float fDelayTime;
-		_float fSkillDuration; 
 		_float fKnockUpDistance;
+		_float fKnockDownDistance;
 		_float fWeight;
 		_float fDropSpeed;
 		_double iStartTrackPosition;
@@ -54,6 +53,9 @@ public:
 
 public:
 	_bool GetCancleAble() { return m_bCancle; }
+	void SetSkillCancleAble(_bool _bCancle) {
+		m_bCancle = _bCancle;
+	}
 
 public:
 	EOWNER_TYPE GetOwnerType() { return m_eSkillOwner; }
@@ -73,8 +75,6 @@ protected:
 	_float m_fCurrentAnimTime = 0.f; //시작 이후 시간 재주는 중 
 
 	_uint m_iDamage = 0; //데미지
-	_float m_fSkillCoolTime = 0.f; //필요할까? 필요없으면 나중에 지우기
-
 	EOWNER_TYPE m_eSkillOwner = EOWNER_TYPE::OWNER_END;
 
 	shared_ptr<CTransform> m_pOwnerTransform = nullptr;
@@ -104,8 +104,8 @@ public:
 		m_pBattleAnims.push_back(_pAnim);
 	}
 
+	//For Player//
 	void SetBurstAnimation(shared_ptr<CAnimation> _pAnim) { m_pBurstAnims.push_back(_pAnim); }
-
 	void SwitchingBurstMode() { m_pMainAnims = &m_pBurstAnims; }
 
 protected:

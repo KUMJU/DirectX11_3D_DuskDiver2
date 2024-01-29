@@ -11,6 +11,9 @@ HRESULT CSuperSkillA::Initialize()
 {
     __super::Initialize();
 
+    m_eSkillOwner = EOWNER_TYPE::OWNER_PLAYER;
+
+
     m_bMultiAtk = true;
 
     CCollider::COLLIDER_DESC AtkDesc = {};
@@ -22,7 +25,7 @@ HRESULT CSuperSkillA::Initialize()
 
     info.bKnockUp = true;
     info.bDownAtk = false;
-    info.fKnockUpDistance = 4.f;
+    info.fKnockUpDistance = 6.f;
     info.fWeight = 2.f;
     info.iStartTrackPosition = 45.0;
     info.iEndTrackPosition = 90.0;

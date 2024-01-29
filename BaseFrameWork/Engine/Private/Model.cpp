@@ -203,8 +203,11 @@ _bool CModel::ReversePlay(_float _fTimeDelta, _bool _isLoop)
 
 _bool CModel::ChangeAnimation(_uint _iAnimNum, _float _LinearTime)
 {
-    if (_iAnimNum == m_iCurrentAnimation || m_IsLinearState)
+    if (m_IsLinearState)
         return false;
+
+    //if (_iAnimNum == m_iCurrentAnimation || m_IsLinearState)
+    //    return false;
 
     m_IsLinearState = true;
     m_NextAnim = m_Animations[_iAnimNum];

@@ -32,6 +32,9 @@ private:
 	HRESULT BindShaderResources();
 
 public:
+	virtual void OnCollide(EObjType _eObjType, shared_ptr<CCollider> _pCollider) override {};
+
+public:
 	static shared_ptr<CMapObject> Create(const wstring& _ModelKey, CTransform::TRANSFORM_DESC* _pDesc = nullptr);
 
 };

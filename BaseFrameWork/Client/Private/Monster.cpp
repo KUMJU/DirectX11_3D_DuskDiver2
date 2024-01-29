@@ -10,6 +10,8 @@
 #include "Skill.h"
 #include "Collider.h"
 
+#include "MonsterSkillSet.h"
+
 CMonster::CMonster()
 {
 }
@@ -54,7 +56,7 @@ _bool CMonster::OnHitKnockUp(_float _fTimeDelta)
     m_fKnockUpTime += _fTimeDelta;
 
     if(m_fKnockUpTime < 1.f){
-        m_fKnockUpSpeed = m_fKnockUpSpeed - (_fTimeDelta * m_fGravity * m_fGweight);
+        m_fKnockUpSpeed = m_fKnockUpSpeed  - (_fTimeDelta * m_fGravity * m_fGweight);
         vPos.m128_f32[1] += m_fKnockUpSpeed * _fTimeDelta;
     }
     else {
@@ -181,6 +183,9 @@ _bool CMonster::CheckReserveAnimList()
 
 void CMonster::ChangeAnim(_uint _iAnimIdx, _bool _bloop)
 {
+    if (m_iAnimNum == _iAnimIdx && m_eCurrentState != EMONSTER_STATE::STATE_HIT)
+        return;
+
     if (m_pModelCom->IsLinearInterpolation())
         return;
 
@@ -205,6 +210,10 @@ void CMonster::KnockUpInfoReset()
 {
     m_fKnockUpTime = 0.f;
     m_fDropSpeed = 10.f;
+
+    m_bDown = false;
+    m_fDownTime = 0.f;
+
 
 }
 
@@ -264,6 +273,13 @@ void CMonster::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> 
 
         }
 
+        //공격 중이었다면 공격 취소 
+        if (m_eCurrentState == EMONSTER_STATE::STATE_ATTACK) {
+            m_pSkillSet->SkillCancle();
+            m_bAttackCoolTime = 0.f;
+        }
+
+        ///스킬 info 받아오기/// 
         m_bKnockUp = pSkill->GetIsKnokUp();
         m_bDownAttack = pSkill->GetIsDownAttack();
         m_iLastHitIndex = pSkill->GetSkillIndex();
@@ -275,6 +291,11 @@ void CMonster::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> 
 
         if (m_bKnockUp) {
             KnockUpInfoReset();
+        }
+
+        if (m_bDown) {
+            m_bDown = false;
+            m_fDownTime = 0.f;
         }
 
         m_bCollisionCheck = true;

@@ -121,6 +121,9 @@ private:
 	void CalcLookVector(_float _fDir);
 
 private:
+	void StateReset();
+
+private:
 	void KeyInput(_float _fTimeDelta);
 	void MouseInput(_float _fTimeDelta);
 
@@ -200,8 +203,6 @@ private:
 //ComboSystem
 private:
 
-	_bool m_ComboArr[5] = { false, false, false, false, false };
-	_uint m_ComboAnimKeyArr[5] = { 0, 1, 3, 5, 7 };
 	_int m_CurrentCombo = -1;
 
 	_bool m_bReserveCombo = false;
@@ -232,8 +233,31 @@ private:
 private:
 	_bool m_IsUsingSkill = false;
 
+
+//PlayerHit
+private:
+
+	_bool m_bKnockUp = false;
+	_bool m_bKnockDown = false;
+
+	_bool m_bDown = false;
+	
+	_float m_fDownTime = 0.f;
+
+	_float m_fKnockUpSpeed = 0.f;
+	_float m_fKnockDownSpeed = 10.f;
+
+	_float m_fGweight = 0.f;
+	_float m_fDropSpeed = 15.f;
+
+	_float m_fKnockUpTime = 0.f;
+	_float m_fKnockDownTime = 0.f;
+
+
+
 public:
 	virtual void OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _pCollider) override;
+	void OnHit(_float _fTimeDelta);
 
 public:
 	static shared_ptr<CPlayer> Create();

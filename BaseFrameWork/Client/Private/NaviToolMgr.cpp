@@ -245,9 +245,8 @@ HRESULT CNaviToolMgr::LoadData(const wstring& _strPath)
 {
 	ifstream fp(_strPath, ios::binary);
 
-	while (true)
-	{
 
+	for (_int i = 1; i < 22; ++i) {
 		_float3 pPoint[3];
 		fp.read((char*)pPoint, sizeof(_float3) * 3);
 
@@ -257,6 +256,21 @@ HRESULT CNaviToolMgr::LoadData(const wstring& _strPath)
 		if (fp.eof())
 			break;
 	}
+
+	//while (true)
+	//{
+
+	//	_float3 pPoint[3];
+	//	fp.read((char*)pPoint, sizeof(_float3) * 3);
+
+	//	shared_ptr<CCell> pCell = CCell::Create(m_pDevice, m_pContext, pPoint, m_Cells.size());
+	//	m_Cells.push_back(pCell);
+
+	//	if (fp.eof())
+	//		break;
+	//}
+
+	fp.close();
 
 	return S_OK;
 }

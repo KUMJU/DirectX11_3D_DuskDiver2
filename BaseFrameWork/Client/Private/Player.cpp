@@ -12,6 +12,7 @@
 #include "Collider.h"
 
 #include "SkillSet.h"
+#include "Skill.h"
 
 #include "Bounding.h"
 #include "Layers.h"
@@ -29,9 +30,6 @@ HRESULT CPlayer::Initialize()
 
     if (FAILED(__super::Initialize(&TransformDesc)))
         return E_FAIL;
-
-    //if (FAILED(AddComponent()))
-    //    return E_FAIL;
 
     m_pShader = CGameInstance::GetInstance()->GetShader(TEXT("Shader_VtxAnim"));
 
@@ -108,6 +106,11 @@ void CPlayer::Tick(_float _fTimeDelta)
         }
     }
 
+
+    if (HEROSTATE::STATE_HIT == m_eCurrentState) {
+        
+        OnHit(_fTimeDelta);
+    }
 
     //공격모션이 idle로 전환되는 과정까지 포함되어있어서 스피드한 콤보 공격을 위해 중간에 끊어 진행
     if (m_bComboAttackStart) {
@@ -188,11 +191,11 @@ void CPlayer::Tick(_float _fTimeDelta)
 
 void CPlayer::LateTick(_float _fTimeDelta)
 {
-
     if (m_iCurrentAnimIdx == 133) {
 
+
         m_fSkillRJumpCool += _fTimeDelta;
-        if (m_fSkillRJumpCool > 1.1f) {
+        if (m_fSkillRJumpCool > 0.2f) {
 
             m_fJumpSpeed = 15.f;
 
@@ -211,7 +214,7 @@ void CPlayer::LateTick(_float _fTimeDelta)
         m_fJumpTime += _fTimeDelta;
 
         //_float fJumpSpeed = (m_fJumpSpeed * _fTimeDelta) + (0.5f * (m_fGravity / m_fJumpTime) * _fTimeDelta * _fTimeDelta);
-        m_fWeight += 0.1f;
+        m_fWeight += 0.15f;
 
         m_fJumpSpeed = m_fJumpSpeed - (m_fGravity * _fTimeDelta) +(m_fWeight * _fTimeDelta);
         vPos.m128_f32[1] += m_fJumpSpeed * _fTimeDelta;
@@ -221,7 +224,9 @@ void CPlayer::LateTick(_float _fTimeDelta)
         if (m_fJumpTime > 0.2f) {
             ChangeAnim(50, true);
             m_fLinearTime = 0.1f;
-            m_fWeight = 0.5f;
+           // m_fWeight = 0.5f;
+
+            m_fWeight = 4.f;
         }
 
     }
@@ -233,7 +238,7 @@ void CPlayer::LateTick(_float _fTimeDelta)
            _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
            m_fJumpTime += _fTimeDelta;
            
-           m_fWeight += 0.2f;
+           m_fWeight += 0.3f;
 
            m_fJumpSpeed = m_fJumpSpeed -(_fTimeDelta * m_fGravity) - (m_fWeight * _fTimeDelta);
            vPos.m128_f32[1] += m_fJumpSpeed * _fTimeDelta;
@@ -285,6 +290,8 @@ void CPlayer::LateTick(_float _fTimeDelta)
     }
 
 
+    m_iCurrentAnimIdx;
+
     if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_NONBLEND, shared_from_this())))
         return;
 
@@ -311,7 +318,7 @@ HRESULT CPlayer::Render()
         if (FAILED(m_pModelCom->BindMaterialShaderResource(m_pShader, (_uint)i, aiTextureType::aiTextureType_DIFFUSE, "g_DiffuseTexture")))
             return E_FAIL;
 
-        if (FAILED(m_pModelCom->BindBoneMatrices(m_pShader, "g_BoneMatrices", i)))
+        if (FAILED(m_pModelCom->BindBoneMatrices(m_pShader, "g_BoneMatrices", (_uint)i)))
             return E_FAIL;
 
         if (FAILED(m_pShader->Begin(0)))
@@ -386,6 +393,10 @@ HRESULT CPlayer::BindShaderResources()
 
 _bool CPlayer::ChangeAnim(_uint _iAnimNum, _bool _isLoop)
 {
+    if (m_iCurrentAnimIdx == _iAnimNum)
+        return false;
+
+
    // 52 == _iAnimNum ||
     m_iCurrentAnimIdx;
     if (m_bJump && 51 == _iAnimNum) {
@@ -423,7 +434,8 @@ _bool CPlayer::ChangeAnim(_uint _iAnimNum, _bool _isLoop)
         HEROSTATE::STATE_COMBO_ATTACK5 != m_eCurrentState &&
         m_iCurrentAnimIdx != 63 && m_iCurrentAnimIdx != 64 &&
         m_iCurrentAnimIdx != 44 && m_iCurrentAnimIdx != 133 &&
-        m_iCurrentAnimIdx != 135 && m_iCurrentAnimIdx != 137)
+        m_iCurrentAnimIdx != 135 && m_iCurrentAnimIdx != 137 &&
+        m_iCurrentAnimIdx != 136)
         {
         m_vPrevAnimPos = { 0.f, 0.f, 0.f };
         m_vCurretnAnimPos = { 0.f, 0.f, 0.f };
@@ -463,6 +475,15 @@ void CPlayer::CheckReserveAnimList()
             return;
         }
 
+
+        if (HEROSTATE::STATE_HIT == m_eCurrentState) {
+
+            m_bSuperArmor = false;
+            m_eCurrentState = HEROSTATE::STATE_IDLE;
+            ChangeAnim(34, false);
+            return;
+
+        }
 
         if (m_IsUsingSkill)
             m_IsUsingSkill = false;
@@ -583,7 +604,7 @@ void CPlayer::KeyInput(_float _fTimeDelta)
         m_isAnimLoop = false;
 
         //Event_Burst
-        CCameraMgr::GetInstance()->StartEvent(TEXT("Event_Burst"));
+      //  CCameraMgr::GetInstance()->StartEvent(TEXT("Event_Burst"));
 
         m_IsUsingSkill = true;
 
@@ -611,6 +632,7 @@ void CPlayer::KeyInput(_float _fTimeDelta)
     if (GetKeyState('C') & 0x8000)
     {
         if (m_bBurstMode) {
+            m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_SUPER2);
             m_eCurrentState = HEROSTATE::STATE_SKILL_Q;
             ChangeAnim(92, false);
             m_IsUsingSkill = true;
@@ -645,8 +667,10 @@ void CPlayer::KeyInput(_float _fTimeDelta)
         DetectMonster();
         m_eCurrentState = HEROSTATE::STATE_SKILL_E;
 
-        if (m_bBurstMode)
+        if (m_bBurstMode) {
+            m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_BURST_E);
             ChangeAnim(71, false);
+        }
         else {
             m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_E);
             ChangeAnim(61, false);
@@ -663,7 +687,7 @@ void CPlayer::KeyInput(_float _fTimeDelta)
         if (m_bBurstMode) {
             ChangeAnim(133, false);
             m_NextAnimIndex.push_back({ 136, false });
-            m_NextAnimIndex.push_back({ 50 , true});
+            m_NextAnimIndex.push_back({ 137 , false});
 
         }
         else {
@@ -919,7 +943,6 @@ void CPlayer::KeyInput(_float _fTimeDelta)
     }
 }
 
-
 void CPlayer::MouseInput(_float _fTimeDelta)
 {
     if (m_pModelCom->IsLinearInterpolation())
@@ -1056,6 +1079,26 @@ void CPlayer::MouseInput(_float _fTimeDelta)
    
 }
 
+void CPlayer::StateReset()
+{
+    //예약된 애니메이션 취소
+    m_NextAnimIndex.clear();
+
+    //점프 상태 취소 (이건 고려해봐야함)
+    m_bJump = false;
+    m_bRunning = false;
+    m_bAttack = false;
+    m_bAtkDeb = false;
+    m_bDash = false;
+    m_bSprint = false;
+
+    m_bReserveCombo = false;
+    m_bComboAttackStart = false;
+    m_fComboTime = 0.f;
+
+
+}
+
 void CPlayer::TurnLerp(_vector _vSrc, _vector _vDst , _float _fDeltaTime, _vector _vPos, unsigned char _flag)
 {
     if (m_MoveFlag != m_LastMoveFlag) {
@@ -1158,6 +1201,97 @@ void CPlayer::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _
     
         m_IsCollideMonster = true;
     }
+    else if (EObjType::OBJ_PROJ == _eObjType) {
+
+        //Hit 판정
+
+        //일반공격 
+        //다운공격(루트모션이 안 잡혀 있어서 따로 이동량을 잡아줘야할듯? )
+        //띄우기 공격? 
+ 
+        if (m_bSuperArmor)
+            return;
+
+        m_eCurrentState = HEROSTATE::STATE_HIT;
+        m_bSuperArmor = true;
+
+
+        StateReset();
+        ChangeAnim(100, false);
+
+        shared_ptr<CSkill> pSkill = dynamic_pointer_cast<CSkill>(_pCollider->GetOwner());
+
+        m_bKnockUp = pSkill->GetIsKnokUp();
+        m_bKnockDown = pSkill->GetIsDownAttack();
+        m_fKnockUpSpeed = pSkill->GetKnokUpDistance();
+        m_fGweight = pSkill->GetGravityWeight();
+
+
+
+        //다중공격인지 아닌지 판별, 다중공격이 아니라면 한번만 맞아도 되기 때문에 enable해줌
+        if (pSkill->GetMultiAtk()) {
+
+            //플레이어 슈퍼아머 판정 시작
+
+        }else{
+            pSkill->SetEnable(false);
+        }
+
+
+    }
+
+}
+
+void CPlayer::OnHit(_float _fTimeDelta)
+{
+
+    _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+    _vector vLook = m_pTransformCom->GetState(CTransform::STATE_LOOK);
+
+    if (m_bKnockUp) {
+
+        m_fKnockUpTime += _fTimeDelta;
+
+        m_bJump = true;
+
+        if (m_fKnockUpTime < 0.6f) {
+            m_fKnockUpSpeed = m_fKnockUpSpeed - (_fTimeDelta * m_fGravity * m_fGweight);
+            vPos.m128_f32[1] += m_fKnockUpSpeed * _fTimeDelta;
+        }
+        else {
+            m_fDropSpeed = m_fDropSpeed + (_fTimeDelta * m_fGravity * m_fGweight);
+            vPos.m128_f32[1] -= m_fDropSpeed * _fTimeDelta;
+        }
+    }
+
+    if (m_bKnockDown) {
+
+        m_fKnockDownTime += _fTimeDelta;
+
+
+        if (m_fKnockDownTime < 0.6f) {
+            vLook = vLook *( -1.f *m_fKnockDownSpeed * _fTimeDelta * m_fGweight);
+            vPos += vLook;
+        }
+        else {
+            m_bKnockDown = false;
+            m_fKnockDownTime = 0.f;
+
+        }
+    }
+
+
+    m_pTransformCom->CheckingMove(vPos, m_pNavigationCom, m_bJump);
+
+    if (!m_bJump) {
+        m_bKnockUp = false;
+        m_fKnockUpTime = 0.f;
+    }
+
+    if (!m_bKnockDown && !m_bKnockDown) {
+        m_bDown = true;
+        m_fDownTime = 0.f;
+    }
 
 
 }
@@ -1171,3 +1305,4 @@ shared_ptr<CPlayer> CPlayer::Create()
 
     return pInstance;
 }
+

@@ -197,15 +197,15 @@ HRESULT CArcadeMap::ReadyLayerMonster(const wstring& _strLayerTag)
 	//if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pMonster5)))
 	//	return E_FAIL;
 
-	//pMonster1 = CEnemy01::Create();
-	//if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Monster"), pMonster1)))
-	//	return E_FAIL;
-	//pMonster1->SetEnable(false);
-
-	pMonster2 = CEnemy02::Create();
-	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Monster"), pMonster2)))
+	pMonster1 = CEnemy01::Create();
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Monster"), pMonster1)))
 		return E_FAIL;
-	pMonster2->SetEnable(false);
+	pMonster1->SetEnable(false);
+
+	//pMonster2 = CEnemy02::Create();
+	//if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Monster"), pMonster2)))
+	//	return E_FAIL;
+	//pMonster2->SetEnable(false);
 	
 	/*
 	pMonster3 = CFinalBoss::Create();

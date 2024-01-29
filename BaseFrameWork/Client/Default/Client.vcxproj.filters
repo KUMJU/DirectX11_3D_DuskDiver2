@@ -157,6 +157,33 @@
     <Filter Include="02. GameObject\03. MapObject\01. Escalator">
       <UniqueIdentifier>{14824ed2-4ba0-44ed-b71a-9c0783fa5157}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05. Minigame">
+      <UniqueIdentifier>{2262a4c2-a5ec-4afb-b3e4-b4b272eab54a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Skill\SkillSet\MonsterSkillSet">
+      <UniqueIdentifier>{b667567b-a92a-40e2-bbc0-b44e9ba3d420}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Skill\01. MonsterSkill">
+      <UniqueIdentifier>{a65afafa-ef29-4ff4-a20e-bbafc707a104}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Skill\01. MonsterSkill\00. Skill_Enemy1">
+      <UniqueIdentifier>{ef6724dd-f031-41a8-a016-321f89917b63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Skill\01. MonsterSkill\01. Skill_Enemy2">
+      <UniqueIdentifier>{185232a1-1236-4a12-9ecc-df67f2893cd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Skill\01. MonsterSkill\02. SkIll_MiddleBoss">
+      <UniqueIdentifier>{d25def00-2e0b-4be8-a317-471a5195050a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Skill\01. MonsterSkill\03. Skill_FinalBoss">
+      <UniqueIdentifier>{b2b13806-2e46-4dec-9e5d-df909b21a172}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95. Helper\JsonAnimData">
+      <UniqueIdentifier>{4f7b16d9-b94c-4875-9e78-2db380b33468}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\03. MapObject\00. MonsterTower\MonsterSpawner">
+      <UniqueIdentifier>{731257b4-c178-47ad-bb48-9a4171a60cf7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -297,9 +324,6 @@
     <ClInclude Include="..\Public\PlrNormalAtk.h">
       <Filter>02. GameObject\05. Skill\00. PlayerSkill\NormalAtk</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\SkillSet.h">
-      <Filter>02. GameObject\05. Skill\SkillSet</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\SkillQ.h">
       <Filter>02. GameObject\05. Skill\00. PlayerSkill\BasicSkill</Filter>
     </ClInclude>
@@ -320,6 +344,27 @@
     </ClInclude>
     <ClInclude Include="..\Public\Skill_BurstE.h">
       <Filter>02. GameObject\05. Skill\00. PlayerSkill\BurstSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Skill_BurstR.h">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\BurstSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SuperSkillB.h">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\SuperSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SkillSet.h">
+      <Filter>02. GameObject\05. Skill\SkillSet\PlayerSkillSet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MonsterSkillSet.h">
+      <Filter>02. GameObject\05. Skill\SkillSet\MonsterSkillSet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Enemy1Skill.h">
+      <Filter>02. GameObject\05. Skill\01. MonsterSkill\00. Skill_Enemy1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Enemy2Skill.h">
+      <Filter>02. GameObject\05. Skill\01. MonsterSkill\01. Skill_Enemy2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MonsterTower.h">
+      <Filter>02. GameObject\03. MapObject\00. MonsterTower</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -443,9 +488,6 @@
     <ClCompile Include="..\Private\PlrNormalAtk.cpp">
       <Filter>02. GameObject\05. Skill\00. PlayerSkill\NormalAtk</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\SkillSet.cpp">
-      <Filter>02. GameObject\05. Skill\SkillSet</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\SkillQ.cpp">
       <Filter>02. GameObject\05. Skill\00. PlayerSkill\BasicSkill</Filter>
     </ClCompile>
@@ -466,6 +508,27 @@
     </ClCompile>
     <ClCompile Include="..\Private\Skill_BurstE.cpp">
       <Filter>02. GameObject\05. Skill\00. PlayerSkill\BurstSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Skill_BurstR.cpp">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\BurstSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SuperSkillB.cpp">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\SuperSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SkillSet.cpp">
+      <Filter>02. GameObject\05. Skill\SkillSet\PlayerSkillSet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MonsterSkillSet.cpp">
+      <Filter>02. GameObject\05. Skill\SkillSet\MonsterSkillSet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Enemy1Skill.cpp">
+      <Filter>02. GameObject\05. Skill\01. MonsterSkill\00. Skill_Enemy1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Enemy2Skill.cpp">
+      <Filter>02. GameObject\05. Skill\01. MonsterSkill\01. Skill_Enemy2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MonsterTower.cpp">
+      <Filter>02. GameObject\03. MapObject\00. MonsterTower</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -494,5 +557,22 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnim.hlsl">
       <Filter>97. ShaderFiles</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Bin\DataFiles\AnimData\Anim_Enemy01.json">
+      <Filter>95. Helper\JsonAnimData</Filter>
+    </None>
+    <None Include="..\Bin\DataFiles\AnimData\Anim_Enemy02.json">
+      <Filter>95. Helper\JsonAnimData</Filter>
+    </None>
+    <None Include="..\Bin\DataFiles\AnimData\Anim_FinalBoss.json">
+      <Filter>95. Helper\JsonAnimData</Filter>
+    </None>
+    <None Include="..\Bin\DataFiles\AnimData\Anim_MiddleBoss.json">
+      <Filter>95. Helper\JsonAnimData</Filter>
+    </None>
+    <None Include="..\Bin\DataFiles\AnimData\Anim_Player_Burst.json">
+      <Filter>95. Helper\JsonAnimData</Filter>
+    </None>
   </ItemGroup>
 </Project>

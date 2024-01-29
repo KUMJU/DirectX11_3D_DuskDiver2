@@ -165,6 +165,8 @@
     <ClInclude Include="..\Public\Enemy01.h" />
     <ClInclude Include="..\Public\Enemy02.h" />
     <ClInclude Include="..\Public\Enemy03.h" />
+    <ClInclude Include="..\Public\Enemy1Skill.h" />
+    <ClInclude Include="..\Public\Enemy2Skill.h" />
     <ClInclude Include="..\Public\Escalator.h" />
     <ClInclude Include="..\Public\EventCamera.h" />
     <ClInclude Include="..\Public\FinalBoss.h" />
@@ -189,6 +191,8 @@
     <ClInclude Include="..\Public\MapObject.h" />
     <ClInclude Include="..\Public\MiddleBoss.h" />
     <ClInclude Include="..\Public\Monster.h" />
+    <ClInclude Include="..\Public\MonsterSkillSet.h" />
+    <ClInclude Include="..\Public\MonsterTower.h" />
     <ClInclude Include="..\Public\NaviToolMgr.h" />
     <ClInclude Include="..\Public\pch.h" />
     <ClInclude Include="..\Public\Player.h" />
@@ -200,7 +204,9 @@
     <ClInclude Include="..\Public\SkillSet.h" />
     <ClInclude Include="..\Public\Skill_BurstE.h" />
     <ClInclude Include="..\Public\Skill_BurstQ.h" />
+    <ClInclude Include="..\Public\Skill_BurstR.h" />
     <ClInclude Include="..\Public\SuperSkillA.h" />
+    <ClInclude Include="..\Public\SuperSkillB.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\ThirdPersonCam.h" />
     <ClInclude Include="..\Public\UI.h" />
@@ -221,6 +227,8 @@
     <ClCompile Include="..\Private\Enemy01.cpp" />
     <ClCompile Include="..\Private\Enemy02.cpp" />
     <ClCompile Include="..\Private\Enemy03.cpp" />
+    <ClCompile Include="..\Private\Enemy1Skill.cpp" />
+    <ClCompile Include="..\Private\Enemy2Skill.cpp" />
     <ClCompile Include="..\Private\Escalator.cpp" />
     <ClCompile Include="..\Private\EventCamera.cpp" />
     <ClCompile Include="..\Private\FinalBoss.cpp" />
@@ -242,6 +250,8 @@
     <ClCompile Include="..\Private\MapObject.cpp" />
     <ClCompile Include="..\Private\MiddleBoss.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
+    <ClCompile Include="..\Private\MonsterSkillSet.cpp" />
+    <ClCompile Include="..\Private\MonsterTower.cpp" />
     <ClCompile Include="..\Private\NaviToolMgr.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\PlrNormalAtk.cpp" />
@@ -252,7 +262,9 @@
     <ClCompile Include="..\Private\SkillSet.cpp" />
     <ClCompile Include="..\Private\Skill_BurstE.cpp" />
     <ClCompile Include="..\Private\Skill_BurstQ.cpp" />
+    <ClCompile Include="..\Private\Skill_BurstR.cpp" />
     <ClCompile Include="..\Private\SuperSkillA.cpp" />
+    <ClCompile Include="..\Private\SuperSkillB.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\ThirdPersonCam.cpp" />
     <ClCompile Include="..\Private\UI.cpp" />
@@ -280,6 +292,13 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS_MAIN</EntryPointName>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Bin\DataFiles\AnimData\Anim_Enemy01.json" />
+    <None Include="..\Bin\DataFiles\AnimData\Anim_Enemy02.json" />
+    <None Include="..\Bin\DataFiles\AnimData\Anim_FinalBoss.json" />
+    <None Include="..\Bin\DataFiles\AnimData\Anim_MiddleBoss.json" />
+    <None Include="..\Bin\DataFiles\AnimData\Anim_Player_Burst.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

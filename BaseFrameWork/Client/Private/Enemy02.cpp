@@ -7,6 +7,8 @@
 #include "Collider.h"
 #include "MapLoader.h"
 
+#include "MonsterSkillSet.h"
+
 CEnemy02::CEnemy02()
 {
 }
@@ -43,6 +45,11 @@ HRESULT CEnemy02::Initialize()
     m_pCollider = CCollider::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), CCollider::TYPE_SPHERE, ColliderDesc);
     m_Components.emplace(TEXT("Com_Collider"), m_pCollider);
     m_pCollider->SetOwner(shared_from_this());
+
+    //**************SkillSet*****************//
+
+    m_pSkillSet = CMonsterSkillSet::Create(1, m_pModelCom);
+    m_pSkillSet->SetTransform(m_pTransformCom);
 
     return S_OK;
 }
@@ -162,8 +169,14 @@ void CEnemy02::Tick(_float _fTimeDelta)
 
    _vector posCheck4 = m_pTransformCom->GetState(CTransform::STATE_POSITION);
 
+
+   m_pSkillSet->Tick(_fTimeDelta);
+
+
    m_pCollider->Tick(m_pTransformCom->GetWorldMatrix());
    CGameInstance::GetInstance()->AddCollider(CCollisionMgr::COL_MONSTER, m_pCollider);
+
+
 
 }
 
@@ -236,6 +249,7 @@ HRESULT CEnemy02::Render()
         return S_OK;
 
     m_pCollider->Render();
+    m_pSkillSet->Render();
 
 
     if (FAILED(BindShaderResources()))
@@ -272,16 +286,19 @@ void CEnemy02::AttackPattern(_uint _iAtkNum)
     case 0:
         
         ChangeAnim(0, m_bLoop);
+        m_pSkillSet->SwitchingSkill(CMonsterSkillSet::ESKILLSTATE::MON_SKILL1);
         m_iAtkPattern = _iAtkNum;
         break;
 
     case 1:
         ChangeAnim(2, m_bLoop);
+        m_pSkillSet->SwitchingSkill(CMonsterSkillSet::ESKILLSTATE::MON_SKILL2);
         m_iAtkPattern = _iAtkNum;
         break;
 
     case 2:
         ChangeAnim(4, m_bLoop);
+        m_pSkillSet->SwitchingSkill(CMonsterSkillSet::ESKILLSTATE::MON_SKILL3);
         m_iAtkPattern = _iAtkNum;
         break;
     default:
@@ -341,8 +358,15 @@ void CEnemy02::IfEmptyAnimList()
     m_vPrevAnimPos = { 0.f, 0.f, 0.f };
     m_vCurrentAnimPos = { 0.f, 0.f, 0.f };
 
+    //if (m_iAnimNum == 16 || m_iAnimNum == 17) {
 
-    if (m_bHit) {
+    //    m_bDown = true;
+    //    m_fDownTime = 0.f;
+    //    return;
+    //}
+
+
+    if (m_bHit && !m_bKnockUp && m_bDown) {
 
         //³ì¾÷Á¾·á 
         m_bHit = false;
@@ -397,7 +421,6 @@ void CEnemy02::OnHit()
         return;
     }
 
-
     m_eCurrentState = EMONSTER_STATE::STATE_HIT;
     m_bHit = true;
 
@@ -421,6 +444,7 @@ void CEnemy02::OnHit()
         m_bJump = true;
     }
     else {
+         
 
         if (18 == m_iAnimNum) {
             ChangeAnim(19, false);

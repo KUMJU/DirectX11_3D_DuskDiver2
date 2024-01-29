@@ -14,6 +14,8 @@ END
 
 BEGIN(Client)
 
+class CMonsterSkillSet;
+
 class CMonster abstract : public CGameObject
 {
 public:
@@ -117,6 +119,7 @@ protected:
 	_float m_fKnockUpTime = 0.f;
 
 	_float m_fGravity = 15.f;
+	//15
 	_float m_fGweight = 1.f;
 
 	_float m_fDownTime = 0.f;
@@ -172,6 +175,9 @@ protected:
 	EMONSTER_STATE m_eCurrentState = EMONSTER_STATE::STATE_IDLE;
 
 	_bool m_bCollisionCheck = false;
+
+protected:
+	shared_ptr<CMonsterSkillSet> m_pSkillSet = nullptr;
 
 public:
 

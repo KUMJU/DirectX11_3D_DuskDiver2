@@ -34,6 +34,12 @@ private:
 	void IfEmptyAnimList() override;
 	_bool CalcDistanceOption() override;
 
+public:
+	virtual void OnHit() override;
+
+	void ResetState();
+
+
 private:
 	_uint m_iWalkPatternNum = 0;
 

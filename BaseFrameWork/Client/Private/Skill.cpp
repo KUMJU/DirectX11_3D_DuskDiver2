@@ -26,7 +26,11 @@ void CSkill::Tick(_float _fTimeDelta)
 	if (!m_IsEnabled)
 		return;
 
+	CCollisionMgr::COLTYPE_GROUP eCurrentGroup;
+
 	if ((*m_pMainAnims).size() != 1) {
+
+		_double temp = (*m_pMainAnims)[m_iCurrentSkillOrder]->GetCurrentTrackPosition();
 
 		if ((*m_pMainAnims)[m_iCurrentSkillOrder]->GetCurrentTrackPosition() >= m_Infos[m_iCurrentSkillOrder].iStartTrackPosition) {
 			if (m_Infos[m_iCurrentSkillOrder].iEndTrackPosition <= (*m_pMainAnims)[m_iCurrentSkillOrder]->GetCurrentTrackPosition()) {
@@ -36,19 +40,23 @@ void CSkill::Tick(_float _fTimeDelta)
 				if (m_iCurrentSkillOrder == m_Infos.size()) {
 					m_IsEnabled = false;
 					SkillReset();
+					return;
 				}
 				else {
 
 					m_bDownAtk = m_Infos[m_iCurrentSkillOrder].bDownAtk;
-					m_fDelay = m_Infos[m_iCurrentSkillOrder].fDelayTime;
 					m_bKnokUp = m_Infos[m_iCurrentSkillOrder].bKnockUp;
+					m_fKnockUpDistance = m_Infos[m_iCurrentSkillOrder].fKnockUpDistance;
+					return;
 				}
 
 
 
 			}
+			eCurrentGroup = (m_eSkillOwner == EOWNER_TYPE::OWNER_PLAYER) ? CCollisionMgr::COL_PLRPROJ : CCollisionMgr::COL_MONPROJ;
+
 			m_Collider->Tick(m_pOwnerTransform->GetWorldMatrix());
-			CGameInstance::GetInstance()->AddCollider(CCollisionMgr::COL_PLRPROJ, m_Collider);
+			CGameInstance::GetInstance()->AddCollider(eCurrentGroup, m_Collider);
 		}
 
 	}
@@ -67,31 +75,23 @@ void CSkill::Tick(_float _fTimeDelta)
 				else
 				{
 					m_bDownAtk = m_Infos[m_iCurrentSkillOrder].bDownAtk;
-					m_fDelay = m_Infos[m_iCurrentSkillOrder].fDelayTime;
 					m_bKnokUp = m_Infos[m_iCurrentSkillOrder].bKnockUp;
 
 				}
 			}
 
+			eCurrentGroup = (m_eSkillOwner == EOWNER_TYPE::OWNER_PLAYER) ? CCollisionMgr::COL_PLRPROJ : CCollisionMgr::COL_MONPROJ;
 
 			m_Collider->Tick(m_pOwnerTransform->GetWorldMatrix());
-			CGameInstance::GetInstance()->AddCollider(CCollisionMgr::COL_PLRPROJ, m_Collider);
+			CGameInstance::GetInstance()->AddCollider(eCurrentGroup, m_Collider);
 		}
 
 
 	}
-
-
-
-
-	
-
 }
 
 void CSkill::LateTick(_float _fTimeDelta)
 {
-
-	//collision °Ë»ç
 
 }
 

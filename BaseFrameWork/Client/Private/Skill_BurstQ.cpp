@@ -15,6 +15,8 @@ HRESULT CSkill_BurstQ::Initialize()
     normalAtkDesc.fRadius = 0.6f;
     normalAtkDesc.vCenter = { 0.f, 0.8f, 0.7f };
 
+    m_eSkillOwner = EOWNER_TYPE::OWNER_PLAYER;
+
 
     SKILLINFO info = {};
 
@@ -27,7 +29,7 @@ HRESULT CSkill_BurstQ::Initialize()
 
     SKILLINFO info1 = {};
 
-    info1.iStartTrackPosition = 5.0;
+    info1.iStartTrackPosition = 6.0;
     info1.iEndTrackPosition = 10.0;
     info1.bKnockUp = false;
     info1.bDownAtk = false;
@@ -36,8 +38,8 @@ HRESULT CSkill_BurstQ::Initialize()
 
     SKILLINFO info2 = {};
 
-    info2.iStartTrackPosition = 40.0;
-    info2.iEndTrackPosition = 60.0;
+    info2.iStartTrackPosition = 22.0;
+    info2.iEndTrackPosition = 50.0;
     info2.bKnockUp = false;
     info2.bDownAtk = true;
     info2.fWeight = 1.f;

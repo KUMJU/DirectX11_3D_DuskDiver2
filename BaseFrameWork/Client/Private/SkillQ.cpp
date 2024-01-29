@@ -17,6 +17,9 @@ HRESULT CSkillQ::Initialize()
     normalAtkDesc.fRadius = 0.5f;
     normalAtkDesc.vCenter = { 0.f, 0.8f, 0.7f };
 
+    m_eSkillOwner = EOWNER_TYPE::OWNER_PLAYER;
+
+
     SKILLINFO info = {};
 
     info.bKnockUp = true;

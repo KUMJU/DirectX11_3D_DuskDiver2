@@ -55,6 +55,18 @@ void CCollisionMgr::CheckPlrProjMonster()
 
 void CCollisionMgr::CheckPlrMonProj()
 {
+
+	for (auto& pPlr : m_ColliderList[COL_PLAYER]) {
+		for (auto& pMon : m_ColliderList[COL_MONPROJ]) {
+
+			if (pPlr->Intersect(pMon->GetColliderType(), pMon->GetBounding())) {
+				//Ãæµ¹µÊ
+				(pPlr->GetOwner())->OnCollide(CGameObject::OBJ_PROJ, pMon);
+				(pMon->GetOwner())->OnCollide(CGameObject::OBJ_PLAYER, pPlr);
+			}
+		}
+	}
+
 }
 
 void CCollisionMgr::ListClear()

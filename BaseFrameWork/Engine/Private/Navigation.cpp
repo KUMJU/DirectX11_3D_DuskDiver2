@@ -51,6 +51,9 @@ HRESULT CNavigation::Initialize(const wstring& _strNavigationDataFilePath)
 	if (FAILED(MakeNeighbors()))
 		return E_FAIL;
 
+	m_Cells;
+
+	int a = 4;
 #ifdef _DEBUG
 	m_pShader = CGameInstance::GetInstance()->GetShader(TEXT("Shader_Cell"));
 //	if (nullptr == m_pShader)
