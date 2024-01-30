@@ -59,7 +59,7 @@ HRESULT CEscalator::Render()
         if (FAILED(m_pStepModel->BindMaterialShaderResource(m_pAnimShader, (_uint)i, aiTextureType::aiTextureType_DIFFUSE, "g_DiffuseTexture")))
             return E_FAIL;
 
-        if (FAILED(m_pStepModel->BindBoneMatrices(m_pAnimShader, "g_BoneMatrices", i)))
+        if (FAILED(m_pStepModel->BindBoneMatrices(m_pAnimShader, "g_BoneMatrices", (_uint)i)))
             return E_FAIL;
 
         if (FAILED(m_pAnimShader->Begin(0)))

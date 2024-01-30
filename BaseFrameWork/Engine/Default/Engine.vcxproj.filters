@@ -160,6 +160,12 @@
     <Filter Include="01. Utility\09. Manager\02. CollisionMgr">
       <UniqueIdentifier>{18238eec-7eb1-4fd8-ba36-36db47866868}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\09. Manager\03. FontMgr">
+      <UniqueIdentifier>{cdb97b75-6f77-48af-bb22-26b8bc2806c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\09. Manager\03. FontMgr\CustomFont">
+      <UniqueIdentifier>{a73011f1-60e3-4dc8-997c-52f6524d2f0a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Engine_Defines.h">
@@ -303,6 +309,12 @@
     <ClInclude Include="..\Public\BoundingAABB.h">
       <Filter>01. Utility\04. Component\04. Collider\Bounding\AABB</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\FontMgr.h">
+      <Filter>01. Utility\09. Manager\03. FontMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CustomFont.h">
+      <Filter>01. Utility\09. Manager\03. FontMgr\CustomFont</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\GraphicDev.cpp">
@@ -433,6 +445,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\BoundingAABB.cpp">
       <Filter>01. Utility\04. Component\04. Collider\Bounding\AABB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\FontMgr.cpp">
+      <Filter>01. Utility\09. Manager\03. FontMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CustomFont.cpp">
+      <Filter>01. Utility\09. Manager\03. FontMgr\CustomFont</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

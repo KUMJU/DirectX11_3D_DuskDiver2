@@ -49,7 +49,7 @@ HRESULT CEdit::Render()
 
 HRESULT CEdit::ReadyLayerBackGround(const wstring& _strLayerTag)
 {
-	shared_ptr<CGameObject> pDummy = CDummy::Create(TEXT("Map_Arcade"));
+	shared_ptr<CGameObject> pDummy = CDummy::Create(TEXT("ArcadeMap_Final"));
 	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pDummy)))
 		return E_FAIL;
 

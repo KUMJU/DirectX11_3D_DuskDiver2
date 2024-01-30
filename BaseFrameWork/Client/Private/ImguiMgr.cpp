@@ -415,7 +415,7 @@ void CImguiMgr::DrawNaviMesh()
 
 void CImguiMgr::SaveData()
 {
-    _int iSize = m_Objects.size();
+    _int iSize = (_int)m_Objects.size();
 
     auto iter = m_CurrentObjectList.begin();
     auto iter2 = m_Objects.begin();

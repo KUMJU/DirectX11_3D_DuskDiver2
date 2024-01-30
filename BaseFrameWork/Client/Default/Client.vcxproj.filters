@@ -109,9 +109,6 @@
     <Filter Include="02. GameObject\05. Skill">
       <UniqueIdentifier>{0d565514-a811-4e53-a587-0fc5937fe529}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\06. Trigger">
-      <UniqueIdentifier>{5a63cd4a-bdac-428f-aadd-7319dc34f934}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\00.Creature\01. Monster\01. Enemy02">
       <UniqueIdentifier>{4d15fcf7-c5bd-4d28-9d60-8b9fcaa44c80}</UniqueIdentifier>
     </Filter>
@@ -192,6 +189,15 @@
     </Filter>
     <Filter Include="02. GameObject\05. Skill\00. PlayerSkill\AirAtk">
       <UniqueIdentifier>{aa68944d-4d46-40d2-9b4a-bac9739f3f33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\03. MapObject\02. Warp">
+      <UniqueIdentifier>{186e11e6-b02d-470a-a908-4f901a402c85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. EventTrigger">
+      <UniqueIdentifier>{5a63cd4a-bdac-428f-aadd-7319dc34f934}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. EventTrigger\Portal">
+      <UniqueIdentifier>{b43537e0-beb9-4ff6-87fd-fcd8efd399da}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -379,7 +385,18 @@
       <Filter>05. Minigame\MinigameMole</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\MonsterPool.h" />
-    <ClInclude Include="..\Public\AirAtk.h" />
+    <ClInclude Include="..\Public\EventTrigger.h">
+      <Filter>02. GameObject\06. EventTrigger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Portal.h">
+      <Filter>02. GameObject\06. EventTrigger\Portal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AirAtk.h">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\AirAtk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mole.h">
+      <Filter>05. Minigame\MinigameMole\Mole</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -548,7 +565,18 @@
       <Filter>05. Minigame\MinigameMole</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\MonsterPool.cpp" />
-    <ClCompile Include="..\Private\AirAtk.cpp" />
+    <ClCompile Include="..\Private\EventTrigger.cpp">
+      <Filter>02. GameObject\06. EventTrigger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Portal.cpp">
+      <Filter>02. GameObject\06. EventTrigger\Portal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AirAtk.cpp">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\AirAtk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mole.cpp">
+      <Filter>05. Minigame\MinigameMole\Mole</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">

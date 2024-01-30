@@ -39,7 +39,7 @@ HRESULT CAirAtk::Initialize(_uint _iComboNum)
     else if (3 == _iComboNum) {
 
         skillDesc.iStartTrackPosition = 7.0;
-        skillDesc.iEndTrackPosition = 25.0;
+        skillDesc.iEndTrackPosition = 15.0;
 
         skillDesc.bKnockUp = true;
         skillDesc.fWeight = 1.5f;
@@ -52,7 +52,7 @@ HRESULT CAirAtk::Initialize(_uint _iComboNum)
     else if (4 == _iComboNum) {
 
         skillDesc.iStartTrackPosition = 7.0;
-        skillDesc.iEndTrackPosition = 20.0;
+        skillDesc.iEndTrackPosition = 15.0;
 
         skillDesc.bKnockUp = true;
         skillDesc.fWeight = 1.5f;

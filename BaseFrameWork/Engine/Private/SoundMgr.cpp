@@ -65,9 +65,9 @@ void CSoundMgr::PlayBGM(const TCHAR* _pSoundKey, _float _fVolume)
 	if (iter == m_mapSound.end())
 		return;
 
-	FMOD_System_PlaySound(m_pSystem, iter->second, FALSE, NULL, &m_pChannelArr[(unsigned long long)CHANNELID::BGM]);
-	FMOD_Channel_SetMode(m_pChannelArr[(unsigned long long)CHANNELID::BGM], FMOD_LOOP_NORMAL);
-	FMOD_Channel_SetVolume(m_pChannelArr[(unsigned long long)CHANNELID::BGM], _fVolume);
+	FMOD_System_PlaySound(m_pSystem, iter->second, FALSE, NULL, &m_pChannelArr[(unsigned long long)CHANNELID::CH_BGM]);
+	FMOD_Channel_SetMode(m_pChannelArr[(unsigned long long)CHANNELID::CH_BGM], FMOD_LOOP_NORMAL);
+	FMOD_Channel_SetVolume(m_pChannelArr[(unsigned long long)CHANNELID::CH_BGM], _fVolume);
 	FMOD_System_Update(m_pSystem);
 }
 
@@ -79,7 +79,7 @@ void CSoundMgr::StopSound(CHANNELID eID)
 
 void CSoundMgr::StopAll()
 {
-	for (int i = 0; i < (unsigned long long)CHANNELID::ENUM_END; ++i)
+	for (int i = 0; i < (unsigned long long)CHANNELID::CH_END; ++i)
 		FMOD_Channel_Stop(m_pChannelArr[i]);
 }
 
@@ -87,14 +87,14 @@ void CSoundMgr::LoadSoundFile()
 {
 	_finddata_t fd;
 
-	intptr_t handle = _findfirst("../Bin/Resource/Sound/*.wav", &fd);
+	intptr_t handle = _findfirst("../../Client/Bin/Resources/Audio/*.wav", &fd);
 
 	if (handle == -1)
 		return;
 
 	int iResult = 0;
 
-	char szCurPath[128] = "../Bin/Resource/Sound/";
+	char szCurPath[128] = "../../Client/Bin/Resources/Audio/";
 	char szFullPath[128] = "";
 
 	while (iResult != -1)
@@ -122,4 +122,12 @@ void CSoundMgr::LoadSoundFile()
 
 	FMOD_System_Update(m_pSystem);
 	_findclose(handle);
+}
+
+shared_ptr<CSoundMgr> CSoundMgr::Create()
+{
+	shared_ptr<CSoundMgr> pInstance = make_shared<CSoundMgr>();
+	pInstance->Initialize();
+
+	return pInstance;
 }

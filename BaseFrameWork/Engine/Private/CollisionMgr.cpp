@@ -19,6 +19,7 @@ void CCollisionMgr::LateTick()
 	CheckPlrProjMonster();
 	CheckPlrMonProj();
 	CheckPlrBlock();
+	CheckPlrTrigger();
 
 	ListClear();
 }
@@ -85,6 +86,18 @@ void CCollisionMgr::CheckMonsterCollide()
 	//	}
 	//}
 
+}
+
+void CCollisionMgr::CheckPlrTrigger()
+{
+	for (auto& pPlr : m_ColliderList[COL_PLAYER]) {
+		for (auto& pTrigger : m_ColliderList[COL_TRIGGER]) {
+
+			if (pPlr->Intersect(pTrigger->GetColliderType(), pTrigger->GetBounding())) {
+				(pTrigger->GetOwner())->OnCollide(CGameObject::OBJ_PLAYER, pPlr);
+			}
+		}
+	}
 }
 
 void CCollisionMgr::ListClear()

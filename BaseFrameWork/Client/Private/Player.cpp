@@ -968,12 +968,19 @@ void CPlayer::KeyInput(_float _fTimeDelta)
         return;
     }
 
-    ////////////////Camera/////////////////////////
+    ////////////////Camera + 이벤트 확인용 순간이동 키(나중에 영상 찍을 땐 지울것)/////////////////////////
 
     if (GetKeyState('1') & 0x8000) {
 
         CCameraMgr::GetInstance()->SwitchingCamera(CCameraMgr::ECAMERATYPE::FREE);
     }
+
+    if (GetKeyState('6') & 0x8000) {
+
+        CCameraMgr::GetInstance()->SwitchingCamera(CCameraMgr::ECAMERATYPE::FREE);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
 
     if (HEROSTATE::STATE_WALK == m_eCurrentState ||
         HEROSTATE::STATE_RUN == m_eCurrentState) {

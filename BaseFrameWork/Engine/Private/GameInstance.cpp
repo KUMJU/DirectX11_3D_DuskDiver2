@@ -7,6 +7,7 @@
 #include "InputDevice.h"
 #include "PickingMgr.h"
 #include "LightMgr.h"
+#include "FontMgr.h"
 
 _float g_fSlowWeight = 1.f;
 
@@ -68,6 +69,15 @@ HRESULT CGameInstance::InitializeEngine(HINSTANCE hInst, _uint iNumLevels, _uint
 	m_pCollisionMgr = CCollisionMgr::Create();
 	if (nullptr == m_pCollisionMgr)
 		return E_FAIL;
+
+	m_pSoundMgr = CSoundMgr::Create();
+	if (nullptr == m_pSoundMgr)
+		return E_FAIL;
+
+	m_pFontMgr = CFontMgr::Create(m_pGraphicDev->GetDeviceInfo(), m_pGraphicDev->GetDeviceContextInfo());
+	if (!m_pFontMgr)
+		return E_FAIL;
+
 
 	return S_OK;
 }
@@ -334,6 +344,39 @@ void CGameInstance::AddCollider(CCollisionMgr::COLTYPE_GROUP _eColGroup, shared_
 
 	m_pCollisionMgr->AddColliderList(_eColGroup, _pCollider);
 
+}
+
+void CGameInstance::PlayAudio(const TCHAR* _pSoundKey, CSoundMgr::CHANNELID eID, _float _fVolume)
+{
+	if (!m_pSoundMgr)
+		return;
+
+	m_pSoundMgr->PlaySound(_pSoundKey, eID, _fVolume);
+
+}
+
+void CGameInstance::PlayBGM(const TCHAR* _pSoundKey, _float _fVolume)
+{
+	if (!m_pSoundMgr)
+		return;
+
+	m_pSoundMgr->PlayBGM(_pSoundKey, _fVolume);
+}
+
+void CGameInstance::StopSound(CSoundMgr::CHANNELID eID)
+{
+	if (!m_pSoundMgr)
+		return;
+
+	m_pSoundMgr->StopSound(eID);
+}
+
+void CGameInstance::StopAll()
+{
+	if (!m_pSoundMgr)
+		return;
+
+	m_pSoundMgr->StopAll();
 }
 
 wrl::ComPtr<ID3D11Device> CGameInstance::GetDeviceInfo()

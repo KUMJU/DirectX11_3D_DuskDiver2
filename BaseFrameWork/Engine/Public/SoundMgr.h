@@ -8,7 +8,7 @@ class CSoundMgr
 {
 public:
 	enum class CHANNELID {
-		BGM, PLAYER, ENUM_END
+		CH_BGM, CH_PLR_VO, CH_PLR_FX, CH_MON, CH_EFFECT, CH_END
 	};
 
 public:
@@ -33,9 +33,14 @@ private:
 
 	map<TCHAR*, FMOD_SOUND*> m_mapSound;
 	// FMOD_CHANNEL : 재생하고 있는 사운드를 관리할 객체 
-	FMOD_CHANNEL* m_pChannelArr[(unsigned long long)CHANNELID::ENUM_END];
+	FMOD_CHANNEL* m_pChannelArr[(unsigned long long)CHANNELID::CH_END];
 	// 사운드 ,채널 객체 및 장치를 관리하는 객체 
 	FMOD_SYSTEM* m_pSystem;
+
+
+public:
+
+	static shared_ptr<CSoundMgr> Create();
 
 };
 

@@ -5,6 +5,7 @@
 #include "PipeLine.h"
 #include "ResourceMgr.h"
 #include "CollisionMgr.h"
+#include "SoundMgr.h"
 
 BEGIN(Engine)
 
@@ -92,6 +93,14 @@ public:
 	void AddCollider(CCollisionMgr::COLTYPE_GROUP _eColGroup, shared_ptr<CCollider> _pCollider);
 
 
+/*Sound Mgr*/
+
+public:
+	void PlayAudio(const TCHAR* _pSoundKey, CSoundMgr::CHANNELID eID, _float _fVolume);
+	void PlayBGM(const TCHAR* _pSoundKey, _float _fVolume);
+	void StopSound(CSoundMgr::CHANNELID eID);
+	void StopAll();
+
 private:
 	shared_ptr<class CGraphicDev> m_pGraphicDev = nullptr;
 	shared_ptr<class CInputDevice> m_pInputDev = nullptr;
@@ -104,7 +113,7 @@ private:
 	shared_ptr<class CLightMgr> m_pLightMgr = nullptr;
 	shared_ptr<class CResourceMgr> m_pResMgr = nullptr;
 	shared_ptr<CCollisionMgr> m_pCollisionMgr = nullptr;
-
+	shared_ptr<CSoundMgr> m_pSoundMgr = nullptr;
 
 private:
 

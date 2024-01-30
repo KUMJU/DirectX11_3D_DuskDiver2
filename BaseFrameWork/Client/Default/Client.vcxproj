@@ -170,6 +170,7 @@
     <ClInclude Include="..\Public\Enemy2Skill.h" />
     <ClInclude Include="..\Public\Escalator.h" />
     <ClInclude Include="..\Public\EventCamera.h" />
+    <ClInclude Include="..\Public\EventTrigger.h" />
     <ClInclude Include="..\Public\FinalBoss.h" />
     <ClInclude Include="..\Public\GameMgr.h" />
     <ClInclude Include="..\Public\imconfig.h" />
@@ -192,6 +193,7 @@
     <ClInclude Include="..\Public\MapObject.h" />
     <ClInclude Include="..\Public\MiddleBoss.h" />
     <ClInclude Include="..\Public\MinigameMole.h" />
+    <ClInclude Include="..\Public\Mole.h" />
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\Public\MonsterPool.h" />
     <ClInclude Include="..\Public\MonsterSkillSet.h" />
@@ -200,6 +202,7 @@
     <ClInclude Include="..\Public\pch.h" />
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\Public\PlrNormalAtk.h" />
+    <ClInclude Include="..\Public\Portal.h" />
     <ClInclude Include="..\Public\Skill.h" />
     <ClInclude Include="..\Public\SkillE.h" />
     <ClInclude Include="..\Public\SkillQ.h" />
@@ -235,6 +238,7 @@
     <ClCompile Include="..\Private\Enemy2Skill.cpp" />
     <ClCompile Include="..\Private\Escalator.cpp" />
     <ClCompile Include="..\Private\EventCamera.cpp" />
+    <ClCompile Include="..\Private\EventTrigger.cpp" />
     <ClCompile Include="..\Private\FinalBoss.cpp" />
     <ClCompile Include="..\Private\GameMgr.cpp" />
     <ClCompile Include="..\Private\imgui.cpp" />
@@ -254,6 +258,7 @@
     <ClCompile Include="..\Private\MapObject.cpp" />
     <ClCompile Include="..\Private\MiddleBoss.cpp" />
     <ClCompile Include="..\Private\MinigameMole.cpp" />
+    <ClCompile Include="..\Private\Mole.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\Private\MonsterPool.cpp" />
     <ClCompile Include="..\Private\MonsterSkillSet.cpp" />
@@ -261,6 +266,7 @@
     <ClCompile Include="..\Private\NaviToolMgr.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\PlrNormalAtk.cpp" />
+    <ClCompile Include="..\Private\Portal.cpp" />
     <ClCompile Include="..\Private\Skill.cpp" />
     <ClCompile Include="..\Private\SkillE.cpp" />
     <ClCompile Include="..\Private\SkillQ.cpp" />

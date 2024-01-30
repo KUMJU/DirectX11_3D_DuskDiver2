@@ -30,6 +30,7 @@
 #include "Escalator.h"
 
 #include "MonsterTower.h"
+#include "Portal.h"
 
 #include "MonsterPool.h"
 
@@ -49,8 +50,11 @@ void CArcadeMap::PreInit()
 
 HRESULT CArcadeMap::Initialize()
 {
-	
+
 	if (FAILED(ReadyLight()))
+		return E_FAIL;
+
+	if (FAILED(ReadyLayerMap(TEXT("Layer_Map"))))
 		return E_FAIL;
 
 	if (FAILED(ReadyLayerPlayer(TEXT("Layer_Player"))))
@@ -64,6 +68,9 @@ HRESULT CArcadeMap::Initialize()
 
 	if (FAILED(ReadyLayerUI(TEXT("Layer_UI"))))
 		return E_FAIL;
+
+
+	CGameInstance::GetInstance()->PlayBGM(TEXT("BGM_MainTheme.wav"), 1.f);
 
 	return S_OK;
 }
@@ -145,11 +152,10 @@ HRESULT CArcadeMap::ReadyLayerCamera(const wstring& _strLayerTag)
 	return S_OK;
 }
 
-HRESULT CArcadeMap::ReadyLayerPlayer(const wstring& _strLayerTag)
+HRESULT CArcadeMap::ReadyLayerMap(const wstring& _strLayerTag)
 {
-
 	//¸Ê ¼³Ä¡ 
-	shared_ptr<CGameObject> pDummy = CDummy::Create(TEXT("Map_Arcade"));
+	shared_ptr<CGameObject> pDummy = CDummy::Create(TEXT("ArcadeMap_Final"));
 	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pDummy)))
 		return E_FAIL;
 
@@ -157,7 +163,7 @@ HRESULT CArcadeMap::ReadyLayerPlayer(const wstring& _strLayerTag)
 
 	//¸Ê ³×ºñ°ÔÀÌ¼Ç ¸Þ½¬ ¼¿ Á¤º¸ ÆÄ½Ì
 	_float4x4 worldMat;
-	_matrix dd =pDummy->GetWorldMatrix();
+	_matrix dd = pDummy->GetWorldMatrix();
 	XMStoreFloat4x4(&worldMat, dd);
 	CMapLoader::GetInstance()->SetWorldMatrix(worldMat);
 	CMapLoader::GetInstance()->LoadCellData(TEXT("CellTest.dat"));
@@ -166,6 +172,19 @@ HRESULT CArcadeMap::ReadyLayerPlayer(const wstring& _strLayerTag)
 	CMapLoader::GetInstance()->LoadMapData("../Bin/DataFiles/ArcadeMap_Object.dat");
 
 
+	/***Æ÷Å» Å×½ºÆ®***/
+
+	shared_ptr<CPortal> pPortal = CPortal::Create({ 0.f, 40.f, -245.f }, { 0.f, 25.f, -212.f });
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pPortal)))
+		return E_FAIL;
+
+	/*****************/
+
+	return S_OK;
+}
+
+HRESULT CArcadeMap::ReadyLayerPlayer(const wstring& _strLayerTag)
+{
  	shared_ptr<CPlayer> pPlayer = CPlayer::Create();
 
 	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pPlayer)))
@@ -278,39 +297,39 @@ void CArcadeMap::KeyInput()
 		return;
 
 
-	if (GetKeyState('7') & 0x8000) {
-		pMonster1->SetEnable(true);
+//	if (GetKeyState('7') & 0x8000) {
+//		pMonster1->SetEnable(true);
+//
+//		m_bKeyDeb = true;
+//	}
+//
+//	if (GetKeyState('8') & 0x8000) {
+//		
+////		pMonster1->SetEnable(false);
+//		pMonster2->SetEnable(true);
+//
+//		m_bKeyDeb = true;
+//
+//	}
+//
+//	if (GetKeyState('9') & 0x8000) {
+//
+//		pMonster2->SetEnable(false);
+//		pMonster3->SetEnable(true);
+//
+//		m_bKeyDeb = true;
+//
+//	}
 
-		m_bKeyDeb = true;
-	}
 
-	if (GetKeyState('8') & 0x8000) {
-		
-//		pMonster1->SetEnable(false);
-		pMonster2->SetEnable(true);
+	//if (GetKeyState('0') & 0x8000) {
 
-		m_bKeyDeb = true;
+	//	pMonster3->SetEnable(false);
+	//	pMonster4->SetEnable(true);
 
-	}
+	//	m_bKeyDeb = true;
 
-	if (GetKeyState('9') & 0x8000) {
-
-		pMonster2->SetEnable(false);
-		pMonster3->SetEnable(true);
-
-		m_bKeyDeb = true;
-
-	}
-
-
-	if (GetKeyState('0') & 0x8000) {
-
-		pMonster3->SetEnable(false);
-		pMonster4->SetEnable(true);
-
-		m_bKeyDeb = true;
-
-	}
+	//}
 
 }
 

@@ -16,6 +16,7 @@ public:
 		COL_BLOCK, //몬스터 Body
 		COL_PLRPROJ, //플레이어 공격체
 		COL_MONPROJ, //몬스터 공격체 
+		COL_TRIGGER,
 		COL_END
 	};
 
@@ -39,7 +40,7 @@ private:
 	void CheckPlrProjMonster();
 	void CheckPlrMonProj();
 	void CheckMonsterCollide();
-
+	void CheckPlrTrigger();
 
 private:
 

@@ -26,6 +26,8 @@ public:
 public:
 	HRESULT ReadyLayerBackGround(const wstring& _strLayerTag);
 	HRESULT ReadyLayerCamera(const wstring& _strLayerTag);
+	HRESULT ReadyLayerMap(const wstring& _strLayerTag);
+
 	HRESULT ReadyLayerPlayer(const wstring& _strLayerTag);
 	HRESULT ReadyLayerMonster(const wstring& _strLayerTag);
 	HRESULT ReadyLayerUI(const wstring& _strLayerTag);
