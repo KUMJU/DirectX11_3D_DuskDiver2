@@ -41,7 +41,7 @@ public:
 
 
 private:
-	_uint m_iWalkPatternNum = 0;
+	_uint m_iWalkPatternNum = 0;	
 
 public:
 	static shared_ptr<CEnemy01> Create();

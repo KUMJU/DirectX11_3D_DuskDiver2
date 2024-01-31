@@ -62,7 +62,7 @@ HRESULT CPlayer::Initialize()
     shared_ptr<CCollider> pCollider = CCollider::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), CCollider::TYPE_SPHERE, PlrCollDesc);
     m_Colliders.push_back(pCollider);
     pCollider->SetOwner(shared_from_this());
-    m_Components.emplace(TEXT("Com_Collider_Body"), m_pCollider);
+    m_Components.emplace(TEXT("Com_Collider_Body"), pCollider);
    
     //*Leg*//
     PlrCollDesc.fRadius = 0.3f;
@@ -70,7 +70,7 @@ HRESULT CPlayer::Initialize()
     pCollider = CCollider::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), CCollider::TYPE_SPHERE, PlrCollDesc);
     m_Colliders.push_back(pCollider);
     pCollider->SetOwner(shared_from_this());
-    m_Components.emplace(TEXT("Com_Collider_Leg"), m_pCollider);
+    m_Components.emplace(TEXT("Com_Collider_Leg"), pCollider);
 
 
     m_eCurrentState = HEROSTATE::STATE_IDLE;
@@ -197,18 +197,6 @@ void CPlayer::LateTick(_float _fTimeDelta)
 {
     if (m_iCurrentAnimIdx == 133) {
 
-        if ((m_pModelCom->GetAnimations()[m_iCurrentAnimIdx])->GetCurrentTrackPosition() > 20.0 &&
-            (m_pModelCom->GetAnimations()[m_iCurrentAnimIdx])->GetCurrentTrackPosition() < 30.0) {
-
-            _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
-            m_fWeight += 13.f;
-
-            m_fJumpSpeed = m_fJumpSpeed + (m_fWeight * _fTimeDelta);
-            vPos.m128_f32[1] += m_fJumpSpeed * _fTimeDelta;
-
-            m_pTransformCom->CheckingMove(vPos, m_pNavigationCom, m_bJump);
-
-        }
 
     }
     else if (m_iCurrentAnimIdx == 52) {
@@ -316,6 +304,8 @@ void CPlayer::LateTick(_float _fTimeDelta)
                 m_fJumpTime = 0.f;
                 m_bDrop = false;
                 m_fJumpDelay = 0.f;
+                m_fWeight = 1.f;
+                m_fJumpSpeed = 4.f;
 
             }
         }
@@ -333,6 +323,7 @@ void CPlayer::LateTick(_float _fTimeDelta)
 
 HRESULT CPlayer::Render()
 {
+
     m_pNavigationCom->Render();
 
     m_pPlayerSkillset->Render();
@@ -361,6 +352,7 @@ HRESULT CPlayer::Render()
             return E_FAIL;
     }
 
+
     return S_OK;
 }
 
@@ -376,14 +368,16 @@ void CPlayer::SetAnimSpeed()
     m_pBattleModelCom->SetSpecificAnimSpeed(1, 1.6f);
     m_pBattleModelCom->SetSpecificAnimSpeed(2, 1.6f);
 
-    m_pBurstModelCom->SetSpecificAnimSpeed(9, 2.f);
-    m_pBurstModelCom->SetSpecificAnimSpeed(11, 2.f);
+
+    m_pBurstModelCom->SetSpecificAnimSpeed(10, 2.f);
+    m_pBurstModelCom->SetSpecificAnimSpeed(12, 2.f);
     m_pBurstModelCom->SetSpecificAnimSpeed(13, 2.f);
     m_pBurstModelCom->SetSpecificAnimSpeed(15, 2.f);
     m_pBurstModelCom->SetSpecificAnimSpeed(16, 2.f);
-    m_pBurstModelCom->SetSpecificAnimSpeed(0, 1.4f);
-    m_pBurstModelCom->SetSpecificAnimSpeed(1, 1.4f);
-    m_pBurstModelCom->SetSpecificAnimSpeed(2, 1.4f);
+    m_pBurstModelCom->SetSpecificAnimSpeed(14, 2.f);
+    m_pBurstModelCom->SetSpecificAnimSpeed(0, 1.6f);
+    m_pBurstModelCom->SetSpecificAnimSpeed(1, 1.6f);
+    m_pBurstModelCom->SetSpecificAnimSpeed(2, 1.6f);
 
 }
 
@@ -467,13 +461,14 @@ _bool CPlayer::ChangeAnim(_uint _iAnimNum, _bool _isLoop)
         return false;
 
 
+    //m_iCurrentAnimIdx != 133 &&
     if (HEROSTATE::STATE_COMBO_ATTACK1 != m_eCurrentState &&
         HEROSTATE::STATE_COMBO_ATTACK2 != m_eCurrentState &&
         HEROSTATE::STATE_COMBO_ATTACK3 != m_eCurrentState &&
         HEROSTATE::STATE_COMBO_ATTACK4 != m_eCurrentState &&
         HEROSTATE::STATE_COMBO_ATTACK5 != m_eCurrentState &&
         m_iCurrentAnimIdx != 63 && m_iCurrentAnimIdx != 64 &&
-        m_iCurrentAnimIdx != 44 && m_iCurrentAnimIdx != 133 &&
+        m_iCurrentAnimIdx != 44 && 
         m_iCurrentAnimIdx != 135 && m_iCurrentAnimIdx != 137 &&
         m_iCurrentAnimIdx != 136)
         {
@@ -571,10 +566,10 @@ void CPlayer::CalcAnimMoveDistance()
         m_vPrevAnimPos = m_vCurretnAnimPos;
         return;
     }
-
+    //|| 133 == m_iCurrentAnimIdx
     if (79 == m_iCurrentAnimIdx || 76 == m_iCurrentAnimIdx ||
         52 == m_iCurrentAnimIdx || 51 == m_iCurrentAnimIdx || 3 == m_iCurrentAnimIdx || 136 == m_iCurrentAnimIdx
-        || 50 == m_iCurrentAnimIdx || 133 == m_iCurrentAnimIdx || 137 == m_iCurrentAnimIdx || 44 == m_iCurrentAnimIdx||
+        || 50 == m_iCurrentAnimIdx  || 137 == m_iCurrentAnimIdx || 44 == m_iCurrentAnimIdx||
         0 == m_iCurrentAnimIdx || 1 == m_iCurrentAnimIdx || 2 == m_iCurrentAnimIdx || 59 == m_iCurrentAnimIdx) {
         m_vPrevAnimPos = { 0.f, 0.f, 0.f };
         m_vCurretnAnimPos = { 0.f, 0.f, 0.f };
@@ -586,12 +581,20 @@ void CPlayer::CalcAnimMoveDistance()
 
     _vector vLook = m_pTransformCom->GetState(CTransform::STATE_LOOK);
     _matrix WorldMat = m_pTransformCom->GetWorldMatrix();
+   
+    _vector vCurrentPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+
+    if (vDistance.m128_f32[1] != 0 && m_iCurrentAnimIdx == 133) {
+
+        m_bJump = true;
+        vCurrentPos.m128_f32[1] += vDistance.m128_f32[1];
+
+    }
+
 
     XMVector3TransformCoord(vDistance, WorldMat);
-    _float vLength = XMVector3Length(vDistance).m128_f32[0];
+    _float vLength = XMVector3Length(XMVectorSetY(vDistance,0.f)).m128_f32[0];
     vLook = vLength* vLook;
-
-    _vector vCurrentPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
     vCurrentPos += vLook;
 
     m_pTransformCom->CheckingMove(vCurrentPos, m_pNavigationCom, m_bJump);
@@ -641,16 +644,15 @@ void CPlayer::KeyInput(_float _fTimeDelta)
     {
         m_eCurrentState = HEROSTATE::STATE_BURST_TRANS;
         IsKeyInput = true;
-        //ChangeAnim(30, false);
-
-        m_pModelCom->ChangeAnimation(30);
+        ChangeAnim(30, false);
+        //m_pModelCom->ChangeAnimation(30);
         m_pBurstModelCom->ChangeAnimation(30);
         m_isAnimLoop = false;
 
         //Event_Burst
-      //  CCameraMgr::GetInstance()->StartEvent(TEXT("Event_Burst"));
+        CCameraMgr::GetInstance()->StartEvent(TEXT("Event_Burst"));
 
-        m_IsUsingSkill = true;
+   //     m_IsUsingSkill = true;
 
     }
 
@@ -689,7 +691,6 @@ void CPlayer::KeyInput(_float _fTimeDelta)
     if (GetKeyState('Q') & 0x8000)
     {
         DetectMonster();
-        m_eCurrentState = HEROSTATE::STATE_SKILL_Q;
 
         if (m_bBurstMode) {
             m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_BURST_Q);
@@ -698,10 +699,13 @@ void CPlayer::KeyInput(_float _fTimeDelta)
             m_NextAnimIndex.push_back({ 65 , false });
         }
         else {
-            ChangeAnim(60, false);
-            m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_Q);
+            if (m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_Q)) {
+                m_eCurrentState = HEROSTATE::STATE_SKILL_Q;
+                ChangeAnim(60, false);
+
+            }
         }
-        m_IsUsingSkill = true;
+      //  m_IsUsingSkill = true;
 
     }
 
@@ -709,18 +713,19 @@ void CPlayer::KeyInput(_float _fTimeDelta)
     if (GetKeyState('E') & 0x8000)
     {
         DetectMonster();
-        m_eCurrentState = HEROSTATE::STATE_SKILL_E;
 
         if (m_bBurstMode) {
             m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_BURST_E);
             ChangeAnim(71, false);
         }
         else {
-            m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_E);
-            ChangeAnim(61, false);
+            if (m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_E)) {
+                m_eCurrentState = HEROSTATE::STATE_SKILL_E;
+                ChangeAnim(61, false);
+            }
         }
 
-        m_IsUsingSkill = true;
+       // m_IsUsingSkill = true;
 
     }
 
@@ -730,23 +735,25 @@ void CPlayer::KeyInput(_float _fTimeDelta)
 
         if (m_bBurstMode) {
             ChangeAnim(133, false);
+            m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_BURST_R);
+
             m_NextAnimIndex.push_back({ 136, false });
-            m_NextAnimIndex.push_back({ 137 , false});
+            m_NextAnimIndex.push_back({ 137 , false });
 
             m_fJumpSpeed = 2.f;
             m_bJump = true;
 
         }
         else {
-            DetectMonster();
-            m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_R);
-            ChangeAnim(62, false);
+            if (m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_R)) {
+                DetectMonster();
+                ChangeAnim(62, false);
+            }
+           // m_IsUsingSkill = true;
 
         }
-        m_IsUsingSkill = true;
 
     }
-
     ///////////////////Walk////////////////////////
 
     m_bSprint = false;
@@ -977,7 +984,8 @@ void CPlayer::KeyInput(_float _fTimeDelta)
 
     if (GetKeyState('6') & 0x8000) {
 
-        CCameraMgr::GetInstance()->SwitchingCamera(CCameraMgr::ECAMERATYPE::FREE);
+        m_pTransformCom->SetState(CTransform::STATE_POSITION, { 95.f , 40.f, -300.f, 1.f });
+        m_pNavigationCom->CalcCurrentPos({ 95.f , 40.f, -300.f, 1.f });
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -1099,21 +1107,37 @@ void CPlayer::MouseInput(_float _fTimeDelta)
                 m_fMinComboAnimTime = 0.5f;
                 m_NextAnimIndex.push_back({ 12 , false });
                 m_bReserveCombo = true;
+                
+                CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
+                CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_02.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
+
                 break;
             case Client::CPlayer::HEROSTATE::STATE_COMBO_ATTACK2:
                 m_fMinComboAnimTime = 0.5f;
                 m_NextAnimIndex.push_back({ 14 , false });
                 m_bReserveCombo = true;
+
+                CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
+                CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_03.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
+
                 break;
             case Client::CPlayer::HEROSTATE::STATE_COMBO_ATTACK3:
                 m_fMinComboAnimTime = 0.5f;
                 m_NextAnimIndex.push_back({ 15 , false });
                 m_bReserveCombo = true;
+
+                CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
+                CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_04.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
+
                 break;
             case Client::CPlayer::HEROSTATE::STATE_COMBO_ATTACK4:
                 m_fMinComboAnimTime = 0.7f;
                 m_NextAnimIndex.push_back({ 16 , false });
                 m_bReserveCombo = true;
+
+                CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
+                CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_07.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
+
                 //attack5 Call + mouseDeb 
                 break;
             case Client::CPlayer::HEROSTATE::STATE_COMBO_ATTACK5:
@@ -1128,6 +1152,9 @@ void CPlayer::MouseInput(_float _fTimeDelta)
                 m_eCurrentState = HEROSTATE::STATE_COMBO_ATTACK1;
                 m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_ATK1);
                 m_bComboAttackStart = true;
+                
+                CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
+                CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_01.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
                 break;
             }
 
@@ -1266,12 +1293,6 @@ void CPlayer::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _
         m_IsCollideMonster = true;
     }
     else if (EObjType::OBJ_PROJ == _eObjType) {
-
-        //Hit 판정
-
-        //일반공격 
-        //다운공격(루트모션이 안 잡혀 있어서 따로 이동량을 잡아줘야할듯? )
-        //띄우기 공격? 
  
         if (m_bSuperArmor)
             return;
@@ -1290,7 +1311,11 @@ void CPlayer::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _
         m_fKnockUpSpeed = pSkill->GetKnokUpDistance();
         m_fGweight = pSkill->GetGravityWeight();
 
+        //Look 몬스터 쪽으로 변경해주기
 
+         
+        _vector vMonPos = pSkill->GetOwnerPos();
+        m_pTransformCom->LookAtForLandObject(vMonPos);
 
         //다중공격인지 아닌지 판별, 다중공격이 아니라면 한번만 맞아도 되기 때문에 enable해줌
         if (pSkill->GetMultiAtk()) {
@@ -1348,15 +1373,32 @@ void CPlayer::OnHit(_float _fTimeDelta)
     m_pTransformCom->CheckingMove(vPos, m_pNavigationCom, m_bJump);
 
     if (!m_bJump) {
+        m_bSuperArmor = false;
         m_bKnockUp = false;
         m_fKnockUpTime = 0.f;
     }
 
     if (!m_bKnockDown && !m_bKnockDown) {
+        m_bSuperArmor = false;
         m_bDown = true;
         m_fDownTime = 0.f;
     }
 
+
+}
+
+void CPlayer::OnHitMinigame()
+{
+    m_eCurrentState = HEROSTATE::STATE_HIT;
+    m_bSuperArmor = true;
+
+    StateReset();
+    ChangeAnim(100, false);
+
+    m_bKnockUp = true;
+    m_bKnockDown = true;
+    m_fKnockUpSpeed = 4.f;
+    m_fGweight = 1.f;
 
 }
 

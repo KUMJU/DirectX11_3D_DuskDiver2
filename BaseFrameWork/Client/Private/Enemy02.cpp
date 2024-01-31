@@ -79,7 +79,6 @@ void CEnemy02::Tick(_float _fTimeDelta)
 
     if (m_bDown) {
         m_fDownTime += _fTimeDelta;
-        
 
         if (m_fDownTime > 2.f) {
             m_bHit = false;
@@ -87,6 +86,8 @@ void CEnemy02::Tick(_float _fTimeDelta)
             m_IsAtkCool = true;
             m_bAttackCoolTime = 0.f;
 
+            //중복기상 때문에 제거 처리 해놨는데 혹시 나중에 문제가 생긴다면 여기 확인해볼것 
+            m_NextAnimIndex.clear();
             ChangeAnim(12, false);
             m_iLastHitIndex = 100;
             m_iCurrentSkillOrderIndex = 100;
@@ -361,13 +362,6 @@ void CEnemy02::IfEmptyAnimList()
     m_vPrevAnimPos = { 0.f, 0.f, 0.f };
     m_vCurrentAnimPos = { 0.f, 0.f, 0.f };
 
-    //if (m_iAnimNum == 16 || m_iAnimNum == 17) {
-
-    //    m_bDown = true;
-    //    m_fDownTime = 0.f;
-    //    return;
-    //}
-
 
     if ((m_bHit && !m_bKnockUp && m_bDown) || 
         (m_bHit && !m_bKnockUp && !m_bDown)) {
@@ -429,10 +423,10 @@ void CEnemy02::OnHit()
     m_bHit = true;
 
     if (m_bDownAttack) {
-        m_NextAnimIndex.clear();
-        ChangeAnim(54, false);
-        m_NextAnimIndex.push_back({ 50, false });
-        m_NextAnimIndex.push_back({ 12, false });
+         m_NextAnimIndex.clear();
+         ChangeAnim(54, false);
+         m_NextAnimIndex.push_back({ 50, false });
+         m_NextAnimIndex.push_back({ 12, false });
 
     }else if (m_bKnockUp) {
         if (16 == m_iAnimNum) {

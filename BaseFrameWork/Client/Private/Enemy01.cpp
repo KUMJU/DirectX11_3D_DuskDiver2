@@ -87,6 +87,7 @@ void CEnemy01::Tick(_float _fTimeDelta)
             m_IsAtkCool = true;
             m_bAttackCoolTime = 0.f;
 
+            m_NextAnimIndex.clear();
             ChangeAnim(9, false);
             m_iLastHitIndex = 100;
             m_iCurrentSkillOrderIndex = 100;
@@ -289,7 +290,7 @@ void CEnemy01::IdlePattern(_uint _iAtkNum)
         break;
     case 2:
         ChangeAnim(6, false);
-       // m_NextAnimIndex.push_back({ 13, true });
+        m_NextAnimIndex.push_back({ 13, true });
         m_eCurrentState = EMONSTER_STATE::STATE_IDLE;
         break;
     case 3:

@@ -15,6 +15,7 @@ HRESULT CSkillE::Initialize()
 
     m_eSkillOwner = EOWNER_TYPE::OWNER_PLAYER;
 
+    m_bCancle = true;
 
     CCollider::COLLIDER_DESC normalAtkDesc = {};
     normalAtkDesc.fRadius = 1.f;
@@ -29,6 +30,7 @@ HRESULT CSkillE::Initialize()
     info.fWeight = 2.f;
     info.iStartTrackPosition = 20.f;
     info.iEndTrackPosition = 25.f;
+    info.CancleAbleRatio = 1.0;
 
     SKILLINFO info1 = {};
 
@@ -38,6 +40,7 @@ HRESULT CSkillE::Initialize()
     info1.fWeight = 2.f;
     info1.iStartTrackPosition = 29.f;
     info1.iEndTrackPosition = 34.f;
+    info1.CancleAbleRatio = 0.7;
 
 
 

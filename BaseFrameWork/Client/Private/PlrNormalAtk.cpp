@@ -27,7 +27,7 @@ HRESULT CPlrNormalAtk::Initialize(_uint _iComboNum)
 
     skillDesc.iStartTrackPosition = 5.0;
     skillDesc.iEndTrackPosition = 25.0;
-
+    skillDesc.CancleAbleRatio = 0.0;
 
     if (3 == _iComboNum) {
         normalAtkDesc.fRadius = 0.6f;

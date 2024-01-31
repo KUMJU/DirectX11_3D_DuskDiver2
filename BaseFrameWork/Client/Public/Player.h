@@ -260,6 +260,7 @@ private:
 public:
 	virtual void OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _pCollider) override;
 	void OnHit(_float _fTimeDelta);
+	void OnHitMinigame();
 
 public:
 	static shared_ptr<CPlayer> Create();

@@ -1,3 +1,5 @@
+#include "Shader_Defines.hlsli"
+
 /*
 버텍스 쉐이더(정점 쉐이더, VS) : 정점 정보에 수학적인 연산을 하여 특별한 효과를 주는데 사용하는 쉐이더
 픽셀 쉐이더(PS): 렌더링 될 각각의 픽셀의 색을 계산하는 방식의 쉐이더
@@ -14,11 +16,6 @@ matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 texture2D g_Texture;
 
 vector g_RGBColor = vector(1.f, 1.f, 1.f, 1.f);
-
-sampler g_LinearSampler = sampler_state // 선언과 동시에 초기화
-{
-    Filter = MIN_MAG_MIP_LINEAR;
-};
 
 //버퍼 생성 때 작성했던 것과 동일한 자료형, 동일한 시맨틱 이름을 사용해야함
 struct VS_IN
@@ -119,12 +116,18 @@ technique11 DefaultTechnique
     //pass를 여러개로 나눠서 한 셰이더 파일 안에 여러 진입점, 다른 효과를 줄 수도 있음
     pass DefaultPass
     {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         PixelShader = compile ps_5_0 PS_MAIN();
     }
 
     pass PointPass
     {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         PixelShader = compile ps_5_0 PS_MAIN_POINT();
     }

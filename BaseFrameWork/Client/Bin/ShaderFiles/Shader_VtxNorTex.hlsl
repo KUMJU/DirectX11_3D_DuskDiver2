@@ -1,4 +1,6 @@
 
+#include "Shader_Defines.hlsli"
+
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 vector g_vLightDiffuse = vector(1.f, 1.f, 1.f, 1.f);
 vector g_vLightAmbient = vector(1.f, 1.f, 1.f, 1.f);
@@ -20,22 +22,6 @@ vector g_vLightPos = vector(30.f, 10.0f, 30.f, 1.f);
 float g_fLightRange = 30.f;
 
 vector g_vCamPosition;
-
-//Linear:면과 면의 경계가 뚜렷하지 않고 보간해줌
-sampler g_LinearSampler = sampler_state
-{
-    Filter = MIN_MAG_MIP_LINEAR;
-    AddressU = WRAP;
-    AddressV = WRAP;
-};
-
-//Linear:별도 보간을 해주지 않고 면과 면의 경계가 뚜렷함
-sampler g_PointSampler = sampler_state
-{
-    Filter = MIN_MAG_MIP_POINT;
-    AddressU = WRAP;
-    AddressV = WRAP;
-};
 
 struct VS_IN
 {
@@ -165,12 +151,18 @@ technique11 DefaultTechnique
 {
     pass Lighting_Point
     {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         PixelShader = compile ps_5_0 PS_MAIN_POINT();
     }
 
     pass Lighting_Directional
     {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         PixelShader = compile ps_5_0 PS_MAIN_DIRECTIONAL();
     }

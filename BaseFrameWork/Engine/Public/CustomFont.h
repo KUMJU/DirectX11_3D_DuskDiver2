@@ -19,8 +19,8 @@ private:
 	wrl::ComPtr<ID3D11DeviceContext> m_pContext = { nullptr };
 
 private:
-	wrl::ComPtr<SpriteBatch> m_pBatch = { nullptr };
-	wrl::ComPtr<SpriteFont> m_pFont = { nullptr };
+	shared_ptr<SpriteBatch> m_pBatch = { nullptr };
+	shared_ptr<SpriteFont> m_pFont = { nullptr };
 
 public:
 	static shared_ptr<CCustomFont> Create(wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID3D11DeviceContext> _pContext, const wstring& _strFontFilePath);

@@ -5,6 +5,36 @@ Engine::CInputDevice::CInputDevice(void)
 
 }
 
+_bool CInputDevice::Key_Down(_ubyte eKeyID)
+{
+	if (m_preKeyState[eKeyID] != m_byKeyState[eKeyID])
+	{
+		if (m_byKeyState[eKeyID] & 0x80)
+			return true;
+	}
+	return false;
+}
+
+_bool CInputDevice::Key_Up(_ubyte eKeyID)
+{
+	if (m_preKeyState[eKeyID] != m_byKeyState[eKeyID])
+	{
+		if (m_preKeyState[eKeyID] & 0x80)
+			return true;
+	}
+	return false;
+}
+
+_bool CInputDevice::Key_Pressing(_ubyte eKeyID)
+{
+	if (m_preKeyState[eKeyID] == m_byKeyState[eKeyID])
+	{
+		if (m_preKeyState[eKeyID] & 0x80)
+			return true;
+	}
+	return false;
+}
+
 HRESULT Engine::CInputDevice::Ready_InputDev(HINSTANCE hInst, HWND hWnd)
 {
 
@@ -36,6 +66,8 @@ HRESULT Engine::CInputDevice::Ready_InputDev(HINSTANCE hInst, HWND hWnd)
 
 void Engine::CInputDevice::Tick(void)
 {
+	memcpy(&m_preKeyState, &m_byKeyState, sizeof(_ubyte) * MAX_BONE);
+
 	m_pKeyBoard->GetDeviceState(MAX_BONE, m_byKeyState);
 	m_pMouse->GetDeviceState(sizeof(m_tMouseState), &m_tMouseState);
 }

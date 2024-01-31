@@ -30,6 +30,10 @@ public:
 
 	HRESULT ReadyLayerPlayer(const wstring& _strLayerTag);
 	HRESULT ReadyLayerMonster(const wstring& _strLayerTag);
+
+	HRESULT ReadyLayerEvent(const wstring& _strLayerTag);
+
+
 	HRESULT ReadyLayerUI(const wstring& _strLayerTag);
 	HRESULT ReadyLight();
 

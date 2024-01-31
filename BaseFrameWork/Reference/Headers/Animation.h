@@ -32,6 +32,9 @@ public:
 
 	_double GetCurrentTrackPosition() { return m_TrackPosition; }
 	_uint GetKeyFramesNum();
+
+	_double GetAnimRatio() { return m_TrackPosition / m_Duration; }
+
 public:
 	void SetAnimSpeed(_float _fSpeed) { m_AnimSpeed = _fSpeed; }
 	 

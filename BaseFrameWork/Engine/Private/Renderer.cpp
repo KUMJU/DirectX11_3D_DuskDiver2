@@ -23,9 +23,9 @@ HRESULT CRenderer::AddRenderGroup(RENDERGROUP _eRenderGroup, shared_ptr<class CG
 HRESULT CRenderer::AddUIRenderGroup(shared_ptr<class CGameObject> _pGameObject, _int _iPriorityIndex)
 {
 	if(0 == _iPriorityIndex)
-		m_RenderObjects[RENDER_UI].push_back(_pGameObject);
-	else 
 		m_RenderObjects[RENDER_UI].push_front(_pGameObject);
+	else 
+		m_RenderObjects[RENDER_UI].push_back(_pGameObject);
 
 	return S_OK;
 }

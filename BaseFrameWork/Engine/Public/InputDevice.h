@@ -20,6 +20,10 @@ public:
 		return *(((_long*)&m_tMouseState) + eMouseState);	
 	}
 	
+	_bool Key_Down(_ubyte eKeyID);
+	_bool Key_Up(_ubyte eKeyID);
+	_bool Key_Pressing(_ubyte eKeyID);
+
 public:
 	HRESULT Ready_InputDev(HINSTANCE hInst, HWND hWnd);
 	void	Tick(void);
@@ -35,6 +39,7 @@ private:
 
 private:
 	_byte					m_byKeyState[MAX_BONE];		// 키보드에 있는 모든 키값을 저장하기 위한 변수
+	_byte					m_preKeyState[MAX_BONE];
 	DIMOUSESTATE			m_tMouseState;	
 
 public:

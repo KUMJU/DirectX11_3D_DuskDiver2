@@ -12,6 +12,7 @@ CSkillQ::CSkillQ()
 HRESULT CSkillQ::Initialize()
 {
     __super::Initialize();
+    m_bCancle = true;
 
     CCollider::COLLIDER_DESC normalAtkDesc = {};
     normalAtkDesc.fRadius = 0.5f;
@@ -28,6 +29,7 @@ HRESULT CSkillQ::Initialize()
     info.fWeight = 2.f;
     info.iStartTrackPosition = 16.f;
     info.iEndTrackPosition = 35.f;
+    info.CancleAbleRatio = 0.8;
 
     shared_ptr<CCollider> pCollider = CCollider::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), CCollider::TYPE_SPHERE, normalAtkDesc);
     pCollider->SetOwner(shared_from_this());

@@ -8,6 +8,7 @@
 #include "Skill.h"
 #include "Skill_BurstQ.h"
 #include "Skill_BurstE.h"
+#include "Skill_BurstR.h"
 #include "SuperSkillA.h"
 #include "SuperSkillB.h"
 
@@ -122,9 +123,10 @@ void CSkillSet::InitializeSkill(shared_ptr<CModel> _pBaseModel, shared_ptr<CMode
 
 	m_Skills.push_back(pSkill);
 
-	pSkill = CSkill_BurstQ::Create();
+	pSkill = CSkill_BurstR::Create();
 	pSkill->SetAnimation(pBaseAnimation[133]); //41
 	pSkill->SetBurstAnimation(pBurstAnimation[133]);
+	pSkill->SetBurstAnimation(pBurstAnimation[136]);
 
 	m_Skills.push_back(pSkill);
 
@@ -183,8 +185,7 @@ _bool CSkillSet::SwitchingSkill(ESKILLSTATE _eChangeSkill)
 			m_Skills[m_eCurrentSkill]->SkillReset();
 
 			m_eCurrentSkill = _eChangeSkill;
-			//여기쪽 다시 생각해봐야할듯 일단 보류 
-			//m_Skills[m_eCurrentSkill]->SetSkillCancleAble(false);
+			m_Skills[m_eCurrentSkill]->SetSkillCancleAble(false);
 			ActiveSkill(_eChangeSkill);
 			
 		}

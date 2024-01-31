@@ -41,11 +41,13 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(CGameInstance::GetInstance()->InitializeEngine(g_hInst, LEVEL_END, g_iWinSizeX, g_iWinSizeY, GraphicDesc)))
 		return E_FAIL;
 
+	if (FAILED(CGameInstance::GetInstance()->AddFont(TEXT("Font_Default"), TEXT("../Bin/Resources/Font/PixelFont.spritefont"))))
+		return E_FAIL;
+
 	CGameInstance::GetInstance()->LoadLevelResource(LEVEL_LOGO);
 
 	if (FAILED(OpenLevel(LEVEL_LOGO)))
 		return E_FAIL;
-
 
 	return S_OK;
 }
@@ -75,7 +77,6 @@ HRESULT CMainApp::Render()
 
 	if (FAILED(CGameInstance::GetInstance()->Present()))
 		return E_FAIL;
-
 
 	return S_OK;
 }

@@ -14,7 +14,7 @@ END
 
 BEGIN(Client)
 
-//콜리전을 몬스터 그룹에 넣으면 편할것 같음
+class CPlayer;
  
 class CMole : public CGameObject
 {
@@ -36,17 +36,30 @@ public:
 	void SetMinigameMgr(shared_ptr<class CMinigameMole> _pMinigame) {m_pMinigame = _pMinigame;}
 	void StateReset();
 
+	void SetSlotIdx(_uint _iIdx) { m_iCurrentSlotNum = _iIdx; }
+	_uint GetSlotIdx() { return m_iCurrentSlotNum; }
+
 private:
 	HRESULT BindShaderResources();
 
 private:	
 	_uint m_MoleTypeNum = 0;
+	_float m_fSpeed = 3.f;
+	_float m_MovingTime = 0.f;
+	_float m_fDir = 1.f;
+
 	weak_ptr<class CMinigameMole> m_pMinigame;
+
+	_bool m_bCollLock = false;
+	_uint m_iCurrentSlotNum = 100;
 
 private:
 	shared_ptr<CCollider> m_pColider = nullptr;
 	shared_ptr<CModel> m_pModelCom = nullptr;
 	shared_ptr<CShader> m_pShader = nullptr;
+
+private:
+	shared_ptr<CPlayer> m_pPlayer = nullptr;
 
 public:
 

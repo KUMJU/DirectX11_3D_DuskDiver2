@@ -27,6 +27,7 @@ HRESULT CSkill_BurstE::Initialize()
     info.fWeight = 1.f;
     info.iStartTrackPosition = 3.f;
     info.iEndTrackPosition = 15.f;
+    info.CancleAbleRatio = 1.0;
 
     m_bMultiAtk = false;
 
@@ -37,6 +38,8 @@ HRESULT CSkill_BurstE::Initialize()
     info2.fWeight = 2.f;
     info2.iStartTrackPosition = 20.f;
     info2.iEndTrackPosition = 24.f;
+    info2.CancleAbleRatio = 1.0;
+
 
     SKILLINFO info3 = {};
 
@@ -45,6 +48,7 @@ HRESULT CSkill_BurstE::Initialize()
     info3.fWeight = 2.f;
     info3.iStartTrackPosition = 26.f;
     info3.iEndTrackPosition = 30.f;
+    info3.CancleAbleRatio = 1.0;
 
     SKILLINFO info4 = {};
 
@@ -53,6 +57,7 @@ HRESULT CSkill_BurstE::Initialize()
     info4.fWeight = 2.f;
     info4.iStartTrackPosition = 35.f;
     info4.iEndTrackPosition = 38.f;
+    info4.CancleAbleRatio = 1.0;
 
     SKILLINFO info5 = {};
 
@@ -61,6 +66,7 @@ HRESULT CSkill_BurstE::Initialize()
     info5.fWeight = 2.f;
     info5.iStartTrackPosition = 40.f;
     info5.iEndTrackPosition = 45.f;
+    info5.CancleAbleRatio = 1.0;
 
 
     SKILLINFO info6 = {};
@@ -71,6 +77,7 @@ HRESULT CSkill_BurstE::Initialize()
     info6.fWeight = 2.f;
     info6.iStartTrackPosition = 48.f;
     info6.iEndTrackPosition = 53.f;
+    info6.CancleAbleRatio = 0.8;
 
 
     shared_ptr<CCollider> pCollider = CCollider::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), CCollider::TYPE_SPHERE, normalAtkDesc);

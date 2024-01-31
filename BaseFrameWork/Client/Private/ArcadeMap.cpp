@@ -34,6 +34,8 @@
 
 #include "MonsterPool.h"
 
+#include "MinigameMole.h"
+
 
 CArcadeMap::CArcadeMap()
 	:CLevel()
@@ -61,6 +63,9 @@ HRESULT CArcadeMap::Initialize()
 		return E_FAIL;
 
 	if (FAILED(ReadyLayerMonster(TEXT("Layer_Monster"))))
+		return E_FAIL;
+
+	if (FAILED(ReadyLayerEvent(TEXT("Layer_Event"))))
 		return E_FAIL;
 
 	if (FAILED(ReadyLayerCamera(TEXT("Layer_Camera"))))
@@ -178,8 +183,6 @@ HRESULT CArcadeMap::ReadyLayerMap(const wstring& _strLayerTag)
 	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pPortal)))
 		return E_FAIL;
 
-	/*****************/
-
 	return S_OK;
 }
 
@@ -199,6 +202,8 @@ HRESULT CArcadeMap::ReadyLayerMonster(const wstring& _strLayerTag)
 {
 
 	CMonsterPool::GetInstance()->Initialize();
+
+	/*****************/
 
 	//shared_ptr<CGameObject> pMonsterTower = CMonsterTower::Create();
 	//if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pMonsterTower)))
@@ -248,6 +253,18 @@ HRESULT CArcadeMap::ReadyLayerMonster(const wstring& _strLayerTag)
 	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Monster"), pMonster4)))
 		return E_FAIL;
 	pMonster4->SetEnable(false);*/
+
+	return S_OK;
+}
+
+HRESULT CArcadeMap::ReadyLayerEvent(const wstring& _strLayerTag)
+{
+
+	shared_ptr<CMinigameMole> pInstance = CMinigameMole::Create();
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pInstance)))
+		return E_FAIL;
+	//게임 시작 트리거
+//	pInstance->GameStart();
 
 	return S_OK;
 }

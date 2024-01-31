@@ -43,7 +43,7 @@ private:
 	vector<shared_ptr<class CMole>> m_Moles[3]; //Mole Pool
 	list<shared_ptr<class CMole>> m_ActiveMoles; // 실질적으로 게임에서 보이는 녀석들 
 
-	_float3 m_vMolePos[9];
+	_float4 m_vMolePos[9];
 	_bool m_HoleSlot[9];
 
 public:

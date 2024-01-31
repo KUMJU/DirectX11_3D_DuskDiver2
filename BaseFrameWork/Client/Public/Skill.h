@@ -20,12 +20,13 @@ public:
 		_float fKnockDownDistance;
 		_float fWeight;
 		_float fDropSpeed;
-		_float fCancleAbleTime;
+		_double CancleAbleRatio;
 		_double iStartTrackPosition;
 		_double iEndTrackPosition;
 		_bool bKnockUp;
 		_bool bDownAtk;
 		_bool bDropAtk;
+
 	};
 
 public:
@@ -108,6 +109,8 @@ public:
 	//For Player//
 	void SetBurstAnimation(shared_ptr<CAnimation> _pAnim) { m_pBurstAnims.push_back(_pAnim); }
 	void SwitchingBurstMode() { m_pMainAnims = &m_pBurstAnims; }
+
+	_vector GetOwnerPos();
 
 protected:
 	_bool m_bKnokUp = false; //에어본 공격인지 판별

@@ -75,7 +75,7 @@ HRESULT CGameInstance::InitializeEngine(HINSTANCE hInst, _uint iNumLevels, _uint
 		return E_FAIL;
 
 	m_pFontMgr = CFontMgr::Create(m_pGraphicDev->GetDeviceInfo(), m_pGraphicDev->GetDeviceContextInfo());
-	if (!m_pFontMgr)
+	if (nullptr == m_pFontMgr)
 		return E_FAIL;
 
 
@@ -108,8 +108,9 @@ HRESULT CGameInstance::Draw()
 	if (nullptr == m_pGraphicDev)
 		return E_FAIL;
 
+	m_pRenderer->Render();
 	m_pLevelMgr->Render();
-	return m_pRenderer->Render();
+	return S_OK;
 }
 
 HRESULT CGameInstance::ClearBackBufferView(const _float4& _vClearColor)
@@ -377,6 +378,16 @@ void CGameInstance::StopAll()
 		return;
 
 	m_pSoundMgr->StopAll();
+}
+
+HRESULT CGameInstance::AddFont(const wstring& _strFontTag, const wstring& _strFontFilePath)
+{
+	return m_pFontMgr->AddFont(_strFontTag, _strFontFilePath);
+}
+
+HRESULT CGameInstance::RenderFont(const wstring& _strFontTag, const wstring& strText, const _float2& vPosition, _fvector vColor, _float fRotation, const _float2& vOrigin, _float fScale)
+{
+	return m_pFontMgr->Render(_strFontTag, strText, vPosition, vColor, fRotation, vOrigin, fScale);
 }
 
 wrl::ComPtr<ID3D11Device> CGameInstance::GetDeviceInfo()

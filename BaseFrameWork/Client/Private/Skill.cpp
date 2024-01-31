@@ -35,6 +35,8 @@ void CSkill::Tick(_float _fTimeDelta)
 
 		_double temp = (*m_pMainAnims)[m_iCurrentSkillOrder]->GetCurrentTrackPosition();
 
+
+
 		if ((*m_pMainAnims)[m_iCurrentSkillOrder]->GetCurrentTrackPosition() >= m_Infos[m_iCurrentSkillOrder].iStartTrackPosition) {
 			if (m_Infos[m_iCurrentSkillOrder].iEndTrackPosition <= (*m_pMainAnims)[m_iCurrentSkillOrder]->GetCurrentTrackPosition()) {
 				++m_iCurrentSkillOrder;
@@ -50,6 +52,7 @@ void CSkill::Tick(_float _fTimeDelta)
 					m_bDownAtk = m_Infos[m_iCurrentSkillOrder].bDownAtk;
 					m_bKnokUp = m_Infos[m_iCurrentSkillOrder].bKnockUp;
 					m_fKnockUpDistance = m_Infos[m_iCurrentSkillOrder].fKnockUpDistance;
+					m_bCancle = true;
 					return;
 				}
 
@@ -91,6 +94,16 @@ void CSkill::Tick(_float _fTimeDelta)
 
 
 	}
+
+	if (!m_bCancle) {
+
+		_double AnimRatio = (*m_pMainAnims)[m_iCurrentSkillOrder]->GetAnimRatio();
+
+		if (AnimRatio <= m_Infos[m_iCurrentSkillOrder].CancleAbleRatio)
+			m_bCancle = true;
+	}
+
+
 }
 
 void CSkill::LateTick(_float _fTimeDelta)
@@ -124,4 +137,12 @@ void CSkill::SkillReset()
 
 void CSkill::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _pCol)
 {
+}
+
+_vector CSkill::GetOwnerPos()
+{
+	if (!m_pOwnerTransform)
+		return _vector();
+
+	return m_pOwnerTransform->GetState(CTransform::STATE_POSITION);
 }
