@@ -176,6 +176,10 @@ void CSkillSet::Render()
 
 _bool CSkillSet::SwitchingSkill(ESKILLSTATE _eChangeSkill)
 {
+	if (_eChangeSkill == m_eCurrentSkill)
+		return false;
+
+
 	if (ESKILLSTATE::SKILL_END != m_eCurrentSkill) {
 
 		if (m_Skills[m_eCurrentSkill]->GetCancleAble()) {
@@ -186,8 +190,8 @@ _bool CSkillSet::SwitchingSkill(ESKILLSTATE _eChangeSkill)
 
 			m_eCurrentSkill = _eChangeSkill;
 			m_Skills[m_eCurrentSkill]->SetSkillCancleAble(false);
-			ActiveSkill(_eChangeSkill);
-			
+			m_Skills[m_eCurrentSkill]->SetEnable(true);
+
 		}
 		else {
 			return false;
@@ -239,6 +243,24 @@ void CSkillSet::SetBurstMode(_bool _isBurst)
 	}
 
 
+}
+
+_bool CSkillSet::CheckMoveEnable()
+{
+
+	if (m_eCurrentSkill == ESKILLSTATE::SKILL_END) {
+		return true;
+	}else if (m_Skills[m_eCurrentSkill]->GetCancleAble()) {
+		//중간취소 가능
+		m_Skills[m_eCurrentSkill]->SetEnable(false);
+		m_Skills[m_eCurrentSkill]->SkillReset();
+		return true;
+	}
+	else {
+		return false;
+	}
+
+	return true;
 }
 
 shared_ptr<CSkillSet> CSkillSet::Create(shared_ptr<CModel> _pBaseModel, shared_ptr<CModel> _pBurstModel)

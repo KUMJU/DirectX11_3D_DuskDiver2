@@ -26,6 +26,7 @@ HRESULT CSkill_BurstQ::Initialize()
     info.bDownAtk = false;
     info.fKnockUpDistance = 0.f;
     info.fWeight = 1.f;
+    info.CancleAbleRatio = 1.0;
 
     SKILLINFO info1 = {};
 
@@ -35,6 +36,7 @@ HRESULT CSkill_BurstQ::Initialize()
     info1.bDownAtk = false;
     info1.fKnockUpDistance = 0.f;
     info1.fWeight = 1.f;
+    info1.CancleAbleRatio = 1.0;
 
     SKILLINFO info2 = {};
 
@@ -43,6 +45,8 @@ HRESULT CSkill_BurstQ::Initialize()
     info2.bKnockUp = false;
     info2.bDownAtk = true;
     info2.fWeight = 1.f;
+    info2.CancleAbleRatio = 0.9;
+
 
 
     shared_ptr<CCollider> pCollider = CCollider::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), CCollider::TYPE_SPHERE, normalAtkDesc);

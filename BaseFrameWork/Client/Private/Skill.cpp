@@ -65,6 +65,14 @@ void CSkill::Tick(_float _fTimeDelta)
 			CGameInstance::GetInstance()->AddCollider(eCurrentGroup, m_Collider);
 		}
 
+		if (!m_bCancle && m_iCurrentSkillOrder == m_pMainAnims->size()) {
+
+			_double AnimRatio = (*m_pMainAnims)[m_iCurrentSkillOrder]->GetAnimRatio();
+
+			if (AnimRatio >= m_Infos[m_iCurrentSkillOrder].CancleAbleRatio)
+				m_bCancle = true;
+		}
+
 	}
 	else {
 
@@ -90,17 +98,19 @@ void CSkill::Tick(_float _fTimeDelta)
 
 			m_Collider->Tick(m_pOwnerTransform->GetWorldMatrix());
 			CGameInstance::GetInstance()->AddCollider(eCurrentGroup, m_Collider);
+
 		}
 
 
-	}
+		if (!m_bCancle) {
 
-	if (!m_bCancle) {
+			_double AnimRatio = (*m_pMainAnims).front()->GetAnimRatio();
 
-		_double AnimRatio = (*m_pMainAnims)[m_iCurrentSkillOrder]->GetAnimRatio();
+			if (AnimRatio >= m_Infos[m_iCurrentSkillOrder].CancleAbleRatio)
+				m_bCancle = true;
+		}
 
-		if (AnimRatio <= m_Infos[m_iCurrentSkillOrder].CancleAbleRatio)
-			m_bCancle = true;
+
 	}
 
 

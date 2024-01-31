@@ -41,7 +41,7 @@ HRESULT CSkillR::Initialize()
     info2.fWeight = 2.f;
     info2.iStartTrackPosition = 30.f;
     info2.iEndTrackPosition = 41.f;
-    info2.CancleAbleRatio = 0.8;
+    info2.CancleAbleRatio = 0.85;
 
     shared_ptr<CCollider> pCollider = CCollider::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), CCollider::TYPE_SPHERE, normalAtkDesc);
     pCollider->SetOwner(shared_from_this());

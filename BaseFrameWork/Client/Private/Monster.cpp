@@ -74,6 +74,27 @@ _bool CMonster::OnHitKnockUp(_float _fTimeDelta)
     return m_bJump;
 }
 
+_bool CMonster::OnHitDrop(_float _fTimeDelta)
+{
+    m_fGweight += 10.f;
+
+    _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+
+    m_fDropSpeed = m_fDropSpeed + (_fTimeDelta * m_fGravity * m_fGweight);
+    vPos.m128_f32[1] -= m_fDropSpeed * _fTimeDelta;
+
+    m_pTransformCom->CheckingMove(vPos, m_pNavigation, m_bJump);
+
+
+    if (!m_bJump) {
+        m_bKnockUp = false;
+        m_bDown = true;
+        m_bDrop = false;
+        m_fDownTime = 0.f;
+    }
+    return m_bJump;
+}
+
 //플레이어 추적
 void CMonster::ChasePlayer()
 {
@@ -97,9 +118,7 @@ void CMonster::CalcPlayerDistance()
     _vector vPlrPos = m_pTargetTransCom->GetState(CTransform::STATE_POSITION);
     _vector vMonPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
 
-    XMVectorSetY(vPlrPos, vMonPos.m128_f32[1]);
-
-    m_pTransformCom->LookAt(vPlrPos);
+    m_pTransformCom->LookAtForLandObject(vPlrPos);
 }
 
 void CMonster::CalcAnimationDistance()
@@ -286,17 +305,26 @@ void CMonster::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> 
         m_iCurrentSkillOrderIndex = pSkill->GetCurrentOrder();
         m_fKnockUpSpeed = pSkill->GetKnokUpDistance();
         m_fGweight = pSkill->GetGravityWeight();
-        
+        m_bDrop = pSkill->GetIsDropAttack();
+
         m_bSuperArmor = true;
 
         if (m_bKnockUp) {
             KnockUpInfoReset();
         }
 
+
         if (m_bDown) {
             m_bDown = false;
             m_fDownTime = 0.f;
         }
+
+        if (m_bDrop) {
+            m_fDropSpeed = 3.f;
+            KnockUpInfoReset();
+            m_bKnockUp = false;
+        }
+
 
         m_bCollisionCheck = true;
         //넉백 여부, 넉업 여부, 

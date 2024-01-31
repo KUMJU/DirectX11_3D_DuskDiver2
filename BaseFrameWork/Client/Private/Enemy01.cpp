@@ -117,9 +117,6 @@ void CEnemy01::Tick(_float _fTimeDelta)
             m_pTransformCom->GoLeft(_fTimeDelta);
             CalcPlayerDistance();
         }
-        else if (32 == m_iAnimNum) {
-
-        }
         else if (6 == m_iAnimNum) {
         
         }
@@ -139,7 +136,7 @@ void CEnemy01::Tick(_float _fTimeDelta)
 
         ChasePlayer();
 
-        if (!m_IsNearPlr) {
+        if (!m_IsNearPlr){
             WalkPattern(m_iWalkPatternNum);
             m_pTransformCom->GoStraight(_fTimeDelta, m_pNavigation, m_bJump);
         }
@@ -190,10 +187,7 @@ void CEnemy01::LateTick(_float _fTimeDelta)
                 m_IsAtkCool = false;
                 m_bAttackCoolTime = 0.f;
             }
-
-
         }
-
     }
 
     if (FAILED(m_pGameInstance->AddRenderGroup(CRenderer::RENDER_NONBLEND, shared_from_this())))
@@ -279,7 +273,9 @@ void CEnemy01::IdlePattern(_uint _iAtkNum)
     switch (_iAtkNum)
     {
     case 0:
-        ChangeAnim(20, true);
+        if (m_iAnimNum != 20) {
+            ChangeAnim(20, true);
+        }
         m_eCurrentState = EMONSTER_STATE::STATE_WALK;
         break;
     case 1:
@@ -294,12 +290,16 @@ void CEnemy01::IdlePattern(_uint _iAtkNum)
         m_eCurrentState = EMONSTER_STATE::STATE_IDLE;
         break;
     case 3:
-        ChangeAnim(21, true);
+        if (m_iAnimNum != 21) {
+            ChangeAnim(21, true);
+        }
         m_eCurrentState = EMONSTER_STATE::STATE_WALK;
 
         break;
     case 4:
-        ChangeAnim(13, true);
+        if (m_iAnimNum != 13) {
+            ChangeAnim(13, true);
+        }
         m_eCurrentState = EMONSTER_STATE::STATE_IDLE;
         break;
     default:
@@ -319,7 +319,7 @@ void CEnemy01::WalkPattern(_uint _iWalkNum)
         break;
     case 1:
         ChangeAnim(4, true);
-        m_pTransformCom->SetSpeed(7.f);
+        m_pTransformCom->SetSpeed(6.f);
         m_eCurrentState = EMONSTER_STATE::STATE_WALK;
         break;
 
@@ -331,7 +331,6 @@ void CEnemy01::WalkPattern(_uint _iWalkNum)
 
 void CEnemy01::IfEmptyAnimList()
 {
- 
     if (6 == m_iAnimNum) {
 
         ChangeAnim(13, true);
@@ -408,8 +407,12 @@ void CEnemy01::OnHit()
 
 void CEnemy01::ResetState()
 {
-    //m_fWaitTime = 0.f;
-    IdlePattern(rand()%3);
+    //여기가 문제인듯 
+
+    m_IsAtkCool = true;
+    m_fTotalCoolTime = 2.f + rand() % 3;
+    m_eCurrentState = EMONSTER_STATE::STATE_IDLE;
+    IdlePattern(rand()%4);
 }
 
 shared_ptr<CEnemy01> CEnemy01::Create()

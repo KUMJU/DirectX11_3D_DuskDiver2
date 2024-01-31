@@ -20,7 +20,7 @@ HRESULT CEnemy02::Initialize()
     CTransform::TRANSFORM_DESC TransformDesc = {};
     TransformDesc.fSpeedPerSet = 1.f;
     TransformDesc.fRotationPerSet = 10.f;
-
+    
     if (FAILED(__super::Initialize(&TransformDesc)))
         return E_FAIL;
 
@@ -104,6 +104,12 @@ void CEnemy02::Tick(_float _fTimeDelta)
         OnHitKnockUp(_fTimeDelta);
     }
 
+
+    if (m_bDrop) {
+        m_bJump = true;
+        OnHitDrop(_fTimeDelta);
+    }
+
     ////플레이어가 가까워지면 방어모드 on 
     //if ((EMONSTER_STATE::STATE_IDLE == m_eCurrentState ||
     //    EMONSTER_STATE::STATE_WALK == m_eCurrentState)&&
@@ -115,7 +121,6 @@ void CEnemy02::Tick(_float _fTimeDelta)
     //    ChangeAnim(10, true);
     //}
 
-    _vector posCheck2 = m_pTransformCom->GetState(CTransform::STATE_POSITION);
 
 
     //방어 브레이크 이후 스턴 상태 
@@ -144,14 +149,10 @@ void CEnemy02::Tick(_float _fTimeDelta)
            {
                m_eCurrentState = EMONSTER_STATE::STATE_WALK;
                ChangeAnim(62, true);
-               _bool jump = false;
-
-               m_pTransformCom->GoStraight(_fTimeDelta, m_pNavigation, jump);
+               m_pTransformCom->GoStraight(_fTimeDelta, m_pNavigation, m_bJump);
            }
        }
     }
-
-    _vector posCheck3 = m_pTransformCom->GetState(CTransform::STATE_POSITION);
 
 
     if (m_bHit) {
@@ -170,8 +171,6 @@ void CEnemy02::Tick(_float _fTimeDelta)
     }
 
    CalcAnimationDistance();
-
-   _vector posCheck4 = m_pTransformCom->GetState(CTransform::STATE_POSITION);
 
 
    m_pSkillSet->Tick(_fTimeDelta);
@@ -438,6 +437,18 @@ void CEnemy02::OnHit()
             ChangeAnim(16, false);
         }
 
+        m_NextAnimIndex.push_back({ 50, true });
+        m_bJump = true;
+    }
+    else if (m_bDrop) {
+        if (16 == m_iAnimNum) {
+            m_NextAnimIndex.clear();
+            ChangeAnim(17, false);
+        }
+        else {
+            m_NextAnimIndex.clear();
+            ChangeAnim(16, false);
+        }
         m_NextAnimIndex.push_back({ 50, true });
         m_bJump = true;
     }

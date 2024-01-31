@@ -21,10 +21,12 @@ HRESULT CSkill_BurstR::Initialize()
     SKILLINFO info = {};
 
     info.bKnockUp = true;
-    info.fKnockUpDistance = 17.f;
+    info.fKnockUpDistance = 16.f;
     info.fWeight = 1.5f;
     info.iStartTrackPosition = 20.f;
     info.iEndTrackPosition = 30.f;
+    info.CancleAbleRatio = 1.0;
+
 
     m_bMultiAtk = false;
 
@@ -32,9 +34,13 @@ HRESULT CSkill_BurstR::Initialize()
 
     info2.bKnockUp = false;
     info2.fKnockUpDistance = 0.f;
+    info2.bDownAtk = false;
+    info2.bDropAtk = true;
     info2.fWeight = 1.f;
-    info2.iStartTrackPosition = 3.f;
-    info2.iEndTrackPosition = 10.f;
+    info2.iStartTrackPosition = 10.f;
+    info2.iEndTrackPosition = 20.f;
+    info2.CancleAbleRatio = 0.96;
+
 
     shared_ptr<CCollider> pCollider = CCollider::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), CCollider::TYPE_SPHERE, normalAtkDesc);
     pCollider->SetOwner(shared_from_this());

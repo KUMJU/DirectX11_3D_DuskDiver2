@@ -39,6 +39,9 @@ public:
 	void SetPlayerBurstModel(shared_ptr<CModel> _pBaseModel) { m_pPlrBurstModel = _pBaseModel; }
 
 	void SetBurstMode(_bool _isBurst);
+
+	_bool CheckMoveEnable();
+
 private:
 	vector<shared_ptr<class CSkill>> m_Skills;
 	ESKILLSTATE m_eCurrentSkill = SKILL_END;

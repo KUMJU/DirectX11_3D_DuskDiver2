@@ -62,6 +62,7 @@ public:
 protected:
 
 	_bool OnHitKnockUp(_float _fTimeDelta);
+	_bool OnHitDrop(_float _fTimeDelta);
 
 protected:
 	void ChasePlayer();
@@ -114,6 +115,7 @@ protected:
 	_bool m_bKnockBack = false;
 	_bool m_bDownAttack = false;
 	_bool m_bDown = false;
+	_bool m_bDrop = false;
 
 	_float m_bKnockUpDistance = 0.f;
 	_float m_bKnockBackDistance = 0.f;

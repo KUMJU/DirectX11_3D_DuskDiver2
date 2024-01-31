@@ -89,6 +89,7 @@ protected:
 public:
 	_bool GetIsKnokUp() { return m_Infos[m_iCurrentSkillOrder].bKnockUp; }
 	_bool GetIsDownAttack() { return m_Infos[m_iCurrentSkillOrder].bDownAtk; }
+	_bool GetIsDropAttack() { return m_Infos[m_iCurrentSkillOrder].bDropAtk; }
 
 	_float GetGravityWeight() { return m_Infos[m_iCurrentSkillOrder].fWeight;}
 	_float GetKnokUpDistance() { return m_Infos[m_iCurrentSkillOrder].fKnockUpDistance; }

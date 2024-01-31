@@ -521,8 +521,10 @@ void CPlayer::CheckReserveAnimList()
 
         }
 
-        if (m_IsUsingSkill)
+        if (m_IsUsingSkill) {
             m_IsUsingSkill = false;
+            m_bSuperArmor = false;
+        }
 
         //달리기 중이면 달리기로 전환
         if (m_bRunning) {
@@ -622,9 +624,6 @@ void CPlayer::KeyInput(_float _fTimeDelta)
     if (m_bComboAttackStart)
         return;
 
-    if (m_IsUsingSkill)
-        return;
-
     if (m_IsMouseDeb)
         return;
 
@@ -652,7 +651,8 @@ void CPlayer::KeyInput(_float _fTimeDelta)
         //Event_Burst
         CCameraMgr::GetInstance()->StartEvent(TEXT("Event_Burst"));
 
-   //     m_IsUsingSkill = true;
+        m_IsUsingSkill = true;
+        m_bSuperArmor = true;
 
     }
 
@@ -668,7 +668,8 @@ void CPlayer::KeyInput(_float _fTimeDelta)
             m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_SUPER1);
             m_eCurrentState = HEROSTATE::STATE_SKILL_Q;
             ChangeAnim(91, false);
-            m_IsUsingSkill = true;        
+            m_IsUsingSkill = true;
+            m_bSuperArmor = true;
         }
 
 
@@ -682,6 +683,7 @@ void CPlayer::KeyInput(_float _fTimeDelta)
             m_eCurrentState = HEROSTATE::STATE_SKILL_Q;
             ChangeAnim(92, false);
             m_IsUsingSkill = true;
+            m_bSuperArmor = true;
         }
 
     }
@@ -693,19 +695,26 @@ void CPlayer::KeyInput(_float _fTimeDelta)
         DetectMonster();
 
         if (m_bBurstMode) {
-            m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_BURST_Q);
-            ChangeAnim(63, false);
-            m_NextAnimIndex.push_back({ 64 , false });
-            m_NextAnimIndex.push_back({ 65 , false });
+            if (m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_BURST_Q)) {
+                ChangeAnim(63, false);
+                m_NextAnimIndex.push_back({ 64 , false });
+                m_NextAnimIndex.push_back({ 65 , false });
+
+                m_IsUsingSkill = true;
+                m_bSuperArmor = true;
+            }
         }
         else {
             if (m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_Q)) {
                 m_eCurrentState = HEROSTATE::STATE_SKILL_Q;
                 ChangeAnim(60, false);
 
+                m_IsUsingSkill = true;
+                m_bSuperArmor = true;
+                //CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
+                //CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_57.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
             }
         }
-      //  m_IsUsingSkill = true;
 
     }
 
@@ -715,17 +724,21 @@ void CPlayer::KeyInput(_float _fTimeDelta)
         DetectMonster();
 
         if (m_bBurstMode) {
-            m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_BURST_E);
-            ChangeAnim(71, false);
+            if (m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_BURST_E)) {
+                ChangeAnim(71, false);
+
+                m_IsUsingSkill = true;
+                m_bSuperArmor = true;
+            }
         }
         else {
             if (m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_E)) {
                 m_eCurrentState = HEROSTATE::STATE_SKILL_E;
                 ChangeAnim(61, false);
+                m_IsUsingSkill = true;
+                m_bSuperArmor = true;
             }
         }
-
-       // m_IsUsingSkill = true;
 
     }
 
@@ -734,24 +747,31 @@ void CPlayer::KeyInput(_float _fTimeDelta)
         m_eCurrentState = HEROSTATE::STATE_SKILL_R;
 
         if (m_bBurstMode) {
-            ChangeAnim(133, false);
-            m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_BURST_R);
+            if (m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_BURST_R)) {
+                ChangeAnim(133, false);
+                m_NextAnimIndex.push_back({ 136, false });
+                m_NextAnimIndex.push_back({ 137 , false });
 
-            m_NextAnimIndex.push_back({ 136, false });
-            m_NextAnimIndex.push_back({ 137 , false });
+                m_fJumpSpeed = 2.f;
+                m_bJump = true;
 
-            m_fJumpSpeed = 2.f;
-            m_bJump = true;
+                m_IsUsingSkill = true;
+                m_bSuperArmor = true;
+            }
 
         }
         else {
             if (m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_R)) {
                 DetectMonster();
                 ChangeAnim(62, false);
+
+                m_IsUsingSkill = true;
+                m_bSuperArmor = true;
             }
-           // m_IsUsingSkill = true;
+           
 
         }
+
 
     }
     ///////////////////Walk////////////////////////
@@ -775,26 +795,29 @@ void CPlayer::KeyInput(_float _fTimeDelta)
     {
         /*CalcLookVector(1.f);
 */
-        m_bRunning = true;
-        m_fCurrentDir = 1.f;
+        if (m_pPlayerSkillset->CheckMoveEnable()) {
 
-        vDst = vCamLookDir;
-        vSrc = m_pTransformCom->GetState(CTransform::STATE_LOOK);
-        
-        m_MoveFlag |= 0x0001;
-       // m_pTransformCom->GoStraight(_fTimeDelta);
+            m_bRunning = true;
+            m_fCurrentDir = 1.f;
 
-        if (m_bDash) {
-            m_bSprint = true;
-            FinalAnimNum = 80;
-            m_bDash = true;
+            vDst = vCamLookDir;
+            vSrc = m_pTransformCom->GetState(CTransform::STATE_LOOK);
+
+            m_MoveFlag |= 0x0001;
+            // m_pTransformCom->GoStraight(_fTimeDelta);
+
+            if (m_bDash) {
+                m_bSprint = true;
+                FinalAnimNum = 80;
+                m_bDash = true;
+            }
+            else {
+                FinalAnimNum = 59;
+            }
+
+            IsLoop = true;
+            IsKeyInput = true;
         }
-        else {
-            FinalAnimNum = 59;
-        }
-
-        IsLoop = true;
-        IsKeyInput = true;
     }
 
     if (GetKeyState('S') & 0x8000) {
@@ -952,13 +975,15 @@ void CPlayer::KeyInput(_float _fTimeDelta)
         if (HEROSTATE::STATE_JUMP == m_eCurrentState)
             return;
 
-        m_eCurrentState = HEROSTATE::STATE_JUMP;
-        m_fJumpSpeed = m_fInitialJumpSpeed;
+        if (m_pPlayerSkillset->CheckMoveEnable()) {
+            m_eCurrentState = HEROSTATE::STATE_JUMP;
+            m_fJumpSpeed = m_fInitialJumpSpeed;
 
-        FinalAnimNum = 52;
-        IsLoop = false;
-        m_bJump = true;
-        IsKeyInput = true;
+            FinalAnimNum = 52;
+            IsLoop = false;
+            m_bJump = true;
+            IsKeyInput = true;
+        }
     }
 
     if (IsKeyInput) {
@@ -1008,9 +1033,6 @@ void CPlayer::KeyInput(_float _fTimeDelta)
 void CPlayer::MouseInput(_float _fTimeDelta)
 {
     if (m_pModelCom->IsLinearInterpolation())
-        return;
-
-    if (m_IsUsingSkill)
         return;
 
     if (m_eCurrentState == HEROSTATE::STATE_HEAVY_ATTACK ||
@@ -1147,15 +1169,16 @@ void CPlayer::MouseInput(_float _fTimeDelta)
                 if (m_bComboAttackStart)
                     return;
 
-                ChangeAnim(10, false);
-                m_fMinComboAnimTime = 0.5f;
-                m_eCurrentState = HEROSTATE::STATE_COMBO_ATTACK1;
-                m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_ATK1);
-                m_bComboAttackStart = true;
-                
-                CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
-                CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_01.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
-                break;
+                if (m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_ATK1)) {
+                    ChangeAnim(10, false);
+                    m_fMinComboAnimTime = 0.5f;
+                    m_eCurrentState = HEROSTATE::STATE_COMBO_ATTACK1;
+                    m_bComboAttackStart = true;
+
+                    CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
+                    CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_01.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
+                    break;
+                }
             }
 
             m_IsMouseDeb = true;

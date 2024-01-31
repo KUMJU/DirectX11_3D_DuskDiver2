@@ -77,7 +77,7 @@ HRESULT CSkill_BurstE::Initialize()
     info6.fWeight = 2.f;
     info6.iStartTrackPosition = 48.f;
     info6.iEndTrackPosition = 53.f;
-    info6.CancleAbleRatio = 0.8;
+    info6.CancleAbleRatio = 0.97;
 
 
     shared_ptr<CCollider> pCollider = CCollider::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), CCollider::TYPE_SPHERE, normalAtkDesc);
