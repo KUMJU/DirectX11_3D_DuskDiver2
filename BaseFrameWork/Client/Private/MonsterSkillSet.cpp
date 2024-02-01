@@ -8,6 +8,7 @@
 
 #include "Enemy1Skill.h"
 #include "Enemy2Skill.h"
+#include "MiddleBossSkill.h"
 
 CMonsterSkillSet::CMonsterSkillSet()
 {
@@ -147,6 +148,25 @@ HRESULT CMonsterSkillSet::SettingEnemy2Skill(shared_ptr<CModel> _pModel)
 
 HRESULT CMonsterSkillSet::SettingMiddleBossSkill(shared_ptr<CModel> _pModel)
 {
+	shared_ptr<CSkill> pSkill;
+	vector<shared_ptr<CAnimation>> pBaseAnimation = _pModel->GetAnimations();
+
+	pSkill = CMiddleBossSkill::Create(1);
+	pSkill->SetAnimation(pBaseAnimation[23]);
+	m_Skills.push_back(pSkill);
+
+	pSkill = CMiddleBossSkill::Create(2);
+	pSkill->SetAnimation(pBaseAnimation[31]);
+	m_Skills.push_back(pSkill);
+
+	pSkill = CMiddleBossSkill::Create(3);
+	pSkill->SetAnimation(pBaseAnimation[32]);
+	m_Skills.push_back(pSkill);
+
+	pSkill = CMiddleBossSkill::Create(4);
+	pSkill->SetAnimation(pBaseAnimation[35]);
+	m_Skills.push_back(pSkill);
+
 	return S_OK;
 }
 

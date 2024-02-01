@@ -35,6 +35,8 @@ HRESULT CEnemy02::Initialize()
     m_iTotalAtkNum = 3;
     m_fTotalCoolTime = 2.f;
 
+    m_iHP = 200;
+
     m_pModelCom->SetAnimNum(20);
     m_pNavigation = CMapLoader::GetInstance()->GetCurrentNavi(0);
     m_Components.emplace(TEXT("Com_Navigation"), m_pNavigation);
@@ -81,18 +83,27 @@ void CEnemy02::Tick(_float _fTimeDelta)
         m_fDownTime += _fTimeDelta;
 
         if (m_fDownTime > 2.f) {
-            m_bHit = false;
-            m_eCurrentState = EMONSTER_STATE::STATE_IDLE;
-            m_IsAtkCool = true;
-            m_bAttackCoolTime = 0.f;
 
-            //중복기상 때문에 제거 처리 해놨는데 혹시 나중에 문제가 생긴다면 여기 확인해볼것 
-            m_NextAnimIndex.clear();
-            ChangeAnim(12, false);
-            m_iLastHitIndex = 100;
-            m_iCurrentSkillOrderIndex = 100;
-            ResetState();
-            m_bDown = false;
+
+            if (m_bDie) {
+                m_IsEnabled = false;
+            }
+            else {
+
+                m_bHit = false;
+                m_eCurrentState = EMONSTER_STATE::STATE_IDLE;
+                m_IsAtkCool = true;
+                m_bAttackCoolTime = 0.f;
+
+                //중복기상 때문에 제거 처리 해놨는데 혹시 나중에 문제가 생긴다면 여기 확인해볼것 
+                m_NextAnimIndex.clear();
+                ChangeAnim(12, false);
+                m_iLastHitIndex = 100;
+                m_iCurrentSkillOrderIndex = 100;
+                ResetState();
+                m_bDown = false;
+            }
+         
 
         }
 
@@ -124,7 +135,7 @@ void CEnemy02::Tick(_float _fTimeDelta)
 
 
     //방어 브레이크 이후 스턴 상태 
-    if (EMONSTER_STATE::STATE_STUN == m_eCurrentState) {
+    if (EMONSTER_STATE::STATE_STUN == m_eCurrentState && !m_bDie) {
 
         m_fStunTime += _fTimeDelta;
 
@@ -139,7 +150,7 @@ void CEnemy02::Tick(_float _fTimeDelta)
 
     //공격하는 중이 아니고 공격 쿨타임이 아닐때(행동 결정)
     if(EMONSTER_STATE::STATE_ATTACK != m_eCurrentState && !m_IsAtkCool&& !m_bDefenceMode &&
-        EMONSTER_STATE::STATE_STUN != m_eCurrentState && !m_bHit) {
+        EMONSTER_STATE::STATE_STUN != m_eCurrentState && !m_bHit && !m_bDie) {
 
         ChasePlayer();
 
@@ -167,6 +178,7 @@ void CEnemy02::Tick(_float _fTimeDelta)
     }
 
     if (m_pModelCom->PlayAnimation(_fTimeDelta, m_bLoop, &m_vCurrentAnimPos)) {
+        
         CheckReserveAnimList();
     }
 
@@ -188,7 +200,7 @@ void CEnemy02::LateTick(_float _fTimeDelta)
     if (!m_IsEnabled)
         return;
 
-    if (!m_bHit) {
+    if (!m_bHit && !m_bDie) {
 
         CalcPlayerDistance();
 
@@ -362,6 +374,13 @@ void CEnemy02::IfEmptyAnimList()
     m_vCurrentAnimPos = { 0.f, 0.f, 0.f };
 
 
+    if (m_iAnimNum == 9) {
+
+        m_IsEnabled = false;
+        return;
+    }
+
+
     if ((m_bHit && !m_bKnockUp && m_bDown) || 
         (m_bHit && !m_bKnockUp && !m_bDown)) {
 
@@ -454,12 +473,18 @@ void CEnemy02::OnHit()
     }
     else {
          
-
-        if (18 == m_iAnimNum) {
-            ChangeAnim(19, false);
+        if (m_bDie) {
+            ChangeAnim(9, false);
         }
         else {
-            ChangeAnim(18, false);
+
+
+            if (18 == m_iAnimNum) {
+                ChangeAnim(19, false);
+            }
+            else {
+                ChangeAnim(18, false);
+            }
         }
     }
 

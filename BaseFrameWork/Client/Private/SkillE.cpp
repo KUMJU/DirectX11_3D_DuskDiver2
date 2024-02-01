@@ -13,6 +13,7 @@ HRESULT CSkillE::Initialize()
 
     __super::Initialize();
 
+    m_iDamage = 10;
     m_eSkillOwner = EOWNER_TYPE::OWNER_PLAYER;
 
     m_bCancle = true;

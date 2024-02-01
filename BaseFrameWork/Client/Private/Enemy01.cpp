@@ -42,6 +42,7 @@ HRESULT CEnemy01::Initialize()
     m_pNavigation = CMapLoader::GetInstance()->GetCurrentNavi(0);
     m_Components.emplace(TEXT("Com_Navigation"), m_pNavigation);
 
+    m_iHP = 100;
 
     /*********Collider*************/
 
@@ -82,18 +83,25 @@ void CEnemy01::Tick(_float _fTimeDelta)
 
 
         if (m_fDownTime > 2.f) {
-            m_bHit = false;
-            m_eCurrentState = EMONSTER_STATE::STATE_IDLE;
-            m_IsAtkCool = true;
-            m_bAttackCoolTime = 0.f;
 
-            m_NextAnimIndex.clear();
-            ChangeAnim(9, false);
-            m_iLastHitIndex = 100;
-            m_iCurrentSkillOrderIndex = 100;
-            ResetState();
-            m_bDown = false;
+            if (m_bDie) {
+                m_IsEnabled = false;
+            }
+            else {
 
+                m_bHit = false;
+                m_eCurrentState = EMONSTER_STATE::STATE_IDLE;
+                m_IsAtkCool = true;
+                m_bAttackCoolTime = 0.f;
+
+                m_NextAnimIndex.clear();
+                ChangeAnim(9, false);
+                m_iLastHitIndex = 100;
+                m_iCurrentSkillOrderIndex = 100;
+                ResetState();
+                m_bDown = false;
+
+            }
         }
 
 
@@ -109,7 +117,7 @@ void CEnemy01::Tick(_float _fTimeDelta)
 
 
     //공격 쿨타임일때
-    if (m_IsAtkCool && !m_bHit) {
+    if (m_IsAtkCool && !m_bHit && !m_bDie) {
         m_IsNearPlr = false;
 
         if (20 == m_iAnimNum) {
@@ -132,7 +140,7 @@ void CEnemy01::Tick(_float _fTimeDelta)
     }
 
     //공격하는 중이 아니고 공격 쿨타임이 아닐때(행동 결정)
-    if (EMONSTER_STATE::STATE_ATTACK != m_eCurrentState && !m_IsAtkCool && !m_bHit) {
+    if (EMONSTER_STATE::STATE_ATTACK != m_eCurrentState && !m_IsAtkCool && !m_bHit && !m_bDie) {
 
         ChasePlayer();
 
@@ -176,7 +184,7 @@ void CEnemy01::LateTick(_float _fTimeDelta)
     if (!m_IsEnabled)
         return;
 
-    if (!m_bHit) {
+    if (!m_bHit && !m_bDie) {
 
         CalcPlayerDistance();
 
@@ -331,6 +339,12 @@ void CEnemy01::WalkPattern(_uint _iWalkNum)
 
 void CEnemy01::IfEmptyAnimList()
 {
+    if (m_iAnimNum == 8) {
+
+        m_IsEnabled = false;
+        return;
+    }
+
     if (6 == m_iAnimNum) {
 
         ChangeAnim(13, true);
@@ -400,7 +414,12 @@ void CEnemy01::OnHit()
     }
     else {
 
-       ChangeAnim(12, false);
+        if (m_bDie) {
+            ChangeAnim(8, false);
+        }
+        else {
+            ChangeAnim(12, false);
+        }
     }
 
 }

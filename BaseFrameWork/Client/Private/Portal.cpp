@@ -53,7 +53,6 @@ void CPortal::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _
 	//플레이어 충돌
 
 	if (CGameObject::EObjType::OBJ_PLAYER == _eObjType) {
-		m_IsEnabled = false;
 		shared_ptr<CGameObject> pPlayer = _pCollider->GetOwner();
 
 		_vector vPos = XMLoadFloat3(&vWarpPosition);
@@ -61,6 +60,7 @@ void CPortal::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _
 		//플레이어 위치 셋팅 + 네비게이션 인덱스 갱신
 		pPlayer->SetPosition(XMVectorSetW(vPos, 1.f));
 		dynamic_pointer_cast<CNavigation>(pPlayer->GetComponent(TEXT("Com_Navigation")))->CalcCurrentPos(vPos);
+		m_IsActive = false;
 	}
 }
 

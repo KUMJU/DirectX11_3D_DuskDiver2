@@ -17,6 +17,7 @@ HRESULT CPlrNormalAtk::Initialize(_uint _iComboNum)
     normalAtkDesc.fRadius = 0.4f;
     normalAtkDesc.vCenter = { 0.f, 0.7f, 0.5f };
 
+    m_iDamage = 10;
 
     m_bMultiAtk = false;
 

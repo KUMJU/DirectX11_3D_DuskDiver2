@@ -13,6 +13,7 @@
 #include <fstream>
 
 #include "Json/json.h"
+#include "BattleSystem.h"
 
 CMainApp::CMainApp()
 {
@@ -91,6 +92,7 @@ HRESULT CMainApp::OpenLevel(LEVEL _eStartLevel)
 
 void CMainApp::Free()
 {
+	CBattleSystem::DestroyInstance();
 	CImguiMgr::DestroyInstance();
 	CGameInstance::DestroyInstance();
 }

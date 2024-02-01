@@ -5,12 +5,17 @@
 #include "MapObject.h"
 #include "GameInstance.h"
 
+#include "MinigameTrigger.h"
+
 CMinigameMole::CMinigameMole()
 {
 }
 
 HRESULT CMinigameMole::Initialize(CTransform::TRANSFORM_DESC* _pDesc)
 {
+
+    __super::Initialize();
+
 
     //mole 리스트에 미리 mole 객체 담아두기 -> 풀링용  
 
@@ -42,6 +47,11 @@ HRESULT CMinigameMole::Initialize(CTransform::TRANSFORM_DESC* _pDesc)
     // 8 9 10 11
 
     _vector vCenterPos = { 88.f, 40.f, -300.f };
+
+
+    shared_ptr<CMinigameTrigger> pTrigger =  CMinigameTrigger::Create(dynamic_pointer_cast<CMinigame>(shared_from_this()), { 100.f, 40.f, -300.f });
+    CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Event"), pTrigger);
+
 
     for (_int i = 0; i < 9; ++i) {
 
@@ -169,14 +179,12 @@ HRESULT CMinigameMole::Render()
 
 void CMinigameMole::GameStart()
 {
-    m_bProcessing = true;
 
 }
 
 void CMinigameMole::GameEnd()
 {
-
-    m_bProcessing = false;
+    __super::GameEnd();
 
     for (auto& iter : m_ActiveMoles) {
         iter->SetEnable(false);

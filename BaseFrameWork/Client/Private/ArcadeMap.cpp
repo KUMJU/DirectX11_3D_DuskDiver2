@@ -35,6 +35,9 @@
 #include "MonsterPool.h"
 
 #include "MinigameMole.h"
+#include "BattleSystem.h"
+
+#include "MonsterTrigger.h"
 
 
 CArcadeMap::CArcadeMap()
@@ -75,13 +78,18 @@ HRESULT CArcadeMap::Initialize()
 		return E_FAIL;
 
 
+	CBattleSystem::GetInstance()->Initialize();
 	CGameInstance::GetInstance()->PlayBGM(TEXT("BGM_MainTheme.wav"), 1.f);
+
 
 	return S_OK;
 }
 
 void CArcadeMap::Tick(_float _fTimeDelta)
 {
+	//여기 위치 괜찮은지 모르겠음 테스트 좀 해보고 변경 필요하면 변경할것 
+	CBattleSystem::GetInstance()->Tick(_fTimeDelta);
+
 	if (m_bKeyDeb) {
 		m_fTime += _fTimeDelta;
 		if (m_fTime > 10.f) {
@@ -183,6 +191,19 @@ HRESULT CArcadeMap::ReadyLayerMap(const wstring& _strLayerTag)
 	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pPortal)))
 		return E_FAIL;
 
+
+	/******몬스터 트리거 테스트*******/
+
+	list<CMonsterPool::SPAWN_INFO> SpawnList;
+
+	CMonsterPool::SPAWN_INFO info1 = {};
+	info1.iMonsterType = 2;
+	info1.vMonsterPos = _vector({ -10.f, 25.f, -175.f });
+	SpawnList.push_back(info1);
+
+	shared_ptr<CMonsterTrigger> pTrigger = CMonsterTrigger::Create(&SpawnList, { 0.f, 25.f, -175.f });
+	CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Event"), pTrigger);
+
 	return S_OK;
 }
 
@@ -246,13 +267,13 @@ HRESULT CArcadeMap::ReadyLayerMonster(const wstring& _strLayerTag)
 	pMonster3 = CFinalBoss::Create();
 	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Monster"), pMonster3)))
 		return E_FAIL;
-	pMonster3->SetEnable(false);
+	pMonster3->SetEnable(false);*/
 
 
 	pMonster4 = CMiddleBoss::Create();
 	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Monster"), pMonster4)))
 		return E_FAIL;
-	pMonster4->SetEnable(false);*/
+	pMonster4->SetEnable(false);
 
 	return S_OK;
 }
@@ -264,7 +285,7 @@ HRESULT CArcadeMap::ReadyLayerEvent(const wstring& _strLayerTag)
 	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pInstance)))
 		return E_FAIL;
 	//게임 시작 트리거
-//	pInstance->GameStart();
+	pInstance->GameStart();
 
 	return S_OK;
 }
@@ -339,14 +360,12 @@ void CArcadeMap::KeyInput()
 //	}
 
 
-	//if (GetKeyState('0') & 0x8000) {
+	if (GetKeyState('0') & 0x8000) {
 
-	//	pMonster3->SetEnable(false);
-	//	pMonster4->SetEnable(true);
+		pMonster4->SetEnable(true);
+		m_bKeyDeb = true;
 
-	//	m_bKeyDeb = true;
-
-	//}
+	}
 
 }
 

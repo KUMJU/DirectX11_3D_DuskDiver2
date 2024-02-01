@@ -32,6 +32,9 @@ private:
 
 
 
+protected:
+	virtual void OnHit() override;
+
 public:
 
 	static shared_ptr<CMiddleBoss> Create();

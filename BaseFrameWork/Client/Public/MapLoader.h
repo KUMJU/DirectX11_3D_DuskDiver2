@@ -40,7 +40,7 @@ public:
 	
 private:
 	_bool m_IsImguiLoad = false;
-
+	_uint m_iTowerIdx = 0;
 	_float4x4 m_WorldMatrix;
 
 	shared_ptr<CNavigation> m_pNavigationCom = nullptr;

@@ -106,7 +106,7 @@ private:
 	//진짜 state가 loop
 	_bool m_isAnimLoop = true;
 
-	_bool m_IsInBattle = true;
+	_bool m_IsInBattle = false;
 
 //변신~~~~~~~~~!!!!!
 private:
@@ -170,6 +170,7 @@ private:
 	_bool m_bRunning = false;
 	_bool m_bAttack = false;
 	_bool m_bSuperArmor = false;
+	_float m_fSuperArmorTime = 0.f;
 
 	_bool m_bAtkDeb = false;
 
@@ -261,6 +262,9 @@ public:
 	virtual void OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _pCollider) override;
 	void OnHit(_float _fTimeDelta);
 	void OnHitMinigame();
+
+	void SetOnBattle(_bool _bOnBattle) { m_IsInBattle = _bOnBattle; }
+
 
 public:
 	static shared_ptr<CPlayer> Create();

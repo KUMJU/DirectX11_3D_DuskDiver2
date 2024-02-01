@@ -25,7 +25,7 @@ _float CTimer::ComputeTimeDelta(void)
 		m_FixTime = m_FrameTime;
 	}
 
-	m_fTimeDelta = float(m_FrameTime.QuadPart - m_LastTime.QuadPart) / m_CpuTick.QuadPart;
+	m_fTimeDelta = (float(m_FrameTime.QuadPart - m_LastTime.QuadPart) / m_CpuTick.QuadPart) * m_fTimeOffset;
 
 	m_LastTime = m_FrameTime;
 

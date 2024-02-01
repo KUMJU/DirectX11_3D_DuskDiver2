@@ -49,6 +49,14 @@ HRESULT CMonster::Render()
     return S_OK;
 }
 
+void CMonster::SetSpawnState()
+{
+
+
+
+
+}
+
 _bool CMonster::OnHitKnockUp(_float _fTimeDelta)
 {
 
@@ -279,6 +287,8 @@ void CMonster::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> 
 
         shared_ptr<CSkill> pSkill = dynamic_pointer_cast<CSkill>(_pCollider->GetOwner());
 
+        if (m_bDie)
+            return;
 
         if (pSkill->GetMultiAtk()) {
             if (m_bSuperArmor) {
@@ -293,7 +303,7 @@ void CMonster::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> 
         }
 
         //공격 중이었다면 공격 취소 
-        if (m_eCurrentState == EMONSTER_STATE::STATE_ATTACK) {
+        if (m_eCurrentState == EMONSTER_STATE::STATE_ATTACK && EMONSTER_TYPE::MONSTER_NORMAL == m_eMonsterType) {
             m_pSkillSet->SkillCancle();
             m_bAttackCoolTime = 0.f;
         }
@@ -306,6 +316,20 @@ void CMonster::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> 
         m_fKnockUpSpeed = pSkill->GetKnokUpDistance();
         m_fGweight = pSkill->GetGravityWeight();
         m_bDrop = pSkill->GetIsDropAttack();
+
+        CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MON);
+        CGameInstance::GetInstance()->PlayAudio(TEXT("flesh_hit_02.wav"), CSoundMgr::CHANNELID::CH_MON, 0.7f);
+
+        _int iDamage = pSkill->GetDamage();
+
+        m_iHP -= iDamage;
+
+        if (m_iHP <= 0) {
+
+            m_bDie = true;
+            m_eCurrentState = EMONSTER_STATE::STATE_DIE;
+        }
+
 
         m_bSuperArmor = true;
 

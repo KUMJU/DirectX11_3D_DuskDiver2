@@ -14,6 +14,8 @@ HRESULT CSkill_BurstR::Initialize()
 
     m_bMultiAtk = false;
 
+    m_iDamage = 20;
+
     CCollider::COLLIDER_DESC normalAtkDesc = {};
     normalAtkDesc.fRadius = 1.f;
     normalAtkDesc.vCenter = { 0.f, 0.6f, 0.f };

@@ -12,6 +12,8 @@ HRESULT CAirAtk::Initialize(_uint _iComboNum)
 {
     m_eSkillOwner = EOWNER_TYPE::OWNER_PLAYER;
 
+    m_iDamage = 10;
+
     CCollider::COLLIDER_DESC normalAtkDesc = {};
     normalAtkDesc.fRadius = 0.7f;
     normalAtkDesc.vCenter = { 0.f, 0.5f, 0.4f };

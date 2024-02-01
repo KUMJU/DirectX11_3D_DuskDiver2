@@ -57,7 +57,9 @@ public:
 	virtual HRESULT Render();
 
 public:
-	void SetSpawnState();
+	//오브젝트풀에서 꺼내기 전에 초기화해주는 작업 
+	virtual void SetSpawnState();
+	_bool GetIsDead() { return m_bDie; }
 
 protected:
 
@@ -131,7 +133,7 @@ protected:
 	_uint m_iLastHitIndex = 100; //플레이어 스킬 식별
 	_uint m_iCurrentSkillOrderIndex = 100;
 
-
+	_bool m_bDie = false;
 	_bool m_bSuperArmor = false;
 	_float m_bSuperArmorCoolTime = 0.f;
 

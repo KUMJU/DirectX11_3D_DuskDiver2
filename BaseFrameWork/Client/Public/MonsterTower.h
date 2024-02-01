@@ -18,7 +18,7 @@ public:
 	virtual ~CMonsterTower() = default;
 
 public:
-	virtual HRESULT Initialize();
+	virtual HRESULT Initialize(_uint _iTowerIdx);
 	virtual void PriorityTick(_float _fTimeDelta) override;
 	virtual void Tick(_float _fTimeDelta) override;
 	virtual void LateTick(_float _fTimeDelta) override;
@@ -27,9 +27,11 @@ public:
 public:
 	virtual void OnCollide(EObjType _eObjType, shared_ptr<CCollider> _pCollider) override;
 
-
 public:
 	void TowerActive();
+
+private:
+	void TowerEventSetting();
 
 private:
 	_bool m_IsActived = false;
@@ -41,8 +43,14 @@ private:
 
 	list<CMonsterPool::SPAWN_INFO> m_SpawnMonsterList;
 
+	//shared_ptr<Trigger> m_pTrigger
+	//TowerType 1 2 
+
+	//shared_ptr<class CEventTrigger> m_pTrigger = nullptr;
+
+	_uint m_iTowerIdx = 0;
 public:
-	static shared_ptr<CMonsterTower> Create();
+	static shared_ptr<CMonsterTower> Create(_uint _iTowerIdx);
 
 };
 

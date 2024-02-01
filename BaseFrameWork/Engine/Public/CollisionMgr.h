@@ -41,6 +41,8 @@ private:
 	void CheckPlrMonProj();
 	void CheckMonsterCollide();
 	void CheckPlrTrigger();
+	void CheckPlrProjTrigger();
+
 
 private:
 

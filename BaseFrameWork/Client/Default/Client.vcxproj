@@ -158,6 +158,7 @@
   <ItemGroup>
     <ClInclude Include="..\Public\AirAtk.h" />
     <ClInclude Include="..\Public\ArcadeMap.h" />
+    <ClInclude Include="..\Public\BattleSystem.h" />
     <ClInclude Include="..\Public\CameraFree.h" />
     <ClInclude Include="..\Public\CameraMgr.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
@@ -192,12 +193,16 @@
     <ClInclude Include="..\Public\MapLoader.h" />
     <ClInclude Include="..\Public\MapObject.h" />
     <ClInclude Include="..\Public\MiddleBoss.h" />
+    <ClInclude Include="..\Public\MiddleBossSkill.h" />
+    <ClInclude Include="..\Public\Minigame.h" />
     <ClInclude Include="..\Public\MinigameMole.h" />
+    <ClInclude Include="..\Public\MinigameTrigger.h" />
     <ClInclude Include="..\Public\Mole.h" />
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\Public\MonsterPool.h" />
     <ClInclude Include="..\Public\MonsterSkillSet.h" />
     <ClInclude Include="..\Public\MonsterTower.h" />
+    <ClInclude Include="..\Public\MonsterTrigger.h" />
     <ClInclude Include="..\Public\NaviToolMgr.h" />
     <ClInclude Include="..\Public\pch.h" />
     <ClInclude Include="..\Public\Player.h" />
@@ -227,6 +232,7 @@
     <ClCompile Include="..\..\..\..\..\..\..\Downloads\ImGuizmo-master\ImGuizmo-master\ImGuizmo.cpp" />
     <ClCompile Include="..\Private\AirAtk.cpp" />
     <ClCompile Include="..\Private\ArcadeMap.cpp" />
+    <ClCompile Include="..\Private\BattleSystem.cpp" />
     <ClCompile Include="..\Private\CameraFree.cpp" />
     <ClCompile Include="..\Private\CameraMgr.cpp" />
     <ClCompile Include="..\Private\Dummy.cpp" />
@@ -257,12 +263,16 @@
     <ClCompile Include="..\Private\MapLoader.cpp" />
     <ClCompile Include="..\Private\MapObject.cpp" />
     <ClCompile Include="..\Private\MiddleBoss.cpp" />
+    <ClCompile Include="..\Private\MiddleBossSkill.cpp" />
+    <ClCompile Include="..\Private\Minigame.cpp" />
     <ClCompile Include="..\Private\MinigameMole.cpp" />
+    <ClCompile Include="..\Private\MinigameTrigger.cpp" />
     <ClCompile Include="..\Private\Mole.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\Private\MonsterPool.cpp" />
     <ClCompile Include="..\Private\MonsterSkillSet.cpp" />
     <ClCompile Include="..\Private\MonsterTower.cpp" />
+    <ClCompile Include="..\Private\MonsterTrigger.cpp" />
     <ClCompile Include="..\Private\NaviToolMgr.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\PlrNormalAtk.cpp" />

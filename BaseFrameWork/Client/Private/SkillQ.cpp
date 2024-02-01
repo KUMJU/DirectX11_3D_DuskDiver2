@@ -14,6 +14,9 @@ HRESULT CSkillQ::Initialize()
     __super::Initialize();
     m_bCancle = true;
 
+    m_iDamage = 15;
+
+
     CCollider::COLLIDER_DESC normalAtkDesc = {};
     normalAtkDesc.fRadius = 0.5f;
     normalAtkDesc.vCenter = { 0.f, 0.8f, 0.7f };

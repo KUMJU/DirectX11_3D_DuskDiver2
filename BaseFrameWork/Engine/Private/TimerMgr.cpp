@@ -15,6 +15,16 @@ _float CTimerMgr::ComputeTimeDelta(const wstring& _strTimerTag)
     return pTimer->ComputeTimeDelta();
 }
 
+void CTimerMgr::SetTimerOffset(const wstring& _strTimerTag, _float _fOffset)
+{
+    shared_ptr<CTimer> pTimer = FindTimer(_strTimerTag);
+
+    if (!pTimer)
+        return;
+
+    pTimer->SetTimeOffset(_fOffset);
+}
+
 HRESULT CTimerMgr::AddTimer(const wstring& _strTimerTag)
 {
     shared_ptr<CTimer> pTimer = FindTimer(_strTimerTag);

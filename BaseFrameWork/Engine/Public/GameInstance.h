@@ -52,6 +52,7 @@ public:
 public:
 	_float ComputeTimeDelta(const wstring& pTimer);
 	HRESULT AddTimer(const wstring& pTimerTag);
+	void SetTimerOffset(const wstring& pTimer, _float _fTimeOffset);
 
 public: /* For.PipeLine */
 	void SetTransform(CPipeLine::D3DTRANSFORMSTATE _eState, _fmatrix _TransformMatrix);

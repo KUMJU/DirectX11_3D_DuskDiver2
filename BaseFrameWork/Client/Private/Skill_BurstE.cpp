@@ -12,6 +12,8 @@ HRESULT CSkill_BurstE::Initialize()
 {
     __super::Initialize();
 
+    m_iDamage = 15;
+
     m_eSkillOwner = EOWNER_TYPE::OWNER_PLAYER;
 
 

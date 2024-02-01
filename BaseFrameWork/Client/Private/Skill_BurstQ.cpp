@@ -11,6 +11,8 @@ HRESULT CSkill_BurstQ::Initialize()
 {
     __super::Initialize();
 
+    m_iDamage = 20;
+
     CCollider::COLLIDER_DESC normalAtkDesc = {};
     normalAtkDesc.fRadius = 0.6f;
     normalAtkDesc.vCenter = { 0.f, 0.8f, 0.7f };

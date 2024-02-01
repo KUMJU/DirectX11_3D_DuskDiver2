@@ -88,6 +88,17 @@ void CPlayer::PriorityTick(_float _fTimeDelta)
 
 void CPlayer::Tick(_float _fTimeDelta)
 {
+
+    if (m_bSuperArmor && !m_IsUsingSkill) {
+       
+        m_fSuperArmorTime += _fTimeDelta;
+
+        if (m_fSuperArmorTime > 1.f) {
+            m_bSuperArmor = false;
+            m_fSuperArmorTime = 0.f;
+        }
+    }
+
     if (HEROSTATE::STATE_BURST_TRANS == m_eCurrentState) {
 
         m_fransformTime += _fTimeDelta;
@@ -177,7 +188,6 @@ void CPlayer::Tick(_float _fTimeDelta)
     }
 
 
-    m_bJump;
     m_fLinearTime = 0.06f;
 
     //루트모션 거리계산
@@ -617,7 +627,6 @@ void CPlayer::CalcLookVector(_float _fDir)
 
 void CPlayer::KeyInput(_float _fTimeDelta)
 { 
-
     if (m_pModelCom->IsLinearInterpolation())
         return;
 
@@ -649,7 +658,7 @@ void CPlayer::KeyInput(_float _fTimeDelta)
         m_isAnimLoop = false;
 
         //Event_Burst
-        CCameraMgr::GetInstance()->StartEvent(TEXT("Event_Burst"));
+       // CCameraMgr::GetInstance()->StartEvent(TEXT("Event_Burst"));
 
         m_IsUsingSkill = true;
         m_bSuperArmor = true;
@@ -850,36 +859,38 @@ void CPlayer::KeyInput(_float _fTimeDelta)
     {
         _vector vRight = XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vCamLookDir);
         _vector vLeft = vRight * -1.f;
+        if (m_pPlayerSkillset->CheckMoveEnable()) {
 
-        if (m_MoveFlag == 0x0001) {
-            vSrc = vPlrLook;
-            vDst = vCamLookDir + vLeft;
-        }else if(m_MoveFlag == 0x0010) {
-            vSrc = vPlrLook;
-            vDst += vLeft;
+            if (m_MoveFlag == 0x0001) {
+                vSrc = vPlrLook;
+                vDst = vCamLookDir + vLeft;
+            }
+            else if (m_MoveFlag == 0x0010) {
+                vSrc = vPlrLook;
+                vDst += vLeft;
+            }
+            else {
+                vSrc = vPlrLook;
+                vDst = vLeft;
+            }
+
+            m_MoveFlag |= 0x0100;
+
+
+            if (m_bDash) {
+                m_bSprint = true;
+                FinalAnimNum = 80;
+                m_bDash = true;
+            }
+            else {
+                FinalAnimNum = 59;
+            }
+
+            IsLoop = true;
+
+            IsKeyInput = true;
+
         }
-        else {
-            vSrc = vPlrLook;
-            vDst = vLeft;
-        }
-
-        m_MoveFlag |= 0x0100;
-
-
-        if (m_bDash) {
-            m_bSprint = true;
-            FinalAnimNum = 80;
-            m_bDash = true;
-        }
-        else {
-            FinalAnimNum = 59;
-        }
-
-        IsLoop = true;
-
-        IsKeyInput = true;
-
-
     }
 
     if (GetKeyState('D') & 0x8000)
@@ -1013,10 +1024,11 @@ void CPlayer::KeyInput(_float _fTimeDelta)
         m_pNavigationCom->CalcCurrentPos({ 95.f , 40.f, -300.f, 1.f });
     }
 
+
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
     if (HEROSTATE::STATE_WALK == m_eCurrentState ||
-        HEROSTATE::STATE_RUN == m_eCurrentState) {
+        HEROSTATE::STATE_RUN == m_eCurrentState || m_bDash) {
         if (m_bDash) {
             m_eCurrentState = HEROSTATE::STATE_IDLE;
             ChangeAnim(79, false);

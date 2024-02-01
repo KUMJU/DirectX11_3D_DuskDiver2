@@ -1,11 +1,11 @@
 #pragma once
 
 #include "Client_Defines.h"
-#include "GameObject.h"
+#include "Minigame.h"
 
 BEGIN(Client)
 
-class CMinigameMole : public CGameObject
+class CMinigameMole : public CMinigame
 {
 public:
 	CMinigameMole();
@@ -22,7 +22,7 @@ public:
 
 public:
 	void GameStart();
-	void GameEnd();
+	virtual void GameEnd();
 
 	//밖에서 두더지가 호출해줘야할듯
 	void GetScore();
@@ -31,11 +31,7 @@ public:
 private:
 	_float m_fSpawnCoolTime = 0.f;
 
-
 private:
-	_bool m_bDone = false;
-	_bool m_bProcessing = false;
-
 	_uint m_iCurrentScore = 0;
 	 
 

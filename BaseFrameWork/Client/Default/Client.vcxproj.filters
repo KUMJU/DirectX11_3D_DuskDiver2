@@ -196,8 +196,20 @@
     <Filter Include="02. GameObject\06. EventTrigger">
       <UniqueIdentifier>{5a63cd4a-bdac-428f-aadd-7319dc34f934}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\06. EventTrigger\Portal">
+    <Filter Include="02. GameObject\06. EventTrigger\00. Minigame">
+      <UniqueIdentifier>{3db6e694-a1fd-4626-a12a-12a8f20012f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. EventTrigger\01. Portal">
       <UniqueIdentifier>{b43537e0-beb9-4ff6-87fd-fcd8efd399da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. EventTrigger\02. MonsterSpawn">
+      <UniqueIdentifier>{aae22847-9a51-4c6e-9ff6-dbe2697ce3fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\00.Creature\01. Monster\MonsterPool">
+      <UniqueIdentifier>{2d415ea9-5c3b-4b8a-9b9b-2b76f9c34f9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. BattleSystem">
+      <UniqueIdentifier>{27ed13ad-3501-4092-a9ac-fa909e1366cb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -384,18 +396,35 @@
     <ClInclude Include="..\Public\MinigameMole.h">
       <Filter>05. Minigame\MinigameMole</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\MonsterPool.h" />
     <ClInclude Include="..\Public\EventTrigger.h">
       <Filter>02. GameObject\06. EventTrigger</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Portal.h">
-      <Filter>02. GameObject\06. EventTrigger\Portal</Filter>
+      <Filter>02. GameObject\06. EventTrigger\01. Portal</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\AirAtk.h">
       <Filter>02. GameObject\05. Skill\00. PlayerSkill\AirAtk</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Mole.h">
       <Filter>05. Minigame\MinigameMole\Mole</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MonsterPool.h">
+      <Filter>02. GameObject\00.Creature\01. Monster\MonsterPool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MinigameTrigger.h">
+      <Filter>02. GameObject\06. EventTrigger\00. Minigame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Minigame.h">
+      <Filter>05. Minigame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MonsterTrigger.h">
+      <Filter>02. GameObject\06. EventTrigger\02. MonsterSpawn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BattleSystem.h">
+      <Filter>02. GameObject\07. BattleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MiddleBossSkill.h">
+      <Filter>02. GameObject\05. Skill\01. MonsterSkill\02. SkIll_MiddleBoss</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -564,18 +593,35 @@
     <ClCompile Include="..\Private\MinigameMole.cpp">
       <Filter>05. Minigame\MinigameMole</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\MonsterPool.cpp" />
     <ClCompile Include="..\Private\EventTrigger.cpp">
       <Filter>02. GameObject\06. EventTrigger</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Portal.cpp">
-      <Filter>02. GameObject\06. EventTrigger\Portal</Filter>
+      <Filter>02. GameObject\06. EventTrigger\01. Portal</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\AirAtk.cpp">
       <Filter>02. GameObject\05. Skill\00. PlayerSkill\AirAtk</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Mole.cpp">
       <Filter>05. Minigame\MinigameMole\Mole</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MonsterPool.cpp">
+      <Filter>02. GameObject\00.Creature\01. Monster\MonsterPool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MinigameTrigger.cpp">
+      <Filter>02. GameObject\06. EventTrigger\00. Minigame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Minigame.cpp">
+      <Filter>05. Minigame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MonsterTrigger.cpp">
+      <Filter>02. GameObject\06. EventTrigger\02. MonsterSpawn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BattleSystem.cpp">
+      <Filter>02. GameObject\07. BattleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MiddleBossSkill.cpp">
+      <Filter>02. GameObject\05. Skill\01. MonsterSkill\02. SkIll_MiddleBoss</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

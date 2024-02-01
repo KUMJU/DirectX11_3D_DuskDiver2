@@ -219,6 +219,14 @@ HRESULT CGameInstance::AddTimer(const wstring& pTimerTag)
 	return m_pTimerMgr->AddTimer(pTimerTag);
 }
 
+void CGameInstance::SetTimerOffset(const wstring& pTimer, _float _fTimeOffset)
+{
+	if (!m_pTimerMgr)
+		return;
+
+	m_pTimerMgr->SetTimerOffset(pTimer, _fTimeOffset);
+}
+
 void CGameInstance::SetTransform(CPipeLine::D3DTRANSFORMSTATE _eState, _fmatrix _TransformMatrix)
 {
 	m_pPipeLine->SetTransform(_eState, _TransformMatrix);

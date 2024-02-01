@@ -11,6 +11,7 @@ public:
 
 public:
 	_float ComputeTimeDelta(const wstring& _strTimerTag);
+	void SetTimerOffset(const wstring& _strTimerTag, _float _fOffset);
 
 public:
 	HRESULT AddTimer(const wstring& _strTimerTag);

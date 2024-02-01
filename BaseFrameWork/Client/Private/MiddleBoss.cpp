@@ -6,6 +6,11 @@
 
 #include "Shader.h"
 
+#include "MapLoader.h"
+#include "Collider.h"
+#include "Navigation.h"
+#include "MonsterSkillSet.h"
+
 CMiddleBoss::CMiddleBoss()
 {
 }
@@ -24,7 +29,7 @@ HRESULT CMiddleBoss::Initialize()
     m_pModelCom = m_pGameInstance->GetModel(TEXT("MiddleBoss"));
     m_Components.emplace(TEXT("Com_Model"), m_pModelCom);
 
-    AttackDistance = 5.f;
+    AttackDistance = 3.f;
     m_eMonsterType = EMONSTER_TYPE::MONSTER_BOSS;
 
     m_iTotalAtkNum = 3;
@@ -32,6 +37,24 @@ HRESULT CMiddleBoss::Initialize()
 
     m_bLoop = false;
     m_pModelCom->ChangeAnimation(43);
+
+    m_pNavigation = CMapLoader::GetInstance()->GetCurrentNavi(0);
+    m_Components.emplace(TEXT("Com_Navigation"), m_pNavigation);
+
+    CCollider::COLLIDER_DESC colDesc = {};
+    colDesc.vCenter = { 0.f, 2.f, 0.f };
+    colDesc.fRadius = 2.f;
+
+    m_iHP = 500;
+
+    m_pCollider = CCollider::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), CCollider::TYPE_SPHERE, colDesc);
+    m_pCollider->SetOwner(shared_from_this());
+    m_Components.emplace(TEXT("Com_Collider"), m_pCollider);
+
+    m_IsAtkCool = true;
+
+    m_pSkillSet = CMonsterSkillSet::Create(2, m_pModelCom);
+    m_pSkillSet->SetTransform(m_pTransformCom);
 
 	return S_OK;
 }
@@ -49,7 +72,7 @@ void CMiddleBoss::Tick(_float _fTimeDelta)
 
         if (47 == m_iAnimNum) {
             _bool jump = false;
-            m_pTransformCom->GoStraight(_fTimeDelta, nullptr, jump);
+            m_pTransformCom->GoStraight(_fTimeDelta, m_pNavigation, m_bJump);
         }
     }
 
@@ -61,14 +84,13 @@ void CMiddleBoss::Tick(_float _fTimeDelta)
     //공격하는 중이 아니고 공격 쿨타임이 아닐때(행동 결정)
     if (EMONSTER_STATE::STATE_ATTACK != m_eCurrentState && !m_IsAtkCool) {
 
-      //  CalcPlayerDistance();
-
         ChasePlayer();
 
         if (!m_IsNearPlr) {
+
             ChangeAnim(47, true);
-            EMONSTER_STATE::STATE_WALK;
-            m_pTransformCom->GoStraight(_fTimeDelta, nullptr, m_bJump);
+            m_eCurrentState =  EMONSTER_STATE::STATE_WALK;
+            m_pTransformCom->GoStraight(_fTimeDelta, m_pNavigation, m_bJump);
         }
     }
 
@@ -82,6 +104,12 @@ void CMiddleBoss::Tick(_float _fTimeDelta)
 
     CalcAnimationDistance();
 
+    m_pSkillSet->Tick(_fTimeDelta);
+
+    m_pCollider->Tick(m_pTransformCom->GetWorldMatrix());
+    CGameInstance::GetInstance()->AddCollider(CCollisionMgr::COL_MONSTER, m_pCollider);
+
+
 }
 
 void CMiddleBoss::LateTick(_float _fTimeDelta)
@@ -91,6 +119,9 @@ void CMiddleBoss::LateTick(_float _fTimeDelta)
 
 
     if (m_IsAtkCool) {
+
+        CalcPlayerDistance();
+
         m_bAttackCoolTime += _fTimeDelta;
 
         if (m_bAttackCoolTime >= m_fTotalCoolTime) {
@@ -98,7 +129,6 @@ void CMiddleBoss::LateTick(_float _fTimeDelta)
             m_bAttackCoolTime = 0.f;
         }
 
-        CalcPlayerDistance();
 
     }
 
@@ -111,6 +141,9 @@ HRESULT CMiddleBoss::Render()
 
     if (!m_IsEnabled)
         return S_OK;
+
+    m_pCollider->Render();
+    m_pSkillSet->Render();
 
     if (FAILED(BindShaderResources()))
         return E_FAIL;
@@ -145,21 +178,25 @@ void CMiddleBoss::AttackPattern(_uint _iAtkNum)
     case 0:
 
         ChangeAnim(23, m_bLoop);
+        m_pSkillSet->SwitchingSkill(CMonsterSkillSet::MON_SKILL1);
         m_iAtkPattern = _iAtkNum;
         break;
 
     case 1:
         ChangeAnim(31, m_bLoop);
+        m_pSkillSet->SwitchingSkill(CMonsterSkillSet::MON_SKILL2);
         m_iAtkPattern = _iAtkNum;
         break;
 
     case 2:
         ChangeAnim(32, m_bLoop);
+        m_pSkillSet->SwitchingSkill(CMonsterSkillSet::MON_SKILL3);
         m_iAtkPattern = _iAtkNum;
         break;
 
     case 3:
         ChangeAnim(35, m_bLoop);
+        m_pSkillSet->SwitchingSkill(CMonsterSkillSet::MON_SKILL4);
         m_iAtkPattern = _iAtkNum;
         break;
     default:
@@ -168,7 +205,7 @@ void CMiddleBoss::AttackPattern(_uint _iAtkNum)
 
 
     m_eCurrentState = EMONSTER_STATE::STATE_ATTACK;
-    m_fTotalCoolTime = 6.f + rand() % 3;
+    m_fTotalCoolTime = 4.5f + rand() % 3;
 
 }
 
@@ -180,6 +217,11 @@ void CMiddleBoss::IfEmptyAnimList()
         m_IsAtkCool = true;
     }
 
+
+    if (16 == m_iAnimNum) {
+        m_IsEnabled = false;
+        return;
+    }
 
     ChangeAnim(40, true);
     m_eCurrentState = EMONSTER_STATE::STATE_IDLE;
@@ -217,6 +259,20 @@ void CMiddleBoss::WalkPattern()
             ChangeAnim(40, true);
         }
     }
+
+}
+
+void CMiddleBoss::TurnToPlayer()
+{
+}
+
+void CMiddleBoss::OnHit()
+{
+
+    if (m_bDie) {
+        ChangeAnim(16, false);
+    }
+
 
 }
 

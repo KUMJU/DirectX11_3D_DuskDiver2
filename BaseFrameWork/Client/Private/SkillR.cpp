@@ -10,6 +10,7 @@ CSkillR::CSkillR()
 HRESULT CSkillR::Initialize()
 {
     __super::Initialize();
+    m_iDamage = 20;
 
     m_eSkillOwner = EOWNER_TYPE::OWNER_PLAYER;
 
