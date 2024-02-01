@@ -197,7 +197,7 @@ void CMinigameMole::GetScore()
 {
     ++m_iCurrentScore;
 
-    if (m_iCurrentScore >= 10) {
+    if (m_iCurrentScore >= 5) {
         GameEnd();
     }
 }

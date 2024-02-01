@@ -35,7 +35,7 @@ HRESULT CEnemy02::Initialize()
     m_iTotalAtkNum = 3;
     m_fTotalCoolTime = 2.f;
 
-    m_iHP = 200;
+    m_iHP = 100;
 
     m_pModelCom->SetAnimNum(20);
     m_pNavigation = CMapLoader::GetInstance()->GetCurrentNavi(0);
@@ -150,7 +150,8 @@ void CEnemy02::Tick(_float _fTimeDelta)
 
     //공격하는 중이 아니고 공격 쿨타임이 아닐때(행동 결정)
     if(EMONSTER_STATE::STATE_ATTACK != m_eCurrentState && !m_IsAtkCool&& !m_bDefenceMode &&
-        EMONSTER_STATE::STATE_STUN != m_eCurrentState && !m_bHit && !m_bDie) {
+        EMONSTER_STATE::STATE_STUN != m_eCurrentState && !m_bHit && !m_bDie && 
+        EMONSTER_STATE::STATE_SPAWN != m_eCurrentState) {
 
         ChasePlayer();
 
@@ -179,6 +180,11 @@ void CEnemy02::Tick(_float _fTimeDelta)
 
     if (m_pModelCom->PlayAnimation(_fTimeDelta, m_bLoop, &m_vCurrentAnimPos)) {
         
+        if (m_iAnimNum == 9) {
+            m_IsEnabled = false;
+            return;
+        }
+
         CheckReserveAnimList();
     }
 
@@ -200,7 +206,7 @@ void CEnemy02::LateTick(_float _fTimeDelta)
     if (!m_IsEnabled)
         return;
 
-    if (!m_bHit && !m_bDie) {
+    if (!m_bHit && !m_bDie && EMONSTER_STATE::STATE_SPAWN != m_eCurrentState) {
 
         CalcPlayerDistance();
 
@@ -372,12 +378,11 @@ void CEnemy02::IfEmptyAnimList()
 
     m_vPrevAnimPos = { 0.f, 0.f, 0.f };
     m_vCurrentAnimPos = { 0.f, 0.f, 0.f };
+    
 
-
-    if (m_iAnimNum == 9) {
-
-        m_IsEnabled = false;
-        return;
+    if (m_eCurrentState == EMONSTER_STATE::STATE_SPAWN) {
+        m_eCurrentState = EMONSTER_STATE::STATE_IDLE;
+        ChangeAnim(20, true);
     }
 
 
@@ -456,6 +461,7 @@ void CEnemy02::OnHit()
             ChangeAnim(16, false);
         }
 
+
         m_NextAnimIndex.push_back({ 50, true });
         m_bJump = true;
     }
@@ -487,6 +493,16 @@ void CEnemy02::OnHit()
             }
         }
     }
+
+}
+
+void CEnemy02::SetSpawnState()
+{
+    __super::SetSpawnState();
+
+    m_eCurrentState = EMONSTER_STATE::STATE_SPAWN;
+    ChangeAnim(37, false);
+    m_iHP = 100;
 
 }
 

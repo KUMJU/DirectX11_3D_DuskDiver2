@@ -51,6 +51,7 @@ private:
 protected:
 
 	virtual void OnHit() override;
+	virtual void SetSpawnState() override;
 
 public:
 	static shared_ptr<CEnemy02> Create();

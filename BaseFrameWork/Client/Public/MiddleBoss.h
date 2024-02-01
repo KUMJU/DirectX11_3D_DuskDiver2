@@ -34,6 +34,7 @@ private:
 
 protected:
 	virtual void OnHit() override;
+	virtual void SetSpawnState() override;
 
 public:
 

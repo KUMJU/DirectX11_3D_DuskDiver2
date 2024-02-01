@@ -54,27 +54,27 @@ void CBattleSystem::Tick(_float _fTimeDelta)
 	if (!m_pMonsterLayer)
 		return;
 
-	list<shared_ptr<CGameObject>> pMonsterList = m_pMonsterLayer->GetObjectList();
+	list<shared_ptr<CGameObject>>* pMonsterList = m_pMonsterLayer->GetObjectList();
 
-	for (auto iter = pMonsterList.begin(); iter != pMonsterList.end(); ) {
+	for (auto iter = pMonsterList->begin(); iter != pMonsterList->end(); ) {
 		//몬스터가 비활성화 되었다면 리스트에서 빼주기 
 		//어차피 몬스터풀에서는 남아있기 때문에 지워도 ㄱㅊ 
 		if (!((*iter)->IsEnabled())) {
-			iter = pMonsterList.erase(iter);
+			iter = pMonsterList->erase(iter);
 		}
 		else {
 			++iter;
 		}
 	}
 
-	if (1 == pMonsterList.size() && !m_bSlowMotion) {
-		if (dynamic_pointer_cast<CMonster>(pMonsterList.front())->GetIsDead()) {
+	if (1 == pMonsterList->size() && !m_bSlowMotion) {
+		if (dynamic_pointer_cast<CMonster>(pMonsterList->front())->GetIsDead()) {
 			m_bSlowMotion = true;
 			KillLastOne();
 		}
 	}
 
-	if (pMonsterList.empty()) {
+	if (pMonsterList->empty()) {
 
 		BattleEnd();
 	}

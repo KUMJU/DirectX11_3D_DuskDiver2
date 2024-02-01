@@ -51,9 +51,23 @@ HRESULT CMonster::Render()
 
 void CMonster::SetSpawnState()
 {
+    m_IsNearPlr = false;
+    m_IsAtkCool = true;
+    m_fTotalCoolTime = 0.f;
+    m_bAttackCoolTime = 0.f;
+    m_bJump = false;
+    m_bKnockUp = false;
+    m_bKnockBack = false;
+    m_bDownAttack = false;
+    m_bDown = false;
+    m_bDrop = false;
 
-
-
+    m_iLastHitIndex = 100;
+    m_iCurrentSkillOrderIndex = 100;
+    m_bDie = false;
+    m_bSuperArmor = false;
+    m_bSuperArmorCoolTime = 0.f;
+    m_bHit = false;
 
 }
 

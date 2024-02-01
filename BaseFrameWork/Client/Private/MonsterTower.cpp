@@ -163,7 +163,22 @@ void CMonsterTower::TowerEventSetting()
 
 	}
 	else if (1 == m_iTowerIdx) {
+		CMonsterPool::SPAWN_INFO info1 = {};
+		info1.iMonsterType = 1;
 
+		info1.vMonsterPos = _vector({ -75.f, 35.f, -298.f });
+		m_SpawnMonsterList.push_back(info1);
+
+		info1.iMonsterType = 0;
+		info1.vMonsterPos = _vector({ -75.f, 35.f, -310.f });
+		m_SpawnMonsterList.push_back(info1);
+
+		info1.iMonsterType = 1;
+		info1.vMonsterPos = _vector({ -70.f, 35.f, -306.f });
+		m_SpawnMonsterList.push_back(info1);
+
+		shared_ptr<CMonsterTrigger> pTrigger = CMonsterTrigger::Create(&m_SpawnMonsterList, { -75.f, 35.f, -306.f });
+		CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Event"), pTrigger);
 	}
 	else if (2 == m_iTowerIdx) {
 

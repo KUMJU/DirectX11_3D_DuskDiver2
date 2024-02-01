@@ -59,6 +59,7 @@ void CMonsterPool::ActiveMonster(list<SPAWN_INFO> _SpawnList)
 		
 		if (pMonster) {
 
+			pMonster->SetSpawnState();
 			pMonster->SetEnable(true);
 			CGameInstance::GetInstance()->AddObject(CGameInstance::GetInstance()->GetCurrentLevel(), TEXT("Layer_Monster"), pMonster);
 			pMonster->SetPosition(XMVectorSetW(iter.vMonsterPos, 1.f));

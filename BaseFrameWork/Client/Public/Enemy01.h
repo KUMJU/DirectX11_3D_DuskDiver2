@@ -36,6 +36,7 @@ private:
 
 public:
 	virtual void OnHit() override;
+	virtual void SetSpawnState() override;
 
 	void ResetState();
 

@@ -117,7 +117,7 @@ void CEnemy01::Tick(_float _fTimeDelta)
 
 
     //공격 쿨타임일때
-    if (m_IsAtkCool && !m_bHit && !m_bDie) {
+    if (m_IsAtkCool && !m_bHit && !m_bDie && m_eCurrentState != EMONSTER_STATE::STATE_SPAWN) {
         m_IsNearPlr = false;
 
         if (20 == m_iAnimNum) {
@@ -140,7 +140,8 @@ void CEnemy01::Tick(_float _fTimeDelta)
     }
 
     //공격하는 중이 아니고 공격 쿨타임이 아닐때(행동 결정)
-    if (EMONSTER_STATE::STATE_ATTACK != m_eCurrentState && !m_IsAtkCool && !m_bHit && !m_bDie) {
+    if (EMONSTER_STATE::STATE_ATTACK != m_eCurrentState && !m_IsAtkCool && !m_bHit && !m_bDie
+        && m_eCurrentState != EMONSTER_STATE::STATE_SPAWN) {
 
         ChasePlayer();
 
@@ -163,6 +164,12 @@ void CEnemy01::Tick(_float _fTimeDelta)
         m_vPrevAnimPos = { 0.f, 0.f, 0.f };
         m_vCurrentAnimPos = { 0.f, 0.f, 0.f };
 
+        if (m_iAnimNum == 8) {
+
+            m_IsEnabled = false;
+            return;
+        }
+
         CheckReserveAnimList();
 
         if (EMONSTER_STATE::STATE_ATTACK == m_eCurrentState) {
@@ -184,7 +191,7 @@ void CEnemy01::LateTick(_float _fTimeDelta)
     if (!m_IsEnabled)
         return;
 
-    if (!m_bHit && !m_bDie) {
+    if (!m_bHit && !m_bDie && m_eCurrentState != EMONSTER_STATE::STATE_SPAWN) {
 
         CalcPlayerDistance();
 
@@ -339,10 +346,13 @@ void CEnemy01::WalkPattern(_uint _iWalkNum)
 
 void CEnemy01::IfEmptyAnimList()
 {
-    if (m_iAnimNum == 8) {
+    if (m_eCurrentState == EMONSTER_STATE::STATE_SPAWN) {
+        m_eCurrentState = EMONSTER_STATE::STATE_IDLE;
+        ChangeAnim(13, true);
+    }
 
-        m_IsEnabled = false;
-        return;
+    if (8 == m_iAnimNum) {
+        m_IsEnabled = true;
     }
 
     if (6 == m_iAnimNum) {
@@ -421,6 +431,17 @@ void CEnemy01::OnHit()
             ChangeAnim(12, false);
         }
     }
+
+}
+
+void CEnemy01::SetSpawnState()
+{
+    __super::SetSpawnState();
+
+    m_eCurrentState = EMONSTER_STATE::STATE_SPAWN;
+    ChangeAnim(18, false);
+    m_iHP = 100;
+
 
 }
 

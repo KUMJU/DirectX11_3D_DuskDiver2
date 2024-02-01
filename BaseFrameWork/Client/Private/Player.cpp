@@ -89,7 +89,7 @@ void CPlayer::PriorityTick(_float _fTimeDelta)
 void CPlayer::Tick(_float _fTimeDelta)
 {
 
-    if (m_bSuperArmor && !m_IsUsingSkill) {
+    if (m_bSuperArmor) {
        
         m_fSuperArmorTime += _fTimeDelta;
 
@@ -533,7 +533,7 @@ void CPlayer::CheckReserveAnimList()
 
         if (m_IsUsingSkill) {
             m_IsUsingSkill = false;
-            m_bSuperArmor = false;
+         //   m_bSuperArmor = false;
         }
 
         //달리기 중이면 달리기로 전환
@@ -627,6 +627,9 @@ void CPlayer::CalcLookVector(_float _fDir)
 
 void CPlayer::KeyInput(_float _fTimeDelta)
 { 
+    if (HEROSTATE::STATE_HIT == m_eCurrentState)
+        return;
+
     if (m_pModelCom->IsLinearInterpolation())
         return;
 
@@ -662,6 +665,7 @@ void CPlayer::KeyInput(_float _fTimeDelta)
 
         m_IsUsingSkill = true;
         m_bSuperArmor = true;
+        m_fSuperArmorTime = 0.f;
 
     }
 
@@ -679,6 +683,7 @@ void CPlayer::KeyInput(_float _fTimeDelta)
             ChangeAnim(91, false);
             m_IsUsingSkill = true;
             m_bSuperArmor = true;
+            m_fSuperArmorTime = 0.f;
         }
 
 
@@ -693,6 +698,7 @@ void CPlayer::KeyInput(_float _fTimeDelta)
             ChangeAnim(92, false);
             m_IsUsingSkill = true;
             m_bSuperArmor = true;
+            m_fSuperArmorTime = 0.f;
         }
 
     }
@@ -711,6 +717,7 @@ void CPlayer::KeyInput(_float _fTimeDelta)
 
                 m_IsUsingSkill = true;
                 m_bSuperArmor = true;
+                m_fSuperArmorTime = 0.f;
             }
         }
         else {
@@ -720,6 +727,7 @@ void CPlayer::KeyInput(_float _fTimeDelta)
 
                 m_IsUsingSkill = true;
                 m_bSuperArmor = true;
+                m_fSuperArmorTime = 0.f;
                 //CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
                 //CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_57.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
             }
@@ -738,6 +746,7 @@ void CPlayer::KeyInput(_float _fTimeDelta)
 
                 m_IsUsingSkill = true;
                 m_bSuperArmor = true;
+                m_fSuperArmorTime = 0.f;
             }
         }
         else {
@@ -746,6 +755,7 @@ void CPlayer::KeyInput(_float _fTimeDelta)
                 ChangeAnim(61, false);
                 m_IsUsingSkill = true;
                 m_bSuperArmor = true;
+                m_fSuperArmorTime = 0.f;
             }
         }
 
@@ -766,6 +776,7 @@ void CPlayer::KeyInput(_float _fTimeDelta)
 
                 m_IsUsingSkill = true;
                 m_bSuperArmor = true;
+                m_fSuperArmorTime = 0.f;
             }
 
         }
@@ -776,6 +787,7 @@ void CPlayer::KeyInput(_float _fTimeDelta)
 
                 m_IsUsingSkill = true;
                 m_bSuperArmor = true;
+                m_fSuperArmorTime = 0.f;
             }
            
 
@@ -1270,13 +1282,13 @@ void CPlayer::DetectMonster()
             return;
     }
 
-    list<shared_ptr<CGameObject>> MonsterObejcts =  m_pMonsterLayer.lock()->GetObjectList();
+    list<shared_ptr<CGameObject>>* MonsterObejcts =  m_pMonsterLayer.lock()->GetObjectList();
 
     _vector vPlayer = m_pTransformCom->GetState(CTransform::STATE_POSITION);
     _float fMinDistance = 99999.f;
     _vector vTargetPos = { 0.f, 0.f ,0.f };
 
-    for (auto& iter : MonsterObejcts) {
+    for (auto& iter : *MonsterObejcts) {
 
         shared_ptr<CTransform> pTransform = dynamic_pointer_cast<CTransform>(iter->GetComponent(TEXT("Com_Transform")));
         _vector vMonPos = pTransform->GetState(CTransform::STATE_POSITION);
@@ -1334,6 +1346,7 @@ void CPlayer::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _
 
         m_eCurrentState = HEROSTATE::STATE_HIT;
         m_bSuperArmor = true;
+        m_fSuperArmorTime = 0.f;
 
 
         StateReset();
@@ -1426,6 +1439,7 @@ void CPlayer::OnHitMinigame()
 {
     m_eCurrentState = HEROSTATE::STATE_HIT;
     m_bSuperArmor = true;
+    m_fSuperArmorTime = 0.f; 
 
     StateReset();
     ChangeAnim(100, false);

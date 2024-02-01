@@ -77,6 +77,7 @@ HRESULT CArcadeMap::Initialize()
 	if (FAILED(ReadyLayerUI(TEXT("Layer_UI"))))
 		return E_FAIL;
 
+	
 
 	CBattleSystem::GetInstance()->Initialize();
 	CGameInstance::GetInstance()->PlayBGM(TEXT("BGM_MainTheme.wav"), 1.f);
@@ -122,6 +123,7 @@ HRESULT CArcadeMap::ReadyLayerCamera(const wstring& _strLayerTag)
 	shared_ptr<CGameObject> pCam;
 
 	//////////////////////////////////////////////////ThirdPersonCamera//////////////////////////////////////////////////
+
 
 	pCam = CThirdPersonCam::Create();
 	CCameraMgr::GetInstance()->SetCamObject(CCameraMgr::ECAMERATYPE::THIRDPERSON, pCam);

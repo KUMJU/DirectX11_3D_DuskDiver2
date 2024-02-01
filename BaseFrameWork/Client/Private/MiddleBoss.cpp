@@ -276,6 +276,16 @@ void CMiddleBoss::OnHit()
 
 }
 
+void CMiddleBoss::SetSpawnState()
+{
+    __super::SetSpawnState();
+
+    m_eCurrentState = EMONSTER_STATE::STATE_IDLE;
+    ChangeAnim(14, false);
+    m_iHP = 300;
+
+}
+
 shared_ptr<CMiddleBoss> CMiddleBoss::Create()
 {
     shared_ptr<CMiddleBoss> pInstance = make_shared<CMiddleBoss>();

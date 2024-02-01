@@ -26,6 +26,8 @@ using namespace DirectX;
 
 #define MAX_BONE 512
 
+
+
 namespace Engine
 {
 	enum MOUSEKEYSTATE { DIM_LB, DIM_RB, DIM_MB, DIM_END };
