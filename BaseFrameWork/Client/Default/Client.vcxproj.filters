@@ -211,6 +211,12 @@
     <Filter Include="02. GameObject\07. BattleSystem">
       <UniqueIdentifier>{27ed13ad-3501-4092-a9ac-fa909e1366cb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05. Minigame\MinigameHockey">
+      <UniqueIdentifier>{c6205119-de06-4622-84c6-2cbf4371b9cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Minigame\MinigameHockey\HockeyBall">
+      <UniqueIdentifier>{459a594e-791a-47d2-a742-02dbb5361461}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -426,6 +432,12 @@
     <ClInclude Include="..\Public\MiddleBossSkill.h">
       <Filter>02. GameObject\05. Skill\01. MonsterSkill\02. SkIll_MiddleBoss</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\MinigameHockey.h">
+      <Filter>05. Minigame\MinigameHockey</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HockeyBall.h">
+      <Filter>05. Minigame\MinigameHockey\HockeyBall</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -622,6 +634,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\MiddleBossSkill.cpp">
       <Filter>02. GameObject\05. Skill\01. MonsterSkill\02. SkIll_MiddleBoss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MinigameHockey.cpp">
+      <Filter>05. Minigame\MinigameHockey</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HockeyBall.cpp">
+      <Filter>05. Minigame\MinigameHockey\HockeyBall</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

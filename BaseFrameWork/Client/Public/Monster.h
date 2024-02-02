@@ -28,6 +28,7 @@ public:
 	enum class EMONSTER_TYPE {
 		MONSTER_NORMAL,
 		MONSTER_BOSS,
+		MONSTER_MINIGAME,
 		MONTER_END
 	};
 
@@ -59,6 +60,7 @@ public:
 public:
 	//오브젝트풀에서 꺼내기 전에 초기화해주는 작업 
 	virtual void SetSpawnState();
+	void SetHockeyMonster();
 	_bool GetIsDead() { return m_bDie; }
 
 protected:

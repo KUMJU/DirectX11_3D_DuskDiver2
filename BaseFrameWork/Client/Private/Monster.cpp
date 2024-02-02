@@ -71,6 +71,11 @@ void CMonster::SetSpawnState()
 
 }
 
+void CMonster::SetHockeyMonster()
+{
+    m_eMonsterType = EMONSTER_TYPE::MONSTER_MINIGAME;
+}
+
 _bool CMonster::OnHitKnockUp(_float _fTimeDelta)
 {
 
@@ -297,6 +302,78 @@ HRESULT CMonster::BindShaderResources()
 
 void CMonster::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _pCollider)
 {
+
+    if (EMONSTER_TYPE::MONSTER_MINIGAME == m_eMonsterType) {
+        if (EObjType::OBJ_HOCKEYBALL == _eObjType) {
+
+            if (m_bDie)
+                return;
+
+            if (m_bSuperArmor) {
+                return;
+            }
+
+           // m_bSuperArmor = true;
+
+            //공격 중이었다면 공격 취소 
+            if (m_eCurrentState == EMONSTER_STATE::STATE_ATTACK && EMONSTER_TYPE::MONSTER_NORMAL == m_eMonsterType) {
+                m_pSkillSet->SkillCancle();
+                m_bAttackCoolTime = 0.f;
+            }
+
+            ///스킬 info 받아오기/// 
+            m_bKnockUp = true;
+            m_bDownAttack = false;
+
+            m_fKnockUpSpeed = 10.f;
+            m_fGweight = 1.5f;
+            m_bDrop = false;
+
+            //m_iLastHitIndex = pSkill->GetSkillIndex();
+           // m_iCurrentSkillOrderIndex = pSkill->GetCurrentOrder();
+
+            CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MON);
+            CGameInstance::GetInstance()->PlayAudio(TEXT("flesh_hit_02.wav"), CSoundMgr::CHANNELID::CH_MON, 0.7f);
+
+            _int iDamage = 20.f;
+
+            m_iHP -= iDamage;
+
+            if (m_iHP <= 0) {
+
+                m_bDie = true;
+                m_eCurrentState = EMONSTER_STATE::STATE_DIE;
+            }
+
+            m_bSuperArmor = true;
+
+            if (m_bKnockUp) {
+                KnockUpInfoReset();
+            }
+
+
+            if (m_bDown) {
+                m_bDown = false;
+                m_fDownTime = 0.f;
+            }
+
+            if (m_bDrop) {
+                m_fDropSpeed = 3.f;
+                KnockUpInfoReset();
+                m_bKnockUp = false;
+            }
+
+
+            m_bCollisionCheck = true;
+            //넉백 여부, 넉업 여부, 
+            OnHit();
+
+
+
+        }
+    }
+
+
     if (EObjType::OBJ_PROJ == _eObjType) {
 
         shared_ptr<CSkill> pSkill = dynamic_pointer_cast<CSkill>(_pCollider->GetOwner());
@@ -317,7 +394,7 @@ void CMonster::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> 
         }
 
         //공격 중이었다면 공격 취소 
-        if (m_eCurrentState == EMONSTER_STATE::STATE_ATTACK && EMONSTER_TYPE::MONSTER_NORMAL == m_eMonsterType) {
+        if (m_eCurrentState == EMONSTER_STATE::STATE_ATTACK && EMONSTER_TYPE::MONSTER_BOSS != m_eMonsterType) {
             m_pSkillSet->SkillCancle();
             m_bAttackCoolTime = 0.f;
         }
@@ -336,12 +413,15 @@ void CMonster::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> 
 
         _int iDamage = pSkill->GetDamage();
 
-        m_iHP -= iDamage;
+        if (EMONSTER_TYPE::MONSTER_MINIGAME != m_eMonsterType) {
+            m_iHP -= iDamage;
 
-        if (m_iHP <= 0) {
+            if (m_iHP <= 0) {
 
-            m_bDie = true;
-            m_eCurrentState = EMONSTER_STATE::STATE_DIE;
+                m_bDie = true;
+                m_eCurrentState = EMONSTER_STATE::STATE_DIE;
+            }
+
         }
 
 
@@ -368,5 +448,9 @@ void CMonster::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> 
         //넉백 여부, 넉업 여부, 
         OnHit();
     }
+
+
+    
+
 
 }

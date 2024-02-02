@@ -21,7 +21,6 @@ public:
 
 
 public:
-	void GameStart();
 	virtual void GameEnd();
 
 	//밖에서 두더지가 호출해줘야할듯

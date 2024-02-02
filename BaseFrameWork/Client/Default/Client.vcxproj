@@ -174,6 +174,7 @@
     <ClInclude Include="..\Public\EventTrigger.h" />
     <ClInclude Include="..\Public\FinalBoss.h" />
     <ClInclude Include="..\Public\GameMgr.h" />
+    <ClInclude Include="..\Public\HockeyBall.h" />
     <ClInclude Include="..\Public\imconfig.h" />
     <ClInclude Include="..\Public\imgui.h" />
     <ClInclude Include="..\Public\ImguiMgr.h" />
@@ -195,6 +196,7 @@
     <ClInclude Include="..\Public\MiddleBoss.h" />
     <ClInclude Include="..\Public\MiddleBossSkill.h" />
     <ClInclude Include="..\Public\Minigame.h" />
+    <ClInclude Include="..\Public\MinigameHockey.h" />
     <ClInclude Include="..\Public\MinigameMole.h" />
     <ClInclude Include="..\Public\MinigameTrigger.h" />
     <ClInclude Include="..\Public\Mole.h" />
@@ -247,6 +249,7 @@
     <ClCompile Include="..\Private\EventTrigger.cpp" />
     <ClCompile Include="..\Private\FinalBoss.cpp" />
     <ClCompile Include="..\Private\GameMgr.cpp" />
+    <ClCompile Include="..\Private\HockeyBall.cpp" />
     <ClCompile Include="..\Private\imgui.cpp" />
     <ClCompile Include="..\Private\ImguiMgr.cpp" />
     <ClCompile Include="..\Private\imgui_demo.cpp" />
@@ -265,6 +268,7 @@
     <ClCompile Include="..\Private\MiddleBoss.cpp" />
     <ClCompile Include="..\Private\MiddleBossSkill.cpp" />
     <ClCompile Include="..\Private\Minigame.cpp" />
+    <ClCompile Include="..\Private\MinigameHockey.cpp" />
     <ClCompile Include="..\Private\MinigameMole.cpp" />
     <ClCompile Include="..\Private\MinigameTrigger.cpp" />
     <ClCompile Include="..\Private\Mole.cpp" />

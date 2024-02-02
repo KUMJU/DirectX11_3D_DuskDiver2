@@ -36,12 +36,19 @@ public:
 	void LateTick();
 
 private:
+	void CheckPlrMonster();
 	void CheckPlrBlock();
 	void CheckPlrProjMonster();
 	void CheckPlrMonProj();
 	void CheckMonsterCollide();
+
+	void CheckMonsterBlock();
+
+
 	void CheckPlrTrigger();
 	void CheckPlrProjTrigger();
+
+	void CheckBlocktoBlock();
 
 
 private:

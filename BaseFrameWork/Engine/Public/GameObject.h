@@ -10,7 +10,15 @@ class CCollider;
 class ENGINE_DLL CGameObject abstract : public std::enable_shared_from_this<CGameObject>
 {
 public:
-	enum EObjType{ OBJ_PLAYER, OBJ_MONSTER, OBJ_UI, OBJ_ENV, OBJ_PROJ, OBJ_END };
+	enum EObjType{ 
+		OBJ_PLAYER, 
+		OBJ_MONSTER, 
+		OBJ_UI, 
+		OBJ_ENV, 
+		OBJ_PROJ, 
+		OBJ_WALL, 
+		OBJ_HOCKEYBALL,
+		OBJ_END };
 
 public:
 	CGameObject();
@@ -33,6 +41,7 @@ public:
 	void SetEnable(_bool _bState) { m_IsEnabled = _bState; }
 	void SetPosition(_vector _vPos);
 
+	EObjType GetObjectType() { return m_eObjType; }
 public:
 	_matrix GetWorldMatrix();
 	//ImguiZmo Àü¿ë//

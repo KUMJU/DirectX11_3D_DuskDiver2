@@ -84,6 +84,11 @@ _float CCollider::GetRadius()
 	return m_pBounding->GetBoundingSphere()->Radius;
 }
 
+_float3 CCollider::GetExtents()
+{
+	return m_pBounding->GetBoundingAABB()->Extents;
+}
+
 _bool CCollider::Intersect(TYPE _eType, shared_ptr<CBounding> _pTargetCollider)
 {
 	return m_pBounding->Intersect(_eType, _pTargetCollider);

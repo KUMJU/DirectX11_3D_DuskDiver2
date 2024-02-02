@@ -33,7 +33,7 @@ void CTransform::CheckingMove(_fvector _vPosition, shared_ptr<CNavigation> _pNav
 
         if (_IsJump) {
             if (fHeight >= vNewPos.m128_f32[1]) {
-                vNewPos.m128_f32[1] = fHeight;
+                vNewPos.m128_f32[1] = fHeight + m_fYOffset;
                 _IsJump = false;
             }
 
@@ -41,7 +41,7 @@ void CTransform::CheckingMove(_fvector _vPosition, shared_ptr<CNavigation> _pNav
 
         }
         else {
-            vNewPos.m128_f32[1] = fHeight;
+            vNewPos.m128_f32[1] = fHeight+ m_fYOffset;
             SetState(STATE_POSITION, vNewPos);
         }
     }

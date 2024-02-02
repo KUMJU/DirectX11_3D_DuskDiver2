@@ -18,7 +18,7 @@ HRESULT CMiddleBossSkill::Initialize(_uint _iComboNum)
     //두번 휘두르기
     if (1 == _iComboNum) {
 
-        normalAtkDesc.fRadius = 1.5f;
+        normalAtkDesc.fRadius = 2.5f;
         normalAtkDesc.vCenter = { 0.f, 1.5f, 2.f };
 
         skillDesc.bKnockUp = true;
@@ -26,10 +26,10 @@ HRESULT CMiddleBossSkill::Initialize(_uint _iComboNum)
         skillDesc.fWeight = 1.f;
 
         skillDesc.fKnockUpDistance = 10.f;
-        skillDesc.fDropSpeed = 7.f;
+        skillDesc.fDropSpeed = 10.f;
 
-        skillDesc.iStartTrackPosition = 5.0;
-        skillDesc.iEndTrackPosition = 80.0;
+        skillDesc.iStartTrackPosition = 20.0;
+        skillDesc.iEndTrackPosition = 85.0;
 
 
     }
@@ -43,13 +43,13 @@ HRESULT CMiddleBossSkill::Initialize(_uint _iComboNum)
         skillDesc.fWeight = 1.f;
 
         skillDesc.iStartTrackPosition = 35.0;
-        skillDesc.iEndTrackPosition = 110.0;
+        skillDesc.iEndTrackPosition = 70.0;
 
     }
     //위에서 떨어지기 
     else if (3 == _iComboNum) {
-        normalAtkDesc.fRadius = 2.f;
-        normalAtkDesc.vCenter = { 0.f, 2.f, 1.5f };
+        normalAtkDesc.fRadius = 3.f;
+        normalAtkDesc.vCenter = { 0.f, 2.f, 2.5f };
 
         skillDesc.bKnockUp = true;
         skillDesc.bDownAtk = true;
@@ -61,15 +61,15 @@ HRESULT CMiddleBossSkill::Initialize(_uint _iComboNum)
     }
     //빙글빙글 도는 공격 
     else if (4 == _iComboNum) {
-        normalAtkDesc.fRadius = 4.f;
+        normalAtkDesc.fRadius = 6.f;
         normalAtkDesc.vCenter = { 0.f, 2.f, 0.f };
 
         skillDesc.bKnockUp = false;
         skillDesc.bDownAtk = true;
         skillDesc.fWeight = 1.f;
 
-        skillDesc.iStartTrackPosition = 50.0;
-        skillDesc.iEndTrackPosition = 110.0;
+        skillDesc.iStartTrackPosition =20.0;
+        skillDesc.iEndTrackPosition = 100.0;
 
     }
 

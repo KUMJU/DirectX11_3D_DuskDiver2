@@ -84,6 +84,7 @@ void CMapLoader::ClassifyObject(const wstring& _strKeyName, _float4x4* _fWorldMa
 		pInstance = CMonsterTower::Create(m_iTowerIdx);
 		CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Object"), pInstance);
 		++m_iTowerIdx;
+
 	}
 	else if (TEXT("Escalator_Base") == _strKeyName) {
 

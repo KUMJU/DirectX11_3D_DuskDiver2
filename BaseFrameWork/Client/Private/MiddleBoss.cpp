@@ -32,7 +32,7 @@ HRESULT CMiddleBoss::Initialize()
     AttackDistance = 3.f;
     m_eMonsterType = EMONSTER_TYPE::MONSTER_BOSS;
 
-    m_iTotalAtkNum = 3;
+    m_iTotalAtkNum = 4;
     m_fTotalCoolTime = 2.f;
 
     m_bLoop = false;
@@ -117,10 +117,13 @@ void CMiddleBoss::LateTick(_float _fTimeDelta)
     if (!m_IsEnabled)
         return;
 
+    //계속 탐지하는건 아무래도 이상한 것ㄱ 같음 
+
+    if (m_eCurrentState != EMONSTER_STATE::STATE_ATTACK) {
+        CalcPlayerDistance();
+    }
 
     if (m_IsAtkCool) {
-
-        CalcPlayerDistance();
 
         m_bAttackCoolTime += _fTimeDelta;
 
@@ -220,7 +223,7 @@ void CMiddleBoss::IfEmptyAnimList()
 
     if (16 == m_iAnimNum) {
         m_IsEnabled = false;
-        return;
+        return; 
     }
 
     ChangeAnim(40, true);

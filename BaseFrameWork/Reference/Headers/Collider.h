@@ -34,6 +34,7 @@ public:
 
 public:
 	_float GetRadius();
+	_float3 GetExtents();
 
 public:
 	_bool Intersect(TYPE _eType, shared_ptr<class CBounding> _pTargetCollider);

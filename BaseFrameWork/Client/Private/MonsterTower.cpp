@@ -8,6 +8,9 @@
 #include "Shader.h"
 
 #include "MonsterTrigger.h"
+#include "MinigameTrigger.h"
+
+#include "MinigameHockey.h"
 
 CMonsterTower::CMonsterTower()
 {
@@ -158,11 +161,19 @@ void CMonsterTower::TowerEventSetting()
 		info1.vMonsterPos = _vector({ 12.f, 20.f, -90.f });
 		m_SpawnMonsterList.push_back(info1);
 
-		shared_ptr<CMonsterTrigger> pTrigger = CMonsterTrigger::Create(&m_SpawnMonsterList, {0.f, 15.f, -93.f });
+		shared_ptr<CMonsterTrigger> pTrigger = CMonsterTrigger::Create(&m_SpawnMonsterList, {0.f, 15.f, -94.f });
 		CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Event"), pTrigger);
 
 	}
 	else if (1 == m_iTowerIdx) {
+
+		shared_ptr<CMinigameHockey> pMinigame = CMinigameHockey::Create();
+		shared_ptr<CMinigameTrigger> pTrigger = CMinigameTrigger::Create(pMinigame, {0.f, 32.f, -305.f});
+		CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Map"), pTrigger);
+		CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Event"), pMinigame);
+
+	}
+	else if (2 == m_iTowerIdx) {
 		CMonsterPool::SPAWN_INFO info1 = {};
 		info1.iMonsterType = 1;
 
@@ -177,11 +188,8 @@ void CMonsterTower::TowerEventSetting()
 		info1.vMonsterPos = _vector({ -70.f, 35.f, -306.f });
 		m_SpawnMonsterList.push_back(info1);
 
-		shared_ptr<CMonsterTrigger> pTrigger = CMonsterTrigger::Create(&m_SpawnMonsterList, { -75.f, 35.f, -306.f });
+		shared_ptr<CMonsterTrigger> pTrigger = CMonsterTrigger::Create(&m_SpawnMonsterList, { -74.f, 35.f, -306.f });
 		CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Event"), pTrigger);
-	}
-	else if (2 == m_iTowerIdx) {
-
 	}
 	else if (3 == m_iTowerIdx) {
 

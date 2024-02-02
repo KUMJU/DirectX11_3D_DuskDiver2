@@ -48,6 +48,14 @@ void CMonsterPool::Initialize()
 		m_Monsters[3].push_back(pMonster);
 	}
 
+	for (_int i = 0; i < 3; ++i) {
+
+		shared_ptr<CMonster> pMonster = CEnemy01::Create();
+		pMonster->SetHockeyMonster();
+		pMonster->SetEnable(false);
+		m_Monsters[4].push_back(pMonster);
+	}
+
 
 }
 

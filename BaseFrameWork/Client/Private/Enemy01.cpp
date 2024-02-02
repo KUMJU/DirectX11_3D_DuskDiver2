@@ -351,6 +351,11 @@ void CEnemy01::IfEmptyAnimList()
         ChangeAnim(13, true);
     }
 
+    if (14 == m_iAnimNum && m_bDie) {
+        m_IsEnabled = false;
+        return;
+    }
+
     if (8 == m_iAnimNum) {
         m_IsEnabled = true;
     }
@@ -412,8 +417,15 @@ void CEnemy01::OnHit()
     if (m_bDownAttack) {
         m_NextAnimIndex.clear();
         ChangeAnim(26, false);
-        m_NextAnimIndex.push_back({ 14, false });
-        m_NextAnimIndex.push_back({ 9, false });
+
+        if (m_bDie) {
+            m_NextAnimIndex.push_back({ 14, false });
+        }
+        else {
+            m_NextAnimIndex.push_back({ 14, false });
+            m_NextAnimIndex.push_back({ 9, false });
+        }
+
 
     }
     else if (m_bKnockUp) {

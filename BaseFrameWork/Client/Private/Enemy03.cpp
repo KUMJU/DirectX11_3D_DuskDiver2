@@ -6,8 +6,11 @@ CEnemy03::CEnemy03()
 }
 
 
-HRESULT CEnemy03::Initialize(CTransform::TRANSFORM_DESC* _pDesc)
+HRESULT CEnemy03::Initialize()
 {
+	m_eMonsterType = EMONSTER_TYPE::MONSTER_MINIGAME;
+
+
 	return S_OK;
 }
 
@@ -25,5 +28,5 @@ void CEnemy03::LateTick(_float _fTimeDelta)
 
 HRESULT CEnemy03::Render()
 {
-	return E_NOTIMPL;
+	return S_OK;
 }

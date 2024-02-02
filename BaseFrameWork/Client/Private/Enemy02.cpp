@@ -379,6 +379,11 @@ void CEnemy02::IfEmptyAnimList()
     m_vPrevAnimPos = { 0.f, 0.f, 0.f };
     m_vCurrentAnimPos = { 0.f, 0.f, 0.f };
     
+    if (50 == m_iAnimNum) {
+        m_IsEnabled = false;
+        return;
+    }
+
 
     if (m_eCurrentState == EMONSTER_STATE::STATE_SPAWN) {
         m_eCurrentState = EMONSTER_STATE::STATE_IDLE;
@@ -448,8 +453,15 @@ void CEnemy02::OnHit()
     if (m_bDownAttack) {
          m_NextAnimIndex.clear();
          ChangeAnim(54, false);
-         m_NextAnimIndex.push_back({ 50, false });
-         m_NextAnimIndex.push_back({ 12, false });
+
+         if (m_bDie) {
+             m_NextAnimIndex.push_back({ 50, false });
+         }
+         else {
+             m_NextAnimIndex.push_back({ 50, false });
+             m_NextAnimIndex.push_back({ 12, false });
+         }
+
 
     }else if (m_bKnockUp) {
         if (16 == m_iAnimNum) {

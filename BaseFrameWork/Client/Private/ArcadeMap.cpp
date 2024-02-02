@@ -287,7 +287,7 @@ HRESULT CArcadeMap::ReadyLayerEvent(const wstring& _strLayerTag)
 	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pInstance)))
 		return E_FAIL;
 	//게임 시작 트리거
-	pInstance->GameStart();
+	//pInstance->GameStart();
 
 	return S_OK;
 }

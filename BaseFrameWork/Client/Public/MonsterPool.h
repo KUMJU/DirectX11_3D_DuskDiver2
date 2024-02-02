@@ -31,7 +31,7 @@ public:
 
 private:
 	//0 : enemy 1 // 1: enemy2 
-	vector<shared_ptr<class CMonster>> m_Monsters[4];
+	vector<shared_ptr<class CMonster>> m_Monsters[5];
 
 
 

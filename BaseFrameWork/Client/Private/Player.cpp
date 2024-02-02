@@ -522,7 +522,7 @@ void CPlayer::CheckReserveAnimList()
         }
 
 
-        if (HEROSTATE::STATE_HIT == m_eCurrentState) {
+        if (HEROSTATE::STATE_HIT == m_eCurrentState && !m_bKnockUp && !m_bKnockDown) {
 
             m_bSuperArmor = false;
             m_eCurrentState = HEROSTATE::STATE_IDLE;
@@ -1032,8 +1032,8 @@ void CPlayer::KeyInput(_float _fTimeDelta)
 
     if (GetKeyState('6') & 0x8000) {
 
-        m_pTransformCom->SetState(CTransform::STATE_POSITION, { 95.f , 40.f, -300.f, 1.f });
-        m_pNavigationCom->CalcCurrentPos({ 95.f , 40.f, -300.f, 1.f });
+        m_pTransformCom->SetState(CTransform::STATE_POSITION, { 5.f , 40.f, -300.f, 1.f });
+        m_pNavigationCom->CalcCurrentPos({ 5.f , 40.f, -300.f, 1.f });
     }
 
 
@@ -1351,6 +1351,7 @@ void CPlayer::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _
 
         StateReset();
         ChangeAnim(100, false);
+        //100
 
         shared_ptr<CSkill> pSkill = dynamic_pointer_cast<CSkill>(_pCollider->GetOwner());
 
@@ -1376,6 +1377,13 @@ void CPlayer::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _
 
 
     }
+    else if (EObjType::OBJ_HOCKEYBALL == _eObjType) {
+   
+        if (m_bSuperArmor)
+            return;
+
+        OnHitMinigame();
+    }
 
 }
 
@@ -1388,9 +1396,9 @@ void CPlayer::OnHit(_float _fTimeDelta)
     if (m_bKnockUp) {
 
         m_fKnockUpTime += _fTimeDelta;
+        ChangeAnim(74, true);
 
         m_bJump = true;
-
         if (m_fKnockUpTime < 0.6f) {
             m_fKnockUpSpeed = m_fKnockUpSpeed - (_fTimeDelta * m_fGravity * m_fGweight);
             vPos.m128_f32[1] += m_fKnockUpSpeed * _fTimeDelta;
@@ -1399,6 +1407,7 @@ void CPlayer::OnHit(_float _fTimeDelta)
             m_fDropSpeed = m_fDropSpeed + (_fTimeDelta * m_fGravity * m_fGweight);
             vPos.m128_f32[1] -= m_fDropSpeed * _fTimeDelta;
         }
+
     }
 
     if (m_bKnockDown) {
@@ -1420,11 +1429,13 @@ void CPlayer::OnHit(_float _fTimeDelta)
 
     m_pTransformCom->CheckingMove(vPos, m_pNavigationCom, m_bJump);
 
-    if (!m_bJump) {
+    if (!m_bJump && m_bKnockUp) {
         m_bSuperArmor = false;
         m_bKnockUp = false;
         m_fKnockUpTime = 0.f;
+        ChangeAnim(34, false);
     }
+
 
     if (!m_bKnockDown && !m_bKnockDown) {
         m_bSuperArmor = false;
@@ -1439,14 +1450,12 @@ void CPlayer::OnHitMinigame()
 {
     m_eCurrentState = HEROSTATE::STATE_HIT;
     m_bSuperArmor = true;
-    m_fSuperArmorTime = 0.f; 
+    m_fSuperArmorTime = 1.5f; 
 
     StateReset();
     ChangeAnim(100, false);
 
-    m_bKnockUp = true;
     m_bKnockDown = true;
-    m_fKnockUpSpeed = 4.f;
     m_fGweight = 1.f;
 
 }

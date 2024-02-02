@@ -27,6 +27,8 @@ public:
 	void Tick(_float _fTimeDelta);
 	void KillLastOne();
 
+	_bool GetOnBattle() { return m_bOnBattle; }
+
 private:
 	_float m_fSlowTIme = 0.f;
 

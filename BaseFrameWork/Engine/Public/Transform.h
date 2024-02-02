@@ -65,6 +65,7 @@ public:
 
 	//모든 이동에 가능여부 확인
 	void CheckingMove(_fvector _vPosition, shared_ptr<class CNavigation> _pNavigation , _bool& _IsJump);
+	void SetYOffset(_float _fOffset) { m_fYOffset = _fOffset; }
 
 public:
 
@@ -92,6 +93,8 @@ private:
 	_float4x4 m_WorldMatrix = {};
 	_float m_fSpeedPerSec = { 0.f };
 	_float m_fRotationPerSet = { 0.f };
+
+	_float m_fYOffset = { 0.f };
 
 public:
 

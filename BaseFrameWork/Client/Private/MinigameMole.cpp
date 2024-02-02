@@ -16,7 +16,7 @@ HRESULT CMinigameMole::Initialize(CTransform::TRANSFORM_DESC* _pDesc)
 
     __super::Initialize();
 
-
+    m_eMinigameType = EMINIGAME_TYPE::GAME_MOLE;
     //mole 리스트에 미리 mole 객체 담아두기 -> 풀링용  
 
     //정답 두더지(킹받게 웃고 있는 표정)
@@ -49,7 +49,7 @@ HRESULT CMinigameMole::Initialize(CTransform::TRANSFORM_DESC* _pDesc)
     _vector vCenterPos = { 88.f, 40.f, -300.f };
 
 
-    shared_ptr<CMinigameTrigger> pTrigger =  CMinigameTrigger::Create(dynamic_pointer_cast<CMinigame>(shared_from_this()), { 100.f, 40.f, -300.f });
+    shared_ptr<CMinigameTrigger> pTrigger =  CMinigameTrigger::Create(dynamic_pointer_cast<CMinigame>(shared_from_this()), { 75.f, 40.f, -299.f });
     CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Event"), pTrigger);
 
 
@@ -177,10 +177,6 @@ HRESULT CMinigameMole::Render()
     return S_OK;
 }
 
-void CMinigameMole::GameStart()
-{
-
-}
 
 void CMinigameMole::GameEnd()
 {

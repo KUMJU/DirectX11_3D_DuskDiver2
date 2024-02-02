@@ -37,7 +37,7 @@ void CBattleSystem::Tick(_float _fTimeDelta)
 
 		m_fSlowTIme += _fTimeDelta;
 
-		if (m_fSlowTIme > 0.5f) {
+		if (m_fSlowTIme > 0.4f) {
 			m_bSlowMotion = false;
 			m_fSlowTIme = 0.f;
 			CGameInstance::GetInstance()->SetTimerOffset(TEXT("Timer_60"), 1.f);

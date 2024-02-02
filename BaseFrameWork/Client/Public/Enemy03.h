@@ -9,7 +9,7 @@ public:
 	virtual ~CEnemy03() = default;
 
 public:
-	virtual HRESULT Initialize(CTransform::TRANSFORM_DESC* _pDesc);
+	virtual HRESULT Initialize();
 	virtual void PriorityTick(_float _fTimeDelta);
 	virtual void Tick(_float _fTimeDelta);
 	virtual void LateTick(_float _fTimeDelta);
