@@ -88,9 +88,6 @@
     <Filter Include="03. Manager\03. CameraMgr">
       <UniqueIdentifier>{1c56e7c4-009d-4ae1-b2bb-4928cc42b788}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\02. Camera\01. ThirdPerson Cam">
-      <UniqueIdentifier>{96aebbe3-acab-45d4-ac7e-dcb33b9735f2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\01. UI\01.UI_PlayerHUD">
       <UniqueIdentifier>{56162f41-41e5-4634-9dbd-c31e1887f936}</UniqueIdentifier>
     </Filter>
@@ -217,6 +214,18 @@
     <Filter Include="05. Minigame\MinigameHockey\HockeyBall">
       <UniqueIdentifier>{459a594e-791a-47d2-a742-02dbb5361461}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\02. Camera\01. ThirdPersonCam">
+      <UniqueIdentifier>{96aebbe3-acab-45d4-ac7e-dcb33b9735f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Minigame\MinigameCommand">
+      <UniqueIdentifier>{843b980f-b7b5-4941-9f40-dc9398cf4088}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Manager\04. CutSceneMgr">
+      <UniqueIdentifier>{6a98473e-c32d-4d73-82aa-fa1467c9e927}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Camera\03. MinigameCamera">
+      <UniqueIdentifier>{a6d287bd-6426-46cd-b748-c517dabd43bc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -322,7 +331,7 @@
       <Filter>03. Manager\02. MapLoader</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ThirdPersonCam.h">
-      <Filter>02. GameObject\02. Camera\01. ThirdPerson Cam</Filter>
+      <Filter>02. GameObject\02. Camera\01. ThirdPersonCam</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CameraMgr.h">
       <Filter>03. Manager\03. CameraMgr</Filter>
@@ -438,6 +447,15 @@
     <ClInclude Include="..\Public\HockeyBall.h">
       <Filter>05. Minigame\MinigameHockey\HockeyBall</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\MinigameCommand.h">
+      <Filter>05. Minigame\MinigameCommand</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CutScene.h">
+      <Filter>04. EventCutScene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CutSceneMgr.h">
+      <Filter>03. Manager\04. CutSceneMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -525,7 +543,7 @@
       <Filter>03. Manager\02. MapLoader</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ThirdPersonCam.cpp">
-      <Filter>02. GameObject\02. Camera\01. ThirdPerson Cam</Filter>
+      <Filter>02. GameObject\02. Camera\01. ThirdPersonCam</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CameraMgr.cpp">
       <Filter>03. Manager\03. CameraMgr</Filter>
@@ -640,6 +658,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\HockeyBall.cpp">
       <Filter>05. Minigame\MinigameHockey\HockeyBall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MinigameCommand.cpp">
+      <Filter>05. Minigame\MinigameCommand</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CutScene.cpp">
+      <Filter>04. EventCutScene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CutSceneMgr.cpp">
+      <Filter>03. Manager\04. CutSceneMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

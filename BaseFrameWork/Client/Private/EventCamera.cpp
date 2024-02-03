@@ -204,8 +204,8 @@ void CEventCamera::EventInitialize()
 			_vector vTargetLook = (m_EventList)[m_iCurrentIdx].pTarget->GetState(CTransform::STATE_LOOK);
 
 			_vector vCamPos = vTargetPos + vTargetLook* (m_EventList)[m_iCurrentIdx].fDistance.x ;
-			vCamPos.m128_f32[1] = (m_EventList)[m_iCurrentIdx].fDistance.y;
-			vTargetPos.m128_f32[1] = (m_EventList)[m_iCurrentIdx].fDistance.y;
+			vCamPos.m128_f32[1] += (m_EventList)[m_iCurrentIdx].fDistance.y;
+			vTargetPos.m128_f32[1] += (m_EventList)[m_iCurrentIdx].fDistance.y;
 
 			XMVectorSetW(vCamPos, 1.f);
 

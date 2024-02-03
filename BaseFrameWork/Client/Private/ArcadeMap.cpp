@@ -35,6 +35,7 @@
 #include "MonsterPool.h"
 
 #include "MinigameMole.h"
+#include "MinigameCommand.h"
 #include "BattleSystem.h"
 
 #include "MonsterTrigger.h"
@@ -193,18 +194,17 @@ HRESULT CArcadeMap::ReadyLayerMap(const wstring& _strLayerTag)
 	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pPortal)))
 		return E_FAIL;
 
+	/******몬스터 트리거 테스트(중간보스)*******/
 
-	/******몬스터 트리거 테스트*******/
+	//list<CMonsterPool::SPAWN_INFO> SpawnList;
 
-	list<CMonsterPool::SPAWN_INFO> SpawnList;
+	//CMonsterPool::SPAWN_INFO info1 = {};
+	//info1.iMonsterType = 2;
+	//info1.vMonsterPos = _vector({ -10.f, 25.f, -175.f });
+	//SpawnList.push_back(info1);
 
-	CMonsterPool::SPAWN_INFO info1 = {};
-	info1.iMonsterType = 2;
-	info1.vMonsterPos = _vector({ -10.f, 25.f, -175.f });
-	SpawnList.push_back(info1);
-
-	shared_ptr<CMonsterTrigger> pTrigger = CMonsterTrigger::Create(&SpawnList, { 0.f, 25.f, -175.f });
-	CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Event"), pTrigger);
+	//shared_ptr<CMonsterTrigger> pTrigger = CMonsterTrigger::Create(&SpawnList, { 0.f, 25.f, -175.f });
+	//CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Event"), pTrigger);
 
 	return S_OK;
 }
@@ -226,56 +226,10 @@ HRESULT CArcadeMap::ReadyLayerMonster(const wstring& _strLayerTag)
 
 	CMonsterPool::GetInstance()->Initialize();
 
-	/*****************/
-
-	//shared_ptr<CGameObject> pMonsterTower = CMonsterTower::Create();
-	//if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pMonsterTower)))
+	//pMonster4 = CMiddleBoss::Create();
+	//if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Monster"), pMonster4)))
 	//	return E_FAIL;
-
-	//shared_ptr<CGameObject> pMonster2 = CEnemy01::Create();
-	//if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pMonster2)))
-	//	return E_FAIL;
-
-	//pMonster2->SetEnable(true);
-
-	//shared_ptr<CGameObject> pMonster3 = CEnemy02::Create();
-	//if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pMonster3)))
-	//	return E_FAIL;
-
-	//pMonster3->SetPosition({ 4.f , 0.f, 0.f ,1.f });
-
-	//-----------------Middle Boss--------------------------------//
-	//shared_ptr<CGameObject> pMonster4 = CMiddleBoss::Create();
-	//if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pMonster4)))
-	//	return E_FAIL;
-
-	//-----------------Final Boss--------------------------------//
-
-	//shared_ptr<CGameObject> pMonster5 = CFinalBoss::Create();
-	//if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pMonster5)))
-	//	return E_FAIL;
-
-	//pMonster1 = CEnemy01::Create();
-	//if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Monster"), pMonster1)))
-	//	return E_FAIL;
-	//pMonster1->SetEnable(false);
-
-	//pMonster2 = CEnemy02::Create();
-	//if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Monster"), pMonster2)))
-	//	return E_FAIL;
-	//pMonster2->SetEnable(false);
-	
-	/*
-	pMonster3 = CFinalBoss::Create();
-	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Monster"), pMonster3)))
-		return E_FAIL;
-	pMonster3->SetEnable(false);*/
-
-
-	pMonster4 = CMiddleBoss::Create();
-	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Monster"), pMonster4)))
-		return E_FAIL;
-	pMonster4->SetEnable(false);
+	//pMonster4->SetEnable(false);
 
 	return S_OK;
 }
@@ -288,6 +242,12 @@ HRESULT CArcadeMap::ReadyLayerEvent(const wstring& _strLayerTag)
 		return E_FAIL;
 	//게임 시작 트리거
 	//pInstance->GameStart();
+
+	/*******커맨드 미니게임 테스트*********/
+
+	shared_ptr<CMinigameCommand> pMinigameCmd = CMinigameCommand::Create();
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pMinigameCmd)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -337,37 +297,8 @@ void CArcadeMap::KeyInput()
 		return;
 
 
-//	if (GetKeyState('7') & 0x8000) {
-//		pMonster1->SetEnable(true);
-//
-//		m_bKeyDeb = true;
-//	}
-//
-//	if (GetKeyState('8') & 0x8000) {
-//		
-////		pMonster1->SetEnable(false);
-//		pMonster2->SetEnable(true);
-//
-//		m_bKeyDeb = true;
-//
-//	}
-//
-//	if (GetKeyState('9') & 0x8000) {
-//
-//		pMonster2->SetEnable(false);
-//		pMonster3->SetEnable(true);
-//
-//		m_bKeyDeb = true;
-//
-//	}
 
 
-	if (GetKeyState('0') & 0x8000) {
-
-		pMonster4->SetEnable(true);
-		m_bKeyDeb = true;
-
-	}
 
 }
 

@@ -9,7 +9,7 @@ class CMinigame abstract : public CGameObject
 {
 public:
 	enum class EMINIGAME_TYPE {
-		GAME_MOLE, GAME_HOCKEY, GAME_END
+		GAME_MOLE, GAME_HOCKEY, GAME_COMMAND, GAME_END
 	};
 
 

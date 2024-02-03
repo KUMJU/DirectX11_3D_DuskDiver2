@@ -38,6 +38,11 @@ public: /* For.Input_Device */
 	_byte	GetDIMouseState(MOUSEKEYSTATE eMouse);
 	_long	GetDIMouseMove(MOUSEMOVESTATE eMouseState);
 
+	_bool Key_Down(_ubyte eKeyID);
+	_bool Key_Up(_ubyte eKeyID);
+	_bool Key_Pressing(_ubyte eKeyID);
+
+
 /*LevelManager*/
 public:
 	HRESULT OpenLevel(_uint _iLevelIndex, shared_ptr<class CLevel> _pLevel);

@@ -162,6 +162,8 @@
     <ClInclude Include="..\Public\CameraFree.h" />
     <ClInclude Include="..\Public\CameraMgr.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
+    <ClInclude Include="..\Public\CutScene.h" />
+    <ClInclude Include="..\Public\CutSceneMgr.h" />
     <ClInclude Include="..\Public\Dummy.h" />
     <ClInclude Include="..\Public\Edit.h" />
     <ClInclude Include="..\Public\Enemy01.h" />
@@ -196,6 +198,7 @@
     <ClInclude Include="..\Public\MiddleBoss.h" />
     <ClInclude Include="..\Public\MiddleBossSkill.h" />
     <ClInclude Include="..\Public\Minigame.h" />
+    <ClInclude Include="..\Public\MinigameCommand.h" />
     <ClInclude Include="..\Public\MinigameHockey.h" />
     <ClInclude Include="..\Public\MinigameMole.h" />
     <ClInclude Include="..\Public\MinigameTrigger.h" />
@@ -237,6 +240,8 @@
     <ClCompile Include="..\Private\BattleSystem.cpp" />
     <ClCompile Include="..\Private\CameraFree.cpp" />
     <ClCompile Include="..\Private\CameraMgr.cpp" />
+    <ClCompile Include="..\Private\CutScene.cpp" />
+    <ClCompile Include="..\Private\CutSceneMgr.cpp" />
     <ClCompile Include="..\Private\Dummy.cpp" />
     <ClCompile Include="..\Private\Edit.cpp" />
     <ClCompile Include="..\Private\Enemy01.cpp" />
@@ -268,6 +273,7 @@
     <ClCompile Include="..\Private\MiddleBoss.cpp" />
     <ClCompile Include="..\Private\MiddleBossSkill.cpp" />
     <ClCompile Include="..\Private\Minigame.cpp" />
+    <ClCompile Include="..\Private\MinigameCommand.cpp" />
     <ClCompile Include="..\Private\MinigameHockey.cpp" />
     <ClCompile Include="..\Private\MinigameMole.cpp" />
     <ClCompile Include="..\Private\MinigameTrigger.cpp" />

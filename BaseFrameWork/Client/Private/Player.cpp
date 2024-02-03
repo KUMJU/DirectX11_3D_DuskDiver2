@@ -160,12 +160,13 @@ void CPlayer::Tick(_float _fTimeDelta)
         }
     }
 
+    if (!m_IsOnMinigame) {
+        //입력 장치 
+        MouseInput(_fTimeDelta);
 
-    //입력 장치 
-    MouseInput(_fTimeDelta);
+        KeyInput(_fTimeDelta);
 
-    KeyInput(_fTimeDelta);
-
+    }
 
     if (m_bComboAttackStart)
     {
@@ -322,8 +323,6 @@ void CPlayer::LateTick(_float _fTimeDelta)
 
     }
 
-
-    m_iCurrentAnimIdx;
 
     if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_NONBLEND, shared_from_this())))
         return;
@@ -661,7 +660,7 @@ void CPlayer::KeyInput(_float _fTimeDelta)
         m_isAnimLoop = false;
 
         //Event_Burst
-       // CCameraMgr::GetInstance()->StartEvent(TEXT("Event_Burst"));
+        CCameraMgr::GetInstance()->StartEvent(TEXT("Event_Burst"));
 
         m_IsUsingSkill = true;
         m_bSuperArmor = true;
@@ -1032,8 +1031,12 @@ void CPlayer::KeyInput(_float _fTimeDelta)
 
     if (GetKeyState('6') & 0x8000) {
 
-        m_pTransformCom->SetState(CTransform::STATE_POSITION, { 5.f , 40.f, -300.f, 1.f });
-        m_pNavigationCom->CalcCurrentPos({ 5.f , 40.f, -300.f, 1.f });
+
+       // m_pTransformCom->SetState(CTransform::STATE_POSITION, { 5.f , 40.f, -300.f, 1.f });
+        //m_pNavigationCom->CalcCurrentPos({ 5.f , 40.f, -300.f, 1.f });
+
+        m_pTransformCom->SetState(CTransform::STATE_POSITION, { -10.f, 25.f, -168.f,  1.f });
+        m_pNavigationCom->CalcCurrentPos({ -10.f, 25.f, -168.f, 1.f });
     }
 
 
@@ -1382,7 +1385,7 @@ void CPlayer::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _
         if (m_bSuperArmor)
             return;
 
-        OnHitMinigame();
+        OnHitHockeyBall();
     }
 
 }
@@ -1457,6 +1460,58 @@ void CPlayer::OnHitMinigame()
 
     m_bKnockDown = true;
     m_fGweight = 1.f;
+
+}
+
+void CPlayer::OnHitHockeyBall()
+{
+    m_eCurrentState = HEROSTATE::STATE_HIT;
+    m_bSuperArmor = true;
+    m_fSuperArmorTime = 1.5f;
+
+    StateReset();
+    ChangeAnim(100, false);
+
+    m_bKnockUp = true;
+    m_bKnockDown = false;
+    m_fKnockUpSpeed = 12.f;
+    m_fGweight = 1.5f;
+}
+
+void CPlayer::CommandMinigameSuccess(_uint _iCount)
+{
+    switch (_iCount)
+    {
+    case 0:
+        if (m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_Q)) {
+            ChangeAnim(60, false);
+            m_NextAnimIndex.push_back({ 44, true });
+        }
+
+        break;
+
+    case 1:
+
+        if (m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_E)) {
+            ChangeAnim(61, false);
+            m_NextAnimIndex.push_back({ 44, true });
+        }
+
+        break;
+
+    case 2:
+
+        if (m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_Q)) {
+            ChangeAnim(91, false);
+            m_NextAnimIndex.push_back({ 44, true });
+        }
+
+        break;
+
+    default:
+        break;
+    }
+
 
 }
 

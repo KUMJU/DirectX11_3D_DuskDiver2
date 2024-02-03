@@ -107,6 +107,7 @@ private:
 	_bool m_isAnimLoop = true;
 
 	_bool m_IsInBattle = false;
+	_bool m_IsOnMinigame = false;
 
 //변신~~~~~~~~~!!!!!
 private:
@@ -261,10 +262,24 @@ private:
 public:
 	virtual void OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _pCollider) override;
 	void OnHit(_float _fTimeDelta);
+	//두더지게임
 	void OnHitMinigame();
+	//하키게임
+	void OnHitHockeyBall();
 
 	void SetOnBattle(_bool _bOnBattle) { m_IsInBattle = _bOnBattle; }
+	void SetOnMinigame(_bool _bOnMinigame) { 
+		m_IsOnMinigame = _bOnMinigame; 
+	
+		if (_bOnMinigame) {
+			ChangeAnim(44, true);
+			m_eCurrentState = HEROSTATE::STATE_IDLE;
+		}
+	
+	}
 
+
+	void CommandMinigameSuccess(_uint _iCount);
 
 public:
 	static shared_ptr<CPlayer> Create();

@@ -2,7 +2,7 @@
 
 #include "Client_Defines.h"
 #include "Camera.h"
-
+ 
 class CEventCamera final : public CCamera
 {
 public:

@@ -38,8 +38,10 @@ private:
 	wrl::ComPtr<IDirectInputDevice8> m_pMouse = nullptr;
 
 private:
-	_byte					m_byKeyState[MAX_BONE];		// 키보드에 있는 모든 키값을 저장하기 위한 변수
-	_byte					m_preKeyState[MAX_BONE];
+	_byte	m_byKeyState[256];		// 키보드에 있는 모든 키값을 저장하기 위한 변수
+	_byte	m_preKeyState[256];
+	_bool	m_bKeyState[256];
+
 	DIMOUSESTATE			m_tMouseState;	
 
 public:

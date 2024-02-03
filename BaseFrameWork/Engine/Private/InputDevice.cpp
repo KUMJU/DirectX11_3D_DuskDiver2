@@ -7,21 +7,29 @@ Engine::CInputDevice::CInputDevice(void)
 
 _bool CInputDevice::Key_Down(_ubyte eKeyID)
 {
-	if (m_preKeyState[eKeyID] != m_byKeyState[eKeyID])
+	if (!m_bKeyState[eKeyID] && (GetKeyState(eKeyID) & 0x8000))
 	{
-		if (m_byKeyState[eKeyID] & 0x80)
-			return true;
+		m_bKeyState[eKeyID] = !m_bKeyState[eKeyID];
+		return true;
 	}
+
+	if (m_bKeyState[eKeyID] && !(GetKeyState(eKeyID) & 0x8000))
+		m_bKeyState[eKeyID] = !m_bKeyState[eKeyID];
+
 	return false;
 }
 
 _bool CInputDevice::Key_Up(_ubyte eKeyID)
 {
-	if (m_preKeyState[eKeyID] != m_byKeyState[eKeyID])
+	if (m_bKeyState[eKeyID] && !(GetKeyState(eKeyID) & 0x8000))
 	{
-		if (m_preKeyState[eKeyID] & 0x80)
-			return true;
+		m_bKeyState[eKeyID] = !m_bKeyState[eKeyID];
+		return true;
 	}
+
+	if (!m_bKeyState[eKeyID] && (GetKeyState(eKeyID) & 0x8000))
+		m_bKeyState[eKeyID] = !m_bKeyState[eKeyID];
+
 	return false;
 }
 
@@ -66,9 +74,9 @@ HRESULT Engine::CInputDevice::Ready_InputDev(HINSTANCE hInst, HWND hWnd)
 
 void Engine::CInputDevice::Tick(void)
 {
-	memcpy(&m_preKeyState, &m_byKeyState, sizeof(_ubyte) * MAX_BONE);
+	//memcpy(&m_preKeyState, &m_byKeyState, sizeof(_ubyte) * 256);
 
-	m_pKeyBoard->GetDeviceState(MAX_BONE, m_byKeyState);
+	m_pKeyBoard->GetDeviceState(256, m_byKeyState);
 	m_pMouse->GetDeviceState(sizeof(m_tMouseState), &m_tMouseState);
 }
 

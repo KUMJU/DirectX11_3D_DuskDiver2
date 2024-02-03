@@ -170,6 +170,30 @@ _long CGameInstance::GetDIMouseMove(MOUSEMOVESTATE eMouseState)
 	return m_pInputDev->Get_DIMouseMove(eMouseState);
 }
 
+_bool CGameInstance::Key_Down(_ubyte eKeyID)
+{
+	if (!m_pInputDev)
+		return false;
+
+	return m_pInputDev->Key_Down(eKeyID);
+}
+
+_bool CGameInstance::Key_Up(_ubyte eKeyID)
+{
+	if (!m_pInputDev)
+		return false;
+
+	return m_pInputDev->Key_Up(eKeyID);
+}
+
+_bool CGameInstance::Key_Pressing(_ubyte eKeyID)
+{
+	if (!m_pInputDev)
+		return false;
+
+	return m_pInputDev->Key_Pressing(eKeyID);
+}
+
 HRESULT CGameInstance::OpenLevel(_uint _iLevelIndex, shared_ptr<class CLevel> _pLevel)
 {
 	if (nullptr == m_pLevelMgr)
