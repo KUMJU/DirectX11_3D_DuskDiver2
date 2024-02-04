@@ -5,6 +5,7 @@
 #include "Enemy02.h"
 #include "MiddleBoss.h"
 #include "FinalBoss.h"
+#include "Bear.h"
 
 #include "GameInstance.h"
 
@@ -56,6 +57,10 @@ void CMonsterPool::Initialize()
 		m_Monsters[4].push_back(pMonster);
 	}
 
+	m_pBear = CBear::Create();
+	m_pBear->SetEnable(false);
+
+	CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_NPC"), m_pBear);
 
 }
 

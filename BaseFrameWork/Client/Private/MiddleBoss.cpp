@@ -68,7 +68,7 @@ void CMiddleBoss::Tick(_float _fTimeDelta)
     if (!m_IsEnabled)
         return;
 
-    if (m_eCurrentState == EMONSTER_STATE::STATE_IDLE) {
+    if (m_eCurrentState == EMONSTER_STATE::STATE_IDLE && !m_bDie) {
 
         if (47 == m_iAnimNum) {
             _bool jump = false;
@@ -82,7 +82,7 @@ void CMiddleBoss::Tick(_float _fTimeDelta)
     }
 
     //공격하는 중이 아니고 공격 쿨타임이 아닐때(행동 결정)
-    if (EMONSTER_STATE::STATE_ATTACK != m_eCurrentState && !m_IsAtkCool) {
+    if (EMONSTER_STATE::STATE_ATTACK != m_eCurrentState && !m_IsAtkCool && !m_bDie) {
 
         ChasePlayer();
 
@@ -119,7 +119,7 @@ void CMiddleBoss::LateTick(_float _fTimeDelta)
 
     //계속 탐지하는건 아무래도 이상한 것ㄱ 같음 
 
-    if (m_eCurrentState != EMONSTER_STATE::STATE_ATTACK) {
+    if (m_eCurrentState != EMONSTER_STATE::STATE_ATTACK && !m_bDie) {
         CalcPlayerDistance();
     }
 
@@ -208,7 +208,7 @@ void CMiddleBoss::AttackPattern(_uint _iAtkNum)
 
 
     m_eCurrentState = EMONSTER_STATE::STATE_ATTACK;
-    m_fTotalCoolTime = 4.5f + rand() % 3;
+    m_fTotalCoolTime = 3.3f + rand() % 3;
 
 }
 
@@ -221,7 +221,7 @@ void CMiddleBoss::IfEmptyAnimList()
     }
 
 
-    if (16 == m_iAnimNum) {
+    if (14 == m_iAnimNum) {
         m_IsEnabled = false;
         return; 
     }
@@ -273,7 +273,7 @@ void CMiddleBoss::OnHit()
 {
 
     if (m_bDie) {
-        ChangeAnim(16, false);
+        ChangeAnim(39, false);
     }
 
 

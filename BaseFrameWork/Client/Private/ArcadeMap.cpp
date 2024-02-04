@@ -69,10 +69,10 @@ HRESULT CArcadeMap::Initialize()
 	if (FAILED(ReadyLayerMonster(TEXT("Layer_Monster"))))
 		return E_FAIL;
 
-	if (FAILED(ReadyLayerEvent(TEXT("Layer_Event"))))
+	if (FAILED(ReadyLayerCamera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 
-	if (FAILED(ReadyLayerCamera(TEXT("Layer_Camera"))))
+	if (FAILED(ReadyLayerEvent(TEXT("Layer_Event"))))
 		return E_FAIL;
 
 	if (FAILED(ReadyLayerUI(TEXT("Layer_UI"))))
@@ -89,7 +89,6 @@ HRESULT CArcadeMap::Initialize()
 
 void CArcadeMap::Tick(_float _fTimeDelta)
 {
-	//여기 위치 괜찮은지 모르겠음 테스트 좀 해보고 변경 필요하면 변경할것 
 	CBattleSystem::GetInstance()->Tick(_fTimeDelta);
 
 	if (m_bKeyDeb) {
@@ -186,7 +185,7 @@ HRESULT CArcadeMap::ReadyLayerMap(const wstring& _strLayerTag)
 
 	//맵 오브젝트 파싱정보 불러오기
 	CMapLoader::GetInstance()->LoadMapData("../Bin/DataFiles/ArcadeMap_Object.dat");
-
+	CMapLoader::GetInstance()->LoadMapData("../Bin/DataFiles/CoinData.dat");
 
 	/***포탈 테스트***/
 
@@ -196,15 +195,15 @@ HRESULT CArcadeMap::ReadyLayerMap(const wstring& _strLayerTag)
 
 	/******몬스터 트리거 테스트(중간보스)*******/
 
-	//list<CMonsterPool::SPAWN_INFO> SpawnList;
+	list<CMonsterPool::SPAWN_INFO> SpawnList;
 
-	//CMonsterPool::SPAWN_INFO info1 = {};
-	//info1.iMonsterType = 2;
-	//info1.vMonsterPos = _vector({ -10.f, 25.f, -175.f });
-	//SpawnList.push_back(info1);
+	CMonsterPool::SPAWN_INFO info1 = {};
+	info1.iMonsterType = 2;
+	info1.vMonsterPos = _vector({ 0.f, 40.f, -380.f });
+	SpawnList.push_back(info1);
 
-	//shared_ptr<CMonsterTrigger> pTrigger = CMonsterTrigger::Create(&SpawnList, { 0.f, 25.f, -175.f });
-	//CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Event"), pTrigger);
+	shared_ptr<CMonsterTrigger> pTrigger = CMonsterTrigger::Create(&SpawnList, { 0.f, 40.f, -380.f });
+	CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Event"), pTrigger);
 
 	return S_OK;
 }

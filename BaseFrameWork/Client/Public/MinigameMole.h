@@ -19,13 +19,18 @@ public:
 	virtual void LateTick(_float _fTimeDelta);
 	virtual HRESULT Render();
 
-
 public:
+	virtual void GameStart();
 	virtual void GameEnd();
 
 	//밖에서 두더지가 호출해줘야할듯
 	void GetScore();
 	void SpawnMole();
+
+public:
+	virtual void SetCameraEvent();
+	virtual void StartEventCutScene();
+	void ProcessingEvent(_float _fTimeDelta);
 
 private:
 	_float m_fSpawnCoolTime = 0.f;
@@ -40,6 +45,14 @@ private:
 
 	_float4 m_vMolePos[9];
 	_bool m_HoleSlot[9];
+
+
+private:
+
+	_vector vCutEventPos1 = { 0.f, 0.f, 0.f, 0.f };
+	_vector vCutEventPos2 = { 0.f, 0.f, 0.f, 0.f };
+	_vector vCutEventPos3 = { 0.f, 0.f, 0.f, 0.f };
+
 
 public:
 	static shared_ptr<CMinigameMole> Create();

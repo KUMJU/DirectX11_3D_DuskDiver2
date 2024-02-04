@@ -29,11 +29,21 @@ public:
 	virtual void GameStart();
 	virtual void GameEnd();
 
+	virtual void StartEventCutScene() {};
+
 	EMINIGAME_TYPE GetMinigameType() { return m_eMinigameType; }
+
+public:
+	virtual void SetCameraEvent() {};
 
 protected:
 	_bool m_bDone = false;
 	_bool m_bProcessing = false;
+
+	_bool m_bStartCutSceneDone = false;
+	_bool m_bCutEndSceneDone = false;
+
+	_float m_fEventProcessTime = 0.f;
 
 	EMINIGAME_TYPE m_eMinigameType = EMINIGAME_TYPE::GAME_END;
 

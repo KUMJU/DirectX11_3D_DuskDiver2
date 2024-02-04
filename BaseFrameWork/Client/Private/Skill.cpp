@@ -35,8 +35,6 @@ void CSkill::Tick(_float _fTimeDelta)
 
 		_double temp = (*m_pMainAnims)[m_iCurrentSkillOrder]->GetCurrentTrackPosition();
 
-
-
 		if ((*m_pMainAnims)[m_iCurrentSkillOrder]->GetCurrentTrackPosition() >= m_Infos[m_iCurrentSkillOrder].iStartTrackPosition) {
 			if (m_Infos[m_iCurrentSkillOrder].iEndTrackPosition <= (*m_pMainAnims)[m_iCurrentSkillOrder]->GetCurrentTrackPosition()) {
 				++m_iCurrentSkillOrder;
@@ -44,6 +42,7 @@ void CSkill::Tick(_float _fTimeDelta)
 
 				if (m_iCurrentSkillOrder == m_Infos.size()) {
 					m_IsEnabled = false;
+					m_bCancle = true;
 					SkillReset();
 					return;
 				}
@@ -52,7 +51,6 @@ void CSkill::Tick(_float _fTimeDelta)
 					m_bDownAtk = m_Infos[m_iCurrentSkillOrder].bDownAtk;
 					m_bKnokUp = m_Infos[m_iCurrentSkillOrder].bKnockUp;
 					m_fKnockUpDistance = m_Infos[m_iCurrentSkillOrder].fKnockUpDistance;
-					m_bCancle = true;
 					return;
 				}
 
@@ -63,9 +61,10 @@ void CSkill::Tick(_float _fTimeDelta)
 
 			m_Collider->Tick(m_pOwnerTransform->GetWorldMatrix());
 			CGameInstance::GetInstance()->AddCollider(eCurrentGroup, m_Collider);
+				
 		}
 
-		if (!m_bCancle && m_iCurrentSkillOrder == m_pMainAnims->size()) {
+		if (!m_bCancle && m_iCurrentSkillOrder == (*m_pMainAnims).size()-1) {
 
 			_double AnimRatio = (*m_pMainAnims)[m_iCurrentSkillOrder]->GetAnimRatio();
 

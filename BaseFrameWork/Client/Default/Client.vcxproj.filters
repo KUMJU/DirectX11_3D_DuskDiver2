@@ -187,9 +187,6 @@
     <Filter Include="02. GameObject\05. Skill\00. PlayerSkill\AirAtk">
       <UniqueIdentifier>{aa68944d-4d46-40d2-9b4a-bac9739f3f33}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\03. MapObject\02. Warp">
-      <UniqueIdentifier>{186e11e6-b02d-470a-a908-4f901a402c85}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\06. EventTrigger">
       <UniqueIdentifier>{5a63cd4a-bdac-428f-aadd-7319dc34f934}</UniqueIdentifier>
     </Filter>
@@ -225,6 +222,15 @@
     </Filter>
     <Filter Include="02. GameObject\02. Camera\03. MinigameCamera">
       <UniqueIdentifier>{a6d287bd-6426-46cd-b748-c517dabd43bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. EventTrigger\03. CutSceneTrigger">
+      <UniqueIdentifier>{229881cb-1a44-46e5-9f0f-68b9926153d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\00.Creature\01. Monster\05. Bear">
+      <UniqueIdentifier>{7ce333c8-ee72-45cd-a5e1-5008ba08fce8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\03. MapObject\02. Coin">
+      <UniqueIdentifier>{b5a8c8f5-490c-4b68-8599-800d14663c1a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -456,6 +462,15 @@
     <ClInclude Include="..\Public\CutSceneMgr.h">
       <Filter>03. Manager\04. CutSceneMgr</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CutSceneTrigger.h">
+      <Filter>02. GameObject\06. EventTrigger\03. CutSceneTrigger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bear.h">
+      <Filter>02. GameObject\00.Creature\01. Monster\05. Bear</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Coin.h">
+      <Filter>02. GameObject\03. MapObject\02. Coin</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -667,6 +682,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\CutSceneMgr.cpp">
       <Filter>03. Manager\04. CutSceneMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CutSceneTrigger.cpp">
+      <Filter>02. GameObject\06. EventTrigger\03. CutSceneTrigger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bear.cpp">
+      <Filter>02. GameObject\00.Creature\01. Monster\05. Bear</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Coin.cpp">
+      <Filter>02. GameObject\03. MapObject\02. Coin</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

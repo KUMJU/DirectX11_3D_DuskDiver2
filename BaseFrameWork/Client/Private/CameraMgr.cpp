@@ -4,6 +4,9 @@
 #include "ThirdPersonCam.h"
 #include "CameraFree.h"
 
+#include "GameMgr.h"
+#include "Player.h"
+
 IMPLEMENT_SINGLETON(CCameraMgr)
 
 CCameraMgr::CCameraMgr()
@@ -108,6 +111,13 @@ void CCameraMgr::AddEventPreset(const wstring& _strName, vector<CEventCamera::EV
 
 void CCameraMgr::StartEvent(const wstring& _strName)
 {
+	CGameMgr::GetInstance()->GetPlayer()->SetOnMinigame(true);
+
 	m_pEventCam->StartEvent(_strName);
 	SwitchingCamera(ECAMERATYPE::EVENT);
+}
+
+void CCameraMgr::SetFreeCamPos(_vector _vPos, _vector _vLook)
+{
+	m_pFreeCam->SetFreeCamPos(_vPos, _vLook);
 }

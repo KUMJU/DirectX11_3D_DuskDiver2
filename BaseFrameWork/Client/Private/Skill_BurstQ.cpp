@@ -47,7 +47,7 @@ HRESULT CSkill_BurstQ::Initialize()
     info2.bKnockUp = false;
     info2.bDownAtk = true;
     info2.fWeight = 1.f;
-    info2.CancleAbleRatio = 0.9;
+    info2.CancleAbleRatio = 0.7f;
 
 
 

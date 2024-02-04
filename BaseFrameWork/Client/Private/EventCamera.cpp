@@ -103,9 +103,6 @@ void CEventCamera::LateTick(_float fTimeDelta)
 		vPos.m128_f32[1] += (m_EventList)[m_iCurrentIdx].fDistance.y * fTimeDelta;
 		m_pTransformCom->SetState(CTransform::STATE_POSITION, vPos);
 
-		
-
-
 		break;
 	case CEventCamera::FUNC_FOCUSING:
 		FocusObject();
@@ -164,6 +161,7 @@ void CEventCamera::EndEvent()
 	m_bEventStart = true;
 	m_iCurrentIdx = 0;
 	m_iMaxSize = 0;
+	CGameMgr::GetInstance()->GetPlayer()->SetOnMinigame(false);
 	CCameraMgr::GetInstance()->SwitchingCamera(CCameraMgr::ECAMERATYPE::THIRDPERSON);
 }
 
@@ -211,6 +209,14 @@ void CEventCamera::EventInitialize()
 
 			m_pTransformCom->SetState(CTransform::STATE_POSITION, vCamPos);
 			m_pTransformCom->LookAt(vTargetPos);
+		}
+		else {
+
+			_vector vCamPos = XMVectorSetW(XMLoadFloat3(&(m_EventList)[m_iCurrentIdx].vStart), 1.f);
+			_vector vCamLook = XMVectorSetW(XMLoadFloat3(&(m_EventList)[m_iCurrentIdx].vEnd), 1.f);
+
+			m_pTransformCom->SetState(CTransform::STATE_POSITION, vCamPos);
+			m_pTransformCom->LookAt(vCamLook);
 		}
 
 		break;

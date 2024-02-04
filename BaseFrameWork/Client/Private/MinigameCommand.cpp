@@ -7,6 +7,10 @@
 
 #include "Player.h"
 
+#include "MonsterPool.h"
+#include "Bear.h"
+#include "CameraMgr.h"
+
 
 CMinigameCommand::CMinigameCommand()
 {
@@ -39,6 +43,12 @@ void CMinigameCommand::Tick(_float _fTimeDelta)
 	if (!m_bProcessing)
 		return;
 
+	if (!m_bStartCutSceneDone) {
+		ProcessingEvent(_fTimeDelta);
+		return;
+	}
+
+
 	KeyInput();
 
 }
@@ -48,8 +58,9 @@ void CMinigameCommand::LateTick(_float _fTimeDelta)
 	if (!m_bProcessing)
 		return;
 
-	CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_UI, shared_from_this());
-
+	if (m_bStartCutSceneDone) {
+		CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_UI, shared_from_this());
+	}
 }
 
 HRESULT CMinigameCommand::Render()
@@ -137,11 +148,13 @@ HRESULT CMinigameCommand::Render()
 void CMinigameCommand::GameStart()
 {
 	__super::GameStart();
-
+	StartEventCutScene();
 	m_pPlayer->SetOnMinigame(true);
 	
 	//플레이어 키인풋 막아주기 + 마우스 인풋 막아주기 
 	//아예 그냥 미니게임 변수를 줘서 어쩌고 저쩌고 한번에 처리해버리기 
+
+	
 
 
 
@@ -150,8 +163,53 @@ void CMinigameCommand::GameStart()
 void CMinigameCommand::GameEnd()
 {
 	__super::GameEnd();
-
 	m_pPlayer->SetOnMinigame(false);
+	CCameraMgr::GetInstance()->SwitchingCamera(CCameraMgr::ECAMERATYPE::THIRDPERSON);
+
+}
+
+void CMinigameCommand::StartEventCutScene()
+{
+
+	_vector vPlrPos = dynamic_pointer_cast<CTransform>(m_pPlayer->GetComponent(TEXT("Com_Transform")))->GetState(CTransform::STATE_POSITION);
+
+	m_pBear = CMonsterPool::GetInstance()->GetBearMonster();
+	m_pBear->SetEnable(true);
+	m_pBear->SetPosition({ 0.f, 50.f, -172.3f , 1.f });
+	
+	m_vInitPos = { vPlrPos.m128_f32[0], 50.f, -172.3f , 1.f};
+
+}
+
+void CMinigameCommand::SetCameraEvent()
+{
+
+}
+
+void CMinigameCommand::ProcessingEvent(_float _fTimeDelta)
+{
+	m_fEventProcessTime += _fTimeDelta;
+
+	if (m_fEventProcessTime > 1.f && m_fEventProcessTime < 2.f) {
+
+		m_fBearDropSpeed += 0.5f * _fTimeDelta + 0.02f;
+		m_vInitPos.m128_f32[1] -= m_fBearDropSpeed;
+
+		if (m_vInitPos.m128_f32[1] < 23.f) {
+			m_vInitPos.m128_f32[1] = 23.f;
+		}
+
+		m_pBear->SetPosition(m_vInitPos);
+
+	}
+	if (3.5f < m_fEventProcessTime) {
+
+		CCameraMgr::GetInstance()->SetFreeCamPos({ m_vInitPos.m128_f32[0] -3.2f, 24.6f, -170.8f , 1.f}, { m_vInitPos.m128_f32[0], 24.6f, -170.8f , 1.f});
+		CCameraMgr::GetInstance()->SwitchingCamera(CCameraMgr::ECAMERATYPE::FREE);
+
+		m_bStartCutSceneDone = true;
+	}
+
 
 
 }
@@ -167,7 +225,7 @@ void CMinigameCommand::CheckCommandList(_uint _iNewCmd)
 
 		if (m_PlayerCommand.size() == m_AnswerCommand[m_iCurrentRound].size()) {
 
-			m_pPlayer->CommandMinigameSuccess(m_iCurrentRound);
+		//	m_pPlayer->CommandMinigameSuccess(m_iCurrentRound);
 
 			++m_iCurrentRound;
 			m_PlayerCommand.clear();

@@ -43,6 +43,12 @@ public:
 	virtual void GameStart();
 	virtual void GameEnd();
 
+public:
+	virtual void StartEventCutScene();
+	virtual void SetCameraEvent();
+	void ProcessingEvent(_float _fTimeDelta);
+
+
 private:
 	void CheckCommandList(_uint _iNewCmd);
 
@@ -65,7 +71,14 @@ private:
 
 
 private:
+	_float m_fBearDropSpeed = 0.f;
+	_float m_fCurrentHeight = 0.f;
+
+	_vector m_vInitPos = _vector();
+
+private:
 	shared_ptr<class CPlayer> m_pPlayer = nullptr;
+	shared_ptr<class CBear> m_pBear = nullptr;
 
 
 public:

@@ -63,12 +63,14 @@ void CMole::Tick(_float _fTimeDelta)
     if (!m_IsEnabled)
         return;
 
-    m_MovingTime += _fTimeDelta;
+    if (m_iCurrentSlotNum != 100) {
 
-    _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
-    vPos.m128_f32[1] += _fTimeDelta * m_fSpeed * m_fDir;
+        m_MovingTime += _fTimeDelta;
 
-    m_pTransformCom->SetState(CTransform::STATE_POSITION, vPos);
+        _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+        vPos.m128_f32[1] += _fTimeDelta * m_fSpeed * m_fDir;
+
+        m_pTransformCom->SetState(CTransform::STATE_POSITION, vPos);
 
         if (1.f == m_fDir && m_MovingTime >= 0.6f) {
             m_fDir = 0.f;
@@ -83,10 +85,12 @@ void CMole::Tick(_float _fTimeDelta)
             m_fDir = 1.f;
             m_MovingTime = 0.f;
         }
- 
 
-    m_pColider->Tick(m_pTransformCom->GetWorldMatrix());
-    CGameInstance::GetInstance()->AddCollider(CCollisionMgr::COL_MONSTER, m_pColider);
+
+        m_pColider->Tick(m_pTransformCom->GetWorldMatrix());
+        CGameInstance::GetInstance()->AddCollider(CCollisionMgr::COL_MONSTER, m_pColider);
+
+    }
 
 }
 

@@ -108,10 +108,9 @@ void CPlayer::Tick(_float _fTimeDelta)
             m_pPlayerSkillset->SetBurstMode(true);
             m_pModelCom = m_pBurstModelCom;
 
-            m_NextAnimIndex.push_back({ 44, false });
-
             m_eCurrentState = HEROSTATE::STATE_IDLE;
             m_fransformTime = 0.f;
+            m_NextAnimIndex.push_back({ 44, true });
             m_bBurstMode = true;
             
         }
@@ -654,13 +653,13 @@ void CPlayer::KeyInput(_float _fTimeDelta)
     {
         m_eCurrentState = HEROSTATE::STATE_BURST_TRANS;
         IsKeyInput = true;
-        ChangeAnim(30, false);
-        //m_pModelCom->ChangeAnimation(30);
+       // ChangeAnim(30, false);
+        m_pModelCom->ChangeAnimation(30);
         m_pBurstModelCom->ChangeAnimation(30);
         m_isAnimLoop = false;
 
         //Event_Burst
-        CCameraMgr::GetInstance()->StartEvent(TEXT("Event_Burst"));
+        //CCameraMgr::GetInstance()->StartEvent(TEXT("Event_Burst"));
 
         m_IsUsingSkill = true;
         m_bSuperArmor = true;
@@ -842,27 +841,30 @@ void CPlayer::KeyInput(_float _fTimeDelta)
 
     if (GetKeyState('S') & 0x8000) {
 
-        if (m_MoveFlag != 0x0001) {
+        if (m_pPlayerSkillset->CheckMoveEnable()) {
 
-            vSrc = vPlrLook;
-            vDst = -1.f * vCamLookDir;
+            if (m_MoveFlag != 0x0001) {
 
-            m_bRunning = true;
-            m_fCurrentDir = -1.f;
-            m_MoveFlag |= 0x0010;
+                vSrc = vPlrLook;
+                vDst = -1.f * vCamLookDir;
+
+                m_bRunning = true;
+                m_fCurrentDir = -1.f;
+                m_MoveFlag |= 0x0010;
 
 
-            if (m_bDash) {
-                m_bSprint = true;
-                FinalAnimNum = 80;
-                m_bDash = true;
+                if (m_bDash) {
+                    m_bSprint = true;
+                    FinalAnimNum = 80;
+                    m_bDash = true;
+                }
+                else {
+                    FinalAnimNum = 59;
+                }
+
+                IsLoop = true;
+                IsKeyInput = true;
             }
-            else {
-                FinalAnimNum = 59;
-            }
-
-            IsLoop = true;
-            IsKeyInput = true;
         }
     }
 

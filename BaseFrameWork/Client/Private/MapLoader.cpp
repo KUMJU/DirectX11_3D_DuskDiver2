@@ -9,6 +9,7 @@
 #include "Escalator.h"
 #include "MonsterTower.h"
 #include "Model.h"
+#include "Coin.h"
 
 #include "imgui.h"
 #include "imgui_impl_win32.h"
@@ -92,6 +93,9 @@ void CMapLoader::ClassifyObject(const wstring& _strKeyName, _float4x4* _fWorldMa
 		CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Object"), pInstance);
 
 
+	}else if(TEXT("GoldA") == _strKeyName){
+		pInstance = CCoin::Create();
+		CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Object"), pInstance);
 
 	}else {
 
