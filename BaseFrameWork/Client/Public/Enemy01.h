@@ -30,6 +30,8 @@ private:
 	virtual void AttackPattern(_uint _iAtkNum) override;
 	void IdlePattern(_uint _iAtkNum);
 	void WalkPattern(_uint _iWalkNum);
+	
+	void UIEnableOn();
 
 	void IfEmptyAnimList() override;
 	_bool CalcDistanceOption() override;
@@ -43,6 +45,12 @@ public:
 
 private:
 	_uint m_iWalkPatternNum = 0;	
+
+/*TestUI*/
+private:
+
+	shared_ptr<class CWorldHPBar> m_pHPBar = nullptr;
+
 
 public:
 	static shared_ptr<CEnemy01> Create();

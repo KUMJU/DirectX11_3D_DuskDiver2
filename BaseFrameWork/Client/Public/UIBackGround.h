@@ -3,13 +3,6 @@
 #include "Engine_Defines.h"
 #include "UI.h"
 
-
-BEGIN(Engine)
-class CShader;
-class CVIRect;
-class CTexture;
-END
-
 BEGIN(Client)
 
 class CUIBackGround final : public CUI

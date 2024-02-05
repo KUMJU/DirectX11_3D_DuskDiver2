@@ -232,6 +232,18 @@
     <Filter Include="02. GameObject\03. MapObject\02. Coin">
       <UniqueIdentifier>{b5a8c8f5-490c-4b68-8599-800d14663c1a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\08. Quest">
+      <UniqueIdentifier>{45aef91b-6ffb-4a7e-80fc-0a573d3c0ebe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. UI\02. UI_HPBar">
+      <UniqueIdentifier>{5ce720eb-c00a-448c-b74c-9bfed6bb293f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. UI\02. UI_HPBar\PlayerHPBar">
+      <UniqueIdentifier>{1e06ad0f-de8f-4d23-ac47-80892d4fc04a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. UI\02. UI_HPBar\WorldHpBar">
+      <UniqueIdentifier>{5f99ea81-9a2c-4a0c-91e3-551479e4c653}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -471,6 +483,12 @@
     <ClInclude Include="..\Public\Coin.h">
       <Filter>02. GameObject\03. MapObject\02. Coin</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UIPlrHPBar.h">
+      <Filter>02. GameObject\01. UI\02. UI_HPBar\PlayerHPBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\WorldHPBar.h">
+      <Filter>02. GameObject\01. UI\02. UI_HPBar\WorldHpBar</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -692,6 +710,12 @@
     <ClCompile Include="..\Private\Coin.cpp">
       <Filter>02. GameObject\03. MapObject\02. Coin</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\UIPlrHPBar.cpp">
+      <Filter>02. GameObject\01. UI\02. UI_HPBar\PlayerHPBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\WorldHPBar.cpp">
+      <Filter>02. GameObject\01. UI\02. UI_HPBar\WorldHpBar</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -717,6 +741,9 @@
       <Filter>97. ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnim.hlsl">
+      <Filter>97. ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPointUI.hlsl">
       <Filter>97. ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

@@ -1,68 +1,89 @@
 #include "Shader_Defines.hlsli"
 
-/*
-버텍스 쉐이더(정점 쉐이더, VS) : 정점 정보에 수학적인 연산을 하여 특별한 효과를 주는데 사용하는 쉐이더
-픽셀 쉐이더(PS): 렌더링 될 각각의 픽셀의 색을 계산하는 방식의 쉐이더
-지오메트리 쉐이더: 버텍스 쉐이더가 수행된 이후 수행됨. 정점을 삭제 혹은 더 추가 할 수 있음. 
-
-[순서]
-
-버텍스 쉐이더 > 지오메트리 쉐이더 > 레스터라이즈 > 픽셀 쉐이더
-
-*/
-
-//전역변수는 Client에서, 혹은 초기값을 넣어주며 세팅해준다
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 texture2D g_Texture;
 
 float g_HPRatio;
-
 vector g_RGBColor = vector(1.f, 1.f, 1.f, 1.f);
 
-//버퍼 생성 때 작성했던 것과 동일한 자료형, 동일한 시맨틱 이름을 사용해야함
 struct VS_IN
 {
     float3 vPosition : POSITION;
-    float2 vTexcoord : TEXCOORD0; //texcoord는 변환 중 값이 변하지 않는다
+    float2 vPSize : PSIZE; 
     
 };
 
 struct VS_OUT
 {
-    float4 vPosition : SV_POSITION; //matrix와 연산했기 때문에 output은 float4로 나온다
-    float2 vTexcoord : TEXCOORD0;
-
+    float4 vPosition : POSITION;
+    float2 vPSize : PSIZE;
+    
 };
 
-//_MAIN : 진입점 함수 , 일반 함수와 동일하게 [출력인자][함수명][입력인자]
-// mul 함수는 transformcoord와 달리 곱한 이후 w 나누기 연산을 수행해주지 않는다
-// 따라서 마지막에 w 나누기 연산을 위해 float4 < format을 유지해야함
+
 VS_OUT VS_MAIN(VS_IN In)
 {
     VS_OUT Out = (VS_OUT) 0;
+   
+    matrix matWVP = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWVP, g_ProjMatrix);
     
-    
-    matrix matWV, matWVP; // World * View , World * View * Projection
-    //보통은 이 행렬들끼리 미리 곱한후, 이 결과값을 들어오는 포지션에 곱한다
-    
-    /* [방법 1]
-    
-    // mul : 곱해지는 행렬의 행과 곱하려는 행의 열의 갯수가 같아야 수행가능
-    //vector(In.vPosition, 1.f) : float3인 vPosition에 w = 1.f를 추가한 후 연산 
-    float4 vPosition = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
-    vPosition = mul(vPosition, g_ViewMatrix);
-    vPosition = mul(vPosition, g_ProjMatrix);
-    */
-    
-    matWV = mul(g_WorldMatrix, g_ViewMatrix);
-    matWVP = mul(matWV, g_ProjMatrix);
-    
-    Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
-    Out.vTexcoord = In.vTexcoord;
+    Out.vPosition = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
+    Out.vPSize = float2(g_WorldMatrix._11 * In.vPSize.x, g_WorldMatrix._22* In.vPSize.y);
     
     return Out;
 
 }
+
+struct GS_IN
+{
+    float4 vPosition : POSITION;
+    float2 vPSize : PSIZE;
+    
+};
+
+struct GS_OUT
+{
+    float4 vPosition : SV_Position;
+    float2 vTexcoord : TEXCOORD0;
+};
+
+
+[maxvertexcount(6)]
+void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> DataStream)
+{
+    GS_OUT Out[4];
+    
+    matrix matVP = mul(g_ViewMatrix, g_ProjMatrix);
+
+    Out[0].vPosition = In[0].vPosition + float4(In[0].vPSize.x * -0.5f, In[0].vPSize.y * -0.5f, 0.f, 0.f);
+    Out[0].vPosition = mul(Out[0].vPosition, matVP);
+    Out[0].vTexcoord = float2(0.f, 1.f);
+
+    Out[1].vPosition = In[0].vPosition + float4(In[0].vPSize.x * 0.5f, In[0].vPSize.y * -0.5f, 0.f, 0.f);
+    Out[1].vPosition = mul(Out[1].vPosition, matVP);
+    Out[1].vTexcoord = float2(1.f, 1.f);
+
+    Out[2].vPosition = In[0].vPosition + float4(In[0].vPSize.x * 0.5f, In[0].vPSize.y * 0.5f, 0.f, 0.f);
+    Out[2].vPosition = mul(Out[2].vPosition, matVP);
+    Out[2].vTexcoord = float2(1.f, 0.f);
+        
+    Out[3].vPosition = In[0].vPosition + float4(In[0].vPSize.x * -0.5f, In[0].vPSize.y * 0.5f, 0.f, 0.f);
+    Out[3].vPosition = mul(Out[3].vPosition, matVP);
+    Out[3].vTexcoord = float2(0.f, 0.f);
+
+    DataStream.Append(Out[3]);
+    DataStream.Append(Out[2]);
+    DataStream.Append(Out[1]);
+    DataStream.RestartStrip();
+
+    DataStream.Append(Out[3]);
+    DataStream.Append(Out[1]);
+    DataStream.Append(Out[0]);
+
+    
+}
+
 
 struct PS_IN
 {
@@ -80,14 +101,10 @@ PS_OUT PS_MAIN(PS_IN In)
     PS_OUT Out = (PS_OUT) 0;
 
     Out.vColor = g_Texture.Sample(g_LinearSampler, In.vTexcoord);    
-    
+  
     if (Out.vColor.a  < 0.4f)
         discard;   
-  
-    //y포지션이 아래에 있을수록 alpha값을 낮게하는 예시 코드
-    //max(a,b)면 a가 b보다 작을 경우 b로 값을 대신해준다
-  
-    
+ 
    return Out;
 
 }
@@ -142,7 +159,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        GeometryShader = compile gs_5_0 GS_MAIN();
         PixelShader = compile ps_5_0 PS_MAIN();
     }
 
@@ -152,7 +169,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        GeometryShader = compile gs_5_0 GS_MAIN();
         PixelShader = compile ps_5_0 PS_MAIN_POINT();
     }
 
@@ -162,7 +179,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
+        GeometryShader = compile gs_5_0 GS_MAIN();
         PixelShader = compile ps_5_0 PS_HPBar();
     }
 

@@ -204,6 +204,7 @@
     <ClInclude Include="..\Public\Transform.h" />
     <ClInclude Include="..\Public\VIBuffer.h" />
     <ClInclude Include="..\Public\VIBufferCell.h" />
+    <ClInclude Include="..\Public\VIBuffer_UI.h" />
     <ClInclude Include="..\Public\VIRect.h" />
     <ClInclude Include="..\Public\VITerrain.h" />
   </ItemGroup>
@@ -250,6 +251,7 @@
     <ClCompile Include="..\Private\Transform.cpp" />
     <ClCompile Include="..\Private\VIBuffer.cpp" />
     <ClCompile Include="..\Private\VIBufferCell.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_UI.cpp" />
     <ClCompile Include="..\Private\VIRect.cpp" />
     <ClCompile Include="..\Private\VITerrain.cpp" />
     <ClCompile Include="..\Public\Engine_Struct.cpp" />

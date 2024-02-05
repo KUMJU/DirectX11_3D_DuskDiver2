@@ -175,6 +175,9 @@ void CResourceMgr::ReadShaderFile(const wstring& _strBaseFilepath, const wstring
                 pShader = CShader::Create(m_pDevice, m_pContext, strPath, VTXPOS::Elements, VTXPOS::iNumElements);
 
             }
+            else if (wstring::npos != strName.find(TEXT("Point"))) {
+                pShader = CShader::Create(m_pDevice, m_pContext, strPath, VTXPOINT::Elements, VTXPOINT::iNumElements);
+            }
 
             if (pShader) {
                 m_Shaders.emplace(EraseExt(strName), pShader);

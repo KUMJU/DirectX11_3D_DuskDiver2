@@ -40,6 +40,8 @@
 
 #include "MonsterTrigger.h"
 
+#include "UIPlrHPBar.h"
+
 
 CArcadeMap::CArcadeMap()
 	:CLevel()
@@ -253,6 +255,7 @@ HRESULT CArcadeMap::ReadyLayerEvent(const wstring& _strLayerTag)
 
 HRESULT CArcadeMap::ReadyLayerUI(const wstring& _strLayerTag)
 {
+	shared_ptr<CUI> pInstance;
 
 	CUIBackGround::tagUIInfo UITagInfo;
 	UITagInfo.fSizeX = 463.f * 0.85f;
@@ -260,7 +263,7 @@ HRESULT CArcadeMap::ReadyLayerUI(const wstring& _strLayerTag)
 	UITagInfo.fX = g_iWinSizeX * 0.5f - 460.f;
 	UITagInfo.fY = g_iWinSizeY * 0.5f- 280.f;
 
-	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_LOGO, _strLayerTag, CUIBackGround::Create(UITagInfo, TEXT("hud_status_bg_He01"), 0))))
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, CUIBackGround::Create(UITagInfo, TEXT("hud_status_bg_He01"), 0))))
 		return E_FAIL;
 
 	UITagInfo.fSizeX = 247.f * 0.65f;
@@ -268,8 +271,19 @@ HRESULT CArcadeMap::ReadyLayerUI(const wstring& _strLayerTag)
 	UITagInfo.fX = g_iWinSizeX * 0.5f - 450.f;
 	UITagInfo.fY = g_iWinSizeY * 0.5f - 310.f;
 
-	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_LOGO, _strLayerTag, CUIBackGround::Create(UITagInfo, TEXT("hud_neme_he01"), 1))))
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, CUIBackGround::Create(UITagInfo, TEXT("hud_neme_he01"), 1))))
 		return E_FAIL;
+
+
+	/**Player HP Bar**/
+
+	pInstance = CUIPlrHPBar::Create();
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pInstance)))
+		return E_FAIL;
+
+	//UIManager 추가해줘야함 
+	
+
 
 	return S_OK;
 }

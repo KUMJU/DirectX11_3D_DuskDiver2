@@ -166,6 +166,9 @@
     <Filter Include="01. Utility\09. Manager\03. FontMgr\CustomFont">
       <UniqueIdentifier>{a73011f1-60e3-4dc8-997c-52f6524d2f0a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\04. Component\00. VIBuffer\03. UI">
+      <UniqueIdentifier>{4e956dfa-17ca-4235-a1c5-e690d17d05c8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Engine_Defines.h">
@@ -315,6 +318,9 @@
     <ClInclude Include="..\Public\CustomFont.h">
       <Filter>01. Utility\09. Manager\03. FontMgr\CustomFont</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_UI.h">
+      <Filter>01. Utility\04. Component\00. VIBuffer\03. UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\GraphicDev.cpp">
@@ -451,6 +457,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\CustomFont.cpp">
       <Filter>01. Utility\09. Manager\03. FontMgr\CustomFont</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_UI.cpp">
+      <Filter>01. Utility\04. Component\00. VIBuffer\03. UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

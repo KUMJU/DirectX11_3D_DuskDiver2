@@ -3,6 +3,7 @@
 
 #include "Shader.h"
 #include "VIRect.h"
+#include "VIBuffer_UI.h"
 
 #include "GameInstance.h"
 
@@ -49,8 +50,8 @@ void CUI::AddBaseComponent()
     wrl::ComPtr<ID3D11Device> pDevice = CGameInstance::GetInstance()->GetDeviceInfo();
     wrl::ComPtr<ID3D11DeviceContext> pContext = CGameInstance::GetInstance()->GetDeviceContextInfo();
 
-    m_VIRectCom = CVIRect::Create(pDevice, pContext);
-    m_Components.emplace(TEXT("Com_VIRect"), m_VIRectCom);
+    m_VIRectCom = CVIBuffer_UI::Create(pDevice, pContext);
+    m_Components.emplace(TEXT("Com_VIUI"), m_VIRectCom);
 
-    m_pShader = CGameInstance::GetInstance()->GetShader(TEXT("Shader_VtxPosTex"));
+    m_pShader = CGameInstance::GetInstance()->GetShader(TEXT("Shader_VtxPointUI"));
 }

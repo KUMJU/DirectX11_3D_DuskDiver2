@@ -231,6 +231,8 @@
     <ClInclude Include="..\Public\UI.h" />
     <ClInclude Include="..\Public\UIBackGround.h" />
     <ClInclude Include="..\Public\UIMgr.h" />
+    <ClInclude Include="..\Public\UIPlrHPBar.h" />
+    <ClInclude Include="..\Public\WorldHPBar.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
@@ -308,6 +310,8 @@
     <ClCompile Include="..\Private\UI.cpp" />
     <ClCompile Include="..\Private\UIBackGround.cpp" />
     <ClCompile Include="..\Private\UIMgr.cpp" />
+    <ClCompile Include="..\Private\UIPlrHPBar.cpp" />
+    <ClCompile Include="..\Private\WorldHPBar.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -327,6 +331,7 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnim.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPointUI.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS_MAIN</EntryPointName>
     </FxCompile>

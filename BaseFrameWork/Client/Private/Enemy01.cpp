@@ -11,6 +11,8 @@
 #include "MapLoader.h"
 #include "Navigation.h"
 
+#include "WorldHPBar.h"
+
 
 CEnemy01::CEnemy01()
 {
@@ -43,6 +45,10 @@ HRESULT CEnemy01::Initialize()
     m_Components.emplace(TEXT("Com_Navigation"), m_pNavigation);
 
     m_iHP = 100;
+
+    m_pHPBar = CWorldHPBar::Create();
+    m_pHPBar->SetMaxHP(100);
+    CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_UI"), m_pHPBar);
 
     /*********Collider*************/
 
@@ -182,6 +188,11 @@ void CEnemy01::Tick(_float _fTimeDelta)
     m_pSkillSet->Tick(_fTimeDelta);
     m_pCollider->Tick(m_pTransformCom->GetWorldMatrix());
     CGameInstance::GetInstance()->AddCollider(CCollisionMgr::COL_MONSTER, m_pCollider);
+
+    _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+    vPos.m128_f32[1] += 2.f;
+
+    m_pHPBar->CalcScreenPos(vPos);
 
 }
 
@@ -344,6 +355,12 @@ void CEnemy01::WalkPattern(_uint _iWalkNum)
 
 }
 
+void CEnemy01::UIEnableOn()
+{
+    m_pHPBar->SetMaxHP(100);
+    m_pHPBar->SetEnable(true);
+}
+
 void CEnemy01::IfEmptyAnimList()
 {
     if (m_eCurrentState == EMONSTER_STATE::STATE_SPAWN) {
@@ -414,6 +431,8 @@ void CEnemy01::OnHit()
     m_eCurrentState = EMONSTER_STATE::STATE_HIT;
     m_bHit = true;
 
+    m_pHPBar->SetHP(m_iHP);
+
     if (m_bDownAttack) {
         m_NextAnimIndex.clear();
         ChangeAnim(26, false);
@@ -449,6 +468,8 @@ void CEnemy01::OnHit()
 void CEnemy01::SetSpawnState()
 {
     __super::SetSpawnState();
+
+    UIEnableOn();
 
     m_eCurrentState = EMONSTER_STATE::STATE_SPAWN;
     ChangeAnim(18, false);
