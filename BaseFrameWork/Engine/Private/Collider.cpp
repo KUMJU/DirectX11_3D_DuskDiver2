@@ -62,6 +62,9 @@ void CCollider::Tick(_fmatrix _WorldMatrix)
 
 HRESULT CCollider::Render()
 {
+
+	m_pContext->GSSetShader(nullptr, nullptr, 0);
+
 	m_pEffect->SetWorld(XMMatrixIdentity());
 	m_pEffect->SetView(CGameInstance::GetInstance()->GetTransformMatrix(CPipeLine::D3DTS_VIEW));
 	m_pEffect->SetProjection(CGameInstance::GetInstance()->GetTransformMatrix(CPipeLine::D3DTS_PROJ));

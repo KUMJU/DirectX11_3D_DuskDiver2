@@ -19,19 +19,12 @@
 
 #include "UIBackGround.h"
 
-#include "Enemy01.h"
-#include "Enemy02.h"
 #include "MiddleBoss.h"
-#include "FinalBoss.h"
-
 #include "GameObject.h"
-
 #include "MapObject.h"
-#include "Escalator.h"
 
 #include "MonsterTower.h"
 #include "Portal.h"
-
 #include "MonsterPool.h"
 
 #include "MinigameMole.h"
@@ -40,7 +33,10 @@
 
 #include "MonsterTrigger.h"
 
+#include "UIMgr.h"
 #include "UIPlrHPBar.h"
+#include "UIQuest.h"
+
 
 
 CArcadeMap::CArcadeMap()
@@ -280,9 +276,15 @@ HRESULT CArcadeMap::ReadyLayerUI(const wstring& _strLayerTag)
 	pInstance = CUIPlrHPBar::Create();
 	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pInstance)))
 		return E_FAIL;
-
-	//UIManager 추가해줘야함 
 	
+	CUIMgr::GetInstance()->AddUI(TEXT("UI_PlayerHP"), pInstance);
+
+	/**Quest UI**/
+
+	pInstance = CUIQuest::Create();
+	if(FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pInstance)))
+		return E_FAIL;
+	CUIMgr::GetInstance()->AddUI(TEXT("UI_Quest"), pInstance);
 
 
 	return S_OK;

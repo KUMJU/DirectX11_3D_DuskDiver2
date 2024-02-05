@@ -21,7 +21,7 @@ HRESULT CUIPlrHPBar::Initialize()
 
     UIInfo.fSizeX = 150.f;
     UIInfo.fSizeY = 12.f;
-    UIInfo.fX = g_iWinSizeX * 0.5f - 440.f;
+    UIInfo.fX = g_iWinSizeX * 0.5f - 435.f;
     UIInfo.fY = g_iWinSizeY * 0.5f - 270.f;
 
     m_fUIStartPoint = UIInfo.fX - (UIInfo.fSizeX * 0.5f);
@@ -34,7 +34,7 @@ HRESULT CUIPlrHPBar::Initialize()
     m_pTextureCom = CGameInstance::GetInstance()->GetTexture(TEXT("hud_img"));
     m_Components.emplace(TEXT("Com_Texture"), m_pTextureCom);
 
-    m_fCurrentHPRatio = 0.8f;
+    m_fCurrentHPRatio = 1.f;
     m_fPrevHPRatio = 1.f;
 
     return S_OK;
@@ -46,6 +46,9 @@ void CUIPlrHPBar::PriorityTick(_float _fTimeDelta)
 
 void CUIPlrHPBar::Tick(_float _fTimeDelta)
 {
+    if (m_IsHPLerp)
+        CalcHPDiff(_fTimeDelta);
+
 }
 
 void CUIPlrHPBar::LateTick(_float _fTimeDelta)
@@ -66,6 +69,7 @@ HRESULT CUIPlrHPBar::Render()
     m_pShader->BindMatrix("g_ProjMatrix", &ProjMatrix);
 
     m_pShader->BindRawValue("g_HPRatio", &m_fCurrentHPRatio, sizeof(_float));
+    m_pShader->BindRawValue("g_PrevHPRatio", &m_fPrevHPRatio, sizeof(_float));
 
     if (FAILED(m_pTextureCom->BindShaderResource(m_pShader, "g_Texture", 0)))
         return E_FAIL;
@@ -84,9 +88,36 @@ HRESULT CUIPlrHPBar::Render()
 
 void CUIPlrHPBar::SetHP(_int _iHP)
 {
+
+    if (_iHP <= 0) {
+        m_fPrevHPRatio = 0.f;
+        m_fCurrentHPRatio = 0.f;
+        m_IsHPLerp = false;
+    }
+    else {
+        if (!m_IsHPLerp) {
+            m_fPrevHPRatio = (_float)m_iHP / (_float)m_iMaxHP;
+            m_IsHPLerp = true;
+        }
+    }
+
     m_iHP = _iHP;
-    m_fPrevHPRatio = m_fCurrentHPRatio;
     m_fCurrentHPRatio = (_float)m_iHP / (_float)m_iMaxHP;
+    m_fCurrentDiff = (m_fPrevHPRatio - m_fCurrentHPRatio) * 2.f;
+
+}
+
+void CUIPlrHPBar::CalcHPDiff(_float _fTimeDelta)
+{
+    if (m_fPrevHPRatio != m_fCurrentHPRatio) {
+        m_fPrevHPRatio -= m_fCurrentDiff * _fTimeDelta;
+
+        if (m_fPrevHPRatio <= m_fCurrentHPRatio) {
+            m_fPrevHPRatio = m_fCurrentHPRatio;
+            m_IsHPLerp = false;
+        }
+    }
+
 }
 
 shared_ptr<CUIPlrHPBar> CUIPlrHPBar::Create()

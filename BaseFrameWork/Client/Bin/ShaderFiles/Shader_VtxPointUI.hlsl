@@ -4,6 +4,8 @@ matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 texture2D g_Texture;
 
 float g_HPRatio;
+float g_PrevHPRatio;
+
 vector g_RGBColor = vector(1.f, 1.f, 1.f, 1.f);
 
 struct VS_IN
@@ -27,8 +29,8 @@ VS_OUT VS_MAIN(VS_IN In)
    
     matrix matWVP = mul(g_WorldMatrix, g_ViewMatrix);
     matWVP = mul(matWVP, g_ProjMatrix);
-    
-    Out.vPosition = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
+    //mul(vector(In.vPosition, 1.f), g_WorldMatrix)
+    Out.vPosition = float4(In.vPosition, 1.f);
     Out.vPSize = float2(g_WorldMatrix._11 * In.vPSize.x, g_WorldMatrix._22* In.vPSize.y);
     
     return Out;
@@ -55,20 +57,49 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> DataStream)
     GS_OUT Out[4];
     
     matrix matVP = mul(g_ViewMatrix, g_ProjMatrix);
+    matVP = mul(g_WorldMatrix, matVP);
 
-    Out[0].vPosition = In[0].vPosition + float4(In[0].vPSize.x * -0.5f, In[0].vPSize.y * -0.5f, 0.f, 0.f);
+    
+    //Out[0].vPosition = In[0].vPosition + float4(In[0].vPSize.x * -0.5f, In[0].vPSize.y * -0.5f, 0.f, 0.f);
+    //Out[0].vPosition = mul(Out[0].vPosition, matVP);
+    //Out[0].vTexcoord = float2(0.f, 1.f);
+
+    //Out[1].vPosition = In[0].vPosition + float4(In[0].vPSize.x * 0.5f, In[0].vPSize.y * -0.5f, 0.f, 0.f);
+    //Out[1].vPosition = mul(Out[1].vPosition, matVP);
+    //Out[1].vTexcoord = float2(1.f, 1.f);
+
+    //Out[2].vPosition = In[0].vPosition + float4(In[0].vPSize.x * 0.5f, In[0].vPSize.y * 0.5f, 0.f, 0.f);
+    //Out[2].vPosition = mul(Out[2].vPosition, matVP);
+    //Out[2].vTexcoord = float2(1.f, 0.f);
+        
+    //Out[3].vPosition = In[0].vPosition + float4(In[0].vPSize.x * -0.5f, In[0].vPSize.y * 0.5f, 0.f, 0.f);
+    //Out[3].vPosition = mul(Out[3].vPosition, matVP);
+    //Out[3].vTexcoord = float2(0.f, 0.f);
+
+    //DataStream.Append(Out[3]);
+    //DataStream.Append(Out[2]);
+    //DataStream.Append(Out[1]);
+    //DataStream.RestartStrip();
+
+    //DataStream.Append(Out[3]);
+    //DataStream.Append(Out[1]);
+    //DataStream.Append(Out[0]);
+    
+    
+    
+    Out[0].vPosition = In[0].vPosition + float4(-0.5f,-0.5f, 0.f, 0.f);
     Out[0].vPosition = mul(Out[0].vPosition, matVP);
     Out[0].vTexcoord = float2(0.f, 1.f);
 
-    Out[1].vPosition = In[0].vPosition + float4(In[0].vPSize.x * 0.5f, In[0].vPSize.y * -0.5f, 0.f, 0.f);
+    Out[1].vPosition = In[0].vPosition + float4(0.5f,-0.5f, 0.f, 0.f);
     Out[1].vPosition = mul(Out[1].vPosition, matVP);
     Out[1].vTexcoord = float2(1.f, 1.f);
 
-    Out[2].vPosition = In[0].vPosition + float4(In[0].vPSize.x * 0.5f, In[0].vPSize.y * 0.5f, 0.f, 0.f);
+    Out[2].vPosition = In[0].vPosition + float4( 0.5f, 0.5f, 0.f, 0.f);
     Out[2].vPosition = mul(Out[2].vPosition, matVP);
     Out[2].vTexcoord = float2(1.f, 0.f);
         
-    Out[3].vPosition = In[0].vPosition + float4(In[0].vPSize.x * -0.5f, In[0].vPSize.y * 0.5f, 0.f, 0.f);
+    Out[3].vPosition = In[0].vPosition + float4(-0.5f, 0.5f, 0.f, 0.f);
     Out[3].vPosition = mul(Out[3].vPosition, matVP);
     Out[3].vTexcoord = float2(0.f, 0.f);
 
@@ -80,6 +111,7 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> DataStream)
     DataStream.Append(Out[3]);
     DataStream.Append(Out[1]);
     DataStream.Append(Out[0]);
+    
 
     
 }
@@ -137,7 +169,13 @@ PS_OUT PS_HPBar(PS_IN In)
     Out.vColor = g_Texture.Sample(g_LinearSampler, In.vTexcoord);
     
     //¿ø·¡ »ö
-    if (In.vTexcoord.r < g_HPRatio)
+    
+   
+    if (In.vTexcoord.x < g_PrevHPRatio && g_HPRatio < In.vTexcoord.x)
+    {
+        Out.vColor.rgb = float3(1.f, 0.3f, 0.1f);
+    }
+    else if(In.vTexcoord.r <= g_HPRatio)
     {
         Out.vColor.rgb = float3(0.f, 1.f, 0.8f);
     }
@@ -149,6 +187,27 @@ PS_OUT PS_HPBar(PS_IN In)
     return Out;
 
 }
+
+
+PS_OUT PS_EnemyHPBar(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    Out.vColor = g_Texture.Sample(g_LinearSampler, In.vTexcoord);
+    
+    
+    if (In.vTexcoord.x < g_PrevHPRatio && g_HPRatio < In.vTexcoord.x)
+    {
+        Out.vColor.rgb = float3(1.f, 0.3f, 0.1f);
+    }
+    else if (g_PrevHPRatio <= In.vTexcoord.x)
+    {
+        Out.vColor.rgb = float3(0.25f, 0.25f, 0.25f);
+    }
+    
+    return Out;
+}
+
 
 technique11 DefaultTechnique
 {
@@ -181,6 +240,16 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = compile gs_5_0 GS_MAIN();
         PixelShader = compile ps_5_0 PS_HPBar();
+    }
+
+    pass PS_EnemyHPBar //3 
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = compile gs_5_0 GS_MAIN();
+        PixelShader = compile ps_5_0 PS_EnemyHPBar();
     }
 
 }

@@ -47,7 +47,8 @@ HRESULT CEnemy01::Initialize()
     m_iHP = 100;
 
     m_pHPBar = CWorldHPBar::Create();
-    m_pHPBar->SetMaxHP(100);
+    m_pHPBar->SetMaxHP(m_iHP);
+
     CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_UI"), m_pHPBar);
 
     /*********Collider*************/
@@ -91,6 +92,7 @@ void CEnemy01::Tick(_float _fTimeDelta)
         if (m_fDownTime > 2.f) {
 
             if (m_bDie) {
+                m_pHPBar->SetEnable(false);
                 m_IsEnabled = false;
             }
             else {
@@ -171,7 +173,7 @@ void CEnemy01::Tick(_float _fTimeDelta)
         m_vCurrentAnimPos = { 0.f, 0.f, 0.f };
 
         if (m_iAnimNum == 8) {
-
+            m_pHPBar->SetEnable(false);
             m_IsEnabled = false;
             return;
         }
@@ -357,7 +359,7 @@ void CEnemy01::WalkPattern(_uint _iWalkNum)
 
 void CEnemy01::UIEnableOn()
 {
-    m_pHPBar->SetMaxHP(100);
+    m_pHPBar->HPBarReset();
     m_pHPBar->SetEnable(true);
 }
 
@@ -369,6 +371,7 @@ void CEnemy01::IfEmptyAnimList()
     }
 
     if (14 == m_iAnimNum && m_bDie) {
+        m_pHPBar->SetEnable(false);
         m_IsEnabled = false;
         return;
     }

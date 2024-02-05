@@ -8,8 +8,8 @@
 #include "MapLoader.h"
 
 #include "MonsterSkillSet.h"
-
 #include "Navigation.h"
+#include "WorldHPBar.h"
 
 CEnemy02::CEnemy02()
 {
@@ -37,6 +37,11 @@ HRESULT CEnemy02::Initialize()
 
     m_iHP = 100;
 
+    m_pHPBar = CWorldHPBar::Create();
+    m_pHPBar->SetMaxHP(m_iHP);
+    CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_UI"), m_pHPBar);
+
+
     m_pModelCom->SetAnimNum(20);
     m_pNavigation = CMapLoader::GetInstance()->GetCurrentNavi(0);
     m_Components.emplace(TEXT("Com_Navigation"), m_pNavigation);
@@ -46,7 +51,7 @@ HRESULT CEnemy02::Initialize()
     CCollider::COLLIDER_DESC ColliderDesc = {};
     ColliderDesc.fRadius = 0.9f;
     ColliderDesc.vCenter = _float3(0.f, 0.6f, 0.f);
-
+     
     m_pCollider = CCollider::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), CCollider::TYPE_SPHERE, ColliderDesc);
     m_Components.emplace(TEXT("Com_Collider"), m_pCollider);
     m_pCollider->SetOwner(shared_from_this());
@@ -86,6 +91,7 @@ void CEnemy02::Tick(_float _fTimeDelta)
 
 
             if (m_bDie) {
+                m_pHPBar->SetEnable(false);
                 m_IsEnabled = false;
             }
             else {
@@ -181,6 +187,7 @@ void CEnemy02::Tick(_float _fTimeDelta)
     if (m_pModelCom->PlayAnimation(_fTimeDelta, m_bLoop, &m_vCurrentAnimPos)) {
         
         if (m_iAnimNum == 9) {
+            m_pHPBar->SetEnable(false);
             m_IsEnabled = false;
             return;
         }
@@ -197,7 +204,10 @@ void CEnemy02::Tick(_float _fTimeDelta)
    m_pCollider->Tick(m_pTransformCom->GetWorldMatrix());
    CGameInstance::GetInstance()->AddCollider(CCollisionMgr::COL_MONSTER, m_pCollider);
 
+   _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+   vPos.m128_f32[1] += 2.5f;
 
+   m_pHPBar->CalcScreenPos(vPos);
 
 }
 
@@ -450,6 +460,8 @@ void CEnemy02::OnHit()
     m_eCurrentState = EMONSTER_STATE::STATE_HIT;
     m_bHit = true;
 
+    m_pHPBar->SetHP(m_iHP);
+
     if (m_bDownAttack) {
          m_NextAnimIndex.clear();
          ChangeAnim(54, false);
@@ -511,6 +523,9 @@ void CEnemy02::OnHit()
 void CEnemy02::SetSpawnState()
 {
     __super::SetSpawnState();
+
+    m_pHPBar->HPBarReset();
+    m_pHPBar->SetEnable(true);
 
     m_eCurrentState = EMONSTER_STATE::STATE_SPAWN;
     ChangeAnim(37, false);

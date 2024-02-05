@@ -3,6 +3,7 @@
 #include "Client_Defines.h"
 #include "Monster.h"
 
+BEGIN(Client)
 
 class CEnemy02 :public CMonster
 {
@@ -32,6 +33,9 @@ private:
 	void ResetState();
 
 private:
+	shared_ptr<class CWorldHPBar> m_pHPBar = nullptr;
+
+private:
 
 	_uint m_iNextPattern = 0;
 
@@ -59,3 +63,4 @@ public:
 
 };
 
+END

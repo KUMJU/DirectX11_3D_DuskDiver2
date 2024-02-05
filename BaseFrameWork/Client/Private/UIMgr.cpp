@@ -2,6 +2,8 @@
 #include "UIMgr.h"
 #include "UI.h"
 
+#include "UIPlrHPBar.h"
+
 IMPLEMENT_SINGLETON(CUIMgr)
 
 CUIMgr::CUIMgr()
@@ -24,4 +26,14 @@ shared_ptr<class CUI> CUIMgr::FindUI(wstring& _strFindKey)
 		return (*iter).second;
 
 	return nullptr;
+}
+
+void CUIMgr::SetPlayerHP(_int _iHP)
+{
+	wstring FindKey = TEXT("UI_PlayerHP");
+	shared_ptr<CUI> pHPBar = FindUI(FindKey);
+	
+	if (pHPBar) {
+		dynamic_pointer_cast<CUIPlrHPBar>(pHPBar)->SetHP(_iHP);
+	}
 }

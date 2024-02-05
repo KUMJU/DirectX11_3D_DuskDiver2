@@ -46,7 +46,6 @@ public:
 private:
 	_uint m_iWalkPatternNum = 0;	
 
-/*TestUI*/
 private:
 
 	shared_ptr<class CWorldHPBar> m_pHPBar = nullptr;

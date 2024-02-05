@@ -18,6 +18,7 @@
 #include "Layers.h"
 
 #include "Animation.h"
+#include "UIMgr.h"
 
 CPlayer::CPlayer()
 {
@@ -1364,6 +1365,11 @@ void CPlayer::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _
         m_bKnockDown = pSkill->GetIsDownAttack();
         m_fKnockUpSpeed = pSkill->GetKnokUpDistance();
         m_fGweight = pSkill->GetGravityWeight();
+
+
+        _int iDamage = pSkill->GetDamage();
+        m_iHp -= iDamage;
+        CUIMgr::GetInstance()->SetPlayerHP(m_iHp);
 
         //Look 몬스터 쪽으로 변경해주기
 
