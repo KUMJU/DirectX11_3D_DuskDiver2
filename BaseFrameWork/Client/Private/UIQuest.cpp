@@ -27,7 +27,7 @@ HRESULT CUIQuest::Initialize()
 	m_pTextureCom = CGameInstance::GetInstance()->GetTexture(TEXT("hud_task"));
     m_Components.emplace(TEXT("Com_Texture"), m_pTextureCom);
 
-    strCurrentQuest = TEXT("퀘스트창입니다");
+    strCurrentQuest = TEXT("이상현상을 제거하라");
 
     m_pTransformCom->Rotation({ 0.f, 0.f, 1.f ,0.f }, XMConvertToRadians(3.5f));
     m_IsEnabled = true;

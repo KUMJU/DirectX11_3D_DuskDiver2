@@ -169,6 +169,12 @@
     <Filter Include="01. Utility\04. Component\00. VIBuffer\03. UI">
       <UniqueIdentifier>{4e956dfa-17ca-4235-a1c5-e690d17d05c8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\04. Component\00. VIBuffer\04. Instancing">
+      <UniqueIdentifier>{0e636d87-eb1f-4ba7-9125-f5b4ba65b0f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\04. Component\00. VIBuffer\04. Instancing\Point">
+      <UniqueIdentifier>{c0fd383c-53ad-478d-9090-50ffc849b51c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Engine_Defines.h">
@@ -321,6 +327,12 @@
     <ClInclude Include="..\Public\VIBuffer_UI.h">
       <Filter>01. Utility\04. Component\00. VIBuffer\03. UI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VIBufferInstancing.h">
+      <Filter>01. Utility\04. Component\00. VIBuffer\04. Instancing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBufferPoint.h">
+      <Filter>01. Utility\04. Component\00. VIBuffer\04. Instancing\Point</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\GraphicDev.cpp">
@@ -460,6 +472,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_UI.cpp">
       <Filter>01. Utility\04. Component\00. VIBuffer\03. UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBufferInstancing.cpp">
+      <Filter>01. Utility\04. Component\00. VIBuffer\04. Instancing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBufferPoint.cpp">
+      <Filter>01. Utility\04. Component\00. VIBuffer\04. Instancing\Point</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

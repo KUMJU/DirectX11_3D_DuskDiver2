@@ -247,6 +247,18 @@
     <Filter Include="02. GameObject\01. UI\02. UI_PlayerSkillBar">
       <UniqueIdentifier>{2ab0aa73-66cd-4c70-8c06-474a7fc45af2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\09. Effect">
+      <UniqueIdentifier>{f704834f-48cf-49ab-8bdb-c5125713363c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\09. Effect\00. Effect_Particle">
+      <UniqueIdentifier>{99b53923-d791-41e8-a3a2-fd116380777c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\09. Effect\01. Effect_Texture">
+      <UniqueIdentifier>{ee727826-6aad-4b15-9821-193b5d4f7af5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\09. Effect\02. Effect_Mesh">
+      <UniqueIdentifier>{e23f70db-ef84-46e1-9dc4-91d4fec6bada}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -498,6 +510,12 @@
     <ClInclude Include="..\Public\UIQuest.h">
       <Filter>02. GameObject\01. UI\03. UI_Quest</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Effect.h">
+      <Filter>02. GameObject\09. Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EffectParticle.h">
+      <Filter>02. GameObject\09. Effect\00. Effect_Particle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -731,6 +749,12 @@
     <ClCompile Include="..\Private\UIQuest.cpp">
       <Filter>02. GameObject\01. UI\03. UI_Quest</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Effect.cpp">
+      <Filter>02. GameObject\09. Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EffectParticle.cpp">
+      <Filter>02. GameObject\09. Effect\00. Effect_Particle</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -759,6 +783,9 @@
       <Filter>97. ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPointUI.hlsl">
+      <Filter>97. ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxInstance.hlsl">
       <Filter>97. ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

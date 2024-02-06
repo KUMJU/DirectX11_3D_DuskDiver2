@@ -22,7 +22,7 @@ HRESULT CWorldHPBar::Initialize()
     UIInfo.fX = 0.f;
     UIInfo.fY = 0.f;
 
-    __super::Initialize(UIInfo, 1);
+    __super::Initialize(UIInfo, 0);
     CUI::AddBaseComponent();
 
     m_vOriginSize.x = UIInfo.fSizeX;
@@ -68,8 +68,8 @@ void CWorldHPBar::LateTick(_float _fTimeDelta)
     if (!m_IsEnabled)
         return;
 
-
-    __super::LateTick(_fTimeDelta);
+    if(!m_IsOutPos)
+        __super::LateTick(_fTimeDelta);
 
 }
 
@@ -178,11 +178,19 @@ void CWorldHPBar::CalcHPDiff(_float _fTimeDelta)
 
 void CWorldHPBar::CalcScreenPos(_fvector _vWorldPos)
 {
+
+    m_IsOutPos = false;
+
     _matrix ViewMat = CGameInstance::GetInstance()->GetTransformMatrix(CPipeLine::D3DTS_VIEW);
     _matrix ProjMat = CGameInstance::GetInstance()->GetTransformMatrix(CPipeLine::D3DTS_PROJ);
 
     _vector vPosition = XMVector3TransformCoord(_vWorldPos, ViewMat);
     vPosition = XMVector3TransformCoord(vPosition, ProjMat);
+
+
+    if (vPosition.m128_f32[2] > 1) {
+        m_IsOutPos = true;
+    }
 
     _float fScreenXNormal = (vPosition.m128_f32[0] + 1.f) * 0.5f;
     _float fScreenYNormal = (vPosition.m128_f32[1] - 1.f) * -0.5f;

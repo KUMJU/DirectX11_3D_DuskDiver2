@@ -13,7 +13,7 @@ public:
 	CRenderer();
 	virtual ~CRenderer() = default;
 
-public:
+public:	
 	HRESULT Initialize();
 	HRESULT AddRenderGroup(RENDERGROUP _eRenderGroup, shared_ptr<class CGameObject> _pGameObject);
 	HRESULT AddUIRenderGroup(shared_ptr<class CGameObject> _pGameObject, _int _iPriorityIndex);

@@ -155,8 +155,8 @@ private:
 	_float m_fSkillRJumpCool = 0.f;
 private:
 
-	_int m_iMaxHp = 500;
-	_int m_iHp = 500;
+	_int m_iMaxHp = 100;
+	_int m_iHp = 100;
 
 	_int m_iBurstGage = 100;
 	_int m_iSkillGage = 3;

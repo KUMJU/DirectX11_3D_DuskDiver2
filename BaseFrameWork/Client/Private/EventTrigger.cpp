@@ -32,13 +32,14 @@ void CEventTrigger::Tick(_float _fTimeDelta)
 		return;
 
 	m_pCollider->Tick(m_pTransformCom->GetWorldMatrix());
+	CGameInstance::GetInstance()->AddCollider(CCollisionMgr::COL_TRIGGER, m_pCollider);
 }
 
 void CEventTrigger::LateTick(_float _fTimeDelta)
 {
 	if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_NONBLEND, shared_from_this())))
 		return;
-	CGameInstance::GetInstance()->AddCollider(CCollisionMgr::COL_TRIGGER, m_pCollider);
+
 }
 
 HRESULT CEventTrigger::Render()

@@ -37,6 +37,8 @@
 #include "UIPlrHPBar.h"
 #include "UIQuest.h"
 
+#include "EffectParticle.h"
+
 
 
 CArcadeMap::CArcadeMap()
@@ -196,12 +198,19 @@ HRESULT CArcadeMap::ReadyLayerMap(const wstring& _strLayerTag)
 	list<CMonsterPool::SPAWN_INFO> SpawnList;
 
 	CMonsterPool::SPAWN_INFO info1 = {};
-	info1.iMonsterType = 2;
-	info1.vMonsterPos = _vector({ 0.f, 40.f, -380.f });
+	info1.iMonsterType = 3;
+	info1.vMonsterPos = _vector({ 0.f, 40.f, -390.f });
 	SpawnList.push_back(info1);
 
 	shared_ptr<CMonsterTrigger> pTrigger = CMonsterTrigger::Create(&SpawnList, { 0.f, 40.f, -380.f });
 	CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Event"), pTrigger);
+
+
+	/**파티클 테스트**/
+
+	shared_ptr<CGameObject> pParticle = CEffectParticle::Create();
+	CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Event"), pParticle);
+
 
 	return S_OK;
 }
@@ -222,11 +231,6 @@ HRESULT CArcadeMap::ReadyLayerMonster(const wstring& _strLayerTag)
 {
 
 	CMonsterPool::GetInstance()->Initialize();
-
-	//pMonster4 = CMiddleBoss::Create();
-	//if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Monster"), pMonster4)))
-	//	return E_FAIL;
-	//pMonster4->SetEnable(false);
 
 	return S_OK;
 }

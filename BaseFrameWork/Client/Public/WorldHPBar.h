@@ -52,6 +52,8 @@ private:
 	//HP바 체력깎여서 러프중인 상태 
 	_bool m_IsHPLerp = false;
 
+	_bool m_IsOutPos = false;
+
 
 private:
 	shared_ptr<CTexture> m_pBackgroundTexture = nullptr;

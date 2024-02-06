@@ -97,6 +97,25 @@ namespace Engine
 		static const D3D11_INPUT_ELEMENT_DESC	Elements[2];
 	}VTXPOINT;
 
+	typedef struct ENGINE_DLL VTX_RECT_INSTANCE
+	{
+		static const unsigned int	iNumElements = { 7 };
+		static const D3D11_INPUT_ELEMENT_DESC		Elements[7];
+	}VTX_RECT_INSTANCE;
+
+	typedef struct ENGINE_DLL VTX_POINT_INSTANCE
+	{
+		static const unsigned int	iNumElements = { 7 };
+		static const D3D11_INPUT_ELEMENT_DESC		Elements[7];
+	}VTX_POINT_INSTANCE;
+
+	typedef struct ENGINE_DLL VTXINSTANCE
+	{
+		XMFLOAT4	vRight, vUp, vLook, vTranslation;
+		XMFLOAT4	vColor;
+
+	}VTXINSTANCE;
+
 }
 
 #endif // Engine_Struct_h__

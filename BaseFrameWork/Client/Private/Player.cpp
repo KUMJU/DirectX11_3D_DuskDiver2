@@ -1038,8 +1038,8 @@ void CPlayer::KeyInput(_float _fTimeDelta)
        // m_pTransformCom->SetState(CTransform::STATE_POSITION, { 5.f , 40.f, -300.f, 1.f });
         //m_pNavigationCom->CalcCurrentPos({ 5.f , 40.f, -300.f, 1.f });
 
-        m_pTransformCom->SetState(CTransform::STATE_POSITION, { -10.f, 25.f, -168.f,  1.f });
-        m_pNavigationCom->CalcCurrentPos({ -10.f, 25.f, -168.f, 1.f });
+        m_pTransformCom->SetState(CTransform::STATE_POSITION, { 0.f, 40.f, -380.f, 1.f });
+        m_pNavigationCom->CalcCurrentPos({ 0.f, 40.f, -380.f, 1.f });
     }
 
 

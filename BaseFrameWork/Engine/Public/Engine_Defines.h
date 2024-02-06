@@ -23,6 +23,7 @@
 using namespace DirectX;
 
 #include <Fmod/fmod.h>
+#include <random>
 
 #define MAX_BONE 512
 

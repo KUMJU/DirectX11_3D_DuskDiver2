@@ -76,7 +76,13 @@ void CMonsterPool::ActiveMonster(list<SPAWN_INFO> _SpawnList)
 			pMonster->SetEnable(true);
 			CGameInstance::GetInstance()->AddObject(CGameInstance::GetInstance()->GetCurrentLevel(), TEXT("Layer_Monster"), pMonster);
 			pMonster->SetPosition(XMVectorSetW(iter.vMonsterPos, 1.f));
-			dynamic_pointer_cast<CNavigation>(pMonster->GetComponent(TEXT("Com_Navigation")))->CalcCurrentPos(iter.vMonsterPos);
+
+			shared_ptr<CComponent> pNavi = pMonster->GetComponent(TEXT("Com_Navigation"));
+
+			if (pNavi) {
+				dynamic_pointer_cast<CNavigation>(pNavi)->CalcCurrentPos(iter.vMonsterPos);
+
+			}
 		}
 	}
 }

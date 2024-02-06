@@ -273,7 +273,7 @@ void CMiddleBoss::OnHit()
 {
 
     if (m_bDie) {
-        ChangeAnim(39, false);
+        ChangeAnim(14, false);
     }
 
 

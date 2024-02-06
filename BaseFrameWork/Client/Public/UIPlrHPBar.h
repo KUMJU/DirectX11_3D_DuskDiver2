@@ -24,8 +24,8 @@ public:
 	void CalcHPDiff(_float _fTimeDelta);
 
 private:
-	_int m_iHP = 500;
-	_int m_iMaxHP = 500;
+	_int m_iHP = 100;
+	_int m_iMaxHP = 100;
 
 	_float m_fUIStartPoint = 0.f;
 	_float m_fUIEndPoint = 0.f;

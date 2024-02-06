@@ -27,6 +27,9 @@ HRESULT CRenderer::AddUIRenderGroup(shared_ptr<class CGameObject> _pGameObject, 
 	else 
 		m_RenderObjects[RENDER_UI].push_back(_pGameObject);
 
+
+	//std::sort(m_RenderObjects[RENDER_UI].begin(), m_RenderObjects[RENDER_UI].end(), [&]( ) {});
+
 	return S_OK;
 }
 

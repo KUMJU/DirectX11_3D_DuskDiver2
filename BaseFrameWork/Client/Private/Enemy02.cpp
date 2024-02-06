@@ -390,6 +390,7 @@ void CEnemy02::IfEmptyAnimList()
     m_vCurrentAnimPos = { 0.f, 0.f, 0.f };
     
     if (50 == m_iAnimNum) {
+        m_pHPBar->SetEnable(false);
         m_IsEnabled = false;
         return;
     }

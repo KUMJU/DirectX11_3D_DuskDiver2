@@ -29,7 +29,8 @@ void CNaviToolMgr::Initialize()
 
 void CNaviToolMgr::AddNewCell()
 {
-	//점과 점의 비교로 1차 sort
+	//점과 점의 비교로 1차 
+
 	SortPoint();
 	//외적을 통한 면의 방향벡터로 2차 sort
 	SortCross();

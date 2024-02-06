@@ -116,6 +116,13 @@ HRESULT CMinigameCommand::Render()
 		{
 		case 0:
 			strCurrentCommand = TEXT("╩С");
+
+
+
+
+
+
+
 			break;
 		case 1:
 			strCurrentCommand = TEXT("го");
