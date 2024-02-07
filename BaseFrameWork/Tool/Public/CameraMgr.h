@@ -1,6 +1,8 @@
 #pragma once
 
-#include "Client_Defines.h"
+#include "Tool_Defines.h"
+#include "EventCamera.h"
+
 
 BEGIN(Engine)
 
@@ -9,7 +11,7 @@ class CCamera;
 END
 
 
-BEGIN(Client)
+BEGIN(Tool)
 
 
 class CCameraMgr
@@ -33,7 +35,18 @@ public:
 	void SetCamObject(ECAMERATYPE _eType, shared_ptr<CGameObject> _pInstance);
 
 public:
-	XMFLOAT3 GetCamLook();
+	_float4 GetCamLook();
+	_vector GetCamPos();
+
+
+////////////////////////////이벤트 카메라////////////////////////////
+public:
+	void AddEventPreset(const wstring& _strName, vector<CEventCamera::EVENT_INFO> _info);
+	void StartEvent(const wstring& _strName);
+
+////////////////////////////프리 카메라////////////////////////////
+public:
+	void SetFreeCamPos(_vector _vPos, _vector _vLook);
 
 
 private:
@@ -44,8 +57,8 @@ private:
 
 	shared_ptr<class CThirdPersonCam> m_pDefualtCam = nullptr;
 	shared_ptr<class CCameraFree> m_pFreeCam = nullptr;
-
-
+	shared_ptr<class CEventCamera> m_pEventCam = nullptr;
+	
 };
 
 END

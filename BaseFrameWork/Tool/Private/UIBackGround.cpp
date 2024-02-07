@@ -6,6 +6,8 @@
 #include "Shader.h"
 #include "VIRect.h"
 
+#include "VIBuffer_UI.h"
+
 CUIBackGround::CUIBackGround()
 {
 }

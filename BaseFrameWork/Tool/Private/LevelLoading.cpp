@@ -1,8 +1,12 @@
 #include "pch.h"
 #include "LevelLoading.h"
 
+#include "UIBackGround.h"
+
 #include "GameInstance.h"
 #include "Loader.h"
+#include "Logo.h"
+#include "ArcadeMap.h"
 #include "Edit.h"
 
 CLevelLoading::CLevelLoading()
@@ -43,7 +47,7 @@ void CLevelLoading::Tick(_float _fTimeDelta)
 		}
 		else {
 			//이걸 loader안으로 옮겨야할듯
-			if (GetKeyState(VK_SPACE) & 0x8000)
+			if (GetKeyState(VK_RETURN) & 0x8000)
 			{
 				OpenLevel();
 			}
@@ -69,21 +73,30 @@ HRESULT CLevelLoading::Render()
 
 HRESULT CLevelLoading::ReadyLayerBackGround(const wstring& _strLayerTag)
 {
+	CUIBackGround::tagUIInfo UITagInfo;
+	UITagInfo.fSizeX = g_iWinSizeX;
+	UITagInfo.fSizeY = g_iWinSizeY;
+	UITagInfo.fX = g_iWinSizeX * 0.5f;
+	UITagInfo.fY = g_iWinSizeY * 0.5f;
+
 	switch (m_eNextLevel)
 	{
-	case Client::LEVEL_LOGO:
-		
+	case Tool::LEVEL_LOGO:
+		if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_LOADING, _strLayerTag, CUIBackGround::Create(UITagInfo, TEXT("title_BackGround"),0))))
+			return E_FAIL;
 		break;
 
-	case Client::LEVEL_ARCADE:
-	
+	case Tool::LEVEL_ARCADE:
+		if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_LOADING, _strLayerTag, CUIBackGround::Create(UITagInfo, TEXT("Loading_E01"),0))))
+			return E_FAIL;
 		break;
 
-	case Client::LEVEL_EDIT:
-
+	case Tool::LEVEL_EDIT:
+		//if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_LOADING, _strLayerTag, CUIBackGround::Create(UITagInfo, TEXT("Loading_E02"),0))))
+		//	return E_FAIL;
 		break;
 
-	case Client::LEVEL_END:
+	case Tool::LEVEL_END:
 		break;
 	default:
 		break;
@@ -103,14 +116,16 @@ void CLevelLoading::OpenLevel()
 
 	switch (m_eNextLevel)
 	{
-	case Client::LEVEL_LOGO:
+	case Tool::LEVEL_LOGO:
+		pLevel = CLogo::Create();
 		break;
-	case Client::LEVEL_ARCADE:
+	case Tool::LEVEL_ARCADE:
+		pLevel = CArcadeMap::Create();
 		break;
-	case Client::LEVEL_EDIT:
+	case Tool::LEVEL_EDIT:
 		pLevel = CEdit::Create();
 		break;
-	case Client::LEVEL_END:
+	case Tool::LEVEL_END:
 		break;
 	default:
 		break;

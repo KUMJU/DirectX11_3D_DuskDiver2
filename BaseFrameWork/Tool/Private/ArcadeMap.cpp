@@ -3,8 +3,10 @@
 
 #include "GameInstance.h"
 #include "Terrain.h"
+
 #include "CameraFree.h"
 #include "ThirdPersonCam.h"
+#include "EventCamera.h"
 
 #include "Dummy.h"
 #include "Player.h"
@@ -16,6 +18,26 @@
 #include "CameraMgr.h"
 
 #include "UIBackGround.h"
+
+#include "MiddleBoss.h"
+#include "GameObject.h"
+#include "MapObject.h"
+
+#include "MonsterTower.h"
+#include "Portal.h"
+#include "MonsterPool.h"
+
+#include "MinigameMole.h"
+#include "MinigameCommand.h"
+#include "BattleSystem.h"
+
+#include "MonsterTrigger.h"
+
+#include "UIMgr.h"
+#include "UIPlrHPBar.h"
+#include "UIQuest.h"
+
+#include "EffectParticle.h"
 
 
 
@@ -34,28 +56,49 @@ void CArcadeMap::PreInit()
 
 HRESULT CArcadeMap::Initialize()
 {
-	
+
 	if (FAILED(ReadyLight()))
 		return E_FAIL;
 
-	CMapLoader::GetInstance()->LoadMapData("../Bin/DataFiles/ArcadeMap.json");
-
+	if (FAILED(ReadyLayerMap(TEXT("Layer_Map"))))
+		return E_FAIL;
 
 	if (FAILED(ReadyLayerPlayer(TEXT("Layer_Player"))))
 		return E_FAIL;
 
+	if (FAILED(ReadyLayerMonster(TEXT("Layer_Monster"))))
+		return E_FAIL;
 
 	if (FAILED(ReadyLayerCamera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 
+	if (FAILED(ReadyLayerEvent(TEXT("Layer_Event"))))
+		return E_FAIL;
+
 	if (FAILED(ReadyLayerUI(TEXT("Layer_UI"))))
 		return E_FAIL;
+
+	
+
+	CBattleSystem::GetInstance()->Initialize();
+	CGameInstance::GetInstance()->PlayBGM(TEXT("BGM_MainTheme.wav"), 1.f);
+
 
 	return S_OK;
 }
 
 void CArcadeMap::Tick(_float _fTimeDelta)
 {
+	CBattleSystem::GetInstance()->Tick(_fTimeDelta);
+
+	if (m_bKeyDeb) {
+		m_fTime += _fTimeDelta;
+		if (m_fTime > 10.f) {
+			m_bKeyDeb = false;
+		}
+	}
+
+	KeyInput();
 }
  
 HRESULT CArcadeMap::Render()
@@ -69,11 +112,7 @@ HRESULT CArcadeMap::Render()
 
 HRESULT CArcadeMap::ReadyLayerBackGround(const wstring& _strLayerTag)
 {
-	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, CTerrain::Create(TEXT("../Bin/Resources/Base/Textures/Terrain/Height1.bmp")))))
-		return E_FAIL;
 
-
-	//hud_status_bg_He01
 
 	return S_OK;
 }
@@ -84,6 +123,7 @@ HRESULT CArcadeMap::ReadyLayerCamera(const wstring& _strLayerTag)
 	shared_ptr<CGameObject> pCam;
 
 	//////////////////////////////////////////////////ThirdPersonCamera//////////////////////////////////////////////////
+
 
 	pCam = CThirdPersonCam::Create();
 	CCameraMgr::GetInstance()->SetCamObject(CCameraMgr::ECAMERATYPE::THIRDPERSON, pCam);
@@ -115,12 +155,69 @@ HRESULT CArcadeMap::ReadyLayerCamera(const wstring& _strLayerTag)
 		return E_FAIL;
 
 
+	//////////////////////////////////////////////////EventCamera//////////////////////////////////////////////////
+
+
+	pCam = CEventCamera::Create();
+	CCameraMgr::GetInstance()->SetCamObject(CCameraMgr::ECAMERATYPE::EVENT, pCam);
+
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pCam)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CArcadeMap::ReadyLayerMap(const wstring& _strLayerTag)
+{
+	//맵 설치 
+	shared_ptr<CGameObject> pDummy = CDummy::Create(TEXT("ArcadeMap_Final"));
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pDummy)))
+		return E_FAIL;
+
+	pDummy->SetPosition({ -565.f, 40.5f, -100.f , 1.f });
+
+	//맵 네비게이션 메쉬 셀 정보 파싱
+	_float4x4 worldMat;
+	_matrix dd = pDummy->GetWorldMatrix();
+	XMStoreFloat4x4(&worldMat, dd);
+	CMapLoader::GetInstance()->SetWorldMatrix(worldMat);
+	CMapLoader::GetInstance()->LoadCellData(TEXT("CellTest.dat"));
+
+	//맵 오브젝트 파싱정보 불러오기
+	CMapLoader::GetInstance()->LoadMapData("../Bin/DataFiles/ArcadeMap_Object.dat");
+	CMapLoader::GetInstance()->LoadMapData("../Bin/DataFiles/CoinData.dat");
+
+	/***포탈 테스트***/
+
+	shared_ptr<CPortal> pPortal = CPortal ::Create({ 0.f, 40.f, -245.f }, { 0.f, 25.f, -212.f });
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pPortal)))
+		return E_FAIL;
+
+	/******몬스터 트리거 테스트(중간보스)*******/
+
+	list<CMonsterPool::SPAWN_INFO> SpawnList;
+
+	CMonsterPool::SPAWN_INFO info1 = {};
+	info1.iMonsterType = 3;
+	info1.vMonsterPos = _vector({ 0.f, 40.f, -390.f });
+	SpawnList.push_back(info1);
+
+	shared_ptr<CMonsterTrigger> pTrigger = CMonsterTrigger::Create(&SpawnList, { 0.f, 40.f, -380.f });
+	CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Event"), pTrigger);
+
+
+	/**파티클 테스트**/
+
+	/*shared_ptr<CGameObject> pParticle = CEffectParticle::Create();
+	CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Event"), pParticle);*/
+
+
 	return S_OK;
 }
 
 HRESULT CArcadeMap::ReadyLayerPlayer(const wstring& _strLayerTag)
 {
-	shared_ptr<CPlayer> pPlayer = CPlayer::Create();
+ 	shared_ptr<CPlayer> pPlayer = CPlayer::Create();
 
 	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pPlayer)))
 		return E_FAIL;
@@ -130,9 +227,35 @@ HRESULT CArcadeMap::ReadyLayerPlayer(const wstring& _strLayerTag)
 	return S_OK;
 }
 
-HRESULT CArcadeMap::ReadyLayerUI(const wstring& _strLayerTag)
+HRESULT CArcadeMap::ReadyLayerMonster(const wstring& _strLayerTag)
 {
 
+	CMonsterPool::GetInstance()->Initialize();
+
+	return S_OK;
+}
+
+HRESULT CArcadeMap::ReadyLayerEvent(const wstring& _strLayerTag)
+{
+
+	shared_ptr<CMinigameMole> pInstance = CMinigameMole::Create();
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pInstance)))
+		return E_FAIL;
+	//게임 시작 트리거
+	//pInstance->GameStart();
+
+	/*******커맨드 미니게임 테스트*********/
+
+	shared_ptr<CMinigameCommand> pMinigameCmd = CMinigameCommand::Create();
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pMinigameCmd)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CArcadeMap::ReadyLayerUI(const wstring& _strLayerTag)
+{
+	shared_ptr<CUI> pInstance;
 
 	CUIBackGround::tagUIInfo UITagInfo;
 	UITagInfo.fSizeX = 463.f * 0.85f;
@@ -140,7 +263,7 @@ HRESULT CArcadeMap::ReadyLayerUI(const wstring& _strLayerTag)
 	UITagInfo.fX = g_iWinSizeX * 0.5f - 460.f;
 	UITagInfo.fY = g_iWinSizeY * 0.5f- 280.f;
 
-	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_LOGO, _strLayerTag, CUIBackGround::Create(UITagInfo, TEXT("hud_status_bg_He01"), 0))))
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, CUIBackGround::Create(UITagInfo, TEXT("hud_status_bg_He01"), 0))))
 		return E_FAIL;
 
 	UITagInfo.fSizeX = 247.f * 0.65f;
@@ -148,8 +271,25 @@ HRESULT CArcadeMap::ReadyLayerUI(const wstring& _strLayerTag)
 	UITagInfo.fX = g_iWinSizeX * 0.5f - 450.f;
 	UITagInfo.fY = g_iWinSizeY * 0.5f - 310.f;
 
-	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_LOGO, _strLayerTag, CUIBackGround::Create(UITagInfo, TEXT("hud_neme_he01"), 1))))
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, CUIBackGround::Create(UITagInfo, TEXT("hud_neme_he01"), 1))))
 		return E_FAIL;
+
+
+	/**Player HP Bar**/
+
+	pInstance = CUIPlrHPBar::Create();
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pInstance)))
+		return E_FAIL;
+	
+	CUIMgr::GetInstance()->AddUI(TEXT("UI_PlayerHP"), pInstance);
+
+	/**Quest UI**/
+
+	pInstance = CUIQuest::Create();
+	if(FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pInstance)))
+		return E_FAIL;
+	CUIMgr::GetInstance()->AddUI(TEXT("UI_Quest"), pInstance);
+
 
 	return S_OK;
 }
@@ -168,6 +308,17 @@ HRESULT CArcadeMap::ReadyLight()
 		return E_FAIL;
 
 	return S_OK;
+}
+                                                                                                                                                            
+void CArcadeMap::KeyInput()
+{
+	if (m_bKeyDeb)
+		return;
+
+
+
+
+
 }
 
 shared_ptr<CArcadeMap> CArcadeMap::Create()

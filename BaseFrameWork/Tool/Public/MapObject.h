@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Client_Defines.h"
+#include "Tool_Defines.h"
 #include "GameObject.h"
 
 BEGIN(Engine)
@@ -8,7 +8,7 @@ class CShader;
 class CModel;
 END
 
-BEGIN(Client)
+BEGIN(Tool)
 
 class CMapObject : public CGameObject
 {
@@ -23,13 +23,16 @@ public:
 	virtual void LateTick(_float _fTimeDelta) override;
 	virtual HRESULT Render() override;
 
-private:
+protected:
 	shared_ptr<CShader> m_pShader = nullptr;
 	shared_ptr<CModel> m_pModelCom = nullptr;
 
 private:
 	HRESULT AddComponent();
 	HRESULT BindShaderResources();
+
+public:
+	virtual void OnCollide(EObjType _eObjType, shared_ptr<CCollider> _pCollider) override {};
 
 public:
 	static shared_ptr<CMapObject> Create(const wstring& _ModelKey, CTransform::TRANSFORM_DESC* _pDesc = nullptr);

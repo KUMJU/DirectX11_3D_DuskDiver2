@@ -1,0 +1,87 @@
+{
+	"0" : 
+	{
+		"AnimName" : "SK_EN0301.ao|A_Combat_attack_1",
+		"LerpTime" : 0.050000000000000003
+	},
+	"1" : 
+	{
+		"AnimName" : "SK_EN0301.ao|A_Combat_attack_2",
+		"LerpTime" : 0.050000000000000003
+	},
+	"10" : 
+	{
+		"AnimName" : "SK_EN0301.ao|A_Combat_hurt_sub_1",
+		"LerpTime" : 0.050000000000000003
+	},
+	"11" : 
+	{
+		"AnimName" : "SK_EN0301.ao|A_Combat_hurt_sub_2",
+		"LerpTime" : 0.050000000000000003
+	},
+	"12" : 
+	{
+		"AnimName" : "SK_EN0301.ao|A_Combat_hurt_sub_3",
+		"LerpTime" : 0.050000000000000003
+	},
+	"13" : 
+	{
+		"AnimName" : "SK_EN0301.ao|A_Combat_idle_1",
+		"LerpTime" : 0.050000000000000003
+	},
+	"14" : 
+	{
+		"AnimName" : "SK_EN0301.ao|A_Combat_recover",
+		"LerpTime" : 0.050000000000000003
+	},
+	"15" : 
+	{
+		"AnimName" : "SK_EN0301.ao|A_Combat_stun",
+		"LerpTime" : 0.050000000000000003
+	},
+	"16" : 
+	{
+		"AnimName" : "SK_EN0301.ao|A_Combat_stun_st",
+		"LerpTime" : 0.050000000000000003
+	},
+	"2" : 
+	{
+		"AnimName" : "SK_EN0301.ao|A_Combat_attack_3",
+		"LerpTime" : 0.050000000000000003
+	},
+	"3" : 
+	{
+		"AnimName" : "SK_EN0301.ao|A_Combat_attack_4_1",
+		"LerpTime" : 0.050000000000000003
+	},
+	"4" : 
+	{
+		"AnimName" : "SK_EN0301.ao|A_Combat_attack_4_2",
+		"LerpTime" : 0.050000000000000003
+	},
+	"5" : 
+	{
+		"AnimName" : "SK_EN0301.ao|A_Combat_attack_4_3",
+		"LerpTime" : 0.050000000000000003
+	},
+	"6" : 
+	{
+		"AnimName" : "SK_EN0301.ao|A_Combat_attack_4_L",
+		"LerpTime" : 0.050000000000000003
+	},
+	"7" : 
+	{
+		"AnimName" : "SK_EN0301.ao|A_Combat_attack_4_R",
+		"LerpTime" : 0.050000000000000003
+	},
+	"8" : 
+	{
+		"AnimName" : "SK_EN0301.ao|A_Combat_attack_5",
+		"LerpTime" : 0.050000000000000003
+	},
+	"9" : 
+	{
+		"AnimName" : "SK_EN0301.ao|A_Combat_death",
+		"LerpTime" : 0.050000000000000003
+	}
+}

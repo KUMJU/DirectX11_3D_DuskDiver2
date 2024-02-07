@@ -16,8 +16,14 @@
     <Filter Include="01. Levels\00. Loading">
       <UniqueIdentifier>{6f616959-0292-405d-bda2-195cd081145d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Levels\01. Logo">
+      <UniqueIdentifier>{eaeb9bfc-ffbf-4437-95ea-6f5aad5026a9}</UniqueIdentifier>
+    </Filter>
     <Filter Include="01. Levels\00. Loading\Loader">
       <UniqueIdentifier>{9c8867fa-fb4b-4286-b0e3-efe6fbcd167f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Levels\02. ArcadeMap">
+      <UniqueIdentifier>{5c5aa2cb-a3f9-4cf6-9a8d-dd7629958f07}</UniqueIdentifier>
     </Filter>
     <Filter Include="97. ShaderFiles">
       <UniqueIdentifier>{c02845d4-f43f-4865-9599-05cca2538e3a}</UniqueIdentifier>
@@ -40,8 +46,11 @@
     <Filter Include="96. Imgui\03. ImguiGizmo">
       <UniqueIdentifier>{2294b1a6-c2fb-453c-8132-c9613443bed9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\00. Player">
-      <UniqueIdentifier>{f655f074-168d-47b9-ae8e-d187db6b456b}</UniqueIdentifier>
+    <Filter Include="02. GameObject\01. UI">
+      <UniqueIdentifier>{275c41ca-57ec-45b2-8480-314b137cf678}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. UI\00.UIBackGroud">
+      <UniqueIdentifier>{684e7909-e8c8-4b53-8978-ddbe4e1d1dc3}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\02. Camera">
       <UniqueIdentifier>{8939f76b-ec3c-43e9-bc4d-8e8cfc8e1e08}</UniqueIdentifier>
@@ -49,8 +58,17 @@
     <Filter Include="02. GameObject\02. Camera\00. CameraFree">
       <UniqueIdentifier>{fc33e8c1-86b5-418b-ad4d-c2a22f3091d1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\03. MapObject">
+      <UniqueIdentifier>{6143915d-e2bd-45ee-a9ee-d7f08e1b5a8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\03. MapObject\00. MonsterTower">
+      <UniqueIdentifier>{877ba863-de5c-4920-91ba-ef0b475efc34}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObject\99. Dummy">
       <UniqueIdentifier>{203089b2-6345-4daa-be49-cc3b2e17311d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Terrain">
+      <UniqueIdentifier>{3430ad2b-51f1-4c7c-8080-c179dbd93290}</UniqueIdentifier>
     </Filter>
     <Filter Include="03. Manager">
       <UniqueIdentifier>{10887624-a703-4166-ad5e-702fc7e41cba}</UniqueIdentifier>
@@ -58,11 +76,194 @@
     <Filter Include="03. Manager\00. GameMgr">
       <UniqueIdentifier>{8da7231f-708a-4666-8678-2311bc13b158}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03. Manager\01. UIMgr">
+      <UniqueIdentifier>{e7866857-6955-43b2-a6d3-081f8abc6633}</UniqueIdentifier>
+    </Filter>
     <Filter Include="95. Helper">
       <UniqueIdentifier>{bbd60d54-7601-45e7-87b6-f4da4f20ef5b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\02. Camera\01. ThirdPerson Cam">
+    <Filter Include="03. Manager\02. MapLoader">
+      <UniqueIdentifier>{c76d9dbd-bfad-4c7e-94aa-93934ae6f5dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Manager\03. CameraMgr">
+      <UniqueIdentifier>{1c56e7c4-009d-4ae1-b2bb-4928cc42b788}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\00.Creature">
+      <UniqueIdentifier>{ad9d5b15-9bcb-47c4-a5f9-fa3e1e4395bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\00.Creature\00. Player">
+      <UniqueIdentifier>{f655f074-168d-47b9-ae8e-d187db6b456b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\00.Creature\01. Monster">
+      <UniqueIdentifier>{4160b83c-54c4-4568-be92-ce486a87a3fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\00.Creature\01. Monster\00. Enemy01">
+      <UniqueIdentifier>{6ffb9d7a-df31-4635-8210-2eb315b0ff47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Skill">
+      <UniqueIdentifier>{0d565514-a811-4e53-a587-0fc5937fe529}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\00.Creature\01. Monster\01. Enemy02">
+      <UniqueIdentifier>{4d15fcf7-c5bd-4d28-9d60-8b9fcaa44c80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Camera\02. EventCamera">
+      <UniqueIdentifier>{7de383d3-0594-4398-abdf-20fad54b0677}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. EventCutScene">
+      <UniqueIdentifier>{3395bed2-1640-4b3f-a64c-bc8c4e3d75b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\00.Creature\01. Monster\02. Enemy03">
+      <UniqueIdentifier>{676ea72a-d90f-4e06-8fdc-015f85e26bef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\00.Creature\01. Monster\03. MiddleBoss">
+      <UniqueIdentifier>{f94656db-269f-4948-b908-bb2a19dc7ce4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\00.Creature\01. Monster\04. FinalBoss">
+      <UniqueIdentifier>{719ba536-5e79-4c03-bc04-ed1a3167b66a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Imgui\02. NaviToolMgr">
+      <UniqueIdentifier>{45741892-a085-4f4a-b5b8-3872addac695}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Skill\SkillSet">
+      <UniqueIdentifier>{b4a9211a-c24b-40f1-968b-b1395239ea60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Skill\00. PlayerSkill">
+      <UniqueIdentifier>{57cc7aa7-eb11-48dd-a88e-903fee2e5d07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Skill\00. PlayerSkill\NormalAtk">
+      <UniqueIdentifier>{3f88882c-ffe8-4a61-9c9c-6b80ef3a2e2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Skill\SkillSet\PlayerSkillSet">
+      <UniqueIdentifier>{83ec6d90-f5ea-4aac-bc08-cd277c7a520e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Skill\00. PlayerSkill\BasicSkill">
+      <UniqueIdentifier>{75733f45-ac48-48b7-bb75-f04abbd6821a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Skill\00. PlayerSkill\BurstSkill">
+      <UniqueIdentifier>{a760f72b-c442-4644-8872-0f7a69e81a6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Skill\00. PlayerSkill\SuperSkill">
+      <UniqueIdentifier>{52db1ceb-d366-4d98-aa52-c7e6adec50a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\03. MapObject\01. Escalator">
+      <UniqueIdentifier>{14824ed2-4ba0-44ed-b71a-9c0783fa5157}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Minigame">
+      <UniqueIdentifier>{2262a4c2-a5ec-4afb-b3e4-b4b272eab54a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Skill\SkillSet\MonsterSkillSet">
+      <UniqueIdentifier>{b667567b-a92a-40e2-bbc0-b44e9ba3d420}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Skill\01. MonsterSkill">
+      <UniqueIdentifier>{a65afafa-ef29-4ff4-a20e-bbafc707a104}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Skill\01. MonsterSkill\00. Skill_Enemy1">
+      <UniqueIdentifier>{ef6724dd-f031-41a8-a016-321f89917b63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Skill\01. MonsterSkill\01. Skill_Enemy2">
+      <UniqueIdentifier>{185232a1-1236-4a12-9ecc-df67f2893cd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Skill\01. MonsterSkill\02. SkIll_MiddleBoss">
+      <UniqueIdentifier>{d25def00-2e0b-4be8-a317-471a5195050a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Skill\01. MonsterSkill\03. Skill_FinalBoss">
+      <UniqueIdentifier>{b2b13806-2e46-4dec-9e5d-df909b21a172}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95. Helper\JsonAnimData">
+      <UniqueIdentifier>{4f7b16d9-b94c-4875-9e78-2db380b33468}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\03. MapObject\00. MonsterTower\MonsterSpawner">
+      <UniqueIdentifier>{731257b4-c178-47ad-bb48-9a4171a60cf7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Minigame\MinigameMole">
+      <UniqueIdentifier>{661a6f88-5912-4b33-bc3d-8e937f45c5fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Minigame\MinigameMole\Mole">
+      <UniqueIdentifier>{7dcc253d-e07c-4352-b493-b04c1bdb1ff0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Skill\00. PlayerSkill\AirAtk">
+      <UniqueIdentifier>{aa68944d-4d46-40d2-9b4a-bac9739f3f33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. EventTrigger">
+      <UniqueIdentifier>{5a63cd4a-bdac-428f-aadd-7319dc34f934}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. EventTrigger\00. Minigame">
+      <UniqueIdentifier>{3db6e694-a1fd-4626-a12a-12a8f20012f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. EventTrigger\01. Portal">
+      <UniqueIdentifier>{b43537e0-beb9-4ff6-87fd-fcd8efd399da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. EventTrigger\02. MonsterSpawn">
+      <UniqueIdentifier>{aae22847-9a51-4c6e-9ff6-dbe2697ce3fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\00.Creature\01. Monster\MonsterPool">
+      <UniqueIdentifier>{2d415ea9-5c3b-4b8a-9b9b-2b76f9c34f9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. BattleSystem">
+      <UniqueIdentifier>{27ed13ad-3501-4092-a9ac-fa909e1366cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Minigame\MinigameHockey">
+      <UniqueIdentifier>{c6205119-de06-4622-84c6-2cbf4371b9cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Minigame\MinigameHockey\HockeyBall">
+      <UniqueIdentifier>{459a594e-791a-47d2-a742-02dbb5361461}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Camera\01. ThirdPersonCam">
       <UniqueIdentifier>{96aebbe3-acab-45d4-ac7e-dcb33b9735f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Minigame\MinigameCommand">
+      <UniqueIdentifier>{843b980f-b7b5-4941-9f40-dc9398cf4088}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Manager\04. CutSceneMgr">
+      <UniqueIdentifier>{6a98473e-c32d-4d73-82aa-fa1467c9e927}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Camera\03. MinigameCamera">
+      <UniqueIdentifier>{a6d287bd-6426-46cd-b748-c517dabd43bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. EventTrigger\03. CutSceneTrigger">
+      <UniqueIdentifier>{229881cb-1a44-46e5-9f0f-68b9926153d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\00.Creature\01. Monster\05. Bear">
+      <UniqueIdentifier>{7ce333c8-ee72-45cd-a5e1-5008ba08fce8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\03. MapObject\02. Coin">
+      <UniqueIdentifier>{b5a8c8f5-490c-4b68-8599-800d14663c1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Quest">
+      <UniqueIdentifier>{45aef91b-6ffb-4a7e-80fc-0a573d3c0ebe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. UI\01. UI_HPBar">
+      <UniqueIdentifier>{5ce720eb-c00a-448c-b74c-9bfed6bb293f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. UI\01. UI_HPBar\PlayerHPBar">
+      <UniqueIdentifier>{1e06ad0f-de8f-4d23-ac47-80892d4fc04a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. UI\01. UI_HPBar\WorldHpBar">
+      <UniqueIdentifier>{5f99ea81-9a2c-4a0c-91e3-551479e4c653}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. UI\03. UI_Quest">
+      <UniqueIdentifier>{8797476f-0a21-4aa1-840a-351a29ed8941}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. UI\02. UI_PlayerSkillBar">
+      <UniqueIdentifier>{2ab0aa73-66cd-4c70-8c06-474a7fc45af2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\09. Effect">
+      <UniqueIdentifier>{f704834f-48cf-49ab-8bdb-c5125713363c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\09. Effect\00. Effect_Particle">
+      <UniqueIdentifier>{99b53923-d791-41e8-a3a2-fd116380777c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\09. Effect\01. Effect_Texture">
+      <UniqueIdentifier>{ee727826-6aad-4b15-9821-193b5d4f7af5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\09. Effect\02. Effect_Mesh">
+      <UniqueIdentifier>{e23f70db-ef84-46e1-9dc4-91d4fec6bada}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\09. Effect\Preset">
+      <UniqueIdentifier>{f771221a-a571-4d98-966c-98b48f297dfa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\99. Dummy\EffectTestAnimModel">
+      <UniqueIdentifier>{36668fe8-e56b-48ba-a7cd-1233b9997c1c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -81,9 +282,6 @@
     <ClInclude Include="..\Public\MainApp.h">
       <Filter>00. MainApp</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Client_Defines.h">
-      <Filter>99. Defines</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\pch.h">
       <Filter>98. Default</Filter>
     </ClInclude>
@@ -93,8 +291,20 @@
     <ClInclude Include="..\Public\Loader.h">
       <Filter>01. Levels\00. Loading\Loader</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Logo.h">
+      <Filter>01. Levels\01. Logo</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\GameMgr.h">
       <Filter>03. Manager\00. GameMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ArcadeMap.h">
+      <Filter>01. Levels\02. ArcadeMap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Terrain.h">
+      <Filter>02. GameObject\04. Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI.h">
+      <Filter>02. GameObject\01. UI</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CameraFree.h">
       <Filter>02. GameObject\02. Camera\00. CameraFree</Filter>
@@ -132,11 +342,20 @@
     <ClInclude Include="..\Public\Dummy.h">
       <Filter>02. GameObject\99. Dummy</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UIBackGround.h">
+      <Filter>02. GameObject\01. UI\00.UIBackGroud</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MapObject.h">
+      <Filter>02. GameObject\03. MapObject</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\ImGuizmo.h">
       <Filter>96. Imgui\03. ImguiGizmo</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UIMgr.h">
+      <Filter>03. Manager\01. UIMgr</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\Player.h">
-      <Filter>02. GameObject\00. Player</Filter>
+      <Filter>02. GameObject\00.Creature\00. Player</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Json\json.h">
       <Filter>95. Helper</Filter>
@@ -144,9 +363,169 @@
     <ClInclude Include="..\Public\Json\json-forwards.h">
       <Filter>95. Helper</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\ThirdPersonCam.h">
-      <Filter>02. GameObject\02. Camera\01. ThirdPerson Cam</Filter>
+    <ClInclude Include="..\Public\MapLoader.h">
+      <Filter>03. Manager\02. MapLoader</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\ThirdPersonCam.h">
+      <Filter>02. GameObject\02. Camera\01. ThirdPersonCam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CameraMgr.h">
+      <Filter>03. Manager\03. CameraMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Monster.h">
+      <Filter>02. GameObject\00.Creature\01. Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Enemy01.h">
+      <Filter>02. GameObject\00.Creature\01. Monster\00. Enemy01</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Enemy02.h">
+      <Filter>02. GameObject\00.Creature\01. Monster\01. Enemy02</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MiddleBoss.h">
+      <Filter>02. GameObject\00.Creature\01. Monster\03. MiddleBoss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Enemy03.h">
+      <Filter>02. GameObject\00.Creature\01. Monster\02. Enemy03</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EventCamera.h">
+      <Filter>02. GameObject\02. Camera\02. EventCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\FinalBoss.h">
+      <Filter>02. GameObject\00.Creature\01. Monster\04. FinalBoss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\NaviToolMgr.h">
+      <Filter>96. Imgui\02. NaviToolMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Skill.h">
+      <Filter>02. GameObject\05. Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlrNormalAtk.h">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\NormalAtk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SkillQ.h">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\BasicSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SkillR.h">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\BasicSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SkillE.h">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\BasicSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Skill_BurstQ.h">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\BurstSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SuperSkillA.h">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\SuperSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Escalator.h">
+      <Filter>02. GameObject\03. MapObject\01. Escalator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Skill_BurstE.h">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\BurstSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Skill_BurstR.h">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\BurstSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SuperSkillB.h">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\SuperSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SkillSet.h">
+      <Filter>02. GameObject\05. Skill\SkillSet\PlayerSkillSet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MonsterSkillSet.h">
+      <Filter>02. GameObject\05. Skill\SkillSet\MonsterSkillSet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Enemy1Skill.h">
+      <Filter>02. GameObject\05. Skill\01. MonsterSkill\00. Skill_Enemy1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Enemy2Skill.h">
+      <Filter>02. GameObject\05. Skill\01. MonsterSkill\01. Skill_Enemy2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MonsterTower.h">
+      <Filter>02. GameObject\03. MapObject\00. MonsterTower</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MinigameMole.h">
+      <Filter>05. Minigame\MinigameMole</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EventTrigger.h">
+      <Filter>02. GameObject\06. EventTrigger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Portal.h">
+      <Filter>02. GameObject\06. EventTrigger\01. Portal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AirAtk.h">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\AirAtk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mole.h">
+      <Filter>05. Minigame\MinigameMole\Mole</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MonsterPool.h">
+      <Filter>02. GameObject\00.Creature\01. Monster\MonsterPool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MinigameTrigger.h">
+      <Filter>02. GameObject\06. EventTrigger\00. Minigame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Minigame.h">
+      <Filter>05. Minigame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MonsterTrigger.h">
+      <Filter>02. GameObject\06. EventTrigger\02. MonsterSpawn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BattleSystem.h">
+      <Filter>02. GameObject\07. BattleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MiddleBossSkill.h">
+      <Filter>02. GameObject\05. Skill\01. MonsterSkill\02. SkIll_MiddleBoss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MinigameHockey.h">
+      <Filter>05. Minigame\MinigameHockey</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HockeyBall.h">
+      <Filter>05. Minigame\MinigameHockey\HockeyBall</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MinigameCommand.h">
+      <Filter>05. Minigame\MinigameCommand</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CutScene.h">
+      <Filter>04. EventCutScene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CutSceneMgr.h">
+      <Filter>03. Manager\04. CutSceneMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CutSceneTrigger.h">
+      <Filter>02. GameObject\06. EventTrigger\03. CutSceneTrigger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bear.h">
+      <Filter>02. GameObject\00.Creature\01. Monster\05. Bear</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Coin.h">
+      <Filter>02. GameObject\03. MapObject\02. Coin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UIPlrHPBar.h">
+      <Filter>02. GameObject\01. UI\01. UI_HPBar\PlayerHPBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\WorldHPBar.h">
+      <Filter>02. GameObject\01. UI\01. UI_HPBar\WorldHpBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UISkillBar.h">
+      <Filter>02. GameObject\01. UI\02. UI_PlayerSkillBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UIQuest.h">
+      <Filter>02. GameObject\01. UI\03. UI_Quest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect.h">
+      <Filter>02. GameObject\09. Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EffectParticle.h">
+      <Filter>02. GameObject\09. Effect\00. Effect_Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EffectPreset.h">
+      <Filter>02. GameObject\09. Effect\Preset</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Tool_Defines.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EffectTestModel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -164,8 +543,20 @@
     <ClCompile Include="..\Private\Loader.cpp">
       <Filter>01. Levels\00. Loading\Loader</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Logo.cpp">
+      <Filter>01. Levels\01. Logo</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\GameMgr.cpp">
       <Filter>03. Manager\00. GameMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ArcadeMap.cpp">
+      <Filter>01. Levels\02. ArcadeMap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Terrain.cpp">
+      <Filter>02. GameObject\04. Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI.cpp">
+      <Filter>02. GameObject\01. UI</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CameraFree.cpp">
       <Filter>02. GameObject\02. Camera\00. CameraFree</Filter>
@@ -200,29 +591,195 @@
     <ClCompile Include="..\Private\Dummy.cpp">
       <Filter>02. GameObject\99. Dummy</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\UIBackGround.cpp">
+      <Filter>02. GameObject\01. UI\00.UIBackGroud</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MapObject.cpp">
+      <Filter>02. GameObject\03. MapObject</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\Downloads\ImGuizmo-master\ImGuizmo-master\ImGuizmo.cpp">
       <Filter>96. Imgui\03. ImguiGizmo</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\UIMgr.cpp">
+      <Filter>03. Manager\01. UIMgr</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\Player.cpp">
-      <Filter>02. GameObject\00. Player</Filter>
+      <Filter>02. GameObject\00.Creature\00. Player</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\jsoncpp.cpp">
       <Filter>95. Helper</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\ThirdPersonCam.cpp">
-      <Filter>02. GameObject\02. Camera\01. ThirdPerson Cam</Filter>
+    <ClCompile Include="..\Private\MapLoader.cpp">
+      <Filter>03. Manager\02. MapLoader</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\ThirdPersonCam.cpp">
+      <Filter>02. GameObject\02. Camera\01. ThirdPersonCam</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CameraMgr.cpp">
+      <Filter>03. Manager\03. CameraMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Monster.cpp">
+      <Filter>02. GameObject\00.Creature\01. Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Enemy01.cpp">
+      <Filter>02. GameObject\00.Creature\01. Monster\00. Enemy01</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Enemy02.cpp">
+      <Filter>02. GameObject\00.Creature\01. Monster\01. Enemy02</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MiddleBoss.cpp">
+      <Filter>02. GameObject\00.Creature\01. Monster\03. MiddleBoss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Enemy03.cpp">
+      <Filter>02. GameObject\00.Creature\01. Monster\02. Enemy03</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EventCamera.cpp">
+      <Filter>02. GameObject\02. Camera\02. EventCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\FinalBoss.cpp">
+      <Filter>02. GameObject\00.Creature\01. Monster\04. FinalBoss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\NaviToolMgr.cpp">
+      <Filter>96. Imgui\02. NaviToolMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Skill.cpp">
+      <Filter>02. GameObject\05. Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlrNormalAtk.cpp">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\NormalAtk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SkillQ.cpp">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\BasicSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SkillR.cpp">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\BasicSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SkillE.cpp">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\BasicSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Skill_BurstQ.cpp">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\BurstSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SuperSkillA.cpp">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\SuperSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Escalator.cpp">
+      <Filter>02. GameObject\03. MapObject\01. Escalator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Skill_BurstE.cpp">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\BurstSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Skill_BurstR.cpp">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\BurstSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SuperSkillB.cpp">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\SuperSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SkillSet.cpp">
+      <Filter>02. GameObject\05. Skill\SkillSet\PlayerSkillSet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MonsterSkillSet.cpp">
+      <Filter>02. GameObject\05. Skill\SkillSet\MonsterSkillSet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Enemy1Skill.cpp">
+      <Filter>02. GameObject\05. Skill\01. MonsterSkill\00. Skill_Enemy1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Enemy2Skill.cpp">
+      <Filter>02. GameObject\05. Skill\01. MonsterSkill\01. Skill_Enemy2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MonsterTower.cpp">
+      <Filter>02. GameObject\03. MapObject\00. MonsterTower</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MinigameMole.cpp">
+      <Filter>05. Minigame\MinigameMole</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EventTrigger.cpp">
+      <Filter>02. GameObject\06. EventTrigger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Portal.cpp">
+      <Filter>02. GameObject\06. EventTrigger\01. Portal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AirAtk.cpp">
+      <Filter>02. GameObject\05. Skill\00. PlayerSkill\AirAtk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mole.cpp">
+      <Filter>05. Minigame\MinigameMole\Mole</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MonsterPool.cpp">
+      <Filter>02. GameObject\00.Creature\01. Monster\MonsterPool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MinigameTrigger.cpp">
+      <Filter>02. GameObject\06. EventTrigger\00. Minigame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Minigame.cpp">
+      <Filter>05. Minigame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MonsterTrigger.cpp">
+      <Filter>02. GameObject\06. EventTrigger\02. MonsterSpawn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BattleSystem.cpp">
+      <Filter>02. GameObject\07. BattleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MiddleBossSkill.cpp">
+      <Filter>02. GameObject\05. Skill\01. MonsterSkill\02. SkIll_MiddleBoss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MinigameHockey.cpp">
+      <Filter>05. Minigame\MinigameHockey</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HockeyBall.cpp">
+      <Filter>05. Minigame\MinigameHockey\HockeyBall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MinigameCommand.cpp">
+      <Filter>05. Minigame\MinigameCommand</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CutScene.cpp">
+      <Filter>04. EventCutScene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CutSceneMgr.cpp">
+      <Filter>03. Manager\04. CutSceneMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CutSceneTrigger.cpp">
+      <Filter>02. GameObject\06. EventTrigger\03. CutSceneTrigger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bear.cpp">
+      <Filter>02. GameObject\00.Creature\01. Monster\05. Bear</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Coin.cpp">
+      <Filter>02. GameObject\03. MapObject\02. Coin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UIPlrHPBar.cpp">
+      <Filter>02. GameObject\01. UI\01. UI_HPBar\PlayerHPBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\WorldHPBar.cpp">
+      <Filter>02. GameObject\01. UI\01. UI_HPBar\WorldHpBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UISkillBar.cpp">
+      <Filter>02. GameObject\01. UI\02. UI_PlayerSkillBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UIQuest.cpp">
+      <Filter>02. GameObject\01. UI\03. UI_Quest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Effect.cpp">
+      <Filter>02. GameObject\09. Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EffectParticle.cpp">
+      <Filter>02. GameObject\09. Effect\00. Effect_Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EffectPreset.cpp">
+      <Filter>02. GameObject\09. Effect\Preset</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EffectTestModel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
       <Filter>98. Default</Filter>
     </Image>
-    <Image Include="Tool.ico">
+    <Image Include="Client.ico">
       <Filter>98. Default</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Tool.rc">
+    <ResourceCompile Include="Client.rc">
       <Filter>98. Default</Filter>
     </ResourceCompile>
   </ItemGroup>
@@ -239,5 +796,28 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnim.hlsl">
       <Filter>97. ShaderFiles</Filter>
     </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPointUI.hlsl">
+      <Filter>97. ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxInstance.hlsl">
+      <Filter>97. ShaderFiles</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Bin\DataFiles\AnimData\Anim_Enemy01.json">
+      <Filter>95. Helper\JsonAnimData</Filter>
+    </None>
+    <None Include="..\Bin\DataFiles\AnimData\Anim_Enemy02.json">
+      <Filter>95. Helper\JsonAnimData</Filter>
+    </None>
+    <None Include="..\Bin\DataFiles\AnimData\Anim_FinalBoss.json">
+      <Filter>95. Helper\JsonAnimData</Filter>
+    </None>
+    <None Include="..\Bin\DataFiles\AnimData\Anim_MiddleBoss.json">
+      <Filter>95. Helper\JsonAnimData</Filter>
+    </None>
+    <None Include="..\Bin\DataFiles\AnimData\Anim_Player_Burst.json">
+      <Filter>95. Helper\JsonAnimData</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -569,7 +569,7 @@ static void stb_textedit_find_charpos(StbFindState *find, IMSTB_TEXTEDIT_STRING 
 
 #define STB_TEXT_HAS_SELECTION(s)   ((s)->select_start != (s)->select_end)
 
-// make the selection/cursor state valid if client altered the string
+// make the selection/cursor state valid if Tool altered the string
 static void stb_textedit_clamp(IMSTB_TEXTEDIT_STRING *str, STB_TexteditState *state)
 {
    int n = STB_TEXTEDIT_STRINGLEN(str);

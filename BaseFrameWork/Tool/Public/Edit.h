@@ -3,9 +3,9 @@
 /* ImGui툴 출력용 level*/
 
 #include "Level.h"
-#include "Client_Defines.h"
+#include "Tool_Defines.h"
 
-BEGIN(Client)
+BEGIN(Tool)
 
 class CEdit final : public CLevel
 {
@@ -20,6 +20,7 @@ public:
 	virtual HRESULT Render();
 
 public:
+	HRESULT ReadyLayerBackGround(const wstring& _strLayerTag);
 	HRESULT ReadyLayerCamera(const wstring& _strLayerTag);
 	HRESULT ReadyLayerPlayer(const wstring& _strLayerTag);
 	HRESULT ReadyLight();

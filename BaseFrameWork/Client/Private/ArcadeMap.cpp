@@ -189,7 +189,7 @@ HRESULT CArcadeMap::ReadyLayerMap(const wstring& _strLayerTag)
 
 	/***Æ÷Å» Å×½ºÆ®***/
 
-	shared_ptr<CPortal> pPortal = CPortal::Create({ 0.f, 40.f, -245.f }, { 0.f, 25.f, -212.f });
+	shared_ptr<CPortal> pPortal = CPortal ::Create({ 0.f, 40.f, -245.f }, { 0.f, 25.f, -212.f });
 	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pPortal)))
 		return E_FAIL;
 

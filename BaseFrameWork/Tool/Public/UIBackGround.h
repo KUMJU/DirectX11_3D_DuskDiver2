@@ -1,16 +1,9 @@
 #pragma once
-#include "Client_Defines.h"
+#include "Tool_Defines.h"
 #include "Engine_Defines.h"
 #include "UI.h"
 
-
-BEGIN(Engine)
-class CShader;
-class CVIRect;
-class CTexture;
-END
-
-BEGIN(Client)
+BEGIN(Tool)
 
 class CUIBackGround final : public CUI
 {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Client_Defines.h"
+#include "Tool_Defines.h"
 #include "GameObject.h"
 
 BEGIN(Engine)
@@ -8,7 +8,7 @@ class CShader;
 class CModel;
 END
 
-BEGIN(Client)
+BEGIN(Tool)
 
 class CDummy final: public CGameObject
 {

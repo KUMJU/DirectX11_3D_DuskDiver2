@@ -1,0 +1,692 @@
+{
+	"0" : 
+	{
+		"AnimName" : "Armature|A_Combat_air_attack_1",
+		"LerpTime" : 0.050000000000000003
+	},
+	"1" : 
+	{
+		"AnimName" : "Armature|A_Combat_air_attack_2",
+		"LerpTime" : 0.050000000000000003
+	},
+	"10" : 
+	{
+		"AnimName" : "Armature|A_Combat_attack_1.002",
+		"LerpTime" : 0.050000000000000003
+	},
+	"100" : 
+	{
+		"AnimName" : "Armature|A_Combat_thrown_up.001",
+		"LerpTime" : 0.050000000000000003
+	},
+	"101" : 
+	{
+		"AnimName" : "Armature|A_Combat_turn_l",
+		"LerpTime" : 0.050000000000000003
+	},
+	"102" : 
+	{
+		"AnimName" : "Armature|A_Combat_turn_l_RootLock",
+		"LerpTime" : 0.050000000000000003
+	},
+	"103" : 
+	{
+		"AnimName" : "Armature|A_Combat_turn_r",
+		"LerpTime" : 0.050000000000000003
+	},
+	"104" : 
+	{
+		"AnimName" : "Armature|A_Combat_turn_r_RootLock",
+		"LerpTime" : 0.050000000000000003
+	},
+	"105" : 
+	{
+		"AnimName" : "Armature|A_Combat_walk",
+		"LerpTime" : 0.050000000000000003
+	},
+	"106" : 
+	{
+		"AnimName" : "Armature|A_Combat_walk.002",
+		"LerpTime" : 0.050000000000000003
+	},
+	"107" : 
+	{
+		"AnimName" : "Armature|A_Combat_walk_back",
+		"LerpTime" : 0.050000000000000003
+	},
+	"108" : 
+	{
+		"AnimName" : "Armature|A_Combat_walk_back.001",
+		"LerpTime" : 0.050000000000000003
+	},
+	"109" : 
+	{
+		"AnimName" : "Armature|A_Combat_wall_fall",
+		"LerpTime" : 0.050000000000000003
+	},
+	"11" : 
+	{
+		"AnimName" : "Armature|A_Combat_attack_2",
+		"LerpTime" : 0.050000000000000003
+	},
+	"110" : 
+	{
+		"AnimName" : "Armature|A_Combat_wall_fall_lp",
+		"LerpTime" : 0.050000000000000003
+	},
+	"111" : 
+	{
+		"AnimName" : "Armature|A_Combat_wall_hit",
+		"LerpTime" : 0.050000000000000003
+	},
+	"112" : 
+	{
+		"AnimName" : "Armature|A_Combat_wall_hurt",
+		"LerpTime" : 0.050000000000000003
+	},
+	"113" : 
+	{
+		"AnimName" : "Armature|RootMotion",
+		"LerpTime" : 0.050000000000000003
+	},
+	"114" : 
+	{
+		"AnimName" : "Armature|RootMotion.001",
+		"LerpTime" : 0.050000000000000003
+	},
+	"115" : 
+	{
+		"AnimName" : "Armature|RootMotion.002",
+		"LerpTime" : 0.050000000000000003
+	},
+	"116" : 
+	{
+		"AnimName" : "Armature|RootMotion.003",
+		"LerpTime" : 0.050000000000000003
+	},
+	"117" : 
+	{
+		"AnimName" : "Armature|RootMotion.004",
+		"LerpTime" : 0.050000000000000003
+	},
+	"118" : 
+	{
+		"AnimName" : "Armature|RootMotion.005",
+		"LerpTime" : 0.050000000000000003
+	},
+	"119" : 
+	{
+		"AnimName" : "Armature|RootMotion.006",
+		"LerpTime" : 0.050000000000000003
+	},
+	"12" : 
+	{
+		"AnimName" : "Armature|A_Combat_attack_2.003",
+		"LerpTime" : 0.050000000000000003
+	},
+	"120" : 
+	{
+		"AnimName" : "Armature|RootMotion.007",
+		"LerpTime" : 0.050000000000000003
+	},
+	"121" : 
+	{
+		"AnimName" : "Armature|RootMotion.008",
+		"LerpTime" : 0.050000000000000003
+	},
+	"122" : 
+	{
+		"AnimName" : "Armature|RootMotion.009",
+		"LerpTime" : 0.050000000000000003
+	},
+	"123" : 
+	{
+		"AnimName" : "Armature|RootMotion.010",
+		"LerpTime" : 0.050000000000000003
+	},
+	"124" : 
+	{
+		"AnimName" : "Armature|RootMotion.011",
+		"LerpTime" : 0.050000000000000003
+	},
+	"125" : 
+	{
+		"AnimName" : "Armature|RootMotion.012",
+		"LerpTime" : 0.050000000000000003
+	},
+	"126" : 
+	{
+		"AnimName" : "Armature|RootMotion.013",
+		"LerpTime" : 0.050000000000000003
+	},
+	"127" : 
+	{
+		"AnimName" : "Armature|RootMotion.014",
+		"LerpTime" : 0.050000000000000003
+	},
+	"128" : 
+	{
+		"AnimName" : "Armature|RootMotion.015",
+		"LerpTime" : 0.050000000000000003
+	},
+	"129" : 
+	{
+		"AnimName" : "Armature|RootMotion.016",
+		"LerpTime" : 0.050000000000000003
+	},
+	"13" : 
+	{
+		"AnimName" : "Armature|A_Combat_attack_3",
+		"LerpTime" : 0.050000000000000003
+	},
+	"130" : 
+	{
+		"AnimName" : "Armature|RootMotion.017",
+		"LerpTime" : 0.050000000000000003
+	},
+	"131" : 
+	{
+		"AnimName" : "Armature|RootMotion.018",
+		"LerpTime" : 0.050000000000000003
+	},
+	"132" : 
+	{
+		"AnimName" : "Armature|RootMotion.019",
+		"LerpTime" : 0.050000000000000003
+	},
+	"133" : 
+	{
+		"AnimName" : "Armature|RootMotion",
+		"LerpTime" : 0.050000000000000003
+	},
+	"134" : 
+	{
+		"AnimName" : "Armature|RootMotion.001",
+		"LerpTime" : 0.050000000000000003
+	},
+	"135" : 
+	{
+		"AnimName" : "Armature|RootMotion.002",
+		"LerpTime" : 0.050000000000000003
+	},
+	"136" : 
+	{
+		"AnimName" : "Armature|RootMotion.003",
+		"LerpTime" : 0.050000000000000003
+	},
+	"137" : 
+	{
+		"AnimName" : "Armature|RootMotion.004",
+		"LerpTime" : 0.050000000000000003
+	},
+	"14" : 
+	{
+		"AnimName" : "Armature|A_Combat_attack_3.003",
+		"LerpTime" : 0.050000000000000003
+	},
+	"15" : 
+	{
+		"AnimName" : "Armature|A_Combat_attack_4.001",
+		"LerpTime" : 0.050000000000000003
+	},
+	"16" : 
+	{
+		"AnimName" : "Armature|A_Combat_attack_5",
+		"LerpTime" : 0.050000000000000003
+	},
+	"17" : 
+	{
+		"AnimName" : "Armature|A_Combat_bounce",
+		"LerpTime" : 0.050000000000000003
+	},
+	"18" : 
+	{
+		"AnimName" : "Armature|A_Combat_bounce.001",
+		"LerpTime" : 0.050000000000000003
+	},
+	"19" : 
+	{
+		"AnimName" : "Armature|A_Combat_broken",
+		"LerpTime" : 0.050000000000000003
+	},
+	"2" : 
+	{
+		"AnimName" : "Armature|A_Combat_air_attack_3",
+		"LerpTime" : 0.050000000000000003
+	},
+	"20" : 
+	{
+		"AnimName" : "Armature|A_combat_burst",
+		"LerpTime" : 0.050000000000000003
+	},
+	"21" : 
+	{
+		"AnimName" : "Armature|A_Combat_dash",
+		"LerpTime" : 0.050000000000000003
+	},
+	"22" : 
+	{
+		"AnimName" : "Armature|A_Combat_Death_01_ed",
+		"LerpTime" : 0.050000000000000003
+	},
+	"23" : 
+	{
+		"AnimName" : "Armature|A_Combat_Death_01_lp",
+		"LerpTime" : 0.050000000000000003
+	},
+	"24" : 
+	{
+		"AnimName" : "Armature|A_Combat_Death_01_st",
+		"LerpTime" : 0.050000000000000003
+	},
+	"25" : 
+	{
+		"AnimName" : "Armature|A_Combat_DeathLie",
+		"LerpTime" : 0.050000000000000003
+	},
+	"26" : 
+	{
+		"AnimName" : "Armature|A_Combat_DeathStart",
+		"LerpTime" : 0.050000000000000003
+	},
+	"27" : 
+	{
+		"AnimName" : "Armature|A_Combat_dodge",
+		"LerpTime" : 0.050000000000000003
+	},
+	"28" : 
+	{
+		"AnimName" : "Armature|A_Combat_dodge_air",
+		"LerpTime" : 0.050000000000000003
+	},
+	"29" : 
+	{
+		"AnimName" : "Armature|A_Combat_dodge_attack",
+		"LerpTime" : 0.050000000000000003
+	},
+	"3" : 
+	{
+		"AnimName" : "Armature|A_Combat_air_heavy_attack_1",
+		"LerpTime" : 0.050000000000000003
+	},
+	"30" : 
+	{
+		"AnimName" : "Armature|A_Combat_FinalBurst",
+		"LerpTime" : 0.050000000000000003
+	},
+	"31" : 
+	{
+		"AnimName" : "Armature|A_Combat_finish_normal",
+		"LerpTime" : 0.050000000000000003
+	},
+	"32" : 
+	{
+		"AnimName" : "Armature|A_Combat_finish_wall",
+		"LerpTime" : 0.050000000000000003
+	},
+	"33" : 
+	{
+		"AnimName" : "Armature|A_Combat_getup",
+		"LerpTime" : 0.050000000000000003
+	},
+	"34" : 
+	{
+		"AnimName" : "Armature|A_Combat_getup.001",
+		"LerpTime" : 0.050000000000000003
+	},
+	"35" : 
+	{
+		"AnimName" : "Armature|A_Combat_heavy_attack_1",
+		"LerpTime" : 0.050000000000000003
+	},
+	"36" : 
+	{
+		"AnimName" : "Armature|A_Combat_helping",
+		"LerpTime" : 0.050000000000000003
+	},
+	"37" : 
+	{
+		"AnimName" : "Armature|A_Combat_hurt_back",
+		"LerpTime" : 0.050000000000000003
+	},
+	"38" : 
+	{
+		"AnimName" : "Armature|A_Combat_hurt_back.001",
+		"LerpTime" : 0.050000000000000003
+	},
+	"39" : 
+	{
+		"AnimName" : "Armature|A_Combat_hurt_fly",
+		"LerpTime" : 0.050000000000000003
+	},
+	"4" : 
+	{
+		"AnimName" : "Armature|A_Combat_Atk_b",
+		"LerpTime" : 0.050000000000000003
+	},
+	"40" : 
+	{
+		"AnimName" : "Armature|A_Combat_hurt_fly.001",
+		"LerpTime" : 0.050000000000000003
+	},
+	"41" : 
+	{
+		"AnimName" : "Armature|A_Combat_hurt_front",
+		"LerpTime" : 0.050000000000000003
+	},
+	"42" : 
+	{
+		"AnimName" : "Armature|A_Combat_hurt_front.001",
+		"LerpTime" : 0.050000000000000003
+	},
+	"43" : 
+	{
+		"AnimName" : "Armature|A_Combat_idle1",
+		"LerpTime" : 0.050000000000000003
+	},
+	"44" : 
+	{
+		"AnimName" : "Armature|A_Combat_idle2",
+		"LerpTime" : 0.050000000000000003
+	},
+	"45" : 
+	{
+		"AnimName" : "Armature|A_Combat_idle3",
+		"LerpTime" : 0.050000000000000003
+	},
+	"46" : 
+	{
+		"AnimName" : "Armature|A_Combat_idle4",
+		"LerpTime" : 0.050000000000000003
+	},
+	"47" : 
+	{
+		"AnimName" : "Armature|A_Combat_idle5",
+		"LerpTime" : 0.050000000000000003
+	},
+	"48" : 
+	{
+		"AnimName" : "Armature|A_Combat_idle_1",
+		"LerpTime" : 0.050000000000000003
+	},
+	"49" : 
+	{
+		"AnimName" : "Armature|A_Combat_idle_RootMotion",
+		"LerpTime" : 0.050000000000000003
+	},
+	"5" : 
+	{
+		"AnimName" : "Armature|A_Combat_Atk_Jb",
+		"LerpTime" : 0.050000000000000003
+	},
+	"50" : 
+	{
+		"AnimName" : "Armature|A_Combat_jump_loop",
+		"LerpTime" : 0.050000000000000003
+	},
+	"51" : 
+	{
+		"AnimName" : "Armature|A_Combat_jump_loop1",
+		"LerpTime" : 0.050000000000000003
+	},
+	"52" : 
+	{
+		"AnimName" : "Armature|A_Combat_jump_up",
+		"LerpTime" : 0.050000000000000003
+	},
+	"53" : 
+	{
+		"AnimName" : "Armature|A_Combat_landing",
+		"LerpTime" : 0.050000000000000003
+	},
+	"54" : 
+	{
+		"AnimName" : "Armature|A_Combat_lie",
+		"LerpTime" : 0.050000000000000003
+	},
+	"55" : 
+	{
+		"AnimName" : "Armature|A_Combat_lie.001",
+		"LerpTime" : 0.050000000000000003
+	},
+	"56" : 
+	{
+		"AnimName" : "Armature|A_Combat_PreSpawn",
+		"LerpTime" : 0.050000000000000003
+	},
+	"57" : 
+	{
+		"AnimName" : "Armature|A_Combat_QStand_f",
+		"LerpTime" : 0.050000000000000003
+	},
+	"58" : 
+	{
+		"AnimName" : "Armature|A_Combat_run",
+		"LerpTime" : 0.050000000000000003
+	},
+	"59" : 
+	{
+		"AnimName" : "Armature|A_Combat_run.001",
+		"LerpTime" : 0.050000000000000003
+	},
+	"6" : 
+	{
+		"AnimName" : "Armature|A_Combat_Atk_Jc_ed",
+		"LerpTime" : 0.050000000000000003
+	},
+	"60" : 
+	{
+		"AnimName" : "Armature|A_Combat_skill_1",
+		"LerpTime" : 0.050000000000000003
+	},
+	"61" : 
+	{
+		"AnimName" : "Armature|A_Combat_skill_2",
+		"LerpTime" : 0.050000000000000003
+	},
+	"62" : 
+	{
+		"AnimName" : "Armature|A_Combat_skill_3",
+		"LerpTime" : 0.050000000000000003
+	},
+	"63" : 
+	{
+		"AnimName" : "Armature|A_Combat_skill_4_1",
+		"LerpTime" : 0.050000000000000003
+	},
+	"64" : 
+	{
+		"AnimName" : "Armature|A_Combat_skill_4_2",
+		"LerpTime" : 0.050000000000000003
+	},
+	"65" : 
+	{
+		"AnimName" : "Armature|A_Combat_skill_4_3",
+		"LerpTime" : 0.050000000000000003
+	},
+	"66" : 
+	{
+		"AnimName" : "Armature|A_Combat_skill_5",
+		"LerpTime" : 0.050000000000000003
+	},
+	"67" : 
+	{
+		"AnimName" : "Armature|A_Combat_skill_6_raise",
+		"LerpTime" : 0.050000000000000003
+	},
+	"68" : 
+	{
+		"AnimName" : "Armature|A_Combat_skill_6_slapdown_ed",
+		"LerpTime" : 0.050000000000000003
+	},
+	"69" : 
+	{
+		"AnimName" : "Armature|A_Combat_skill_6_slapdown_lp",
+		"LerpTime" : 0.050000000000000003
+	},
+	"7" : 
+	{
+		"AnimName" : "Armature|A_Combat_Atk_Jc_lp",
+		"LerpTime" : 0.050000000000000003
+	},
+	"70" : 
+	{
+		"AnimName" : "Armature|A_Combat_skill_6_slapdown_st",
+		"LerpTime" : 0.050000000000000003
+	},
+	"71" : 
+	{
+		"AnimName" : "Armature|A_Combat_skill_7",
+		"LerpTime" : 0.050000000000000003
+	},
+	"72" : 
+	{
+		"AnimName" : "Armature|A_Combat_skill_8",
+		"LerpTime" : 0.050000000000000003
+	},
+	"73" : 
+	{
+		"AnimName" : "Armature|A_Combat_slapdown",
+		"LerpTime" : 0.050000000000000003
+	},
+	"74" : 
+	{
+		"AnimName" : "Armature|A_Combat_slapdown.001",
+		"LerpTime" : 0.050000000000000003
+	},
+	"75" : 
+	{
+		"AnimName" : "Armature|A_Combat_spawn",
+		"LerpTime" : 0.050000000000000003
+	},
+	"76" : 
+	{
+		"AnimName" : "Armature|A_Combat_special_2",
+		"LerpTime" : 0.050000000000000003
+	},
+	"77" : 
+	{
+		"AnimName" : "Armature|A_Combat_special_4",
+		"LerpTime" : 0.050000000000000003
+	},
+	"78" : 
+	{
+		"AnimName" : "Armature|A_Combat_special_5",
+		"LerpTime" : 0.050000000000000003
+	},
+	"79" : 
+	{
+		"AnimName" : "Armature|A_Combat_sprint_ed",
+		"LerpTime" : 0.050000000000000003
+	},
+	"8" : 
+	{
+		"AnimName" : "Armature|A_Combat_Atk_Jc_st",
+		"LerpTime" : 0.050000000000000003
+	},
+	"80" : 
+	{
+		"AnimName" : "Armature|A_Combat_sprint_lp",
+		"LerpTime" : 0.050000000000000003
+	},
+	"81" : 
+	{
+		"AnimName" : "Armature|A_Combat_sprint_st",
+		"LerpTime" : 0.050000000000000003
+	},
+	"82" : 
+	{
+		"AnimName" : "Armature|A_Combat_step_back",
+		"LerpTime" : 0.050000000000000003
+	},
+	"83" : 
+	{
+		"AnimName" : "Armature|A_Combat_strafe_left",
+		"LerpTime" : 0.050000000000000003
+	},
+	"84" : 
+	{
+		"AnimName" : "Armature|A_Combat_strafe_left.001",
+		"LerpTime" : 0.050000000000000003
+	},
+	"85" : 
+	{
+		"AnimName" : "Armature|A_Combat_strafe_right",
+		"LerpTime" : 0.050000000000000003
+	},
+	"86" : 
+	{
+		"AnimName" : "Armature|A_Combat_strafe_right.001",
+		"LerpTime" : 0.050000000000000003
+	},
+	"87" : 
+	{
+		"AnimName" : "Armature|A_Combat_stun",
+		"LerpTime" : 0.050000000000000003
+	},
+	"88" : 
+	{
+		"AnimName" : "Armature|A_Combat_stun.001",
+		"LerpTime" : 0.050000000000000003
+	},
+	"89" : 
+	{
+		"AnimName" : "Armature|A_Combat_stun_recover",
+		"LerpTime" : 0.050000000000000003
+	},
+	"9" : 
+	{
+		"AnimName" : "Armature|A_Combat_attack_1",
+		"LerpTime" : 0.050000000000000003
+	},
+	"90" : 
+	{
+		"AnimName" : "Armature|A_Combat_stun_recover.001",
+		"LerpTime" : 0.050000000000000003
+	},
+	"91" : 
+	{
+		"AnimName" : "Armature|A_Combat_super_skill_1",
+		"LerpTime" : 0.050000000000000003
+	},
+	"92" : 
+	{
+		"AnimName" : "Armature|A_Combat_super_skill_2",
+		"LerpTime" : 0.050000000000000003
+	},
+	"93" : 
+	{
+		"AnimName" : "Armature|A_Combat_thrown_down",
+		"LerpTime" : 0.050000000000000003
+	},
+	"94" : 
+	{
+		"AnimName" : "Armature|A_Combat_thrown_down.001",
+		"LerpTime" : 0.050000000000000003
+	},
+	"95" : 
+	{
+		"AnimName" : "Armature|A_Combat_thrown_hori",
+		"LerpTime" : 0.050000000000000003
+	},
+	"96" : 
+	{
+		"AnimName" : "Armature|A_Combat_thrown_hori.001",
+		"LerpTime" : 0.050000000000000003
+	},
+	"97" : 
+	{
+		"AnimName" : "Armature|A_Combat_thrown_spin",
+		"LerpTime" : 0.050000000000000003
+	},
+	"98" : 
+	{
+		"AnimName" : "Armature|A_Combat_thrown_spin.001",
+		"LerpTime" : 0.050000000000000003
+	},
+	"99" : 
+	{
+		"AnimName" : "Armature|A_Combat_thrown_up",
+		"LerpTime" : 0.050000000000000003
+	}
+}

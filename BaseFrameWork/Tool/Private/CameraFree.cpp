@@ -42,7 +42,8 @@ void CCameraFree::PriorityTick(_float fTimeDelta)
 
 	if (GetKeyState(VK_UP) & 0x8000)
 	{
-		m_pTransformCom->GoStraight(fTimeDelta);
+		_bool jump = false;
+		m_pTransformCom->GoStraight(fTimeDelta, nullptr, jump);
 	}
 
 	if (GetKeyState(VK_DOWN) & 0x8000)
@@ -57,7 +58,8 @@ void CCameraFree::PriorityTick(_float fTimeDelta)
 
 	if (GetKeyState(VK_RIGHT) & 0x8000)
 	{
-		m_pTransformCom->GoRight(fTimeDelta);
+		_bool jump = false;
+		m_pTransformCom->GoRight(fTimeDelta, nullptr, &jump);
 	}
 
 	if (!m_IsCamLock) {
@@ -88,6 +90,13 @@ void CCameraFree::LateTick(_float fTimeDelta)
 HRESULT CCameraFree::Render()
 {
 	return S_OK;
+
+}
+
+void CCameraFree::SetFreeCamPos(_vector _vPos, _vector _vLook)
+{
+	m_pTransformCom->SetState(CTransform::STATE_POSITION, _vPos);
+	m_pTransformCom->LookAt(_vLook);
 
 }
 

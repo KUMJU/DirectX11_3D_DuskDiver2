@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Client_Defines.h"
+#include "Tool_Defines.h"
 
-BEGIN(Client)
+BEGIN(Tool)
 
 class CUIMgr
 {
@@ -15,8 +15,16 @@ private:
 public:
 	void AddUI(const wstring& _strUIKey , shared_ptr<class CUI> _pUI);
 
+//common
 public:
 	shared_ptr<class CUI> FindUI(wstring& _strFindKey);
+
+
+//Specific Function
+public:
+	void SetPlayerHP(_int _iHP);
+
+
 
 private:
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Client_Defines.h"
+#include "Tool_Defines.h"
 #include "GameObject.h"
 #include "VITerrain.h"
 
@@ -9,7 +9,7 @@ class CShader;
 class CTexture;
 END
 
-BEGIN(Client)
+BEGIN(Tool)
 
 class CTerrain final : public CGameObject
 {

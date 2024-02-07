@@ -1,4 +1,6 @@
 
+#include "Shader_Defines.hlsli"
+
 matrix g_BoneMatrices[512];
 
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
@@ -12,20 +14,6 @@ vector g_vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
 
 vector g_vLightDir = vector(1.f, -1.f, 1.f, 0.f);
 vector g_vCamPosition;
-
-sampler g_LinearSampler = sampler_state
-{
-    Filter = MIN_MAG_MIP_LINEAR;
-    AddressU = WRAP;
-    AddressV = WRAP;
-};
-
-sampler g_PointSampler = sampler_state
-{
-    Filter = MIN_MAG_MIP_POINT;
-    AddressU = WRAP;
-    AddressV = WRAP;
-};
 
 struct VS_IN
 {
@@ -58,10 +46,12 @@ VS_OUT VS_MAIN(VS_IN In)
     matWV = mul(g_WorldMatrix, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
     
+    float fWeightW = 1.f - (In.vBlendWeights.x + In.vBlendWeights.y + In.vBlendWeights.z);
+
     matrix BoneMatrix = g_BoneMatrices[In.vBlendIndices.x] * In.vBlendWeights.x +
     g_BoneMatrices[In.vBlendIndices.y] * In.vBlendWeights.y +
     g_BoneMatrices[In.vBlendIndices.z] * In.vBlendWeights.z +
-    g_BoneMatrices[In.vBlendIndices.w] * In.vBlendWeights.w;
+    g_BoneMatrices[In.vBlendIndices.w] * fWeightW;
     
     vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
     
@@ -116,7 +106,12 @@ technique11 DefaultTechnique
 {
     pass Default
     {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
         VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();
     }
 

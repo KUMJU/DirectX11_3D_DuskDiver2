@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Camera.h"
-#include "Client_Defines.h"
+#include "Tool_Defines.h"
 
-BEGIN(Client)
+BEGIN(Tool)
 
 
 //구면좌표계를 사용한 3인칭 카메라
@@ -20,6 +20,9 @@ private:
 	virtual void LateTick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+public:
+	_float4 GetCamLookVector() { return m_vLookPlr; }
+
 private:
 
 	//초기 플레이어 좌표값을 이용해 필요한 값을 계산해두는 함수
@@ -28,6 +31,7 @@ private:
 	void SphericalRotate(_float _fAzimuth , _float _fElevation);
 	//좌표계변환
 	_vector ToCartesian();
+
 
 private:
 
@@ -58,6 +62,8 @@ private:
 	//플레이어 기준으로 얼만큼 더 위에 있을건지
 	_float m_fHeight = 0.f;
 
+	_float m_fLastYPos = 0.f;
+
 private:
 	_float3 m_vCameraAt;
 	_float3 m_vCameraEye;
@@ -66,6 +72,11 @@ private:
 private:
 	_float4 m_vPreCamPos = {};
 
+//for Player
+private:
+	_float4 m_vLookPlr = {};
+
+	void CalcLookVectors(_fvector _vCamPos, _fvector _vPlrPos);
 
 private:
 	_bool m_IsInitDone = false;

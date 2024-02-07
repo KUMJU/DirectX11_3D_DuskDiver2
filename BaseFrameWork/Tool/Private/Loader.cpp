@@ -116,7 +116,9 @@ HRESULT CLoader::LoadingForArcadeMap()
 
 HRESULT CLoader::LoadingForEdit()
 {
-    CGameInstance::GetInstance()->LoadResourceForTool();
+    CGameInstance::GetInstance()->LoadLevelResource(LEVEL_STATIC);
+    CGameInstance::GetInstance()->LoadLevelResource(LEVEL_ARCADE);
+
     m_isFinished = true;
     return S_OK;
 }

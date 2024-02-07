@@ -17,7 +17,7 @@ HRESULT CEffectParticle::Initialize(CTransform::TRANSFORM_DESC* _pDesc)
     if (FAILED(__super::Initialize(nullptr)))
         return E_FAIL;
 
-    m_pTexture = CGameInstance::GetInstance()->GetTexture(TEXT("Snow"));
+    m_pTexture = CGameInstance::GetInstance()->GetTexture(TEXT("T_Fire_Particle"));
     m_Components.emplace(TEXT("Com_Texture"), m_pTexture);
 
     m_pShader = CGameInstance::GetInstance()->GetShader(TEXT("Shader_VtxInstance"));

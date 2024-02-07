@@ -259,6 +259,9 @@
     <Filter Include="02. GameObject\09. Effect\02. Effect_Mesh">
       <UniqueIdentifier>{e23f70db-ef84-46e1-9dc4-91d4fec6bada}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\09. Effect\Preset">
+      <UniqueIdentifier>{f771221a-a571-4d98-966c-98b48f297dfa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -516,6 +519,9 @@
     <ClInclude Include="..\Public\EffectParticle.h">
       <Filter>02. GameObject\09. Effect\00. Effect_Particle</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\EffectPreset.h">
+      <Filter>02. GameObject\09. Effect\Preset</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -754,6 +760,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\EffectParticle.cpp">
       <Filter>02. GameObject\09. Effect\00. Effect_Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EffectPreset.cpp">
+      <Filter>02. GameObject\09. Effect\Preset</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

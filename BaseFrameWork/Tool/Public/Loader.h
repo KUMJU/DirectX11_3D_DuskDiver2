@@ -1,8 +1,8 @@
    #pragma once
 
-#include "Client_Defines.h"
+#include "Tool_Defines.h"
 
-BEGIN(Client)
+BEGIN(Tool)
 
 class CLoader final
 {

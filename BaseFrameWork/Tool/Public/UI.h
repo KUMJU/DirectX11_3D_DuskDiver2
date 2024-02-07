@@ -1,14 +1,15 @@
 #pragma once
 
-#include "Client_Defines.h"
+#include "Tool_Defines.h"
 #include "GameObject.h"
 
 BEGIN(Engine)
 class CShader;
-class CVIRect;
+class CVIBuffer_UI;
+class CTexture;
 END
 
-BEGIN(Client)
+BEGIN(Tool)
 
 class CUI abstract : public CGameObject
 {
@@ -33,7 +34,9 @@ public:
 
 protected:
 	shared_ptr<CShader> m_pShader = nullptr;
-	shared_ptr<CVIRect> m_VIRectCom = nullptr;
+	shared_ptr<CVIBuffer_UI> m_VIRectCom = nullptr;
+	shared_ptr<CTexture> m_pTextureCom = nullptr;
+
 
 protected:
 	void AddBaseComponent();

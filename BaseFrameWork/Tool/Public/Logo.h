@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Client_Defines.h"
+#include "Tool_Defines.h"
 #include "Level.h"
 
-BEGIN(Client)
+BEGIN(Tool)
 
 class CLogo final: public CLevel
 {

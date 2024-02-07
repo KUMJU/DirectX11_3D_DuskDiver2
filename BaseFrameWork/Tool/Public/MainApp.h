@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Client_Defines.h"
+#include "Tool_Defines.h"
 
 BEGIN(Engine)
 class CGameInstance;
 END
 
 
-BEGIN(Client)
+BEGIN(Tool)
 
 class CMainApp final
 {
@@ -23,10 +23,6 @@ public:
 
 private:
 	HRESULT OpenLevel(LEVEL _eStartLevel);	 
-
-private:
-	void TestFileWrite();
-	void TestFileRead();
 
 private:
 	_bool m_IsImguiOn = true;

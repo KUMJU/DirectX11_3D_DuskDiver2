@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{D6254CE2-9BCC-4587-92D2-AEAC5C78C09A}</ProjectGuid>
-    <RootNamespace>Tool</RootNamespace>
+    <ProjectGuid>{DBC32411-F6FA-4137-8FDE-D676723699D5}</ProjectGuid>
+    <RootNamespace>Client</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -156,11 +156,33 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\AirAtk.h" />
+    <ClInclude Include="..\Public\ArcadeMap.h" />
+    <ClInclude Include="..\Public\BattleSystem.h" />
+    <ClInclude Include="..\Public\Bear.h" />
     <ClInclude Include="..\Public\CameraFree.h" />
-    <ClInclude Include="..\Public\Client_Defines.h" />
+    <ClInclude Include="..\Public\CameraMgr.h" />
+    <ClInclude Include="..\Public\Coin.h" />
+    <ClInclude Include="..\Public\CutScene.h" />
+    <ClInclude Include="..\Public\CutSceneMgr.h" />
+    <ClInclude Include="..\Public\CutSceneTrigger.h" />
     <ClInclude Include="..\Public\Dummy.h" />
     <ClInclude Include="..\Public\Edit.h" />
+    <ClInclude Include="..\Public\Effect.h" />
+    <ClInclude Include="..\Public\EffectParticle.h" />
+    <ClInclude Include="..\Public\EffectPreset.h" />
+    <ClInclude Include="..\Public\EffectTestModel.h" />
+    <ClInclude Include="..\Public\Enemy01.h" />
+    <ClInclude Include="..\Public\Enemy02.h" />
+    <ClInclude Include="..\Public\Enemy03.h" />
+    <ClInclude Include="..\Public\Enemy1Skill.h" />
+    <ClInclude Include="..\Public\Enemy2Skill.h" />
+    <ClInclude Include="..\Public\Escalator.h" />
+    <ClInclude Include="..\Public\EventCamera.h" />
+    <ClInclude Include="..\Public\EventTrigger.h" />
+    <ClInclude Include="..\Public\FinalBoss.h" />
     <ClInclude Include="..\Public\GameMgr.h" />
+    <ClInclude Include="..\Public\HockeyBall.h" />
     <ClInclude Include="..\Public\imconfig.h" />
     <ClInclude Include="..\Public\imgui.h" />
     <ClInclude Include="..\Public\ImguiMgr.h" />
@@ -175,10 +197,48 @@
     <ClInclude Include="..\Public\Json\json.h" />
     <ClInclude Include="..\Public\LevelLoading.h" />
     <ClInclude Include="..\Public\Loader.h" />
+    <ClInclude Include="..\Public\Logo.h" />
     <ClInclude Include="..\Public\MainApp.h" />
+    <ClInclude Include="..\Public\MapLoader.h" />
+    <ClInclude Include="..\Public\MapObject.h" />
+    <ClInclude Include="..\Public\MiddleBoss.h" />
+    <ClInclude Include="..\Public\MiddleBossSkill.h" />
+    <ClInclude Include="..\Public\Minigame.h" />
+    <ClInclude Include="..\Public\MinigameCommand.h" />
+    <ClInclude Include="..\Public\MinigameHockey.h" />
+    <ClInclude Include="..\Public\MinigameMole.h" />
+    <ClInclude Include="..\Public\MinigameTrigger.h" />
+    <ClInclude Include="..\Public\Mole.h" />
+    <ClInclude Include="..\Public\Monster.h" />
+    <ClInclude Include="..\Public\MonsterPool.h" />
+    <ClInclude Include="..\Public\MonsterSkillSet.h" />
+    <ClInclude Include="..\Public\MonsterTower.h" />
+    <ClInclude Include="..\Public\MonsterTrigger.h" />
+    <ClInclude Include="..\Public\NaviToolMgr.h" />
     <ClInclude Include="..\Public\pch.h" />
     <ClInclude Include="..\Public\Player.h" />
+    <ClInclude Include="..\Public\PlrNormalAtk.h" />
+    <ClInclude Include="..\Public\Portal.h" />
+    <ClInclude Include="..\Public\Skill.h" />
+    <ClInclude Include="..\Public\SkillE.h" />
+    <ClInclude Include="..\Public\SkillQ.h" />
+    <ClInclude Include="..\Public\SkillR.h" />
+    <ClInclude Include="..\Public\SkillSet.h" />
+    <ClInclude Include="..\Public\Skill_BurstE.h" />
+    <ClInclude Include="..\Public\Skill_BurstQ.h" />
+    <ClInclude Include="..\Public\Skill_BurstR.h" />
+    <ClInclude Include="..\Public\SuperSkillA.h" />
+    <ClInclude Include="..\Public\SuperSkillB.h" />
+    <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\ThirdPersonCam.h" />
+    <ClInclude Include="..\Public\Tool_Defines.h" />
+    <ClInclude Include="..\Public\UI.h" />
+    <ClInclude Include="..\Public\UIBackGround.h" />
+    <ClInclude Include="..\Public\UIMgr.h" />
+    <ClInclude Include="..\Public\UIPlrHPBar.h" />
+    <ClInclude Include="..\Public\UIQuest.h" />
+    <ClInclude Include="..\Public\UISkillBar.h" />
+    <ClInclude Include="..\Public\WorldHPBar.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
@@ -186,10 +246,33 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\..\..\Downloads\ImGuizmo-master\ImGuizmo-master\ImGuizmo.cpp" />
+    <ClCompile Include="..\Private\AirAtk.cpp" />
+    <ClCompile Include="..\Private\ArcadeMap.cpp" />
+    <ClCompile Include="..\Private\BattleSystem.cpp" />
+    <ClCompile Include="..\Private\Bear.cpp" />
     <ClCompile Include="..\Private\CameraFree.cpp" />
+    <ClCompile Include="..\Private\CameraMgr.cpp" />
+    <ClCompile Include="..\Private\Coin.cpp" />
+    <ClCompile Include="..\Private\CutScene.cpp" />
+    <ClCompile Include="..\Private\CutSceneMgr.cpp" />
+    <ClCompile Include="..\Private\CutSceneTrigger.cpp" />
     <ClCompile Include="..\Private\Dummy.cpp" />
     <ClCompile Include="..\Private\Edit.cpp" />
+    <ClCompile Include="..\Private\Effect.cpp" />
+    <ClCompile Include="..\Private\EffectParticle.cpp" />
+    <ClCompile Include="..\Private\EffectPreset.cpp" />
+    <ClCompile Include="..\Private\EffectTestModel.cpp" />
+    <ClCompile Include="..\Private\Enemy01.cpp" />
+    <ClCompile Include="..\Private\Enemy02.cpp" />
+    <ClCompile Include="..\Private\Enemy03.cpp" />
+    <ClCompile Include="..\Private\Enemy1Skill.cpp" />
+    <ClCompile Include="..\Private\Enemy2Skill.cpp" />
+    <ClCompile Include="..\Private\Escalator.cpp" />
+    <ClCompile Include="..\Private\EventCamera.cpp" />
+    <ClCompile Include="..\Private\EventTrigger.cpp" />
+    <ClCompile Include="..\Private\FinalBoss.cpp" />
     <ClCompile Include="..\Private\GameMgr.cpp" />
+    <ClCompile Include="..\Private\HockeyBall.cpp" />
     <ClCompile Include="..\Private\imgui.cpp" />
     <ClCompile Include="..\Private\ImguiMgr.cpp" />
     <ClCompile Include="..\Private\imgui_demo.cpp" />
@@ -201,9 +284,46 @@
     <ClCompile Include="..\Private\jsoncpp.cpp" />
     <ClCompile Include="..\Private\LevelLoading.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
+    <ClCompile Include="..\Private\Logo.cpp" />
     <ClCompile Include="..\Private\MainApp.cpp" />
+    <ClCompile Include="..\Private\MapLoader.cpp" />
+    <ClCompile Include="..\Private\MapObject.cpp" />
+    <ClCompile Include="..\Private\MiddleBoss.cpp" />
+    <ClCompile Include="..\Private\MiddleBossSkill.cpp" />
+    <ClCompile Include="..\Private\Minigame.cpp" />
+    <ClCompile Include="..\Private\MinigameCommand.cpp" />
+    <ClCompile Include="..\Private\MinigameHockey.cpp" />
+    <ClCompile Include="..\Private\MinigameMole.cpp" />
+    <ClCompile Include="..\Private\MinigameTrigger.cpp" />
+    <ClCompile Include="..\Private\Mole.cpp" />
+    <ClCompile Include="..\Private\Monster.cpp" />
+    <ClCompile Include="..\Private\MonsterPool.cpp" />
+    <ClCompile Include="..\Private\MonsterSkillSet.cpp" />
+    <ClCompile Include="..\Private\MonsterTower.cpp" />
+    <ClCompile Include="..\Private\MonsterTrigger.cpp" />
+    <ClCompile Include="..\Private\NaviToolMgr.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
+    <ClCompile Include="..\Private\PlrNormalAtk.cpp" />
+    <ClCompile Include="..\Private\Portal.cpp" />
+    <ClCompile Include="..\Private\Skill.cpp" />
+    <ClCompile Include="..\Private\SkillE.cpp" />
+    <ClCompile Include="..\Private\SkillQ.cpp" />
+    <ClCompile Include="..\Private\SkillR.cpp" />
+    <ClCompile Include="..\Private\SkillSet.cpp" />
+    <ClCompile Include="..\Private\Skill_BurstE.cpp" />
+    <ClCompile Include="..\Private\Skill_BurstQ.cpp" />
+    <ClCompile Include="..\Private\Skill_BurstR.cpp" />
+    <ClCompile Include="..\Private\SuperSkillA.cpp" />
+    <ClCompile Include="..\Private\SuperSkillB.cpp" />
+    <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\ThirdPersonCam.cpp" />
+    <ClCompile Include="..\Private\UI.cpp" />
+    <ClCompile Include="..\Private\UIBackGround.cpp" />
+    <ClCompile Include="..\Private\UIMgr.cpp" />
+    <ClCompile Include="..\Private\UIPlrHPBar.cpp" />
+    <ClCompile Include="..\Private\UIQuest.cpp" />
+    <ClCompile Include="..\Private\UISkillBar.cpp" />
+    <ClCompile Include="..\Private\WorldHPBar.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -213,19 +333,28 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Tool.rc" />
+    <ResourceCompile Include="Client.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Tool.ico" />
+    <Image Include="Client.ico" />
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnim.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxInstance.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPointUI.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS_MAIN</EntryPointName>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Bin\DataFiles\AnimData\Anim_Enemy01.json" />
+    <None Include="..\Bin\DataFiles\AnimData\Anim_Enemy02.json" />
+    <None Include="..\Bin\DataFiles\AnimData\Anim_FinalBoss.json" />
+    <None Include="..\Bin\DataFiles\AnimData\Anim_MiddleBoss.json" />
+    <None Include="..\Bin\DataFiles\AnimData\Anim_Player_Burst.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

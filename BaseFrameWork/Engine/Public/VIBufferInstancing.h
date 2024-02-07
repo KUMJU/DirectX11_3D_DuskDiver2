@@ -18,6 +18,8 @@ public:
 		_bool			isLoop;
 		_float4			vColor;
 		_float			fDuration;
+		_float3			fDirection;
+		_bool			bStartSamePoint;
 	}INSTANCE_DESC;
 
 
@@ -33,6 +35,8 @@ public:
 public:
 	void TickDrop(_float _fTimeDelta);
 	void TickSpread(_float _fTimeDelta);
+
+	void TickInstance(_float _fTimeDelta);
 
 protected:
 	wrl::ComPtr<ID3D11Buffer> m_pVBInstance = { nullptr };

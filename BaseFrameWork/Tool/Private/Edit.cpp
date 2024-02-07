@@ -5,6 +5,10 @@
 #include "Dummy.h"
 
 #include "GameInstance.h"
+#include "NaviToolMgr.h"
+
+#include "Terrain.h"
+
 
 CEdit::CEdit()
 {
@@ -16,8 +20,15 @@ void CEdit::PreInit()
 
 HRESULT CEdit::Initialize()
 {
+	CNaviToolMgr::GetInstance()->Initialize();
+
 	if (FAILED(ReadyLight()))
 		return E_FAIL;
+
+	
+	if (FAILED(ReadyLayerBackGround(TEXT("Layer_BackGround"))))
+		return E_FAIL;
+
 
 	if (FAILED(ReadyLayerCamera(TEXT("Layer_Camera"))))
 		return E_FAIL;
@@ -34,6 +45,36 @@ void CEdit::Tick(_float _fTimeDelta)
 
 HRESULT CEdit::Render()
 {
+	CNaviToolMgr::GetInstance()->Render();
+
+	return S_OK;
+}
+
+HRESULT CEdit::ReadyLayerBackGround(const wstring& _strLayerTag)
+{
+
+	CVITerrain::TerrainDesc desc = {};
+	desc.iVerticesX = 100;
+	desc.iVerticesZ = 100;
+
+
+	shared_ptr<CTerrain> pTerrain = CTerrain::Create(desc);
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pTerrain)))
+		return E_FAIL;
+
+	pTerrain->SetPosition({ -50.f, 0.f, -50.f, 1.f });
+
+	/*shared_ptr<CGameObject> pDummy = CDummy::Create(TEXT("ArcadeMap_Final"));
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pDummy)))
+		return E_FAIL;
+
+	pDummy->SetPosition({ -565.f, 40.5f, -100.f , 1.f });
+	CImguiMgr::GetInstance()->SetMapObject(pDummy);*/
+
+
+
+
+
 	return S_OK;
 }
 

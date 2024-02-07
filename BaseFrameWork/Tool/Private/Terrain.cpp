@@ -131,19 +131,19 @@ HRESULT CTerrain::Bind_ShaderResources()
 	if (FAILED(m_pShader->BindMatrix("g_ProjMatrix", &ProjMat)))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom[TYPE_DIFFUSE]->BindShaderResources(m_pShader, "g_DiffuseTexture")))
+	if (FAILED(m_pTextureCom[TYPE_DIFFUSE]->BindShaderResource(m_pShader, "g_DiffuseTexture", 0)))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom[TYPE_MASK]->BindShaderResource(m_pShader, "g_MaskTexture", 0)))
-		return E_FAIL;
+	//if (FAILED(m_pTextureCom[TYPE_MASK]->BindShaderResource(m_pShader, "g_MaskTexture", 0)))
+	//	return E_FAIL;
 
-	if (m_IsBrushVisible) {
-		if (FAILED(m_pTextureCom[TYPE_BRUSH]->BindShaderResource(m_pShader, "g_BrushTexture", 0)))
-			return E_FAIL;
+	//if (m_IsBrushVisible) {
+	//	if (FAILED(m_pTextureCom[TYPE_BRUSH]->BindShaderResource(m_pShader, "g_BrushTexture", 0)))
+	//		return E_FAIL;
 
-		if (FAILED(m_pShader->BindRawValue("g_vBrushPos", &m_vBrushPos, sizeof(_float3))))
-			return E_FAIL;
-	}
+	//	if (FAILED(m_pShader->BindRawValue("g_vBrushPos", &m_vBrushPos, sizeof(_float3))))
+	//		return E_FAIL;
+	//}
 
 	_float4 fCamPos = CGameInstance::GetInstance()->GetCamPosition();
 	if (FAILED(m_pShader->BindRawValue("g_vCamPosition", &fCamPos, sizeof(_float4))))
