@@ -22,6 +22,8 @@ HRESULT CVIBufferInstancing::Initialize(INSTANCE_DESC* _desc)
         m_LifeTimes.push_back(TimeRange(m_RandomNumber));
     }
 
+    EffectInitSetting();
+
     return S_OK;
 }
 
@@ -168,13 +170,14 @@ void CVIBufferInstancing::TickInstance(_float _fTimeDelta)
     uniform_real_distribution<float>	HeightRange(m_InstanceData.vRange.y * -0.5f, m_InstanceData.vRange.y * 0.5f);
     uniform_real_distribution<float>	DepthRange(m_InstanceData.vRange.z * -0.5f, m_InstanceData.vRange.z * 0.5f);
 
+
     m_pContext->Map(m_pVBInstance.Get(), 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
 
     for (_uint i = 0; i < m_iNumInstance; ++i)
     {
-        ((VTXINSTANCE*)SubResource.pData)[i].vTranslation.x += m_Speeds[i] * _fTimeDelta * m_InstanceData.fDirection.x;
-        ((VTXINSTANCE*)SubResource.pData)[i].vTranslation.y += m_Speeds[i] * _fTimeDelta * m_InstanceData.fDirection.y;
-        ((VTXINSTANCE*)SubResource.pData)[i].vTranslation.z += m_Speeds[i] * _fTimeDelta * m_InstanceData.fDirection.z;
+        ((VTXINSTANCE*)SubResource.pData)[i].vTranslation.x += m_Speeds[i] * _fTimeDelta * m_Directions[i].x;
+        ((VTXINSTANCE*)SubResource.pData)[i].vTranslation.y += m_Speeds[i] * _fTimeDelta * m_Directions[i].y;
+        ((VTXINSTANCE*)SubResource.pData)[i].vTranslation.z += m_Speeds[i] * _fTimeDelta * m_Directions[i].z;
 
 
         m_LifeTimes[i] -= _fTimeDelta;
@@ -184,20 +187,12 @@ void CVIBufferInstancing::TickInstance(_float _fTimeDelta)
             {
                 m_LifeTimes[i] = TimeRange(m_RandomNumber);
 
-                if (m_InstanceData.bStartSamePoint) {
-                    ((VTXINSTANCE*)SubResource.pData)[i].vTranslation = _float4(
-                        m_InstanceData.vCenter.x ,
-                        m_InstanceData.vCenter.y,
-                        m_InstanceData.vCenter.z ,
-                        1.f);
-                }
-                else {
-                    ((VTXINSTANCE*)SubResource.pData)[i].vTranslation = _float4(
-                        m_InstanceData.vCenter.x + WidthRange(m_RandomNumber),
-                        m_InstanceData.vCenter.y + HeightRange(m_RandomNumber),
-                        m_InstanceData.vCenter.z + DepthRange(m_RandomNumber),
-                        1.f);
-                }
+                ((VTXINSTANCE*)SubResource.pData)[i].vTranslation = _float4(
+                    m_InstanceData.vCenter.x + WidthRange(m_RandomNumber),
+                    m_InstanceData.vCenter.y + HeightRange(m_RandomNumber),
+                    m_InstanceData.vCenter.z + DepthRange(m_RandomNumber),
+                    1.f);
+             
 
             }
             else
@@ -208,5 +203,36 @@ void CVIBufferInstancing::TickInstance(_float _fTimeDelta)
     }
 
     m_pContext->Unmap(m_pVBInstance.Get(), 0);
+
+}
+
+void CVIBufferInstancing::EffectInitSetting()
+{
+    m_InitPositions.reserve(m_iNumInstance);
+    m_Directions.reserve(m_iNumInstance);
+        
+    //초기 시작 위치를 세팅해줌
+    uniform_real_distribution<float>	StartXPos(m_InstanceData.vStartPointMin.x, m_InstanceData.vStartPointMax.x);
+    uniform_real_distribution<float>	StartYPos(m_InstanceData.vStartPointMin.y, m_InstanceData.vStartPointMax.y);
+    uniform_real_distribution<float>	StartZPos(m_InstanceData.vStartPointMin.z, m_InstanceData.vStartPointMax.z);
+
+
+    //초기 direction을 세팅해줌
+    uniform_real_distribution<float>	DirectionX(m_InstanceData.vDirectionMin.x, m_InstanceData.vDirectionMax.x);
+    uniform_real_distribution<float>	DirectionY(m_InstanceData.vDirectionMin.y, m_InstanceData.vDirectionMax.y);
+    uniform_real_distribution<float>	DirectionZ(m_InstanceData.vDirectionMin.z, m_InstanceData.vDirectionMax.z);
+
+    for (_uint i = 0; i < m_iNumInstance; ++i) {
+        m_InitPositions.push_back({ StartXPos(m_RandomNumber),StartYPos(m_RandomNumber), StartZPos(m_RandomNumber) });
+        m_Directions.push_back({ DirectionX(m_RandomNumber),DirectionY(m_RandomNumber), DirectionZ(m_RandomNumber) });
+    }
+}
+
+
+void CVIBufferInstancing::ResetEffect() {
+
+    m_fTimeAcc = 0.f;
+    
+
 
 }

@@ -11,6 +11,7 @@ class CEffectPreset : public CGameObject
 {
 public:
 	CEffectPreset();
+	CEffectPreset(const CEffectPreset& _rhs);
 	virtual ~CEffectPreset() = default;
 
 
@@ -34,7 +35,9 @@ public:
 
 public:
 	_bool m_bLoop = false;
-	_float2 m_vTotalDuration = _float2(0.f, 0.f);
+
+	_float m_vTotalDuration = 0.f;
+	_float m_fAccTime = 0.f;
 
 private:
 	vector<shared_ptr<class CEffect>> m_Effects; 
@@ -42,6 +45,7 @@ private:
 
 public:
 	static shared_ptr<CEffectPreset> Create();
+	static shared_ptr<CEffectPreset> Clone(shared_ptr<CEffectPreset> _rhs);
 
 };
 

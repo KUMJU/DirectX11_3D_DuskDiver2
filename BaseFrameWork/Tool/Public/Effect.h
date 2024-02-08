@@ -33,9 +33,18 @@ public:
 	virtual void LateTick(_float _fTimeDelta);
 	virtual HRESULT Render();
 
+
+public:
+	char* GetEffectName() {
+		return m_strEffectName;
+	}
+
+
 public:
 	//각 이펙트마다 오버라이딩에서 각자 필요한 정보를 저장함
 	virtual void ParsingData(ofstream& _fp) {};
+	//제일 초기의 상태로 돌려준다
+	virtual void ResetEffect() {};
 
 protected:
 	shared_ptr<CShader> m_pShader = nullptr;
@@ -46,6 +55,8 @@ protected:
 
 	//활성화 시간이 지나면 false로 상태를 꺼주고 다시 이펙트 풀로 돌려보낸다 
 	_float m_fLifeTime = 0.f;
+
+	char* m_strEffectName = {};
 
 
 };

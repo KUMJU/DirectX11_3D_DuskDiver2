@@ -11,7 +11,7 @@ CEffectParticle::CEffectParticle()
 {
 }
 
-HRESULT CEffectParticle::Initialize(_uint _iInstanceNum, const wstring& _strTextureKey, CVIBufferInstancing::INSTANCE_DESC* _desc)
+HRESULT CEffectParticle::Initialize(_uint _iInstanceNum, const wstring& _strTextureKey, CVIBufferInstancing::INSTANCE_DESC* _desc, char* _strName)
 {
 
     if (FAILED(__super::Initialize(nullptr)))
@@ -24,6 +24,8 @@ HRESULT CEffectParticle::Initialize(_uint _iInstanceNum, const wstring& _strText
 
     m_pVIBufferCom = CVIBufferPoint::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), _iInstanceNum, _desc);
     m_Components.emplace(TEXT("Com_VIBuffer"), m_pVIBufferCom);
+
+    m_strEffectName = _strName;
 
     return S_OK;
 }
@@ -79,11 +81,18 @@ HRESULT CEffectParticle::Render()
     return S_OK;
 }
 
-shared_ptr<CEffectParticle> CEffectParticle::Create(_uint _iInstanceNum, const wstring& _strTextureKey, CVIBufferInstancing::INSTANCE_DESC* _desc)
+void CEffectParticle::ResetEffect()
+{
+
+    //   m_pVIBufferCom->reset
+
+}
+
+shared_ptr<CEffectParticle> CEffectParticle::Create(_uint _iInstanceNum, const wstring& _strTextureKey, CVIBufferInstancing::INSTANCE_DESC* _desc, char* _strName)
 {
     shared_ptr<CEffectParticle> pInstance = make_shared<CEffectParticle>();
 
-    if (FAILED(pInstance->Initialize(_iInstanceNum, _strTextureKey, _desc)))
+    if (FAILED(pInstance->Initialize(_iInstanceNum, _strTextureKey, _desc , _strName)))
         MSG_BOX("Failed to Create : CEffectParticle");
 
     return pInstance;

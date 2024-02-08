@@ -18,8 +18,12 @@ public:
 		_bool			isLoop;
 		_float4			vColor;
 		_float			fDuration;
-		_float3			fDirection;
-		_bool			bStartSamePoint;
+
+		_float3			vDirectionMin;
+		_float3			vDirectionMax;
+		_float3			vStartPointMin;
+		_float3			vStartPointMax;
+
 	}INSTANCE_DESC;
 
 
@@ -51,9 +55,19 @@ protected:
 	_float m_fTimeAcc = { 0.f };
 	_bool m_isFinished = { false };
 
+
+protected:
 	vector<_float> m_Speeds;
 	vector<_float> m_LifeTimes;
 
+	//각 인스턴스의 초기 시작 위치+이동 방향 저장
+	vector<_float3> m_InitPositions;
+	vector<_float3> m_Directions;
+
+
+public:
+	void EffectInitSetting();
+	void ResetEffect();
 
 };
 

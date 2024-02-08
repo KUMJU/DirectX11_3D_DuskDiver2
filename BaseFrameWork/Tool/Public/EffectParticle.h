@@ -13,7 +13,7 @@ public:
 
 
 public:
-	virtual HRESULT Initialize(_uint _iInstanceNum, const wstring& _strTextureKey, CVIBufferInstancing::INSTANCE_DESC* _desc);
+	virtual HRESULT Initialize(_uint _iInstanceNum, const wstring& _strTextureKey, CVIBufferInstancing::INSTANCE_DESC* _desc, char* _strName);
 	virtual void PriorityTick(_float _fTimeDelta);
 	virtual void Tick(_float _fTimeDelta);
 	virtual void LateTick(_float _fTimeDelta);
@@ -22,8 +22,12 @@ public:
 private:
 	shared_ptr<CVIBufferPoint> m_pVIBufferCom = nullptr;
 
+
 public:
-	static shared_ptr<CEffectParticle> Create(_uint _iInstanceNum, const wstring& _strTextureKey, CVIBufferInstancing::INSTANCE_DESC* _desc);
+	virtual void ResetEffect();
+
+public:
+	static shared_ptr<CEffectParticle> Create(_uint _iInstanceNum, const wstring& _strTextureKey, CVIBufferInstancing::INSTANCE_DESC* _desc , char* _strName);
 
 };
 

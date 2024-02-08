@@ -6,6 +6,13 @@ CEffectPreset::CEffectPreset()
 {
 }
 
+CEffectPreset::CEffectPreset(const CEffectPreset& _rhs)
+	:m_bLoop(_rhs.m_bLoop),
+	m_vTotalDuration(_rhs.m_vTotalDuration),
+	m_Effects(_rhs.m_Effects)
+{
+}
+
 HRESULT CEffectPreset::Initialize()
 {
 	return S_OK;
@@ -17,6 +24,23 @@ void CEffectPreset::PriorityTick(_float _fTimeDelta)
 
 void CEffectPreset::Tick(_float _fTimeDelta)
 {
+	m_fAccTime += _fTimeDelta;
+
+	if (m_fAccTime >= m_vTotalDuration) {
+		//루프 이펙트일때
+		if (m_bLoop) {
+			ResetEffect();
+			m_fAccTime = 0.f;
+		}
+		else {
+			//비활성화 
+			m_IsEnabled = false;
+			m_fAccTime = 0.f;
+			ResetEffect();
+		}
+	}
+
+
 	for (auto& iter : m_Effects)
 		iter->Tick(_fTimeDelta);
 
@@ -64,6 +88,9 @@ void CEffectPreset::ParsingEffect()
 void CEffectPreset::ResetEffect()
 {
 
+
+
+
 	//Effect 안에 오버라이드 함수 만든다음에 순회하면서 돌려주기 
 
 }
@@ -75,5 +102,11 @@ shared_ptr<CEffectPreset> CEffectPreset::Create()
 	if (FAILED(pInstance->Initialize()))
 		MSG_BOX("Failed to Create : CEffectPreset");
 
+	return pInstance;
+}
+
+shared_ptr<CEffectPreset> CEffectPreset::Clone(shared_ptr<CEffectPreset> _rhs)
+{
+	shared_ptr<CEffectPreset> pInstance = make_shared<CEffectPreset>(*(_rhs.get()));
 	return pInstance;
 }

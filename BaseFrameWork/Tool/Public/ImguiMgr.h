@@ -61,18 +61,27 @@ private:
 	void MeshEffectSetting();
 
 	void CreateEffect();
+	void CreatePreset();
 
 
 private:
-	//ParticlePreset
+	/**개별 이펙트 이름**/
+	vector<char*> m_EffectNameList;
+	//Current ViewPreset
 	shared_ptr<class CEffectPreset> m_pEffectPreset = nullptr;
 
-	//    ImGui::ListBox("Object List", &m_ObjListIdx, m_ObjectList.data(), (_int)m_ObjectList.size(), 10);
+	//만들어뒀던 Preset 저장리스트 
+	vector<shared_ptr<class CEffectPreset>> m_Presets;
+	vector<char*> m_PresetNameList;
 
-	vector<char*> m_EffectNameList;
-	_int m_iEffectSelectIdx = 0;
+	_int m_iEffectSelectIdx = -1;
+	_int m_iPrevEffectIdx = -1;
+
+	_int m_iPresetSelectIdx = -1;
+	_int m_iPrevPresetIdx = -1;
 
 	_char m_CurrentName[256] = "";
+	_char m_CurrentPresetName[256] = "";
 
 //Effect Save Parameter//
 private:
@@ -95,8 +104,11 @@ private:
 	_float2 m_vSize = _float2();
 	_float2 m_vSpeed = _float2();
 	_float4 m_vColor = _float4();
-	_float3 m_fDir = _float3();
-	_bool m_bStartOnePoint = false;
+	_float3 m_vDirMin = _float3();
+	_float3 m_vDirMax = _float3();
+	_float3 m_vStartPosMin = _float3();
+	_float3 m_vStartPosMax = _float3();
+
 
 	_bool m_bGlow = false;
 	_float4 m_vGlowColor = _float4();

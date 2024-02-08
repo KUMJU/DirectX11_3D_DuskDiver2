@@ -81,9 +81,6 @@ HRESULT CVIBufferPoint::Initialize(_uint _iNumInstance, CVIBufferInstancing::INS
 	VTXINSTANCE* pVertices2 = new VTXINSTANCE[m_iNumInstance];
 	ZeroMemory(pVertices2, sizeof(VTXINSTANCE) * m_iNumInstance);
 
-	uniform_real_distribution<float>	WidthRange(m_InstanceData.vRange.x * -0.5f, m_InstanceData.vRange.x * 0.5f);
-	uniform_real_distribution<float>	HeightRange(m_InstanceData.vRange.y * -0.5f, m_InstanceData.vRange.y * 0.5f);
-	uniform_real_distribution<float>	DepthRange(m_InstanceData.vRange.z * -0.5f, m_InstanceData.vRange.z * 0.5f);
 	uniform_real_distribution<float>	SizeRange(m_InstanceData.vSize.x, m_InstanceData.vSize.y);
 
 	for (_uint i = 0; i < m_iNumInstance; ++i)
@@ -93,9 +90,9 @@ HRESULT CVIBufferPoint::Initialize(_uint _iNumInstance, CVIBufferInstancing::INS
 		pVertices2[i].vUp = _float4(0.f, fSize, 0.f, 0.f);
 		pVertices2[i].vLook = _float4(0.f, 0.f, fSize, 0.f);
 		pVertices2[i].vTranslation = _float4(
-			m_InstanceData.vCenter.x + WidthRange(m_RandomNumber),
-			m_InstanceData.vCenter.y + HeightRange(m_RandomNumber),
-			m_InstanceData.vCenter.z + DepthRange(m_RandomNumber),
+			m_InstanceData.vCenter.x + m_InitPositions[i].x,
+			m_InstanceData.vCenter.y + m_InitPositions[i].y,
+			m_InstanceData.vCenter.z + m_InitPositions[i].z,
 			1.f);
 
 		pVertices2[i].vColor = m_InstanceData.vColor;
