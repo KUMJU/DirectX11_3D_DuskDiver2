@@ -24,6 +24,10 @@ private:
 
 
 public:
+	virtual void ParsingData(ofstream& _fp) override;
+
+
+public:
 	virtual void ResetEffect();
 
 public:

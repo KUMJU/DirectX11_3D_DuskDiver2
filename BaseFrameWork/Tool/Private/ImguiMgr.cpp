@@ -12,12 +12,15 @@
 #include "Model.h"
 
 #include "EffectParticle.h"
+#include "EffectTexture.h"
 
 #include <fstream>
 
 #include "Escalator.h"
 #include "VIBufferInstancing.h"
 #include "EffectPreset.h"
+
+#include <io.h>
 
 IMPLEMENT_SINGLETON(CImguiMgr)
 
@@ -58,8 +61,11 @@ HRESULT CImguiMgr::Initialize()
     m_pEffectPreset = CEffectPreset::Create();
     CGameInstance::GetInstance()->AddObject(LEVEL_EDIT, TEXT("Layer_Effect"), m_pEffectPreset);
 
-    //리스트 세팅
-    //SetObjectList();
+
+    //메쉬& 텍스쳐 리스트 세팅
+    SettingImageData();
+    
+
 
     return S_OK;
 }
@@ -137,6 +143,9 @@ void CImguiMgr::EffectSetting() {
 
     BasicEffectSetting();
 
+
+    //Effect 폴더 내에 있는 리스트 쭉 읽어오기 
+
     ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
     if (ImGui::BeginTabBar("Effect Type", tab_bar_flags))
     {
@@ -193,6 +202,13 @@ void CImguiMgr::EffectListView()
     if (ImGui::Button("Clear")) {
         
     }
+
+    if (ImGui::Button("Preset Play")) {
+
+        m_pEffectPreset->PlayEffect();
+
+    }
+
         
     ImGui::Text("Preset");
     ImGui::Separator();
@@ -242,6 +258,21 @@ void CImguiMgr::BasicEffectSetting()
 
     ImGui::InputText("Effect Name", m_CurrentName, sizeof(char) * 256);
 
+    //추후에 Noise 텍스쳐랑 Base Diffuse랑 구분해두기 
+    if (ImGui::BeginCombo("combo 1", m_ImagesList[m_iImageNum]))
+    {
+        for (int n = 0; n < m_ImagesList.size(); n++)
+        {
+            const bool is_selected = (m_iImageNum == n);
+            if (ImGui::Selectable(m_ImagesList[n], is_selected))
+                m_iImageNum = n;
+
+            if (is_selected)
+                ImGui::SetItemDefaultFocus();
+        }
+        ImGui::EndCombo();
+    }
+
     //BaseTexture DropDown
 
     ImGui::Separator();
@@ -255,9 +286,7 @@ void CImguiMgr::ParticleEffectSetting()
 
     ImGui::InputInt("Instance Number", &m_iInstanceNum);
 
-    ImGui::InputFloat3("Pivot", &m_vPivot.x);
     ImGui::InputFloat3("Center", &m_vCenter.x);
-    ImGui::InputFloat3("Range", &m_vRange.x); // x: Start y:End
     ImGui::InputFloat2("Size", &m_vSize.x); // x : MinSpeed y: MaxSpeed
     ImGui::InputFloat2("Speed", &m_vSpeed.x);
     ImGui::InputFloat4("Color", &m_vColor.x);
@@ -265,12 +294,19 @@ void CImguiMgr::ParticleEffectSetting()
     ImGui::InputFloat3("Direction Max", &m_vDirMax.x);
     ImGui::InputFloat3("Start Position Min", &m_vStartPosMin.x);
     ImGui::InputFloat3("Start Position Max", &m_vStartPosMax.x);
+    ImGui::InputFloat2("Duration", &m_vDuration.x);
 
 }
 
 void CImguiMgr::TextureEffectSetting()
 {
     ImGui::Text("This is Texture Effect Setting");
+
+    ImGui::InputFloat3("Center", &m_vCenter.x);
+    ImGui::InputFloat2("Size", &m_vSize.x); // x : MinSpeed y: MaxSpeed
+    ImGui::InputFloat4("Color", &m_vColor.x);
+    ImGui::InputFloat2("Rotation", &m_vRotation.x);
+    ImGui::InputFloat2("Duration", &m_vDuration.x);
 
 }
 
@@ -280,31 +316,114 @@ void CImguiMgr::MeshEffectSetting()
 
 }
 
+
+void CImguiMgr::SettingImageData()
+{
+    _wfinddata_t fd;
+    intptr_t lHandle;
+    const wstring& strFullPath = m_strBasePath + TEXT("Texture/*.*");
+
+    if (-1 == (lHandle = _wfindfirst(strFullPath.c_str(), &fd)))
+        return;
+
+    while (0 == _wfindnext(lHandle, &fd))
+    {
+        const wstring& strName = fd.name;
+
+        if (IsFileOrDir(fd) && fd.size != 0 && fd.name[0] != '.') {
+            wstring strName = fd.name;
+            wstring strExt = EraseExt(strName);
+
+            char* strMultiByte = new char[256];
+            WideCharToMultiByte(CP_ACP, 0, strExt.c_str(), -1, strMultiByte, 256, NULL, NULL);
+            m_ImagesList.push_back(const_cast<char*>(strMultiByte));
+           
+        }
+    }
+
+    _findclose(lHandle);
+
+}
+
+
+void CImguiMgr::SettingMeshData()
+{
+}
+
+_bool CImguiMgr::IsFileOrDir(_wfinddata_t _fd)
+{
+    if (_fd.attrib & _A_SUBDIR)
+        return false; //디렉토리
+    else
+        return true; //파일
+
+}
+
+wstring CImguiMgr::EraseExt(const wstring& _strFileName)
+{
+    size_t iCount = _strFileName.find_last_of(TEXT("."));
+    return _strFileName.substr(0, iCount);
+}
+
+
 void CImguiMgr::CreateEffect()
 {   
-    CVIBufferInstancing::INSTANCE_DESC InstanceDesc = {};
- 
-    InstanceDesc.vPivot = m_vPivot;
-    InstanceDesc.vCenter = m_vCenter;
-    InstanceDesc.vRange = m_vRange;
-    InstanceDesc.vSize = m_vSize;
-    InstanceDesc.vSpeed = m_vSpeed;
-    InstanceDesc.vLifeTime = m_fTotalDuration;
-    InstanceDesc.isLoop = m_IsLoop;
-    InstanceDesc.vColor = m_vColor;
-    InstanceDesc.vDirectionMin = m_vDirMin;
-    InstanceDesc.vDirectionMax = m_vDirMax;
-    InstanceDesc.vStartPointMin = m_vStartPosMin;
-    InstanceDesc.vStartPointMax = m_vStartPosMax;
 
-    char* EffectName = new char[256];
-    memcpy_s(EffectName, sizeof(char) * 256, m_CurrentName, sizeof(char) * 256);
+    if (0 == m_iEffectType) {
+        CVIBufferInstancing::INSTANCE_DESC InstanceDesc = {};
 
-    shared_ptr<CEffectParticle> pParticle = CEffectParticle::Create(m_iInstanceNum,TEXT("Snow"), &InstanceDesc, EffectName);
-   // CGameInstance::GetInstance()->AddObject(LEVEL_EDIT, TEXT("Layer_Effect"), pParticle);
+        InstanceDesc.vCenter = m_vCenter;
+        InstanceDesc.vSize = m_vSize;
+        InstanceDesc.vSpeed = m_vSpeed;
+        InstanceDesc.vLifeTime = m_fTotalDuration;
+        InstanceDesc.isLoop = m_IsLoop;
+        InstanceDesc.vColor = m_vColor;
+        InstanceDesc.vDirectionMin = m_vDirMin;
+        InstanceDesc.vDirectionMax = m_vDirMax;
+        InstanceDesc.vStartPointMin = m_vStartPosMin;
+        InstanceDesc.vStartPointMax = m_vStartPosMax;
+        InstanceDesc.vDuration = m_vDuration;
 
-    m_EffectNameList.push_back(EffectName);
-    m_pEffectPreset->AddEffect(pParticle);
+        char* EffectName = new char[256];
+        memcpy_s(EffectName, sizeof(char) * 256, m_CurrentName, sizeof(char) * 256);
+
+        _tchar szFullPath[MAX_PATH] = TEXT("");
+        MultiByteToWideChar(CP_ACP, 0, m_ImagesList[m_iImageNum], (_int)strlen(m_ImagesList[m_iImageNum]), szFullPath, MAX_PATH);
+
+        shared_ptr<CEffectParticle> pParticle = CEffectParticle::Create(m_iInstanceNum, szFullPath, &InstanceDesc, EffectName);
+
+        m_EffectNameList.push_back(EffectName);
+        m_pEffectPreset->AddEffect(pParticle);
+
+    }
+    else if (1 == m_iEffectType) {
+
+
+        CEffectTexture::TEXEFFECT_DESC textureDesc = {};
+
+        textureDesc.vCenter = m_vCenter;
+        textureDesc.vColor = m_vColor;
+        textureDesc.vRotation = m_vRotation;
+        textureDesc.vScale = m_vSize;
+
+        char* EffectName = new char[256];
+        memcpy_s(EffectName, sizeof(char) * 256, m_CurrentName, sizeof(char) * 256);
+
+        _tchar szFullPath[MAX_PATH] = TEXT("");
+        MultiByteToWideChar(CP_ACP, 0, m_ImagesList[m_iImageNum], (_int)strlen(m_ImagesList[m_iImageNum]), szFullPath, MAX_PATH);
+
+        shared_ptr<CEffectTexture> pParticle = CEffectTexture::Create(szFullPath, &textureDesc, EffectName);
+
+        m_EffectNameList.push_back(EffectName);
+        m_pEffectPreset->AddEffect(pParticle);
+    }
+    else if (2 == m_iEffectType) {
+
+
+
+    }
+
+  
 
 }
 

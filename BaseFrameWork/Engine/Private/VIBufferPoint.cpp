@@ -96,6 +96,7 @@ HRESULT CVIBufferPoint::Initialize(_uint _iNumInstance, CVIBufferInstancing::INS
 			1.f);
 
 		pVertices2[i].vColor = m_InstanceData.vColor;
+		pVertices2[i].vColor.w = 0;
 	}
 
 	m_InitialData.pSysMem = pVertices2;

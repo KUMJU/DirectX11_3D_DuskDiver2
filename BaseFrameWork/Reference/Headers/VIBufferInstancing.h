@@ -17,7 +17,8 @@ public:
 		_float2			vLifeTime;
 		_bool			isLoop;
 		_float4			vColor;
-		_float			fDuration;
+
+		_float2			vDuration;
 
 		_float3			vDirectionMin;
 		_float3			vDirectionMax;
@@ -36,11 +37,19 @@ public:
 	virtual HRESULT Render();
 	virtual HRESULT Bind_Buffers();
 
+//기본 Tick
 public:
-	void TickDrop(_float _fTimeDelta);
-	void TickSpread(_float _fTimeDelta);
+	_bool TickInstance(_float _fTimeDelta); //시작점과 방향을 지정할 수 있는 function
 
-	void TickInstance(_float _fTimeDelta);
+
+//파티클 추가 기능 
+protected:
+	void ColorLerp() {};
+	void AlphaLerp() {};
+
+public:
+
+	void ResetInstance();
 
 protected:
 	wrl::ComPtr<ID3D11Buffer> m_pVBInstance = { nullptr };
@@ -65,9 +74,13 @@ protected:
 	vector<_float3> m_Directions;
 
 
+//For Parsing
+protected:
+	INSTANCE_DESC* GetParticleDesc() { return &m_InstanceData; }
+
+
 public:
 	void EffectInitSetting();
-	void ResetEffect();
 
 };
 

@@ -70,6 +70,15 @@ void CEffectPreset::DeleteEffect(_uint _iEffectIdx)
 
 }
 
+void CEffectPreset::PlayEffect()
+{
+	for (auto& iter : m_Effects) {
+
+		iter->ResetEffect();
+		iter->SetEnable(true);
+	}
+}
+
 void CEffectPreset::ParsingEffect()
 {
 	//이펙트 갯수 + 루프여부 + 전체 duration

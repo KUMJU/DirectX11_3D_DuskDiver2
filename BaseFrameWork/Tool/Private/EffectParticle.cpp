@@ -32,16 +32,27 @@ HRESULT CEffectParticle::Initialize(_uint _iInstanceNum, const wstring& _strText
 
 void CEffectParticle::PriorityTick(_float _fTimeDelta)
 {
+    if (m_IsEnabled == false)
+        return;
+
 }
 
 void CEffectParticle::Tick(_float _fTimeDelta)
 {
-    m_pVIBufferCom->TickInstance(_fTimeDelta);
+    if (m_IsEnabled == false)
+        return;
+
+    if (m_pVIBufferCom->TickInstance(_fTimeDelta))
+        m_IsEnabled = false;
+
 
 }
 
 void CEffectParticle::LateTick(_float _fTimeDelta)
 {
+    if (m_IsEnabled == false)
+        return;
+
     if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_NONBLEND, shared_from_this())))
         return;
 }
@@ -81,11 +92,18 @@ HRESULT CEffectParticle::Render()
     return S_OK;
 }
 
+void CEffectParticle::ParsingData(ofstream& _fp)
+{
+    //Json Parsing  
+
+
+
+
+}
+
 void CEffectParticle::ResetEffect()
 {
-
-    //   m_pVIBufferCom->reset
-
+    m_pVIBufferCom->ResetInstance();
 }
 
 shared_ptr<CEffectParticle> CEffectParticle::Create(_uint _iInstanceNum, const wstring& _strTextureKey, CVIBufferInstancing::INSTANCE_DESC* _desc, char* _strName)

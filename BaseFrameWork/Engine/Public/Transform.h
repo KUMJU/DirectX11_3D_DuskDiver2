@@ -80,6 +80,7 @@ public:
 		
 	void Rotation(_fvector _vAxis, _float _fRadian);
 	void MoveTo(_fvector _vPoint, _float _fLimit, _float _fTimeDelta);
+	void RotaitionRollYawPitch(_float _fRadianX, _float _fRadianY, _float _fRadianZ);
 	void LookAt(_fvector _vPoint);
 	void LookAtForLandObject(_fvector _vPoint);
 

@@ -108,10 +108,40 @@ private:
 	_float3 m_vDirMax = _float3();
 	_float3 m_vStartPosMin = _float3();
 	_float3 m_vStartPosMax = _float3();
-
+	_float2 m_vDuration = _float2();
 
 	_bool m_bGlow = false;
 	_float4 m_vGlowColor = _float4();
+
+
+private:
+	_float3 m_vRotation = _float3();
+
+private:
+	const wstring& m_strBasePath = TEXT("../../Client/Bin/Resources/Base/Effect/");
+
+	//따로 findData해서 파일 이름만 가져오기
+
+
+//-----------이펙트 메쉬 & 이펙트 이미지 미리보기 리스트 뷰 -----------
+private:
+	
+	vector<char*> m_ImagesList;
+	vector<char*> m_MeshesList;
+
+	_int m_iImageNum = 0;
+	_int m_iMeshNum = -1;
+
+private:
+
+	//리스트박스에 세팅 
+	void SettingImageData();
+	void SettingMeshData();
+
+	_bool IsFileOrDir(_wfinddata_t _fd);
+	wstring EraseExt(const wstring& _strFileName);
+
+//-----------------------------------------------------------------------
 
 private:
 	POINT GetMouse();

@@ -29,6 +29,10 @@ public:
 	shared_ptr<CEffect> GetEffect(_uint _iEffectIdx) { return m_Effects[_iEffectIdx]; }
 	vector<shared_ptr<class CEffect>>* GetEffectList() {return &m_Effects;}
 
+
+public:
+	void PlayEffect();
+
 public:
 	void ParsingEffect();
 	void ResetEffect();
@@ -38,6 +42,7 @@ public:
 
 	_float m_vTotalDuration = 0.f;
 	_float m_fAccTime = 0.f;
+
 
 private:
 	vector<shared_ptr<class CEffect>> m_Effects; 

@@ -797,6 +797,9 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxInstance.hlsl">
       <Filter>97. ShaderFiles</Filter>
     </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPointTex.hlsl">
+      <Filter>97. ShaderFiles</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Bin\DataFiles\AnimData\Anim_Enemy01.json">

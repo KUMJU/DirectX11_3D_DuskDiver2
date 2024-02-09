@@ -128,6 +128,7 @@ void CTransform::TurnPlayer(_vector _vAxis, _float _fAngle, _float _fTimeDelta)
 
 void CTransform::Rotation(_fvector _vAxis, _float _fRadian)
 {
+
     _matrix RotationMatrix = XMMatrixRotationAxis(_vAxis, _fRadian);
     _float3 vScaled = GetScaled();
 
@@ -151,6 +152,23 @@ void CTransform::MoveTo(_fvector _vPoint, _float _fLimit, _float _fTimeDelta)
 
     if (fDistance > _fLimit)
         vPosition += XMVector3Normalize(vDir) * m_fSpeedPerSec * _fTimeDelta;
+}
+
+void CTransform::RotaitionRollYawPitch(_float _fRadianX, _float _fRadianY, _float _fRadianZ)
+{
+    _matrix RotationMatrix =  XMMatrixRotationRollPitchYaw(_fRadianX, _fRadianY, _fRadianZ);
+    _float3 vScaled = GetScaled();
+
+    for (size_t i = STATE_RIGHT; i < STATE_POSITION; i++) {
+
+        _float4 vTemp = _float4(0.f, 0.f, 0.f, 0.f);
+
+        *((_float*)&vTemp + i) = 1.f * *((_float*)&vScaled + i);
+
+        _vector vStateDir = XMLoadFloat4(&vTemp);
+        SetState(STATE(i), XMVector4Transform(vStateDir, RotationMatrix));
+    }
+
 }
 
 void CTransform::LookAt(_fvector _vPoint)

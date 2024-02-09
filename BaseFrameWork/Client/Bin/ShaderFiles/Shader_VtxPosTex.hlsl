@@ -15,8 +15,6 @@
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 texture2D g_Texture;
 
-float g_HPRatio;
-
 vector g_RGBColor = vector(1.f, 1.f, 1.f, 1.f);
 
 //버퍼 생성 때 작성했던 것과 동일한 자료형, 동일한 시맨틱 이름을 사용해야함

@@ -526,6 +526,9 @@
       <Filter>99. Defines</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\EffectTestModel.h" />
+    <ClInclude Include="..\Public\EffectTexture.h">
+      <Filter>02. GameObject\09. Effect\01. Effect_Texture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -769,6 +772,9 @@
       <Filter>02. GameObject\09. Effect\Preset</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\EffectTestModel.cpp" />
+    <ClCompile Include="..\Private\EffectTexture.cpp">
+      <Filter>02. GameObject\09. Effect\01. Effect_Texture</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -800,6 +806,9 @@
       <Filter>97. ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxInstance.hlsl">
+      <Filter>97. ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPointTex.hlsl">
       <Filter>97. ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>
