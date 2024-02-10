@@ -208,8 +208,8 @@ HRESULT CArcadeMap::ReadyLayerMap(const wstring& _strLayerTag)
 
 	/**파티클 테스트**/
 
-	shared_ptr<CGameObject> pParticle = CEffectParticle::Create();
-	CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Event"), pParticle);
+	//shared_ptr<CGameObject> pParticle = CEffectParticle::Create();
+	//CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Event"), pParticle);
 
 
 	return S_OK;

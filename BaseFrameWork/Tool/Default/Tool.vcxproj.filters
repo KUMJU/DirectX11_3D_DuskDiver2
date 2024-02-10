@@ -529,6 +529,9 @@
     <ClInclude Include="..\Public\EffectTexture.h">
       <Filter>02. GameObject\09. Effect\01. Effect_Texture</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\EffectMesh.h">
+      <Filter>02. GameObject\09. Effect\02. Effect_Mesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -775,6 +778,9 @@
     <ClCompile Include="..\Private\EffectTexture.cpp">
       <Filter>02. GameObject\09. Effect\01. Effect_Texture</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\EffectMesh.cpp">
+      <Filter>02. GameObject\09. Effect\02. Effect_Mesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -802,13 +808,7 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnim.hlsl">
       <Filter>97. ShaderFiles</Filter>
     </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPointUI.hlsl">
-      <Filter>97. ShaderFiles</Filter>
-    </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxInstance.hlsl">
-      <Filter>97. ShaderFiles</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPointTex.hlsl">
       <Filter>97. ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

@@ -169,6 +169,7 @@
     <ClInclude Include="..\Public\Dummy.h" />
     <ClInclude Include="..\Public\Edit.h" />
     <ClInclude Include="..\Public\Effect.h" />
+    <ClInclude Include="..\Public\EffectMesh.h" />
     <ClInclude Include="..\Public\EffectParticle.h" />
     <ClInclude Include="..\Public\EffectPreset.h" />
     <ClInclude Include="..\Public\EffectTestModel.h" />
@@ -260,6 +261,7 @@
     <ClCompile Include="..\Private\Dummy.cpp" />
     <ClCompile Include="..\Private\Edit.cpp" />
     <ClCompile Include="..\Private\Effect.cpp" />
+    <ClCompile Include="..\Private\EffectMesh.cpp" />
     <ClCompile Include="..\Private\EffectParticle.cpp" />
     <ClCompile Include="..\Private\EffectPreset.cpp" />
     <ClCompile Include="..\Private\EffectTestModel.cpp" />
@@ -346,8 +348,6 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxInstance.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl" />
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPointTex.hlsl" />
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPointUI.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS_MAIN</EntryPointName>
     </FxCompile>

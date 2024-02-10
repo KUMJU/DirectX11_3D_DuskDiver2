@@ -23,9 +23,7 @@ HRESULT CEffectParticle::Initialize(CTransform::TRANSFORM_DESC* _pDesc)
     m_pShader = CGameInstance::GetInstance()->GetShader(TEXT("Shader_VtxInstance"));
 
     CVIBufferPoint::INSTANCE_DESC			InstanceDesc{};
-    InstanceDesc.vPivot = _float3(0.f, 9.f, 0.f);
     InstanceDesc.vCenter = _float3(0.0f, 50.f, 0.f);
-    InstanceDesc.vRange = _float3(300.0f, 5.0f, 300.0f);
     InstanceDesc.vSize = _float2(0.2f, 0.7f);
     InstanceDesc.vSpeed = _float2(1.f, 3.f);
     InstanceDesc.vLifeTime = _float2(20.f, 50.f);
@@ -44,7 +42,7 @@ void CEffectParticle::PriorityTick(_float _fTimeDelta)
 
 void CEffectParticle::Tick(_float _fTimeDelta)
 {
-    m_pVIBufferCom->TickDrop(_fTimeDelta);
+    m_pVIBufferCom->TickInstance(_fTimeDelta);
 
 }
 

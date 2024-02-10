@@ -5,6 +5,7 @@
 BEGIN(Engine)
 
 class CVIBuffer_UI;
+class CVIRect;
 
 END
 
@@ -20,6 +21,7 @@ public:
 		_float3 vRotation;
 		_float3 vCenter;
 		_float4 vColor;
+		_float2 vDuration;
 	};
 
 public:
@@ -33,10 +35,25 @@ public:
 	virtual void LateTick(_float _fTimeDelta);
 	virtual HRESULT Render();
 
+public:
+	virtual void ParsingData(Json::Value& _root) override;
+
+
 private:
 
 	_float4 m_vColor = { 1.f, 1.f, 1.f, 1.f };
 	shared_ptr<CVIBuffer_UI> m_pVIBuffer = nullptr;
+
+	wstring m_TextureKey = TEXT("");
+
+
+	TEXEFFECT_DESC m_TextureDesc = {};
+
+	_float m_fDurationStart = 0.f;
+	_float m_fDurationEnd = 0.f;
+
+
+	_float m_fAccTime = 0.f;
 
 public:
 	static shared_ptr<CEffectTexture> Create(const wstring& _strTextureKey, TEXEFFECT_DESC* _TextureDesc, char* _strName);

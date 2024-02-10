@@ -13,6 +13,7 @@
 
 #include "EffectParticle.h"
 #include "EffectTexture.h"
+#include "EffectMesh.h"
 
 #include <fstream>
 
@@ -21,6 +22,10 @@
 #include "EffectPreset.h"
 
 #include <io.h>
+
+
+#include "Json/json.h"
+#include "Json/json-forwards.h"
 
 IMPLEMENT_SINGLETON(CImguiMgr)
 
@@ -64,7 +69,7 @@ HRESULT CImguiMgr::Initialize()
 
     //메쉬& 텍스쳐 리스트 세팅
     SettingImageData();
-    
+    SettingMeshData();
 
 
     return S_OK;
@@ -97,12 +102,6 @@ HRESULT CImguiMgr::Render(void)
 
     EffectSetting();
     EffectListView();
-
-   // ObjectLoader();
-
-    //if(m_IsZmoUsing)
-       // ImgZmoUpdate();
-
 
     //Reset
     if (-1 == m_iCurrentObjIdx) {
@@ -197,6 +196,13 @@ void CImguiMgr::EffectListView()
 
     if (ImGui::Button("Delete")) {
        
+        if (m_iEffectSelectIdx == -1)
+            return;
+
+        m_pEffectPreset->DeleteEffect(m_iEffectSelectIdx);
+        m_iEffectSelectIdx = -1;
+
+
     } ImGui::SameLine();
 
     if (ImGui::Button("Clear")) {
@@ -205,7 +211,13 @@ void CImguiMgr::EffectListView()
 
     if (ImGui::Button("Preset Play")) {
 
-        m_pEffectPreset->PlayEffect();
+        m_pEffectPreset->PlayEffect();   
+
+    }
+
+    if (ImGui::Button("Preset Stop")) {
+
+        m_pEffectPreset->StopEffect();
 
     }
 
@@ -217,11 +229,11 @@ void CImguiMgr::EffectListView()
     ImGui::InputText(" ", m_CurrentPresetName, sizeof(_char) * 256);
     ImGui::SameLine();
 
-    if (ImGui::Button("Create Preset")) {
+    if (ImGui::Button("Save Preset")) {
         CreatePreset();
     }
 
-    //프리셋 리스트박스
+    //프리셋 Json 리스트 
 
     ImGui::ListBox("Preset List", &m_iPresetSelectIdx, m_PresetNameList.data(), (_int)m_PresetNameList.size(), 5);
 
@@ -239,12 +251,8 @@ void CImguiMgr::EffectListView()
                 m_EffectNameList.push_back(iter->GetEffectName());
 
             }
-
         }
-
-
     }
-
 
     ImGui::End();
 
@@ -305,7 +313,7 @@ void CImguiMgr::TextureEffectSetting()
     ImGui::InputFloat3("Center", &m_vCenter.x);
     ImGui::InputFloat2("Size", &m_vSize.x); // x : MinSpeed y: MaxSpeed
     ImGui::InputFloat4("Color", &m_vColor.x);
-    ImGui::InputFloat2("Rotation", &m_vRotation.x);
+    ImGui::InputFloat3("Rotation", &m_vRotation.x);
     ImGui::InputFloat2("Duration", &m_vDuration.x);
 
 }
@@ -313,6 +321,26 @@ void CImguiMgr::TextureEffectSetting()
 void CImguiMgr::MeshEffectSetting()
 {
     ImGui::Text("This is Mesh Effect Setting");
+
+
+    if (ImGui::BeginCombo("combo 1", m_MeshesList[m_iMeshNum]))
+    {
+        for (int n = 0; n < m_MeshesList.size(); n++)
+        {
+            const bool is_selected = (m_iMeshNum == n);
+            if (ImGui::Selectable(m_MeshesList[n], is_selected))
+                m_iMeshNum = n;
+
+            if (is_selected)
+                ImGui::SetItemDefaultFocus();
+        }
+        ImGui::EndCombo();
+    }
+
+
+    ImGui::InputFloat3("Scale", &m_vScale.x);
+    ImGui::InputFloat3("Center", &m_vCenter.x);
+
 
 }
 
@@ -348,6 +376,33 @@ void CImguiMgr::SettingImageData()
 
 void CImguiMgr::SettingMeshData()
 {
+    _wfinddata_t fd;
+    intptr_t lHandle;
+    const wstring& BasePath = TEXT("../../Client/Bin/Resources/Base/Models/NonAnim/Effect/");
+    const wstring& strFullPath = BasePath + TEXT("*.*");
+
+    if (-1 == (lHandle = _wfindfirst(strFullPath.c_str(), &fd)))
+        return;
+
+    while (0 == _wfindnext(lHandle, &fd))
+    {
+        const wstring& strName = fd.name;
+
+        if (IsFileOrDir(fd) && fd.size != 0 && fd.name[0] != '.') {
+            wstring strName = fd.name;
+            wstring strExt = EraseExt(strName);
+
+            char* strMultiByte = new char[256];
+            WideCharToMultiByte(CP_ACP, 0, strExt.c_str(), -1, strMultiByte, 256, NULL, NULL);
+            m_MeshesList.push_back(const_cast<char*>(strMultiByte));
+
+        }
+    }
+
+    _findclose(lHandle);
+
+
+
 }
 
 _bool CImguiMgr::IsFileOrDir(_wfinddata_t _fd)
@@ -368,6 +423,9 @@ wstring CImguiMgr::EraseExt(const wstring& _strFileName)
 
 void CImguiMgr::CreateEffect()
 {   
+
+    m_pEffectPreset->SetLoop(m_IsLoop);
+    m_pEffectPreset->SetDuration(m_fTotalDuration.y);
 
     if (0 == m_iEffectType) {
         CVIBufferInstancing::INSTANCE_DESC InstanceDesc = {};
@@ -419,24 +477,56 @@ void CImguiMgr::CreateEffect()
     }
     else if (2 == m_iEffectType) {
 
+        CEffectMesh::MESH_DESC desc = {};
+
+        desc.vCenter = m_vCenter;
+        desc.vScale = m_vScale;
+
+        char* EffectName = new char[256];
+        memcpy_s(EffectName, sizeof(char) * 256, m_CurrentName, sizeof(char) * 256);
+
+        _tchar szFullPath[MAX_PATH] = TEXT("");
+        MultiByteToWideChar(CP_ACP, 0, m_ImagesList[m_iImageNum], (_int)strlen(m_ImagesList[m_iImageNum]), szFullPath, MAX_PATH);
+
+        _tchar szMeshName[MAX_PATH] = TEXT("");
+        MultiByteToWideChar(CP_ACP, 0, m_MeshesList[m_iMeshNum], (_int)strlen(m_MeshesList[m_iMeshNum]), szMeshName, MAX_PATH);
+        shared_ptr<CEffectMesh> pParticle = CEffectMesh::Create(szFullPath, szMeshName, &desc, EffectName);
+
+        m_EffectNameList.push_back(EffectName);
+        m_pEffectPreset->AddEffect(pParticle);
 
 
     }
 
+    m_pEffectPreset->PlayEffect();
   
 
 }
 
 void CImguiMgr::CreatePreset()
 {
+    const wstring& strFullPath = m_strSavePath;
+    const wstring& strExt = TEXT(".json");
 
-    shared_ptr<CEffectPreset> pPreset = CEffectPreset::Clone(m_pEffectPreset);
-    m_Presets.push_back(pPreset);
+    _tchar szFullPath[MAX_PATH] = TEXT("");
+    MultiByteToWideChar(CP_ACP, 0, m_CurrentPresetName, (_int)strlen(m_CurrentPresetName), szFullPath, MAX_PATH);
 
-    char* PresetName = new char[256];
-    memcpy_s(PresetName, sizeof(char) * 256, m_CurrentPresetName, sizeof(char) * 256);
+    const wstring& strSavePath = strFullPath + szFullPath + strExt;
+    const wstring& strName = szFullPath + strExt;
 
-    m_PresetNameList.push_back(PresetName);
+    ofstream out(strSavePath);
+
+    Json::Value Root;    
+
+    m_pEffectPreset->ParsingEffect(Root);
+
+    Json::StreamWriterBuilder builder;
+    const std::unique_ptr<Json::StreamWriter> writer(builder.newStreamWriter());
+    writer->write(Root, &out);
+
+    char* strMultiByte = new char[256];
+    WideCharToMultiByte(CP_ACP, 0, strName.c_str(), -1, strMultiByte, 256, NULL, NULL);
+    m_PresetNameList.push_back(const_cast<char*>(strMultiByte));
 
 
 }

@@ -3,6 +3,10 @@
 #include "GameObject.h"
 #include "Tool_Defines.h"
 
+
+#include "Json/json.h"
+#include "Json/json-forwards.h"
+
 BEGIN(Tool)
  
 //Tool¿ë
@@ -31,15 +35,21 @@ public:
 
 
 public:
-	void PlayEffect();
+
+	void SetLoop(_bool _bLoop) { m_bLoop = _bLoop; }
+	void SetDuration(_float _vDuration) { m_vTotalDuration = _vDuration;}
 
 public:
-	void ParsingEffect();
+	void PlayEffect();
+	void StopEffect();
+
+public:
+	void ParsingEffect(Json::Value& _root);
 	void ResetEffect();
 
 public:
 	_bool m_bLoop = false;
-
+	 
 	_float m_vTotalDuration = 0.f;
 	_float m_fAccTime = 0.f;
 

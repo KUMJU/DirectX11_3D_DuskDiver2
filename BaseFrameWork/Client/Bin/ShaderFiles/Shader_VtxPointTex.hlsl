@@ -24,10 +24,12 @@ VS_OUT VS_MAIN(VS_IN In)
 {
     VS_OUT Out = (VS_OUT) 0;
    
+    vector vPosition = vector(In.vPosition, 1.f);
+  //  Out.vPosition = mul(vPosition, g_WorldMatrix);
     Out.vPosition = float4(In.vPosition, 1.f);
-    //float2로 받지만 실질적으론 SizeX, sizeY
-    Out.vPSize = float2(length(In.TransformMatrix._11_12_13) * In.vPSize.x,
-		length(In.TransformMatrix._21_22_23) * In.vPSize.y);
+    
+    Out.vPSize = float2(length(g_WorldMatrix._11_12_13) * In.vPSize.x,
+		length(g_WorldMatrix._21_22_23) * In.vPSize.y);
     
     
     return Out;
@@ -51,27 +53,30 @@ struct GS_OUT
 [maxvertexcount(6)]
 void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> DataStream)
 {
+    
     GS_OUT Out[4];
     
-    matrix matWVP = mul(g_ViewMatrix, g_ProjMatrix);
-    matWVP = mul(g_WorldMatrix, matVP);
-    
-    
-    Out[0].vPosition = In[0].vPosition + float4(-0.5f,-0.5f, 0.f, 0.f);
-    Out[0].vPosition = mul(Out[0].vPosition, matWVP);
+    matrix matVP = mul(g_WorldMatrix, g_ViewMatrix);
+    matVP = mul(matVP, g_ProjMatrix);
+
+    Out[0].vPosition = In[0].vPosition + float4(-0.5f , 0.5f , 0.f, 0.f);
+    Out[0].vPosition = mul(Out[0].vPosition, matVP);
     Out[0].vTexcoord = float2(0.f, 0.f);
 
-    Out[1].vPosition = In[0].vPosition + float4(0.5f,-0.5f, 0.f, 0.f);
-    Out[1].vPosition = mul(Out[1].vPosition, matWVP);
-    Out[1].vTexcoord = float2(0.f, 1.f);
 
-    Out[2].vPosition = In[0].vPosition + float4( 0.5f, 0.5f, 0.f, 0.f);
-    Out[2].vPosition = mul(Out[2].vPosition, matWVP);
+    Out[1].vPosition = In[0].vPosition + float4(0.5f , 0.5f , 0.f, 0.f);
+    Out[1].vPosition = mul(Out[1].vPosition, matVP);
+    Out[1].vTexcoord = float2(1.f, 0.f);
+
+    Out[2].vPosition = In[0].vPosition + float4(0.5f , -0.5f , 0.f, 0.f);
+    Out[2].vPosition = mul(Out[2].vPosition, matVP);
     Out[2].vTexcoord = float2(1.f, 1.f);
-        
-    Out[3].vPosition = In[0].vPosition + float4(-0.5f, 0.5f, 0.f, 0.f);
-    Out[3].vPosition = mul(Out[3].vPosition, matWVP);
+
+    Out[3].vPosition = In[0].vPosition + float4(-0.5f , -0.5f , 0.f, 0.f);
+    Out[3].vPosition = mul(Out[3].vPosition, matVP);
     Out[3].vTexcoord = float2(0.f, 1.f);
+
+
 
     DataStream.Append(Out[0]);
     DataStream.Append(Out[1]);
@@ -99,12 +104,14 @@ struct PS_OUT
 PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
+    
+    Out.vColor = g_Texture.Sample(g_LinearSampler, In.vTexcoord) * g_RGBColor;
 
-    Out.vColor = g_Texture.Sample(g_LinearSampler, In.vTexcoord);    
-    //색 변경
-    Out.vColor = Out.vColor * g_RGBColor;
- 
-   return Out;
+    if (0 == Out.vColor.a)
+        discard;
+    
+    
+    return Out;
 
 }
 

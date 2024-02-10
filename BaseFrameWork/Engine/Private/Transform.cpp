@@ -167,6 +167,7 @@ void CTransform::RotaitionRollYawPitch(_float _fRadianX, _float _fRadianY, _floa
 
         _vector vStateDir = XMLoadFloat4(&vTemp);
         SetState(STATE(i), XMVector4Transform(vStateDir, RotationMatrix));
+
     }
 
 }

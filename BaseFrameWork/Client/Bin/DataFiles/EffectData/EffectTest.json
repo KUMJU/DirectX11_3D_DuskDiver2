@@ -1,0 +1,87 @@
+{
+	"FIre" : 
+	{
+		"Center" : 
+		{
+			"x" : 0.0,
+			"y" : 0.0,
+			"z" : 0.0
+		},
+		"Color" : 
+		{
+			"x" : 1.0,
+			"y" : 1.0,
+			"z" : 1.0
+		},
+		"DirectMax" : 
+		{
+			"x" : 1.0,
+			"y" : 1.0,
+			"z" : 1.0
+		},
+		"DirectMin" : 
+		{
+			"x" : -1.0,
+			"y" : -1.0,
+			"z" : -1.0
+		},
+		"EffectType" : 0,
+		"InstanceNum" : 100,
+		"LifeTime" : 
+		{
+			"x" : 0.0,
+			"y" : 20.0
+		},
+		"Size" : 
+		{
+			"x" : 0.30000001192092896,
+			"y" : 0.30000001192092896
+		},
+		"Speed" : 
+		{
+			"x" : 4.0,
+			"y" : 4.0
+		},
+		"StartPointMax" : 
+		{
+			"x" : 0.0,
+			"y" : 2.0,
+			"z" : 0.0
+		},
+		"StartPointMin" : 
+		{
+			"x" : 0.0,
+			"y" : 2.0,
+			"z" : 0.0
+		},
+		"TextureKey" : "T_Fire_Particle_2x1"
+	},
+	"SnowFlowl" : 
+	{
+		"Center" : 
+		{
+			"x" : 0.0,
+			"y" : 0.0,
+			"z" : 0.0
+		},
+		"Color" : 
+		{
+			"x" : 1.0,
+			"y" : 1.0,
+			"z" : 1.0
+		},
+		"EffectType" : 1,
+		"Rotation" : 
+		{
+			"x" : 90.0,
+			"y" : 0.0,
+			"z" : 0.0
+		},
+		"Scale" : 
+		{
+			"x" : 20.0,
+			"y" : 20.0
+		},
+		"TextureKey" : "Snow"
+	}
+}

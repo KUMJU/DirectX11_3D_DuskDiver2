@@ -90,47 +90,6 @@ PS_OUT PS_MAIN(PS_IN In)
 
 }
 
-PS_OUT PS_MAIN_POINT(PS_IN In)
-{
-    PS_OUT Out = (PS_OUT) 0;
-
-    Out.vColor = g_Texture.Sample(g_LinearSampler, In.vTexcoord);
-    
-    if (Out.vColor.a < 0.4f)
-        discard;
-  
-    Out.vColor.r = 0.8f;
-    Out.vColor.g = 0.2f;
-    Out.vColor.b = 0.5f;
-    
-    //y포지션이 아래에 있을수록 alpha값을 낮게하는 예시 코드
-    //max(a,b)면 a가 b보다 작을 경우 b로 값을 대신해준다
-  
-    
-    return Out;
-
-}
-
-PS_OUT PS_HPBar(PS_IN In)
-{
-    PS_OUT Out = (PS_OUT) 0;
-
-    Out.vColor = g_Texture.Sample(g_LinearSampler, In.vTexcoord);
-    
-    //원래 색
-    if (In.vTexcoord.r < g_HPRatio)
-    {
-        Out.vColor.rgb = float3(0.f, 1.f, 0.8f);
-    }
-    else
-    {
-        Out.vColor.rgb = float3(0.25f, 0.25f, 0.25f);
-    }
-    
-    return Out;
-
-}
-
 technique11 DefaultTechnique
 {
     //pass를 여러개로 나눠서 한 셰이더 파일 안에 여러 진입점, 다른 효과를 줄 수도 있음
@@ -144,24 +103,5 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN();
     }
 
-    pass PointPass
-    {
-        SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN_POINT();
-    }
-
-    pass HPBar //2 
-    {
-        SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_HPBar();
-    }
 
 }

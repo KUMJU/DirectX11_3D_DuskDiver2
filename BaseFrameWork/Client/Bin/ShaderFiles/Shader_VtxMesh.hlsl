@@ -7,6 +7,9 @@ vector g_vLightAmbient = vector(1.f, 1.f, 1.f, 1.f);
 vector g_vLightSpecular = vector(1.f, 1.f, 1.f, 1.f);
 
 texture2D g_DiffuseTexture;
+texture2D g_MaskTexture;
+
+
 vector g_vMtrlAmbient = vector(0.4f, 0.4f, 0.4f, 1.f);
 vector g_vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
 
@@ -116,9 +119,26 @@ PS_OUT PS_COLOR(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_EFFECT_MAIN(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    vector vMask = g_MaskTexture.Sample(g_LinearSampler, In.vTexcoord);
+    //g_MaskTexture
+    
+    Out.vColor = vMask;
+        
+    if (0 == Out.vColor.w)
+        discard;
+    
+    return Out;
+
+}
+
+
 technique11 DefaultTechnique
 {
-    pass Default
+    pass Default // 0
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -129,7 +149,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN();
     }
 
-    pass Color
+    pass Color // 1 
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -138,6 +158,18 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_COLOR();
+    }
+
+
+    pass Effect // 2
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_EFFECT_MAIN();
     }
 
 }

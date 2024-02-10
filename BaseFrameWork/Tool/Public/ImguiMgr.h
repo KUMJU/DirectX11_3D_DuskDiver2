@@ -117,8 +117,15 @@ private:
 private:
 	_float3 m_vRotation = _float3();
 
+
+private:
+	_float3 m_vScale = _float3();
+
+
+
 private:
 	const wstring& m_strBasePath = TEXT("../../Client/Bin/Resources/Base/Effect/");
+	const wstring& m_strSavePath = TEXT("../../Client/Bin/DataFiles/EffectData/");
 
 	//따로 findData해서 파일 이름만 가져오기
 
@@ -130,7 +137,7 @@ private:
 	vector<char*> m_MeshesList;
 
 	_int m_iImageNum = 0;
-	_int m_iMeshNum = -1;
+	_int m_iMeshNum = 0;
 
 private:
 

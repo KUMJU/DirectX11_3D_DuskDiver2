@@ -3,6 +3,9 @@
 #include "GameObject.h"
 #include "Tool_Defines.h"
 
+#include "Json/json.h"
+#include "Json/json-forwards.h"
+
 BEGIN(Engine)
 class CShader;
 class CTexture;
@@ -42,7 +45,7 @@ public:
 
 public:
 	//각 이펙트마다 오버라이딩에서 각자 필요한 정보를 저장함
-	virtual void ParsingData(ofstream& _fp) {};
+	virtual void ParsingData(Json::Value& _root) {};
 	//제일 초기의 상태로 돌려준다
 	virtual void ResetEffect() {};
 
