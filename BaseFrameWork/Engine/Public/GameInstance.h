@@ -43,6 +43,11 @@ public: /* For.Input_Device */
 	_bool Key_Pressing(_ubyte eKeyID);
 
 
+#ifdef _DEBUG
+public:
+	HRESULT AddDebugComponent(shared_ptr<class CComponent> pComponent);
+#endif // _DEBUG
+
 /*LevelManager*/
 public:
 	HRESULT OpenLevel(_uint _iLevelIndex, shared_ptr<class CLevel> _pLevel);
@@ -72,6 +77,8 @@ public:
 	HRESULT AddRenderGroup(CRenderer::RENDERGROUP _eRenderGroup, shared_ptr<class CGameObject> _pGameObject);
 	HRESULT AddUIRenderGroup(shared_ptr<class CGameObject> _pGameObject, _int _iPriorityIdx);
 
+	void SetDebugOnOff();
+
 /*Picking*/
 public:
 	_float4 TerrainPicking(POINT _ptMouse, shared_ptr<class CVITerrain> _pTerrainCom, shared_ptr<class CTransform> _pTransCom);
@@ -81,6 +88,7 @@ public:
 public:
 	HRESULT AddLight(const LIGHT_DESC& _LightDesc);
 	const LIGHT_DESC* GetLightDesc(_uint iIndex) const;
+	HRESULT RenderLight(shared_ptr<class CShader> _pShader, shared_ptr<class CVIRect> _pVIBuffer);
 
 /*Resource Mgr*/
 public:
@@ -109,6 +117,18 @@ public:
 	HRESULT AddFont(const wstring& _strFontTag, const wstring& _strFontFilePath);
 	HRESULT RenderFont(const wstring& _strFontTag, const wstring& strText, const _float2& vPosition, _fvector vColor = Colors::White, _float fRotation = 0.f, const _float2& vOrigin = _float2(0.f, 0.f), _float fScale = 1.f);
 
+/*Target Mgr*/
+public:
+	HRESULT AddRenderTarget(const wstring& _strTargetTag, _uint _iSizeX, _uint _iSizeY, DXGI_FORMAT _ePixelFormat, const _float4& _vClearColor);
+	HRESULT AddMRT(const wstring& _strMRTTag, const wstring& _strTargetTag);
+	HRESULT BeginMRT(const wstring& _strMRTTag);
+	HRESULT EndMRT();
+	HRESULT BindSRV(const wstring& _strTargetTag, shared_ptr<class CShader> _pShader, const _char* _pConstantName);
+
+#ifdef _DEBUG
+	HRESULT ReadyDebug(const wstring& _strTargetTag, _float _fX, _float _fY, _float _fSizeX, _float _fSizeY);
+	HRESULT RenderMRT(const wstring& _strMRTTag, shared_ptr<class CShader> _pShader, shared_ptr<class CVIRect> _pVIBuffer);
+#endif
 
 private:
 	shared_ptr<class CGraphicDev> m_pGraphicDev = nullptr;
@@ -124,8 +144,9 @@ private:
 	shared_ptr<CCollisionMgr> m_pCollisionMgr = nullptr;
 	shared_ptr<CSoundMgr> m_pSoundMgr = nullptr;
 	shared_ptr<class CFontMgr> m_pFontMgr = nullptr;
+	shared_ptr<class CTargetMgr> m_pTargetMgr = nullptr;
 
-private:
+
 
 public:
 	wrl::ComPtr<ID3D11Device> GetDeviceInfo();

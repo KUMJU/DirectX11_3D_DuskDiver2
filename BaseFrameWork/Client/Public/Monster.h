@@ -160,6 +160,8 @@ protected:
 
 protected:
 	_int m_iHP = 0;
+	_int m_iMaxHP = 0;
+
 	_uint m_iAtkPattern = 0;
 
 	_bool m_IsSturnState = false;

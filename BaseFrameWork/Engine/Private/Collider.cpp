@@ -2,6 +2,7 @@
 
 #include "BoundingSphere.h"
 #include "BoundingAABB.h"
+#include "BoundingOBB.h"
 
 #include "GameInstance.h"
 
@@ -45,6 +46,9 @@ HRESULT CCollider::Initialize(wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID
 
 		break;
 	case Engine::CCollider::TYPE_OBB:
+
+		m_pBounding = CBoundingOBB::Create(_pDevice, _pContext, _desc);
+
 		break;
 	case Engine::CCollider::TYPE_END:
 		break;
@@ -62,6 +66,7 @@ void CCollider::Tick(_fmatrix _WorldMatrix)
 
 HRESULT CCollider::Render()
 {
+	m_pContext->GSSetShader(nullptr, nullptr, 0);
 
 	m_pEffect->SetWorld(XMMatrixIdentity());
 	m_pEffect->SetView(CGameInstance::GetInstance()->GetTransformMatrix(CPipeLine::D3DTS_VIEW));
@@ -69,7 +74,6 @@ HRESULT CCollider::Render()
 
 	m_pContext->IASetInputLayout(m_pInputLayout.Get());
 	m_pEffect->Apply(m_pContext.Get());
-	m_pContext->GSSetShader(nullptr, nullptr, 0);
 
 	m_pBatch->Begin();
 

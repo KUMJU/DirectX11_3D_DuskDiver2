@@ -161,6 +161,7 @@
     <ClInclude Include="..\Public\Bone.h" />
     <ClInclude Include="..\Public\Bounding.h" />
     <ClInclude Include="..\Public\BoundingAABB.h" />
+    <ClInclude Include="..\Public\BoundingOBB.h" />
     <ClInclude Include="..\Public\BoundingSphere.h" />
     <ClInclude Include="..\Public\Camera.h" />
     <ClInclude Include="..\Public\Cell.h" />
@@ -194,9 +195,11 @@
     <ClInclude Include="..\Public\PickingMgr.h" />
     <ClInclude Include="..\Public\PipeLine.h" />
     <ClInclude Include="..\Public\Renderer.h" />
+    <ClInclude Include="..\Public\RenderTarget.h" />
     <ClInclude Include="..\Public\ResourceMgr.h" />
     <ClInclude Include="..\Public\Shader.h" />
     <ClInclude Include="..\Public\SoundMgr.h" />
+    <ClInclude Include="..\Public\TargetMgr.h" />
     <ClInclude Include="..\Public\Texture.h" />
     <ClInclude Include="..\Public\ThreadPool.h" />
     <ClInclude Include="..\Public\Timer.h" />
@@ -215,6 +218,7 @@
     <ClCompile Include="..\Private\Bone.cpp" />
     <ClCompile Include="..\Private\Bounding.cpp" />
     <ClCompile Include="..\Private\BoundingAABB.cpp" />
+    <ClCompile Include="..\Private\BoundingOBB.cpp" />
     <ClCompile Include="..\Private\BoundingSphere.cpp" />
     <ClCompile Include="..\Private\Camera.cpp" />
     <ClCompile Include="..\Private\Cell.cpp" />
@@ -243,9 +247,11 @@
     <ClCompile Include="..\Private\PickingMgr.cpp" />
     <ClCompile Include="..\Private\PipeLine.cpp" />
     <ClCompile Include="..\Private\Renderer.cpp" />
+    <ClCompile Include="..\Private\RenderTarget.cpp" />
     <ClCompile Include="..\Private\ResourceMgr.cpp" />
     <ClCompile Include="..\Private\Shader.cpp" />
     <ClCompile Include="..\Private\SoundMgr.cpp" />
+    <ClCompile Include="..\Private\TargetMgr.cpp" />
     <ClCompile Include="..\Private\Texture.cpp" />
     <ClCompile Include="..\Private\ThreadPool.cpp" />
     <ClCompile Include="..\Private\Timer.cpp" />
@@ -262,6 +268,7 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Cell.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Deferred.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Bin\ShaderFiles\Shader_Defines.hlsli" />

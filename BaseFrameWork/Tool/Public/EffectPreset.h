@@ -46,6 +46,7 @@ public:
 public:
 	void ParsingEffect(Json::Value& _root);
 	void ResetEffect();
+	void DeleteAll();
 
 public:
 	_bool m_bLoop = false;

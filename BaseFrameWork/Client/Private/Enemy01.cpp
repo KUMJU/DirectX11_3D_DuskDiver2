@@ -221,6 +221,8 @@ void CEnemy01::LateTick(_float _fTimeDelta)
     if (FAILED(m_pGameInstance->AddRenderGroup(CRenderer::RENDER_NONBLEND, shared_from_this())))
         return;
 
+    CGameInstance::GetInstance()->AddDebugComponent(m_pCollider);
+
 }
 
 HRESULT CEnemy01::Render()
@@ -228,8 +230,7 @@ HRESULT CEnemy01::Render()
     if (!m_IsEnabled)
         return S_OK;
 
-    m_pCollider->Render();
-    m_pSkillSet->Render();
+   // m_pSkillSet->Render();
 
     if (FAILED(BindShaderResources()))
         return E_FAIL;

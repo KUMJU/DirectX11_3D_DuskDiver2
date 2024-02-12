@@ -168,10 +168,10 @@ void CSkillSet::Tick(_float _fDelatTime)
 
 void CSkillSet::Render()
 {
-	if (ESKILLSTATE::SKILL_END != m_eCurrentSkill) {
-
-		m_Skills[m_eCurrentSkill]->Render();
-	}
+//	if (ESKILLSTATE::SKILL_END != m_eCurrentSkill) {
+//
+//		m_Skills[m_eCurrentSkill]->Render();
+//	}
 }
 
 _bool CSkillSet::SwitchingSkill(ESKILLSTATE _eChangeSkill)

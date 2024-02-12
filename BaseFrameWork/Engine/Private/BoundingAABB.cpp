@@ -55,6 +55,9 @@ _bool CBoundingAABB::Intersect(CCollider::TYPE eType, shared_ptr<CBounding> _pBo
         break;
     }
     case Engine::CCollider::TYPE_OBB:
+
+        shared_ptr<BoundingOrientedBox> TargetOBB = _pBounding->GetBoundingOBB();
+        m_isColl = m_Box->Intersects(*(TargetOBB.get()));
         break;
     }
 

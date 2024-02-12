@@ -23,7 +23,7 @@ public:
 public:
 	virtual shared_ptr<BoundingSphere> GetBoundingSphere() { return nullptr; };
 	virtual shared_ptr<BoundingBox> GetBoundingAABB() { return nullptr; };
-	virtual shared_ptr<BoundingBox> GetBoundingOBB() { return nullptr; };
+	virtual shared_ptr<BoundingOrientedBox> GetBoundingOBB() { return nullptr; };
 
 protected:
 

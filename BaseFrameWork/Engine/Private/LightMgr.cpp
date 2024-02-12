@@ -32,6 +32,14 @@ HRESULT CLightMgr::AddLight(const LIGHT_DESC& _LightDesc)
     return S_OK;
 }
 
+HRESULT CLightMgr::Render(shared_ptr<class CShader> _pShader, shared_ptr<class CVIRect> _pVIBuffer)
+{
+    for (auto& pLight : m_Lights)
+        pLight->Render(_pShader, _pVIBuffer);
+
+    return S_OK;
+}
+
 shared_ptr<CLightMgr> CLightMgr::Create(wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID3D11DeviceContext> _pContext)
 {
     shared_ptr<CLightMgr> pInstance = make_shared<CLightMgr>(_pDevice, _pContext);

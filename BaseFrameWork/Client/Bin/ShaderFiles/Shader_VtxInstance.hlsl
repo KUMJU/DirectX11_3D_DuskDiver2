@@ -119,12 +119,12 @@ PS_OUT PS_MAIN(PS_IN In)
     if (In.vColor.a == 0.f)
         discard;
 
-    Out.vColor = g_Texture.Sample(g_LinearSampler, In.vTexcoord) * In.vColor;
+    Out.vColor = g_Texture.Sample(g_LinearSampler, In.vTexcoord);
 
     if (Out.vColor.a < 0.3f)
         discard;
 
-   // Out.vColor = In.vColor;
+   //Out.vColor = In.vColor;
 
     return Out;
 

@@ -25,7 +25,6 @@ void CResourceMgr::LogoResourceLoad()
     m_iCurrentLevel = 2;
     const wstring& strBasePath = TEXT("../../Client/Bin/Resources/Logo/");
 
-    LoadShader();
     LoadTexture(strBasePath);
     LoadMesh(strBasePath);
  
@@ -104,22 +103,6 @@ shared_ptr<class CModel> CResourceMgr::GetModel(const wstring& _strModelKey)
     return nullptr;
 }
 
-shared_ptr<class CComponent> CResourceMgr::GetBuffer(const wstring& _strModelKey)
-{
-    auto iter = m_Buffers.find(_strModelKey);
-
-    if (m_Buffers.end() != iter) {
-        return (*iter).second;
-    }
-
-    return nullptr;
-}
-
-void CResourceMgr::AddBuffer(const wstring& _strKeyName, shared_ptr<class CComponent> _pBuf)
-{
-    m_Buffers.emplace(_strKeyName, _pBuf);
-}
-
 HRESULT CResourceMgr::LoadShader()
 {
     const wstring& strBasePath = TEXT("../../Client/Bin/ShaderFiles/");
@@ -180,6 +163,9 @@ void CResourceMgr::ReadShaderFile(const wstring& _strBaseFilepath, const wstring
             }
             else if (wstring::npos != strName.find(TEXT("Instance"))) {
                 pShader = CShader::Create(m_pDevice, m_pContext, strPath, VTX_POINT_INSTANCE::Elements, VTX_POINT_INSTANCE::iNumElements);
+            }
+            else if (wstring::npos != strName.find(TEXT("Deferred"))) {
+                pShader = CShader::Create(m_pDevice, m_pContext, strPath, VTXPOSTEX::Elements, VTXPOSTEX::iNumElements);
             }
             
             if (pShader) {

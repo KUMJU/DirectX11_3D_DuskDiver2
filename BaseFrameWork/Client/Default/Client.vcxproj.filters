@@ -262,6 +262,27 @@
     <Filter Include="02. GameObject\09. Effect\Preset">
       <UniqueIdentifier>{f771221a-a571-4d98-966c-98b48f297dfa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\05. Skill\01. MonsterSkill\03. Skill_FinalBoss\Skill1">
+      <UniqueIdentifier>{d6670c3a-777a-48ce-bc00-f62b3463deef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Skill\01. MonsterSkill\03. Skill_FinalBoss\Skill2">
+      <UniqueIdentifier>{5a9fee7e-d03c-44e1-8443-c499732e8975}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Skill\01. MonsterSkill\03. Skill_FinalBoss\Skill3">
+      <UniqueIdentifier>{32c6a282-b9ca-45f1-a101-30ad7fcde68c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Skill\01. MonsterSkill\03. Skill_FinalBoss\Skill4">
+      <UniqueIdentifier>{8e90e539-284d-4c92-a852-5eedcbc6cee3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. Skill\01. MonsterSkill\03. Skill_FinalBoss\Skill5">
+      <UniqueIdentifier>{dcd1d7a3-aa1f-43a0-ae5c-b0e2147e9e09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. UI\01. UI_HPBar\BossHPBar">
+      <UniqueIdentifier>{0bc8f95e-74bc-4082-80f7-58853aa7089c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Manager\05. EffectMgr">
+      <UniqueIdentifier>{b1371a94-333d-4779-8033-28a3aa9010df}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -522,6 +543,33 @@
     <ClInclude Include="..\Public\EffectPreset.h">
       <Filter>02. GameObject\09. Effect\Preset</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\BossSkill1.h">
+      <Filter>02. GameObject\05. Skill\01. MonsterSkill\03. Skill_FinalBoss\Skill1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BossSkill2.h">
+      <Filter>02. GameObject\05. Skill\01. MonsterSkill\03. Skill_FinalBoss\Skill2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BossSkill3.h">
+      <Filter>02. GameObject\05. Skill\01. MonsterSkill\03. Skill_FinalBoss\Skill3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BossSkill4.h">
+      <Filter>02. GameObject\05. Skill\01. MonsterSkill\03. Skill_FinalBoss\Skill4</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BossSkill5.h">
+      <Filter>02. GameObject\05. Skill\01. MonsterSkill\03. Skill_FinalBoss\Skill5</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BossHPBar.h">
+      <Filter>02. GameObject\01. UI\01. UI_HPBar\BossHPBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EffectMgr.h">
+      <Filter>03. Manager\05. EffectMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EffectMesh.h">
+      <Filter>02. GameObject\09. Effect\02. Effect_Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EffectTexture.h">
+      <Filter>02. GameObject\09. Effect\01. Effect_Texture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -763,6 +811,33 @@
     </ClCompile>
     <ClCompile Include="..\Private\EffectPreset.cpp">
       <Filter>02. GameObject\09. Effect\Preset</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BossSkill1.cpp">
+      <Filter>02. GameObject\05. Skill\01. MonsterSkill\03. Skill_FinalBoss\Skill1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BossSkill2.cpp">
+      <Filter>02. GameObject\05. Skill\01. MonsterSkill\03. Skill_FinalBoss\Skill2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BossSkill3.cpp">
+      <Filter>02. GameObject\05. Skill\01. MonsterSkill\03. Skill_FinalBoss\Skill3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BossSkill4.cpp">
+      <Filter>02. GameObject\05. Skill\01. MonsterSkill\03. Skill_FinalBoss\Skill4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BossSkill5.cpp">
+      <Filter>02. GameObject\05. Skill\01. MonsterSkill\03. Skill_FinalBoss\Skill5</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BossHPBar.cpp">
+      <Filter>02. GameObject\01. UI\01. UI_HPBar\BossHPBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EffectMgr.cpp">
+      <Filter>03. Manager\05. EffectMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EffectMesh.cpp">
+      <Filter>02. GameObject\09. Effect\02. Effect_Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EffectTexture.cpp">
+      <Filter>02. GameObject\09. Effect\01. Effect_Texture</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

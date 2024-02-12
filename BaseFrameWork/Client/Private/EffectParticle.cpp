@@ -6,54 +6,73 @@
 
 #include "Shader.h"
 #include "Texture.h"
-
 CEffectParticle::CEffectParticle()
 {
 }
 
-HRESULT CEffectParticle::Initialize(CTransform::TRANSFORM_DESC* _pDesc)
+HRESULT CEffectParticle::Initialize(_uint _iInstanceNum, const wstring& _strTextureKey, CVIBufferInstancing::INSTANCE_DESC* _desc, char* _strName)
 {
+
+    m_InstanceDesc = *_desc;
 
     if (FAILED(__super::Initialize(nullptr)))
         return E_FAIL;
 
-    m_pTexture = CGameInstance::GetInstance()->GetTexture(TEXT("T_Fire_Particle"));
+    m_pTexture = CGameInstance::GetInstance()->GetTexture(_strTextureKey);
     m_Components.emplace(TEXT("Com_Texture"), m_pTexture);
 
     m_pShader = CGameInstance::GetInstance()->GetShader(TEXT("Shader_VtxInstance"));
 
-    CVIBufferPoint::INSTANCE_DESC			InstanceDesc{};
-    InstanceDesc.vCenter = _float3(0.0f, 50.f, 0.f);
-    InstanceDesc.vSize = _float2(0.2f, 0.7f);
-    InstanceDesc.vSpeed = _float2(1.f, 3.f);
-    InstanceDesc.vLifeTime = _float2(20.f, 50.f);
-    InstanceDesc.isLoop = true;
-    InstanceDesc.vColor = _float4(1.f, 1.f, 1.f, 1.f);
-
-    m_pVIBufferCom = CVIBufferPoint::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), 1000, &InstanceDesc);
+    m_pVIBufferCom = CVIBufferPoint::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), _iInstanceNum, _desc);
     m_Components.emplace(TEXT("Com_VIBuffer"), m_pVIBufferCom);
+
+    m_iInstanceNum = _iInstanceNum;
+    m_strEffectName = _strName;
+
+    m_TextureKey = _strTextureKey;
 
     return S_OK;
 }
 
 void CEffectParticle::PriorityTick(_float _fTimeDelta)
 {
+    if (m_IsEnabled == false)
+        return;
+
 }
 
-void CEffectParticle::Tick(_float _fTimeDelta)
+void CEffectParticle::Tick(_float _fTimeDelta, _matrix _ParentMat)
 {
-    m_pVIBufferCom->TickInstance(_fTimeDelta);
+    if (m_IsEnabled == false)
+        return;
+
+
+    if (m_pVIBufferCom->TickInstance(_fTimeDelta))
+        m_IsEnabled = false;
+    m_ParentMat = _ParentMat;
+
 
 }
 
 void CEffectParticle::LateTick(_float _fTimeDelta)
 {
-    if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_NONBLEND, shared_from_this())))
+    if (m_IsEnabled == false)
+        return;
+
+    if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_NONLIGHT, shared_from_this())))
         return;
 }
 
 HRESULT CEffectParticle::Render()
 {
+    _vector worldMat = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+    _float4x4 matWorld;
+    m_pTransformCom->SetState(CTransform::STATE_POSITION, m_ParentMat.r[3]);
+   // XMStoreFloat4x4(&matWorld, m_ParentMat);
+
+    /*if (FAILED(m_pShader->BindMatrix("g_WorldMatrix", &matWorld)))
+        return E_FAIL;*/
+
     if (FAILED(m_pTransformCom->BindShaderResource(m_pShader, "g_WorldMatrix")))
         return E_FAIL;
 
@@ -87,11 +106,16 @@ HRESULT CEffectParticle::Render()
     return S_OK;
 }
 
-shared_ptr<CEffectParticle> CEffectParticle::Create()
+void CEffectParticle::ResetEffect()
+{
+    m_pVIBufferCom->ResetInstance();
+}
+
+shared_ptr<CEffectParticle> CEffectParticle::Create(_uint _iInstanceNum, const wstring& _strTextureKey, CVIBufferInstancing::INSTANCE_DESC* _desc, char* _strName)
 {
     shared_ptr<CEffectParticle> pInstance = make_shared<CEffectParticle>();
 
-    if (FAILED(pInstance->Initialize(nullptr)))
+    if (FAILED(pInstance->Initialize(_iInstanceNum, _strTextureKey, _desc, _strName)))
         MSG_BOX("Failed to Create : CEffectParticle");
 
     return pInstance;

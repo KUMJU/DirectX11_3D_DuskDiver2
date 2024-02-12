@@ -59,13 +59,12 @@ void CMonsterTower::Tick(_float _fTimeDelta)
 void CMonsterTower::LateTick(_float _fTimeDelta)
 {
 	__super::LateTick(_fTimeDelta);
+	CGameInstance::GetInstance()->AddDebugComponent(m_pCollider);
 
 }
 
 HRESULT CMonsterTower::Render()
 {
-
-	m_pCollider->Render();
 
 	__super::Render();
 
@@ -85,11 +84,6 @@ HRESULT CMonsterTower::Render()
 	_float4x4 ProjMat = CGameInstance::GetInstance()->GetTransformFloat4x4(CPipeLine::D3DTS_PROJ);
 
 	if (FAILED(m_pShader->BindMatrix("g_ProjMatrix", &ProjMat)))
-		return E_FAIL;
-
-	_float4 CamPos = CGameInstance::GetInstance()->GetCamPosition();
-
-	if (FAILED(m_pShader->BindRawValue("g_vCamPosition", &CamPos, sizeof(_float4))))
 		return E_FAIL;
 
 	_float4 vColor; 

@@ -38,7 +38,11 @@ void CCollisionMgr::CheckPlrMonster()
 		for (auto& pMon : m_ColliderList[COL_MONSTER]) {
 
 			if (pPlr->Intersect(pMon->GetColliderType(), pMon->GetBounding())) {
-				(pPlr->GetOwner())->OnCollide(CGameObject::OBJ_MONSTER, pMon);
+
+				CGameObject::EObjType eObjType = pMon->GetOwner()->GetObjectType();
+
+
+				(pPlr->GetOwner())->OnCollide(eObjType, pMon);
 				(pMon->GetOwner())->OnCollide(CGameObject::OBJ_PLAYER, pPlr);
 			}
 		}

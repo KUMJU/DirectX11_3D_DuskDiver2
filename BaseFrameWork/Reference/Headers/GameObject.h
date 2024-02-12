@@ -13,6 +13,7 @@ public:
 	enum EObjType{ 
 		OBJ_PLAYER, 
 		OBJ_MONSTER, 
+		OBJ_BOSSMONSTER,
 		OBJ_UI, 
 		OBJ_ENV, 
 		OBJ_PROJ, 

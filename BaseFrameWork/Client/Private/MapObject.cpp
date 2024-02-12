@@ -80,15 +80,6 @@ HRESULT CMapObject::BindShaderResources()
     if (FAILED(m_pShader->BindMatrix("g_ProjMatrix", &ProjMat)))
         return E_FAIL;
 
-    _float4 CamPos = CGameInstance::GetInstance()->GetCamPosition();
-
-    if (FAILED(m_pShader->BindRawValue("g_vCamPosition", &CamPos, sizeof(_float4))))
-        return E_FAIL;
-
-    const LIGHT_DESC* pLightDesc = CGameInstance::GetInstance()->GetLightDesc(0);
-    if (nullptr == pLightDesc)
-        return E_FAIL;
-
     return S_OK;
 }
 

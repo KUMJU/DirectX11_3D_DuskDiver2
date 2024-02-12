@@ -8,6 +8,7 @@
 #include "PickingMgr.h"
 #include "LightMgr.h"
 #include "FontMgr.h"
+#include "TargetMgr.h"
 
 _float g_fSlowWeight = 1.f;
 
@@ -36,7 +37,20 @@ HRESULT CGameInstance::InitializeEngine(HINSTANCE hInst, _uint iNumLevels, _uint
 	if (!m_pPipeLine)
 		return E_FAIL;
 
-	m_pRenderer = CRenderer::Create();
+	m_pLightMgr = CLightMgr::Create(m_pGraphicDev->GetDeviceInfo(), m_pGraphicDev->GetDeviceContextInfo());
+	if (nullptr == m_pLightMgr)
+		return E_FAIL;
+
+	m_pResMgr = CResourceMgr::Create(m_pGraphicDev->GetDeviceInfo(), m_pGraphicDev->GetDeviceContextInfo());
+	if (nullptr == m_pResMgr)
+		return E_FAIL;
+	m_pResMgr->LoadShader();
+
+	m_pTargetMgr = CTargetMgr::Create(m_pGraphicDev->GetDeviceInfo(), m_pGraphicDev->GetDeviceContextInfo());
+	if (!m_pTargetMgr)
+		return E_FAIL;
+
+	m_pRenderer = CRenderer::Create(m_pGraphicDev->GetDeviceInfo(), m_pGraphicDev->GetDeviceContextInfo());
 	if (!m_pRenderer)
 		return E_FAIL;
 
@@ -56,14 +70,6 @@ HRESULT CGameInstance::InitializeEngine(HINSTANCE hInst, _uint iNumLevels, _uint
 
 	m_pPickingMgr = CPickingMgr::Create(_iScreenX, _iScreenY);
 	if (nullptr == m_pPickingMgr)
-		return E_FAIL;
-
-	m_pLightMgr = CLightMgr::Create(m_pGraphicDev->GetDeviceInfo(), m_pGraphicDev->GetDeviceContextInfo());
-	if (nullptr == m_pLightMgr)
-		return E_FAIL;
-
-	m_pResMgr = CResourceMgr::Create(m_pGraphicDev->GetDeviceInfo(), m_pGraphicDev->GetDeviceContextInfo());
-	if (nullptr == m_pResMgr)
 		return E_FAIL;
 
 	m_pCollisionMgr = CCollisionMgr::Create();
@@ -194,6 +200,13 @@ _bool CGameInstance::Key_Pressing(_ubyte eKeyID)
 	return m_pInputDev->Key_Pressing(eKeyID);
 }
 
+#ifdef _DEBUG
+HRESULT CGameInstance::AddDebugComponent(shared_ptr<class CComponent> pComponent)
+{
+	return m_pRenderer->AddDebugComponent(pComponent);
+}
+#endif // DEBUG
+
 HRESULT CGameInstance::OpenLevel(_uint _iLevelIndex, shared_ptr<class CLevel> _pLevel)
 {
 	if (nullptr == m_pLevelMgr)
@@ -297,6 +310,13 @@ HRESULT CGameInstance::AddUIRenderGroup(shared_ptr<class CGameObject> _pGameObje
 	return m_pRenderer->AddUIRenderGroup( _pGameObject, _iPriorityIdx);
 }
 
+void CGameInstance::SetDebugOnOff()
+{
+
+	m_pRenderer->SetDebugModeOnOff();
+
+}
+
 _float4 CGameInstance::TerrainPicking(POINT _ptMouse, shared_ptr<class CVITerrain> _pTerrainCom, shared_ptr<class CTransform> _pTransCom)
 {
 	if (!m_pPickingMgr)
@@ -325,6 +345,11 @@ HRESULT CGameInstance::AddLight(const LIGHT_DESC& _LightDesc)
 const LIGHT_DESC* CGameInstance::GetLightDesc(_uint iIndex) const
 {
 	return m_pLightMgr->GetLightDesc(iIndex);
+}
+
+HRESULT CGameInstance::RenderLight(shared_ptr<class CShader> _pShader, shared_ptr<class CVIRect> _pVIBuffer)
+{
+	return m_pLightMgr->Render(_pShader, _pVIBuffer);;
 }
 
 void CGameInstance::LoadLevelResource(_uint _iLevelIndex)
@@ -420,6 +445,42 @@ HRESULT CGameInstance::AddFont(const wstring& _strFontTag, const wstring& _strFo
 HRESULT CGameInstance::RenderFont(const wstring& _strFontTag, const wstring& strText, const _float2& vPosition, _fvector vColor, _float fRotation, const _float2& vOrigin, _float fScale)
 {
 	return m_pFontMgr->Render(_strFontTag, strText, vPosition, vColor, fRotation, vOrigin, fScale);
+}
+
+HRESULT CGameInstance::AddRenderTarget(const wstring& _strTargetTag, _uint _iSizeX, _uint _iSizeY, DXGI_FORMAT _ePixelFormat, const _float4& _vClearColor)
+{
+	return m_pTargetMgr->AddRenderTarget(_strTargetTag, _iSizeX, _iSizeY, _ePixelFormat, _vClearColor);
+}
+
+HRESULT CGameInstance::AddMRT(const wstring& _strMRTTag, const wstring& _strTargetTag)
+{
+	return m_pTargetMgr->AddMRT(_strMRTTag, _strTargetTag);
+}
+
+HRESULT CGameInstance::BeginMRT(const wstring& _strMRTTag)
+{
+	return m_pTargetMgr->BeginMRT(_strMRTTag);
+}
+
+HRESULT CGameInstance::EndMRT()
+{
+	return m_pTargetMgr->End_MRT();
+}
+
+HRESULT CGameInstance::BindSRV(const wstring& _strTargetTag, shared_ptr<class CShader> _pShader, const _char* _pConstantName)
+{
+	return m_pTargetMgr->BindSRV(_strTargetTag, _pShader, _pConstantName);
+}
+
+HRESULT CGameInstance::ReadyDebug(const wstring& _strTargetTag, _float _fX, _float _fY, _float _fSizeX, _float _fSizeY)
+{
+	return m_pTargetMgr->ReadyDebug(_strTargetTag, _fX, _fY, _fSizeX, _fSizeY);
+}
+
+HRESULT CGameInstance::RenderMRT(const wstring& _strMRTTag, shared_ptr<class CShader> _pShader, shared_ptr<class CVIRect> _pVIBuffer)
+{
+	return m_pTargetMgr->RenderMRT(_strMRTTag, _pShader, _pVIBuffer);
+
 }
 
 wrl::ComPtr<ID3D11Device> CGameInstance::GetDeviceInfo()

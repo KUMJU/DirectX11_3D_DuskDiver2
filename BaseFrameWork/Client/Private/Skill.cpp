@@ -118,6 +118,8 @@ void CSkill::Tick(_float _fTimeDelta)
 void CSkill::LateTick(_float _fTimeDelta)
 {
 
+	CGameInstance::GetInstance()->AddDebugComponent(m_Collider);
+
 }
 
 HRESULT CSkill::Render()

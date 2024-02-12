@@ -12,6 +12,7 @@ public:
 
 public:
 	virtual HRESULT Initialize();
+	virtual HRESULT Render() { return S_OK; }
 
 protected:
 	wrl::ComPtr<ID3D11Device> m_pDevice;

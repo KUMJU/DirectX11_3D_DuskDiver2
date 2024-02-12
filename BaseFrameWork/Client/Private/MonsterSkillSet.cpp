@@ -10,6 +10,14 @@
 #include "Enemy2Skill.h"
 #include "MiddleBossSkill.h"
 
+#include "BossSkill1.h"
+#include "BossSkill2.h"
+#include "BossSkill3.h"
+#include "BossSkill4.h"
+#include "BossSkill5.h"
+
+#include "GameInstance.h"
+
 CMonsterSkillSet::CMonsterSkillSet()
 {
 }
@@ -53,6 +61,16 @@ void CMonsterSkillSet::Tick(_float _fDelatTime)
 
 		if (!m_Skills[m_eCurrentSkill]->IsEnabled())
 			m_eCurrentSkill = ESKILLSTATE::MON_SKILLEND;
+	}
+
+
+}
+
+void CMonsterSkillSet::LateTick(_float _fDeltaTime)
+{
+
+	if (ESKILLSTATE::MON_SKILLEND != m_eCurrentSkill) {
+		m_Skills[m_eCurrentSkill]->LateTick(_fDeltaTime);
 	}
 
 
@@ -172,6 +190,30 @@ HRESULT CMonsterSkillSet::SettingMiddleBossSkill(shared_ptr<CModel> _pModel)
 
 HRESULT CMonsterSkillSet::SettingFinalBossSkill(shared_ptr<CModel> _pModel)
 {
+
+	shared_ptr<CSkill> pSkill;
+	vector<shared_ptr<CAnimation>> pBaseAnimation = _pModel->GetAnimations();
+
+	pSkill = CBossSkill1::Create();
+	pSkill->SetAnimation(pBaseAnimation[0]);
+	m_Skills.push_back(pSkill);
+
+	pSkill = CBossSkill2::Create();
+	pSkill->SetAnimation(pBaseAnimation[1]);
+	m_Skills.push_back(pSkill);
+
+	pSkill = CBossSkill3::Create();
+	pSkill->SetAnimation(pBaseAnimation[2]);
+	m_Skills.push_back(pSkill);
+
+	pSkill = CBossSkill4::Create();
+	pSkill->SetAnimation(pBaseAnimation[4]);
+	m_Skills.push_back(pSkill);
+
+	pSkill = CBossSkill5::Create();
+	pSkill->SetAnimation(pBaseAnimation[8]);
+	m_Skills.push_back(pSkill);
+
 	return S_OK;
 }
 

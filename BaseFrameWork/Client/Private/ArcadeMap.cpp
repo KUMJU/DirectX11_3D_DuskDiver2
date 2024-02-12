@@ -38,7 +38,7 @@
 #include "UIQuest.h"
 
 #include "EffectParticle.h"
-
+#include "EffectMgr.h"
 
 
 CArcadeMap::CArcadeMap()
@@ -56,6 +56,7 @@ void CArcadeMap::PreInit()
 
 HRESULT CArcadeMap::Initialize()
 {
+	CEffectMgr::GetInstance()->LoadEffectPreset();
 
 	if (FAILED(ReadyLight()))
 		return E_FAIL;
@@ -199,7 +200,7 @@ HRESULT CArcadeMap::ReadyLayerMap(const wstring& _strLayerTag)
 
 	CMonsterPool::SPAWN_INFO info1 = {};
 	info1.iMonsterType = 3;
-	info1.vMonsterPos = _vector({ 0.f, 40.f, -390.f });
+	info1.vMonsterPos = _vector({ 0.f, 40.f, -425.f });
 	SpawnList.push_back(info1);
 
 	shared_ptr<CMonsterTrigger> pTrigger = CMonsterTrigger::Create(&SpawnList, { 0.f, 40.f, -380.f });
@@ -253,6 +254,11 @@ HRESULT CArcadeMap::ReadyLayerEvent(const wstring& _strLayerTag)
 	return S_OK;
 }
 
+HRESULT CArcadeMap::ReadyLandObjects()
+{
+	return E_NOTIMPL;
+}
+
 HRESULT CArcadeMap::ReadyLayerUI(const wstring& _strLayerTag)
 {
 	shared_ptr<CUI> pInstance;
@@ -299,8 +305,8 @@ HRESULT CArcadeMap::ReadyLight()
 	LIGHT_DESC LightDesc = {};
 
 	LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
-	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
-	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vDirection = _float4(0.f, -0.5f, -1.f, 0.f);
+	LightDesc.vDiffuse = _float4(0.5f, 0.5f, 0.5f, 1.f);
 	LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
 	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
 

@@ -25,10 +25,7 @@ public:
 	shared_ptr<class CShader> GetShader(const wstring& _strShaderKey);
 	shared_ptr<class CTexture> GetTexture(const wstring& _strTextureKey);
 	shared_ptr<class CModel> GetModel(const wstring& _strModelKey);
-	shared_ptr<class CComponent> GetBuffer(const wstring& _strModelKey);
 
-public:
-	void AddBuffer(const wstring& _strKeyName, shared_ptr<class CComponent> _pBuf);
 
 private:
 	void BaseResourceLoad();

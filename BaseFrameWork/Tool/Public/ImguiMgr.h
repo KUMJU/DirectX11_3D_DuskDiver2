@@ -145,6 +145,8 @@ private:
 	void SettingImageData();
 	void SettingMeshData();
 
+	void LoadPreset();
+
 	_bool IsFileOrDir(_wfinddata_t _fd);
 	wstring EraseExt(const wstring& _strFileName);
 

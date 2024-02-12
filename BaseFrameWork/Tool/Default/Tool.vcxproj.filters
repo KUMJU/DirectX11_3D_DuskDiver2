@@ -25,9 +25,6 @@
     <Filter Include="01. Levels\02. ArcadeMap">
       <UniqueIdentifier>{5c5aa2cb-a3f9-4cf6-9a8d-dd7629958f07}</UniqueIdentifier>
     </Filter>
-    <Filter Include="97. ShaderFiles">
-      <UniqueIdentifier>{c02845d4-f43f-4865-9599-05cca2538e3a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject">
       <UniqueIdentifier>{540423b5-8758-4b41-9c58-d0fab6cd1d22}</UniqueIdentifier>
     </Filter>
@@ -794,23 +791,6 @@
     <ResourceCompile Include="Client.rc">
       <Filter>98. Default</Filter>
     </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl">
-      <Filter>97. ShaderFiles</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl">
-      <Filter>97. ShaderFiles</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh.hlsl">
-      <Filter>97. ShaderFiles</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnim.hlsl">
-      <Filter>97. ShaderFiles</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxInstance.hlsl">
-      <Filter>97. ShaderFiles</Filter>
-    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Bin\DataFiles\AnimData\Anim_Enemy01.json">

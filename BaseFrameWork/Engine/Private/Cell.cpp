@@ -92,8 +92,8 @@ _bool CCell::isIn(_fvector _vPosition, _int* _pNeighborIndex)
 
 HRESULT CCell::Render()
 {
-	m_pVIBuffer->BindBuffers();
-	m_pVIBuffer->Render();
+	//m_pVIBuffer->BindBuffers();
+	//m_pVIBuffer->Render();
 
 	return S_OK;
 }

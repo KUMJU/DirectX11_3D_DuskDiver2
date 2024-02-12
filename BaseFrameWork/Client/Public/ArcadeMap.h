@@ -33,6 +33,7 @@ public:
 
 	HRESULT ReadyLayerEvent(const wstring& _strLayerTag);
 
+	HRESULT ReadyLandObjects();
 
 	HRESULT ReadyLayerUI(const wstring& _strLayerTag);
 	HRESULT ReadyLight();

@@ -21,6 +21,8 @@ HRESULT CMonster::Initialize(CTransform::TRANSFORM_DESC* _pDesc)
     __super::Initialize(_pDesc);
     m_pGameInstance = CGameInstance::GetInstance();
 
+    m_eObjType = EObjType::OBJ_MONSTER;
+
     m_pTarget = CGameMgr::GetInstance()->GetPlayer();
 
     if (m_pTarget) {
@@ -279,23 +281,6 @@ HRESULT CMonster::BindShaderResources()
     if (FAILED(m_pShader->BindMatrix("g_ProjMatrix", &ProjMat)))
         return E_FAIL;
 
-    _float4 CamPos = CGameInstance::GetInstance()->GetCamPosition();
-
-    if (FAILED(m_pShader->BindRawValue("g_vCamPosition", &CamPos, sizeof(_float4))))
-        return E_FAIL;
-
-    const LIGHT_DESC* pLightDesc = CGameInstance::GetInstance()->GetLightDesc(0);
-    if (nullptr == pLightDesc)
-        return E_FAIL;
-
-    if (FAILED(m_pShader->BindRawValue("g_vLightDiffuse", &pLightDesc->vDiffuse, sizeof(_float4))))
-        return E_FAIL;
-    if (FAILED(m_pShader->BindRawValue("g_vLightAmbient", &pLightDesc->vAmbient, sizeof(_float4))))
-        return E_FAIL;
-    if (FAILED(m_pShader->BindRawValue("g_vLightSpecular", &pLightDesc->vSpecular, sizeof(_float4))))
-        return E_FAIL;
-    if (FAILED(m_pShader->BindRawValue("g_vLightDir", &pLightDesc->vDirection, sizeof(_float4))))
-        return E_FAIL;
 
     return S_OK;
 }

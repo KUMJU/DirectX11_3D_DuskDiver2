@@ -106,7 +106,7 @@ PS_OUT PS_MAIN(PS_IN In)
 
     Out.vColor = g_Texture.Sample(g_LinearSampler, In.vTexcoord);    
   
-    if (Out.vColor.a  < 0.4f)
+    if (Out.vColor.a  < 0.2f)
         discard;   
  
    return Out;
@@ -223,5 +223,4 @@ technique11 DefaultTechnique
         GeometryShader = compile gs_5_0 GS_MAIN();
         PixelShader = compile ps_5_0 PS_EnemyHPBar();
     }
-
 }

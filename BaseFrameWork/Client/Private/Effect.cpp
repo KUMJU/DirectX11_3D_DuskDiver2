@@ -15,7 +15,7 @@ void CEffect::PriorityTick(_float _fTimeDelta)
 {
 }
 
-void CEffect::Tick(_float _fTimeDelta)
+void CEffect::Tick(_float _fTimeDelta, _matrix _ParentMat)
 {
 }
 

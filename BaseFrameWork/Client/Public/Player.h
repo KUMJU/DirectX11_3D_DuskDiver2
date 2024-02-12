@@ -258,6 +258,9 @@ private:
 	_float m_fKnockDownTime = 0.f;
 
 
+private:
+	shared_ptr<class CEffectPreset> m_pPreset= nullptr;
+
 
 public:
 	virtual void OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _pCollider) override;

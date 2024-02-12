@@ -107,9 +107,22 @@ void CEffectPreset::ParsingEffect(Json::Value& _root)
 	//이펙트 갯수 + 루프여부 + 전체 duration
 	//이펙트 타입 + 필요한 인자들저장
 
+	Json::Value PresetInfo;
+
+	PresetInfo["Loop"] = m_bLoop;
+	PresetInfo["Duration"] = m_vTotalDuration;
+
+	_root["Preset Info"] = PresetInfo;
+
+
+	Json::Value Elements;
+	
 	for (auto& iter : m_Effects) {	
-		iter->ParsingData(_root);
+		iter->ParsingData(Elements);
 	}
+
+
+	_root["Elements"] = Elements;
 
 }
 
@@ -118,6 +131,12 @@ void CEffectPreset::ResetEffect()
 	for (auto& iter : m_Effects) {
 		iter->ResetEffect();
 	}
+}
+
+void CEffectPreset::DeleteAll()
+{
+	m_IsEnabled = false;
+	m_Effects.clear();
 }
 
 shared_ptr<CEffectPreset> CEffectPreset::Create()

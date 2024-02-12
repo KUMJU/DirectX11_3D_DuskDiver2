@@ -344,15 +344,6 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnim.hlsl" />
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxInstance.hlsl" />
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh.hlsl" />
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl" />
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl">
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS_MAIN</EntryPointName>
-    </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="..\Bin\DataFiles\AnimData\Anim_Enemy01.json" />
     <None Include="..\Bin\DataFiles\AnimData\Anim_Enemy02.json" />
     <None Include="..\Bin\DataFiles\AnimData\Anim_FinalBoss.json" />

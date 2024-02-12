@@ -16,6 +16,7 @@ public:
 public:
 	HRESULT Initialize();
 	HRESULT AddLight(const LIGHT_DESC& _LightDesc);
+	HRESULT Render(shared_ptr<class CShader> _pShader, shared_ptr<class CVIRect> _pVIBuffer);
 
 private:
 	wrl::ComPtr<ID3D11Device> m_pDevice = nullptr;

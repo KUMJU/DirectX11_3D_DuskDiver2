@@ -1,12 +1,65 @@
 #include "Renderer.h"
 #include "GameObject.h"
+#include "Component.h"
+#include "GameInstance.h"
+#include "Shader.h"
+#include "VIRect.h"
 
-CRenderer::CRenderer()
+CRenderer::CRenderer(wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID3D11DeviceContext> _pContext)
+	:m_pDevice(_pDevice),
+	m_pContext(_pContext)
 {
 }
 
 HRESULT CRenderer::Initialize()
 {
+	D3D11_VIEWPORT ViewPortDesc{};
+
+	_uint iNumViewPorts = 1;
+
+	m_pContext->RSGetViewports(&iNumViewPorts, &ViewPortDesc);
+
+	if (FAILED(CGameInstance::GetInstance()->AddRenderTarget(TEXT("Target_Diffuse"), ViewPortDesc.Width, ViewPortDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(1.f, 1.f, 1.f, 0.f))))
+		return E_FAIL;
+
+	if (FAILED(CGameInstance::GetInstance()->AddRenderTarget(TEXT("Target_Normal"), ViewPortDesc.Width, ViewPortDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(1.f, 1.f, 1.f, 1.f))))
+		return E_FAIL;
+
+	if (FAILED(CGameInstance::GetInstance()->AddRenderTarget(TEXT("Target_Shade"), ViewPortDesc.Width, ViewPortDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(1.f, 1.f, 1.f, 1.f))))
+		return E_FAIL;
+
+	if(FAILED(CGameInstance::GetInstance()->AddMRT(TEXT("MRT_GameObjects"), TEXT("Target_Diffuse"))))
+		return E_FAIL;
+
+	if (FAILED(CGameInstance::GetInstance()->AddMRT(TEXT("MRT_GameObjects"), TEXT("Target_Normal"))))
+		return E_FAIL;
+
+	if (FAILED(CGameInstance::GetInstance()->AddMRT(TEXT("MRT_LightAcc"), TEXT("Target_Shade"))))
+		return E_FAIL;
+
+	m_pVIBuffer = CVIRect::Create(m_pDevice, m_pContext);
+	if (!m_pVIBuffer)
+		return E_FAIL;
+
+	m_pShader = CGameInstance::GetInstance()->GetShader(TEXT("Shader_Deferred"));
+
+	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity());
+	m_WorldMatrix._11 = ViewPortDesc.Width;
+	m_WorldMatrix._22 = ViewPortDesc.Height;
+
+	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
+	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(ViewPortDesc.Width, ViewPortDesc.Height, 0.f, 1.f));
+
+#ifdef _DEBUG
+	if (FAILED(CGameInstance::GetInstance()->ReadyDebug(TEXT("Target_Diffuse"), 150.0f, 150.0f, 300.f, 300.f)))
+		return E_FAIL;
+	if (FAILED(CGameInstance::GetInstance()->ReadyDebug(TEXT("Target_Normal"), 150.0f, 450.0f, 300.f, 300.f)))
+		return E_FAIL;
+	if (FAILED(CGameInstance::GetInstance()->ReadyDebug(TEXT("Target_Shade"), 450.0f, 150.0f, 300.f, 300.f)))
+		return E_FAIL;
+#endif // _DEBUG
+
+
 	return S_OK;
 }
 
@@ -35,17 +88,51 @@ HRESULT CRenderer::AddUIRenderGroup(shared_ptr<class CGameObject> _pGameObject, 
 
 HRESULT CRenderer::Render()
 {
+	wrl::ComPtr<ID3D11RenderTargetView> pBackBufferView;
+	wrl::ComPtr<ID3D11DepthStencilView> pDepthStencilView;
+
 	if (FAILED(RenderPriority()))
 		return E_FAIL;
 
+
 	if (FAILED(RenderNonBlend()))
 		return E_FAIL;
+
+
+	if (FAILED(RenderLight()))
+		return E_FAIL;
+
+	if (FAILED(RenderFinal()))
+		return E_FAIL;
+
+
+	if (FAILED(RenderNonLight()))
+		return E_FAIL;
+
 
 	if (FAILED(RenderBlend()))
 		return E_FAIL;
 
 	if (FAILED(RenderUI()))
 		return E_FAIL;
+
+	
+#ifdef _DEBUG
+	if (m_bDebugOn) {
+		if (FAILED(RenderDebug()))
+			return E_FAIL;
+
+	}
+#endif
+
+
+	return S_OK;
+}
+
+HRESULT CRenderer::AddDebugComponent(shared_ptr<class CComponent> _pComponent)
+{
+
+	m_DebugCom.push_back(_pComponent);
 
 	return S_OK;
 }
@@ -64,12 +151,82 @@ HRESULT CRenderer::RenderPriority()
 
 HRESULT CRenderer::RenderNonBlend()
 {
+	//Diffuset + Normal
+	if (FAILED(CGameInstance::GetInstance()->BeginMRT(TEXT("MRT_GameObjects"))))
+		return E_FAIL;
+
 	for (auto& pGameObject : m_RenderObjects[RENDER_NONBLEND]) {
 		if (nullptr != pGameObject)
 			pGameObject->Render();
 	}
 
 	m_RenderObjects[RENDER_NONBLEND].clear();
+
+
+	if (FAILED(CGameInstance::GetInstance()->EndMRT()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CRenderer::RenderLight()
+{
+	if (FAILED(CGameInstance::GetInstance()->BeginMRT(TEXT("MRT_LightAcc"))))
+		return E_FAIL;
+
+	if (FAILED(m_pShader->BindMatrix("g_WorldMatrix", &m_WorldMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pShader->BindMatrix("g_ViewMatrix", &m_ViewMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pShader->BindMatrix("g_ProjMatrix", &m_ProjMatrix)))
+		return E_FAIL;
+
+	/* 노말 렌더타겟을 쉐이더에 던진다. */
+	if (FAILED(CGameInstance::GetInstance()->BindSRV(TEXT("Target_Normal"), m_pShader, "g_NormalTexture")))
+		return E_FAIL;
+
+	/* 빛들을 하나씩 그린다.(사각형버퍼를 셰이드타겟에 그린다.) */
+	CGameInstance::GetInstance()->RenderLight(m_pShader, m_pVIBuffer);
+
+	if (FAILED(CGameInstance::GetInstance()->EndMRT()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CRenderer::RenderFinal()
+{
+	if (FAILED(m_pShader->BindMatrix("g_WorldMatrix", &m_WorldMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pShader->BindMatrix("g_ViewMatrix", &m_ViewMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pShader->BindMatrix("g_ProjMatrix", &m_ProjMatrix)))
+		return E_FAIL;
+
+	if (FAILED(CGameInstance::GetInstance()->BindSRV(TEXT("Target_Diffuse"), m_pShader, "g_DiffuseTexture")))
+		return E_FAIL;
+
+	if (FAILED(CGameInstance::GetInstance()->BindSRV(TEXT("Target_Shade"), m_pShader, "g_ShadeTexture")))
+		return E_FAIL;
+
+	m_pShader->Begin(3);
+
+	m_pVIBuffer->BindBuffers();
+	m_pVIBuffer->Render();
+
+	return S_OK;
+}
+
+HRESULT CRenderer::RenderNonLight()
+{
+
+	for (auto& pGameObject : m_RenderObjects[RENDER_NONLIGHT])
+	{
+		if (pGameObject)
+			pGameObject->Render();
+	}
+
+	m_RenderObjects[RENDER_NONLIGHT].clear();
 
 	return S_OK;
 }
@@ -98,9 +255,29 @@ HRESULT CRenderer::RenderUI()
 	return S_OK;
 }
 
-shared_ptr<CRenderer> CRenderer::Create()
+HRESULT CRenderer::RenderDebug()
 {
-	shared_ptr<CRenderer> pInstance = make_shared<CRenderer>();
+	if (FAILED(m_pShader->BindMatrix("g_ViewMatrix", &m_ViewMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pShader->BindMatrix("g_ProjMatrix", &m_ProjMatrix)))
+		return E_FAIL;
+
+	CGameInstance::GetInstance()->RenderMRT(TEXT("MRT_GameObjects"), m_pShader, m_pVIBuffer);
+	CGameInstance::GetInstance()->RenderMRT(TEXT("MRT_LightAcc"), m_pShader, m_pVIBuffer);
+
+	for (auto& pComponent : m_DebugCom)
+	{
+		pComponent->Render();
+	}
+
+	m_DebugCom.clear();
+
+	return S_OK;
+}
+
+shared_ptr<CRenderer> CRenderer::Create(wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID3D11DeviceContext> _pContext)
+{
+	shared_ptr<CRenderer> pInstance = make_shared<CRenderer>(_pDevice,_pContext);
 
 	if (FAILED(pInstance->Initialize())) {
 		MSG_BOX("Create Failed : Renderer");

@@ -4,16 +4,7 @@
 matrix g_BoneMatrices[512];
 
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-vector g_vLightDiffuse = vector(1.f, 1.f, 1.f, 1.f);
-vector g_vLightAmbient = vector(1.f, 1.f, 1.f, 1.f);
-vector g_vLightSpecular = vector(1.f, 1.f, 1.f, 1.f);
-
 texture2D g_DiffuseTexture;
-vector g_vMtrlAmbient = vector(0.4f, 0.4f, 0.4f, 1.f);
-vector g_vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
-
-vector g_vLightDir = vector(1.f, -1.f, 1.f, 0.f);
-vector g_vCamPosition;
 
 struct VS_IN
 {
@@ -54,11 +45,12 @@ VS_OUT VS_MAIN(VS_IN In)
     g_BoneMatrices[In.vBlendIndices.w] * fWeightW;
     
     vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
-    
+    vector vNormal = mul(vector(In.vNormal, 0.f), BoneMatrix);
+
     Out.vPosition = mul(vPosition, matWVP);
     Out.vTexcoord = In.vTexcoord;
     Out.vWorldPos = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
-    Out.vNormal = mul(vector(In.vNormal, 0.f), g_WorldMatrix);
+    Out.vNormal = normalize(mul(vNormal, g_WorldMatrix));
     
     return Out;
 
@@ -74,7 +66,8 @@ struct PS_IN
 
 struct PS_OUT
 {
-    vector vColor : SV_TARGET0;
+    vector vDiffuse : SV_TARGET0;
+    vector vNormal : SV_TARGET1;
 };
 
 PS_OUT PS_MAIN(PS_IN In)
@@ -87,17 +80,10 @@ PS_OUT PS_MAIN(PS_IN In)
     if (vMtrlDiffuse.a < 0.1f)
         discard;
     
-    vector vReflect = reflect(normalize(g_vLightDir), normalize(In.vNormal));
-    vector vLook = In.vWorldPos - g_vCamPosition;
     
-    /* 0~1 */
-    
-    float fSpecular = pow(max(dot(normalize(vReflect) * -1.f, normalize(vLook)), 0.f), 30.f);
-    float fShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f);
-    
-    Out.vColor = ((g_vLightDiffuse * vMtrlDiffuse) * min(fShade + (g_vLightAmbient * g_vMtrlAmbient), 1.f)
-		+ (g_vLightSpecular * g_vMtrlSpecular) * fSpecular);
-    
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+
     return Out;
 
 }

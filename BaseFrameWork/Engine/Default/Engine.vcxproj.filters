@@ -175,6 +175,12 @@
     <Filter Include="01. Utility\04. Component\00. VIBuffer\04. Instancing\Point">
       <UniqueIdentifier>{c0fd383c-53ad-478d-9090-50ffc849b51c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\10. RenderTargets">
+      <UniqueIdentifier>{84143c56-ffce-40de-a2b1-32964bc3de5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\10. RenderTargets\Manager">
+      <UniqueIdentifier>{9bcb5ab4-3b83-4998-b578-39a4eaf76dbd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Engine_Defines.h">
@@ -333,6 +339,15 @@
     <ClInclude Include="..\Public\VIBufferPoint.h">
       <Filter>01. Utility\04. Component\00. VIBuffer\04. Instancing\Point</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\BoundingOBB.h">
+      <Filter>01. Utility\04. Component\04. Collider\Bounding\OBB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\RenderTarget.h">
+      <Filter>01. Utility\10. RenderTargets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TargetMgr.h">
+      <Filter>01. Utility\10. RenderTargets\Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\GraphicDev.cpp">
@@ -479,9 +494,21 @@
     <ClCompile Include="..\Private\VIBufferPoint.cpp">
       <Filter>01. Utility\04. Component\00. VIBuffer\04. Instancing\Point</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\BoundingOBB.cpp">
+      <Filter>01. Utility\04. Component\04. Collider\Bounding\OBB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RenderTarget.cpp">
+      <Filter>01. Utility\10. RenderTargets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TargetMgr.cpp">
+      <Filter>01. Utility\10. RenderTargets\Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Cell.hlsl">
+      <Filter>97. ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Deferred.hlsl">
       <Filter>97. ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

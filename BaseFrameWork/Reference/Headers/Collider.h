@@ -30,7 +30,7 @@ public:
 public:
 	HRESULT Initialize(wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID3D11DeviceContext> _pContext, CCollider::TYPE _eType, COLLIDER_DESC _desc);
 	void Tick(_fmatrix _WorldMatrix);
-	HRESULT Render();
+	virtual HRESULT Render();
 
 public:
 	_float GetRadius();

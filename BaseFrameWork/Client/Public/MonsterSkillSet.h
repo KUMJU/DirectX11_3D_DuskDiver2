@@ -15,7 +15,7 @@ class CMonsterSkillSet
 {
 public:
 	enum ESKILLSTATE {
-		MON_SKILL1, MON_SKILL2, MON_SKILL3, MON_SKILL4, MON_SKILLEND
+		MON_SKILL1, MON_SKILL2, MON_SKILL3, MON_SKILL4, MON_SKILL5, MON_SKILLEND
 	};
 
 public:
@@ -24,6 +24,7 @@ public:
 public:
 	void InitializeSkill(_uint _iMonsterIdx, shared_ptr<CModel> _pBaseModel);
 	void Tick(_float _fDelatTime);
+	void LateTick(_float _fDeltaTime);
 	void Render();
 
 public:

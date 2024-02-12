@@ -37,17 +37,10 @@ void CEventTrigger::Tick(_float _fTimeDelta)
 
 void CEventTrigger::LateTick(_float _fTimeDelta)
 {
-	if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_NONBLEND, shared_from_this())))
-		return;
-
+	CGameInstance::GetInstance()->AddDebugComponent(m_pCollider);
 }
 
 HRESULT CEventTrigger::Render()
 {
-	if (!m_IsEnabled)
-		return S_OK;
-
-	m_pCollider->Render();
-
 	return S_OK;
 }

@@ -17,6 +17,7 @@ public:
 
 public:
 	HRESULT Initialize(const LIGHT_DESC& _LightDesc);
+	HRESULT Render(shared_ptr<class CShader> _pShader, shared_ptr<class CVIRect> _pVIBuffer);
 
 private:
 	LIGHT_DESC m_LightDesc = {};

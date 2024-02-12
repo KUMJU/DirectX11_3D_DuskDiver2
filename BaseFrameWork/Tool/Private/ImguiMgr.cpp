@@ -233,6 +233,10 @@ void CImguiMgr::EffectListView()
         CreatePreset();
     }
 
+    if (ImGui::Button("Load Preset")) {
+        LoadPreset();
+    }
+
     //프리셋 Json 리스트 
 
     ImGui::ListBox("Preset List", &m_iPresetSelectIdx, m_PresetNameList.data(), (_int)m_PresetNameList.size(), 5);
@@ -243,14 +247,14 @@ void CImguiMgr::EffectListView()
         if (m_iPresetSelectIdx != -1) {
 
 
-            vector<shared_ptr<CEffect>> pList = *(m_Presets[m_iPresetSelectIdx]->GetEffectList());
-            m_EffectNameList.clear();
+            //vector<shared_ptr<CEffect>> pList = *(m_Presets[m_iPresetSelectIdx]->GetEffectList());
+            //m_EffectNameList.clear();
 
-            for (auto& iter : pList) {
+            //for (auto& iter : pList) {
 
-                m_EffectNameList.push_back(iter->GetEffectName());
+            //    m_EffectNameList.push_back(iter->GetEffectName());
 
-            }
+            //}
         }
     }
 
@@ -267,7 +271,7 @@ void CImguiMgr::BasicEffectSetting()
     ImGui::InputText("Effect Name", m_CurrentName, sizeof(char) * 256);
 
     //추후에 Noise 텍스쳐랑 Base Diffuse랑 구분해두기 
-    if (ImGui::BeginCombo("combo 1", m_ImagesList[m_iImageNum]))
+    if (ImGui::BeginCombo("Image List", m_ImagesList[m_iImageNum]))
     {
         for (int n = 0; n < m_ImagesList.size(); n++)
         {
@@ -323,7 +327,7 @@ void CImguiMgr::MeshEffectSetting()
     ImGui::Text("This is Mesh Effect Setting");
 
 
-    if (ImGui::BeginCombo("combo 1", m_MeshesList[m_iMeshNum]))
+    if (ImGui::BeginCombo("Mesh List", m_MeshesList[m_iMeshNum]))
     {
         for (int n = 0; n < m_MeshesList.size(); n++)
         {
@@ -401,6 +405,42 @@ void CImguiMgr::SettingMeshData()
 
     _findclose(lHandle);
 
+
+
+}
+
+void CImguiMgr::LoadPreset()
+{
+    Json::Value root;
+
+    const wstring& strFullPath = m_strSavePath;
+    const wstring& strExt = TEXT(".json");
+    
+    _tchar szFullPath[MAX_PATH] = TEXT("");
+    MultiByteToWideChar(CP_ACP, 0, m_PresetNameList[m_iPresetSelectIdx], (_int)strlen(m_CurrentPresetName), szFullPath, MAX_PATH);
+
+    const wstring& strCompletePath = strFullPath + szFullPath + strExt;
+    ifstream in(strCompletePath);
+
+    in >> root;
+
+    _int iEffectNum = root.size();
+
+    Json::ValueIterator iter = root.begin();
+
+    m_EffectNameList.clear();
+
+    for (_int i = 0; i < iEffectNum; ++i) {
+
+        string KeyName;
+        KeyName = iter.key().asString();
+
+        char* szName = new char[256];
+        memcpy_s(szName, sizeof(char) * 256, KeyName.c_str(), sizeof(char) * 256);
+        m_EffectNameList.push_back(szName);
+
+        ++iter;
+    }
 
 
 }
@@ -528,6 +568,10 @@ void CImguiMgr::CreatePreset()
     WideCharToMultiByte(CP_ACP, 0, strName.c_str(), -1, strMultiByte, 256, NULL, NULL);
     m_PresetNameList.push_back(const_cast<char*>(strMultiByte));
 
+
+    m_pEffectPreset->DeleteAll();
+    m_EffectNameList.clear();
+    m_iEffectSelectIdx = 0;
 
 }
 

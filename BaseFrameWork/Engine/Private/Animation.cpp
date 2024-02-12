@@ -17,7 +17,7 @@ HRESULT CAnimation::Initialize(ifstream& _ifs, shared_ptr<class CModel> _pModel)
 
     m_iCurrentKeyFrames.resize(m_iNumChannels);
     
-    for (_int i = 0; i < m_iNumChannels; ++i) {
+    for (_uint i = 0; i < m_iNumChannels; ++i) {
         
         shared_ptr<CChannel> pChannel = CChannel::Create(_ifs, _pModel);
 

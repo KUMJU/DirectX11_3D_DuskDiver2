@@ -1,3 +1,5 @@
+#include "Shader_Defines.hlsli"
+
 matrix		g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 vector		g_vColor = vector(0.f, 1.f, 0.f, 1.f);
 
@@ -54,6 +56,10 @@ technique11	DefaultTechnique
 {
 	pass DefaultPass
 	{
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
 		VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN();

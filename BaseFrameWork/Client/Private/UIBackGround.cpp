@@ -30,7 +30,7 @@ void CUIBackGround::Tick(_float _fTimeDelta)
 
 void CUIBackGround::LateTick(_float _fTimeDelta)
 {
-    CUI::LateTick(_fTimeDelta);
+   CUI::LateTick(_fTimeDelta);
 }
 
 HRESULT CUIBackGround::Render()

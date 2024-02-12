@@ -7,10 +7,10 @@ BEGIN(Engine)
 class CRenderer final
 {
 public:
-	enum RENDERGROUP { RENDER_PRIORITY, RENDER_NONBLEND, RENDER_BLEND, RENDER_UI, RENDER_END };
+	enum RENDERGROUP { RENDER_PRIORITY, RENDER_NONBLEND, RENDER_NONLIGHT, RENDER_BLEND, RENDER_UI, RENDER_END };
 
 public:
-	CRenderer();
+	CRenderer(wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID3D11DeviceContext> _pContext);
 	virtual ~CRenderer() = default;
 
 public:	
@@ -23,15 +23,47 @@ private:
 	list<shared_ptr<class CGameObject>> m_RenderObjects[RENDER_END];
 
 private:
+	shared_ptr<class CShader> m_pShader = nullptr;
+	shared_ptr<class CVIRect> m_pVIBuffer = nullptr;
+
+	_float4x4 m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
+
+#ifdef _DEBUG
+public:
+	HRESULT AddDebugComponent(shared_ptr<class CComponent> _pComponent);
+
+private:
+	list<shared_ptr<class CComponent>> m_DebugCom;
+
+private:
+	wrl::ComPtr<ID3D11Device> m_pDevice = nullptr;
+	wrl::ComPtr<ID3D11DeviceContext> m_pContext = nullptr;
+
+#endif
+
+private:
 	HRESULT RenderPriority();
 	HRESULT RenderNonBlend();
+	HRESULT RenderLight();
+	HRESULT RenderFinal();
+	HRESULT RenderNonLight();
 	HRESULT RenderBlend();
 	HRESULT RenderUI();
 
-private:
+#ifdef _DEBUG
+	HRESULT RenderDebug();
+#endif // _DEBUG
+
 
 public:
-	static shared_ptr<CRenderer> Create();
+	void SetDebugModeOnOff() { m_bDebugOn = !m_bDebugOn; }
+
+private:
+	_bool m_bDebugOn = true;
+
+
+public:
+	static shared_ptr<CRenderer> Create(wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID3D11DeviceContext> _pContext);
 
 };
 

@@ -3,6 +3,9 @@
 #include "Client_Defines.h"
 #include "Monster.h"
 
+
+BEGIN(Client)
+
 class CFinalBoss final: public CMonster
 {
 public:
@@ -16,10 +19,18 @@ public:
 	virtual void LateTick(_float _fTimeDelta);
 	virtual HRESULT Render();
 
+
 private:
 	virtual void AttackPattern(_uint _iAtkNum) override;
 	virtual void IfEmptyAnimList() override;
 	virtual _bool CalcDistanceOption() override;
+
+private:
+	virtual void SetSpawnState() override;
+
+protected:
+	virtual void OnHit() override;
+
 
 private:
 	_uint m_iTestNum = 0;
@@ -35,6 +46,13 @@ private:
 	_vector m_vOriginLookVec = { 0.f, 0.f, 0.f, 0.f };
 	
 
+private:
+
+	shared_ptr<class CBossHPBar> m_pHPBar = nullptr;
+
+private:
+	shared_ptr<CCollider> m_pCollider2 = nullptr;
+
 
 public:
 	static shared_ptr<CFinalBoss> Create();
@@ -42,3 +60,5 @@ public:
 
 };
 
+
+END

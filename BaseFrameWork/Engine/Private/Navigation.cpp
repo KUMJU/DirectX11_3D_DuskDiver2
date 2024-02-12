@@ -38,7 +38,7 @@ HRESULT CNavigation::Initialize(const wstring& _strNavigationDataFilePath)
 		if (0 == dwByte)
 			break;
 
-		shared_ptr<CCell> pCell = CCell::Create(m_pDevice, m_pContext, vPoints, m_Cells.size());
+		shared_ptr<CCell> pCell = CCell::Create(m_pDevice, m_pContext, vPoints, (_uint)m_Cells.size());
 
 		if (nullptr == pCell)
 			return E_FAIL;

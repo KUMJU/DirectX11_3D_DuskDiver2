@@ -87,10 +87,6 @@ HRESULT CEscalator::BindAnimShader()
     if (FAILED(m_pAnimShader->BindMatrix("g_ProjMatrix", &ProjMat)))
         return E_FAIL;
 
-    _float4 CamPos = CGameInstance::GetInstance()->GetCamPosition();
-
-    if (FAILED(m_pAnimShader->BindRawValue("g_vCamPosition", &CamPos, sizeof(_float4))))
-        return E_FAIL;
 
     const LIGHT_DESC* pLightDesc = CGameInstance::GetInstance()->GetLightDesc(0);
     if (nullptr == pLightDesc)

@@ -20,6 +20,10 @@
 #include "Animation.h"
 #include "UIMgr.h"
 
+#include "EffectMgr.h"
+
+#include "EffectPreset.h"
+
 CPlayer::CPlayer()
 {
 }
@@ -40,7 +44,8 @@ HRESULT CPlayer::Initialize()
     m_pBurstModelCom = CGameInstance::GetInstance()->GetModel(TEXT("Hero1_Burst"));
 
     
-
+    m_pPreset = CEffectMgr::GetInstance()->FindEffect(TEXT("TestPreset"));
+    m_pPreset->SetParentTransform(m_pTransformCom);
     SetAnimSpeed();
     //Set Models 
 
@@ -202,6 +207,9 @@ void CPlayer::Tick(_float _fTimeDelta)
         iter->Tick(m_pTransformCom->GetWorldMatrix());
         CGameInstance::GetInstance()->AddCollider(CCollisionMgr::COL_PLAYER, iter);
     }
+
+    m_pPreset->Tick(_fTimeDelta);
+
 }
 
 void CPlayer::LateTick(_float _fTimeDelta)
@@ -328,18 +336,21 @@ void CPlayer::LateTick(_float _fTimeDelta)
         return;
 
     m_IsCollideMonster = false;
+
+    for (auto& iter : m_Colliders)
+        CGameInstance::GetInstance()->AddDebugComponent(iter);
+
+    CGameInstance::GetInstance()->AddDebugComponent(m_pNavigationCom);
+
+    m_pPreset->LateTick(_fTimeDelta);
+
+//    m_pPlayerSkillset->l();
+
+
 }
 
 HRESULT CPlayer::Render()
 {
-
-    m_pNavigationCom->Render();
-
-    m_pPlayerSkillset->Render();
-
-
-    for (auto& iter : m_Colliders)
-        iter->Render();
 
     if (FAILED(BindShaderResources()))
         return E_FAIL;
@@ -405,25 +416,6 @@ HRESULT CPlayer::BindShaderResources()
 
     if (FAILED(m_pShader->BindMatrix("g_ProjMatrix", &ProjMat)))
         return E_FAIL;
-
-    _float4 CamPos = CGameInstance::GetInstance()->GetCamPosition();
-
-    if (FAILED(m_pShader->BindRawValue("g_vCamPosition", &CamPos, sizeof(_float4))))
-        return E_FAIL;
-
-    const LIGHT_DESC* pLightDesc = CGameInstance::GetInstance()->GetLightDesc(0);
-    if (nullptr == pLightDesc)
-        return E_FAIL;
-
-    if (FAILED(m_pShader->BindRawValue("g_vLightDiffuse", &pLightDesc->vDiffuse, sizeof(_float4))))
-        return E_FAIL;
-    if (FAILED(m_pShader->BindRawValue("g_vLightAmbient", &pLightDesc->vAmbient, sizeof(_float4))))
-        return E_FAIL;
-    if (FAILED(m_pShader->BindRawValue("g_vLightSpecular", &pLightDesc->vSpecular, sizeof(_float4))))
-        return E_FAIL;
-    if (FAILED(m_pShader->BindRawValue("g_vLightDir", &pLightDesc->vDirection, sizeof(_float4))))
-        return E_FAIL;
-
     return S_OK;
 }
 
@@ -1008,6 +1000,8 @@ void CPlayer::KeyInput(_float _fTimeDelta)
             IsLoop = false;
             m_bJump = true;
             IsKeyInput = true;
+
+            m_pPreset->PlayEffect();
         }
     }
 
@@ -1041,6 +1035,11 @@ void CPlayer::KeyInput(_float _fTimeDelta)
         m_pTransformCom->SetState(CTransform::STATE_POSITION, { 0.f, 40.f, -380.f, 1.f });
         m_pNavigationCom->CalcCurrentPos({ 0.f, 40.f, -380.f, 1.f });
     }
+
+    if(CGameInstance::GetInstance()->Key_Down('5')) {
+        CGameInstance::GetInstance()->SetDebugOnOff();
+    }
+
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -1343,6 +1342,30 @@ void CPlayer::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _
         vNewPos = XMVectorSetW(vNewPos, 1.f);
         m_pTransformCom->CheckingMove(vNewPos, m_pNavigationCom, m_bJump);
     
+        m_IsCollideMonster = true;
+    }
+    else if (EObjType::OBJ_BOSSMONSTER == _eObjType) {
+
+        shared_ptr<CGameObject> pMonster = _pCollider->GetOwner();
+        _float fMonRadius = _pCollider->GetBounding()->GetBoundingSphere()->Radius;
+        _float fPlrRadius = (*m_Colliders.begin())->GetBounding()->GetBoundingSphere()->Radius;
+
+        _vector vCenter = XMLoadFloat3(&_pCollider->GetBounding()->GetBoundingSphere()->Center);
+
+        _float fRadDistance = fMonRadius + fPlrRadius;
+
+        shared_ptr<CTransform> pMonTransform = dynamic_pointer_cast<CTransform>(pMonster->GetComponent(TEXT("Com_Transform")));
+        _matrix MonWorld = pMonTransform->GetWorldMatrix();
+        _vector vPlrPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+
+        _vector vDir = XMVectorSetW(XMVector3Normalize(vPlrPos - XMVectorSetY(vCenter, vPlrPos.m128_f32[1])), 0.f);
+
+        _vector vNewPos = vCenter + (vDir * fRadDistance);
+
+        vNewPos.m128_f32[1] = vPlrPos.m128_f32[1];
+        vNewPos = XMVectorSetW(vNewPos, 1.f);
+        m_pTransformCom->CheckingMove(vNewPos, m_pNavigationCom, m_bJump);
+
         m_IsCollideMonster = true;
     }
     else if (EObjType::OBJ_PROJ == _eObjType) {

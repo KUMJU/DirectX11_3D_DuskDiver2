@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Effect.h"
+#include "VIBufferPoint.h"
 
 BEGIN(Client)
 
@@ -12,9 +13,9 @@ public:
 
 
 public:
-	virtual HRESULT Initialize(CTransform::TRANSFORM_DESC* _pDesc);
+	virtual HRESULT Initialize(_uint _iInstanceNum, const wstring& _strTextureKey, CVIBufferInstancing::INSTANCE_DESC* _desc, char* _strName);
 	virtual void PriorityTick(_float _fTimeDelta);
-	virtual void Tick(_float _fTimeDelta);
+	virtual void Tick(_float _fTimeDelta, _matrix _ParentMat = XMMatrixIdentity());
 	virtual void LateTick(_float _fTimeDelta);
 	virtual HRESULT Render();
 
@@ -22,7 +23,19 @@ private:
 	shared_ptr<CVIBufferPoint> m_pVIBufferCom = nullptr;
 
 public:
-	static shared_ptr<CEffectParticle> Create();
+	virtual void ResetEffect();
+
+private:
+	CVIBufferInstancing::INSTANCE_DESC m_InstanceDesc = {};
+	_uint m_iInstanceNum = 0;
+
+	wstring m_TextureKey = TEXT("");
+
+private:
+	_matrix m_ParentMat;
+
+public:
+	static shared_ptr<CEffectParticle> Create(_uint _iInstanceNum, const wstring& _strTextureKey, CVIBufferInstancing::INSTANCE_DESC* _desc, char* _strName);
 
 };
 
