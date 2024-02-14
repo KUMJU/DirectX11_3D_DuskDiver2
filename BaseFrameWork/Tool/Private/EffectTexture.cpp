@@ -17,20 +17,29 @@ HRESULT CEffectTexture::Initialize(const wstring& _strTextureKey, TEXEFFECT_DESC
 {
 
     m_eEffectType = EFFECT_TYPE::TYPE_TEXTURE;
-    __super::Initialize(nullptr);
 
+    m_TextureDesc = *_TextureDesc;
+
+    CTransform::TRANSFORM_DESC desc = {};
+    desc.fRotationPerSet = _TextureDesc->fTurnSpeed;
+    desc.fSpeedPerSet = 0.f;
+
+    __super::Initialize(&desc);
+
+
+    ComputeInitData();
     m_pTransformCom->SetState(CTransform::STATE_POSITION, { _TextureDesc->vCenter.x, _TextureDesc->vCenter.y, _TextureDesc->vCenter.z, 1.f });
-    m_pTransformCom->SetScaling(_TextureDesc->vScale.x, _TextureDesc->vScale.y, 1.f);
+    m_pTransformCom->SetScaling(_TextureDesc->vStartScale.x, _TextureDesc->vStartScale.y, 1.f);
+
 
     m_pTransformCom->RotaitionRollYawPitch(
         XMConvertToRadians(_TextureDesc->vRotation.x), 
         XMConvertToRadians(_TextureDesc->vRotation.y), 
         XMConvertToRadians(_TextureDesc->vRotation.z));
 
-
- //   m_pTransformCom->Rotation({ 0.f, 0.f, 1.f }, XMConvertToRadians(_TextureDesc->vRotation.z));
-
     m_vColor = _TextureDesc->vColor;
+
+    m_vTurnAxis = XMLoadFloat4(&_TextureDesc->vTurnAxis);
 
     m_pShader = CGameInstance::GetInstance()->GetShader(TEXT("Shader_VtxPointTex"));
  
@@ -63,15 +72,16 @@ void CEffectTexture::Tick(_float _fTimeDelta)
         return;
 
     m_fAccTime += _fTimeDelta;
-
+    m_fTimeDelta = _fTimeDelta;
 
     if (m_fAccTime >= m_fDurationStart) {
 
-        if (m_fAccTime <= m_fDurationEnd) {
+        if (m_fAccTime >= m_fDurationEnd) {
             m_IsEnabled = false;
         }
 
-        //Parent 객체가 있다면 그대로 따라간다
+        ScaleLerp();
+        m_pTransformCom->Turn(m_vTurnAxis, _fTimeDelta);
     }
 
 }
@@ -81,7 +91,7 @@ void CEffectTexture::LateTick(_float _fTimeDelta)
     if (!m_IsEnabled)
         return;
 
-    if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_NONBLEND, shared_from_this())))
+    if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_NONLIGHT, shared_from_this())))
         return;
 
 }
@@ -120,6 +130,25 @@ HRESULT CEffectTexture::Render()
 
 
     return S_OK;
+}
+
+void CEffectTexture::ComputeInitData()
+{
+    m_fMiddleTime = m_TextureDesc.fScaleChangeTime;
+
+    _float fStartProcessTime = m_fMiddleTime - m_TextureDesc.vDuration.x;
+    _float fEndProcessTime = m_TextureDesc.vDuration.y - m_fMiddleTime;
+
+    //시작~ 중간 차이 계산 
+    m_vStartScaleDiff = _float2({ (m_TextureDesc.vMiddleScale.x - m_TextureDesc.vStartScale.x) / fStartProcessTime,
+    (m_TextureDesc.vMiddleScale.y - m_TextureDesc.vStartScale.y) / fStartProcessTime });
+
+    //중간 ~ 끝 차이 계산
+
+
+    m_vEndScaleDiff = _float2({ (m_TextureDesc.vEndScale.x - m_TextureDesc.vMiddleScale.x) / fEndProcessTime,
+    (m_TextureDesc.vEndScale.y - m_TextureDesc.vMiddleScale.y) / fEndProcessTime });
+
 }
 
 void CEffectTexture::ParsingData(Json::Value& _root)
@@ -163,13 +192,38 @@ void CEffectTexture::ParsingData(Json::Value& _root)
 
     Json::Value Scale;
 
-    Scale["x"] = m_TextureDesc.vScale.x;
-    Scale["y"] = m_TextureDesc.vScale.y;
+    Scale["x"] = m_TextureDesc.vStartScale.x;
+    Scale["y"] = m_TextureDesc.vStartScale.y;
 
     EffectInfo["Scale"] = Scale;
 
    
     _root[m_strEffectName] = EffectInfo;
+
+
+}
+
+void CEffectTexture::ResetEffect() {
+
+    m_vCurrentScale = XMLoadFloat2(&m_TextureDesc.vStartScale);
+    m_fAccTime = 0.f;
+
+}
+
+void CEffectTexture::ScaleLerp()
+{
+    if (m_fMiddleTime >= m_fAccTime) {
+        m_vCurrentScale += XMLoadFloat2(&m_vStartScaleDiff) * m_fTimeDelta;
+    }
+    else {
+        m_vCurrentScale += XMLoadFloat2(&m_vEndScaleDiff) * m_fTimeDelta;
+    }
+
+    // SetScaling
+    m_pTransformCom->SetScaling(m_vCurrentScale.m128_f32[0],
+        m_vCurrentScale.m128_f32[1],
+       1.f);
+
 
 
 }

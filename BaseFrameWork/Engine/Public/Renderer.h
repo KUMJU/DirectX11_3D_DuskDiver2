@@ -7,7 +7,7 @@ BEGIN(Engine)
 class CRenderer final
 {
 public:
-	enum RENDERGROUP { RENDER_PRIORITY, RENDER_NONBLEND, RENDER_NONLIGHT, RENDER_BLEND, RENDER_UI, RENDER_END };
+	enum RENDERGROUP { RENDER_PRIORITY, RENDER_NONBLEND, RENDER_NONLIGHT, RENDER_GLOW, RENDER_BLEND, RENDER_UI, RENDER_END };
 
 public:
 	CRenderer(wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID3D11DeviceContext> _pContext);
@@ -47,6 +47,7 @@ private:
 	HRESULT RenderLight();
 	HRESULT RenderFinal();
 	HRESULT RenderNonLight();
+	HRESULT RenderGlow();
 	HRESULT RenderBlend();
 	HRESULT RenderUI();
 
@@ -61,6 +62,9 @@ public:
 private:
 	_bool m_bDebugOn = true;
 
+
+	_float m_fScreenWidth = 0.f;
+	_float m_fScreenHeight = 0.f;
 
 public:
 	static shared_ptr<CRenderer> Create(wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID3D11DeviceContext> _pContext);

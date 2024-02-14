@@ -36,6 +36,9 @@ private:
 
 	wstring m_TextureKey = TEXT("");
 
+	_bool m_bGlow = false;
+	_float4 m_vGlowColor = _float4();
+
 public:
 	static shared_ptr<CEffectParticle> Create(_uint _iInstanceNum, const wstring& _strTextureKey, CVIBufferInstancing::INSTANCE_DESC* _desc , char* _strName);
 

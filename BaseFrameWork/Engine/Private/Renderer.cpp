@@ -19,6 +19,7 @@ HRESULT CRenderer::Initialize()
 
 	m_pContext->RSGetViewports(&iNumViewPorts, &ViewPortDesc);
 
+	/*Set RenderTarget*/
 	if (FAILED(CGameInstance::GetInstance()->AddRenderTarget(TEXT("Target_Diffuse"), ViewPortDesc.Width, ViewPortDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(1.f, 1.f, 1.f, 0.f))))
 		return E_FAIL;
 
@@ -28,6 +29,11 @@ HRESULT CRenderer::Initialize()
 	if (FAILED(CGameInstance::GetInstance()->AddRenderTarget(TEXT("Target_Shade"), ViewPortDesc.Width, ViewPortDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(1.f, 1.f, 1.f, 1.f))))
 		return E_FAIL;
 
+	if (FAILED(CGameInstance::GetInstance()->AddRenderTarget(TEXT("Target_Glow"), ViewPortDesc.Width, ViewPortDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(1.f, 1.f, 1.f, 0.f))))
+		return E_FAIL;
+
+
+	/*Set MRT*/
 	if(FAILED(CGameInstance::GetInstance()->AddMRT(TEXT("MRT_GameObjects"), TEXT("Target_Diffuse"))))
 		return E_FAIL;
 
@@ -35,6 +41,9 @@ HRESULT CRenderer::Initialize()
 		return E_FAIL;
 
 	if (FAILED(CGameInstance::GetInstance()->AddMRT(TEXT("MRT_LightAcc"), TEXT("Target_Shade"))))
+		return E_FAIL;
+
+	if (FAILED(CGameInstance::GetInstance()->AddMRT(TEXT("MRT_Glow"), TEXT("Target_Glow"))))
 		return E_FAIL;
 
 	m_pVIBuffer = CVIRect::Create(m_pDevice, m_pContext);
@@ -46,6 +55,9 @@ HRESULT CRenderer::Initialize()
 	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity());
 	m_WorldMatrix._11 = ViewPortDesc.Width;
 	m_WorldMatrix._22 = ViewPortDesc.Height;
+
+	m_fScreenWidth = ViewPortDesc.Width;
+	m_fScreenHeight = ViewPortDesc.Height;
 
 	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
 	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(ViewPortDesc.Width, ViewPortDesc.Height, 0.f, 1.f));
@@ -101,6 +113,9 @@ HRESULT CRenderer::Render()
 
 	if (FAILED(RenderLight()))
 		return E_FAIL;
+
+	//if (FAILED(RenderGlow()))
+	//	return E_FAIL;
 
 	if (FAILED(RenderFinal()))
 		return E_FAIL;
@@ -209,6 +224,9 @@ HRESULT CRenderer::RenderFinal()
 	if (FAILED(CGameInstance::GetInstance()->BindSRV(TEXT("Target_Shade"), m_pShader, "g_ShadeTexture")))
 		return E_FAIL;
 
+	if (FAILED(CGameInstance::GetInstance()->BindSRV(TEXT("Target_Glow"), m_pShader, "g_GlowTexture")))
+		return E_FAIL;
+
 	m_pShader->Begin(3);
 
 	m_pVIBuffer->BindBuffers();
@@ -227,6 +245,50 @@ HRESULT CRenderer::RenderNonLight()
 	}
 
 	m_RenderObjects[RENDER_NONLIGHT].clear();
+
+	return S_OK;
+}
+
+HRESULT CRenderer::RenderGlow()
+{
+
+	if (m_RenderObjects[RENDER_GLOW].empty())
+		return S_OK;
+
+	//각 객체에 Render를 돌려서 렌더 타겟에 전부 그린다음에 그 타겟을 디퍼드 셰이더에 던져서(가로 세로 총 2회) 완성함? 
+
+	/*****렌더 타겟 텍스쳐에 객체 그리기 ******/
+	if (FAILED(CGameInstance::GetInstance()->BeginMRT(TEXT("MRT_Glow"))))
+		return E_FAIL;
+
+	for (auto& pGameObject : m_RenderObjects[RENDER_GLOW]) {
+		if (nullptr != pGameObject)
+			pGameObject->Render();
+	}
+
+	m_RenderObjects[RENDER_GLOW].clear();
+
+	if (FAILED(CGameInstance::GetInstance()->EndMRT()))
+		return E_FAIL;
+
+	/*********그린 렌더 타겟을 디퍼드 셰이더에 던져서 후처리 작업**********/
+	if (FAILED(m_pShader->BindMatrix("g_WorldMatrix", &m_WorldMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pShader->BindMatrix("g_ViewMatrix", &m_ViewMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pShader->BindMatrix("g_ProjMatrix", &m_ProjMatrix)))
+		return E_FAIL;
+
+	//화면 해상도 바인드
+	if (FAILED(m_pShader->BindRawValue("g_fScreenWidth", &m_fScreenWidth, sizeof(_float))))
+		return E_FAIL;
+	if (FAILED(m_pShader->BindRawValue("g_fScreenHeight", &m_fScreenHeight, sizeof(_float))))
+		return E_FAIL;
+
+
+	if (FAILED(CGameInstance::GetInstance()->BindSRV(TEXT("Target_Glow"), m_pShader, "g_Texture")))
+		return E_FAIL;
+
 
 	return S_OK;
 }

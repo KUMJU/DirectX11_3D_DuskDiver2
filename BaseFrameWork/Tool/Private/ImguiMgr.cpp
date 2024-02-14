@@ -69,6 +69,8 @@ HRESULT CImguiMgr::Initialize()
 
     //메쉬& 텍스쳐 리스트 세팅
     SettingImageData();
+    SettingMaskData();
+    SettingNoiseData();
     SettingMeshData();
 
 
@@ -191,16 +193,26 @@ void CImguiMgr::EffectListView()
 {
     //이펙트 리스트박스
     ImGui::Begin("Effect ListView");
-
+     
     ImGui::ListBox("Object List", &m_iEffectSelectIdx, m_EffectNameList.data(), (_int)m_EffectNameList.size(), 5);
 
     if (ImGui::Button("Delete")) {
        
-        if (m_iEffectSelectIdx == -1)
+        if (m_iEffectSelectIdx == -1 || m_EffectNameList.empty())
             return;
 
         m_pEffectPreset->DeleteEffect(m_iEffectSelectIdx);
-        m_iEffectSelectIdx = -1;
+
+        auto iter = m_EffectNameList.begin();
+
+        for (size_t i = 0; i < m_iEffectSelectIdx; ++i) {
+            ++iter;
+        }
+
+        m_EffectNameList.erase(iter);
+        m_iEffectSelectIdx = 0;
+
+
 
 
     } ImGui::SameLine();
@@ -301,31 +313,56 @@ void CImguiMgr::ParticleEffectSetting()
     ImGui::InputFloat3("Center", &m_vCenter.x);
     ImGui::InputFloat2("Size", &m_vSize.x); // x : MinSpeed y: MaxSpeed
     ImGui::InputFloat2("Speed", &m_vSpeed.x);
-    ImGui::InputFloat4("Color", &m_vColor.x);
+
+    ImGui::ColorEdit3("Color", &m_vColor.x);
+
+    ImGui::SeparatorText("Direction");
+
     ImGui::InputFloat3("Direction Min", &m_vDirMin.x);
     ImGui::InputFloat3("Direction Max", &m_vDirMax.x);
+
+    ImGui::SeparatorText("Start Position");
+
     ImGui::InputFloat3("Start Position Min", &m_vStartPosMin.x);
     ImGui::InputFloat3("Start Position Max", &m_vStartPosMax.x);
     ImGui::InputFloat2("Duration", &m_vDuration.x);
+
+    ImGui::SeparatorText("Glow");
+    ImGui::Checkbox("Using Glow", &m_bGlow);
+    ImGui::ColorEdit3("Glow Color", &m_vGlowColor.x);
+
+    ImGui::SeparatorText("Alpha");
+    //Alpha Lerp
 
 }
 
 void CImguiMgr::TextureEffectSetting()
 {
-    ImGui::Text("This is Texture Effect Setting");
 
     ImGui::InputFloat3("Center", &m_vCenter.x);
-    ImGui::InputFloat2("Size", &m_vSize.x); // x : MinSpeed y: MaxSpeed
-    ImGui::InputFloat4("Color", &m_vColor.x);
-    ImGui::InputFloat3("Rotation", &m_vRotation.x);
+    ImGui::ColorEdit3("Color", &m_vColor.x);
     ImGui::InputFloat2("Duration", &m_vDuration.x);
+
+    ImGui::SeparatorText("Scale Info");
+
+    ImGui::InputFloat2("Start Scale", &m_vTexStartScale.x); 
+    ImGui::InputFloat2("Middle Scale", &m_vTexMiddleScale.x);
+    ImGui::InputFloat2("End Scale", &m_vTexEndScale.x); 
+    ImGui::InputFloat("Change Time", &m_fScaleChangeTime);
+
+
+    ImGui::SeparatorText("Spin Info");
+
+    ImGui::InputFloat3("Rotation", &m_vRotation.x);
+
+    ImGui::InputFloat("Turn Speed", &m_fTurnSpeed);
+    ImGui::InputFloat3("Turn Axis", &m_vAxis.x);
 
 }
 
 void CImguiMgr::MeshEffectSetting()
 {
-    ImGui::Text("This is Mesh Effect Setting");
-
+    ImGui::InputFloat2("Life Time", &m_vDuration.x);
 
     if (ImGui::BeginCombo("Mesh List", m_MeshesList[m_iMeshNum]))
     {
@@ -342,9 +379,61 @@ void CImguiMgr::MeshEffectSetting()
     }
 
 
-    ImGui::InputFloat3("Scale", &m_vScale.x);
+    ImGui::InputFloat3("Start Scale", &m_vScale.x);
+    ImGui::InputFloat3("Middle Scale", &m_vMiddleScale.x);
+    ImGui::InputFloat3("End Scale", &m_vEndScale.x);
+    ImGui::InputFloat("Change Time", &m_fScaleChangeTime);
+
     ImGui::InputFloat3("Center", &m_vCenter.x);
 
+    ImGui::ColorEdit3("Color", &m_vColor.x);
+    ImGui::ColorEdit3("Color Lerp", &m_vLerpColor.x);
+
+    ImGui::SeparatorText("Mask Texture");
+
+    ImGui::Checkbox("Using MaskTexture", &m_IsMaskTex);
+
+    ImGui::Checkbox("Mask UV Loop", &m_bMaskUVLoop);
+
+    if (ImGui::BeginCombo("Mask Texture List", m_MaskList[m_iMaskNum]))
+    {
+        for (int n = 0; n < m_MaskList.size(); n++)
+        {
+            const bool is_selected = (m_iMaskNum == n);
+            if (ImGui::Selectable(m_MaskList[n], is_selected))
+                m_iMaskNum = n;
+
+            if (is_selected)
+                ImGui::SetItemDefaultFocus();
+        }
+        ImGui::EndCombo();
+    }
+
+    ImGui::InputFloat2("MaskTex Direction", &m_vMaskDirection.x);
+    ImGui::InputFloat("Mask UV Speed", &m_fMaskSpeed);
+
+
+    ImGui::SeparatorText("Noise Texture");
+
+    ImGui::Checkbox("Using NoiseTexture", &m_IsNoiseTex);
+
+    if (ImGui::BeginCombo("Noise Texture List", m_NoiseList[m_iNoiseNum]))
+    {
+        for (int n = 0; n < m_NoiseList.size(); n++)
+        {
+            const bool is_selected = (m_iNoiseNum == n);
+            if (ImGui::Selectable(m_NoiseList[n], is_selected))
+                m_iNoiseNum = n;
+
+            if (is_selected)
+                ImGui::SetItemDefaultFocus();
+        }
+        ImGui::EndCombo();
+    }
+
+
+    ImGui::InputFloat2("NoiseTex Direction", &m_vNoiseDirection.x);
+    ImGui::InputFloat("Noise UV Speed", &m_fNoiseSpeed);
 
 }
 
@@ -353,7 +442,7 @@ void CImguiMgr::SettingImageData()
 {
     _wfinddata_t fd;
     intptr_t lHandle;
-    const wstring& strFullPath = m_strBasePath + TEXT("Texture/*.*");
+    const wstring& strFullPath = m_strBasePath + TEXT("Diffuse/*.*");
 
     if (-1 == (lHandle = _wfindfirst(strFullPath.c_str(), &fd)))
         return;
@@ -370,6 +459,61 @@ void CImguiMgr::SettingImageData()
             WideCharToMultiByte(CP_ACP, 0, strExt.c_str(), -1, strMultiByte, 256, NULL, NULL);
             m_ImagesList.push_back(const_cast<char*>(strMultiByte));
            
+        }
+    }
+
+    _findclose(lHandle);
+
+}
+
+void CImguiMgr::SettingMaskData()
+{
+    _wfinddata_t fd;
+    intptr_t lHandle;
+    const wstring& strFullPath = m_strBasePath + TEXT("Mask/*.*");
+
+    if (-1 == (lHandle = _wfindfirst(strFullPath.c_str(), &fd)))
+        return;
+
+    while (0 == _wfindnext(lHandle, &fd))
+    {
+        const wstring& strName = fd.name;
+
+        if (IsFileOrDir(fd) && fd.size != 0 && fd.name[0] != '.') {
+            wstring strName = fd.name;
+            wstring strExt = EraseExt(strName);
+
+            char* strMultiByte = new char[256];
+            WideCharToMultiByte(CP_ACP, 0, strExt.c_str(), -1, strMultiByte, 256, NULL, NULL);
+            m_MaskList.push_back(const_cast<char*>(strMultiByte));
+
+        }
+    }
+
+    _findclose(lHandle);
+}
+
+void CImguiMgr::SettingNoiseData()
+{
+    _wfinddata_t fd;
+    intptr_t lHandle;
+    const wstring& strFullPath = m_strBasePath + TEXT("Noise/*.*");
+
+    if (-1 == (lHandle = _wfindfirst(strFullPath.c_str(), &fd)))
+        return;
+
+    while (0 == _wfindnext(lHandle, &fd))
+    {
+        const wstring& strName = fd.name;
+
+        if (IsFileOrDir(fd) && fd.size != 0 && fd.name[0] != '.') {
+            wstring strName = fd.name;
+            wstring strExt = EraseExt(strName);
+
+            char* strMultiByte = new char[256];
+            WideCharToMultiByte(CP_ACP, 0, strExt.c_str(), -1, strMultiByte, 256, NULL, NULL);
+            m_NoiseList.push_back(const_cast<char*>(strMultiByte));
+
         }
     }
 
@@ -481,6 +625,8 @@ void CImguiMgr::CreateEffect()
         InstanceDesc.vStartPointMin = m_vStartPosMin;
         InstanceDesc.vStartPointMax = m_vStartPosMax;
         InstanceDesc.vDuration = m_vDuration;
+        InstanceDesc.bGlow = m_bGlow;
+        InstanceDesc.vGlowColor = m_vGlowColor;
 
         char* EffectName = new char[256];
         memcpy_s(EffectName, sizeof(char) * 256, m_CurrentName, sizeof(char) * 256);
@@ -502,7 +648,15 @@ void CImguiMgr::CreateEffect()
         textureDesc.vCenter = m_vCenter;
         textureDesc.vColor = m_vColor;
         textureDesc.vRotation = m_vRotation;
-        textureDesc.vScale = m_vSize;
+        textureDesc.vStartScale = m_vTexStartScale;
+        textureDesc.vMiddleScale = m_vTexMiddleScale;
+        textureDesc.vEndScale = m_vTexEndScale;
+        textureDesc.vDuration = m_vDuration;
+
+        textureDesc.fTurnSpeed = m_fTurnSpeed;
+        textureDesc.vTurnAxis = m_vAxis;
+
+        textureDesc.fScaleChangeTime = m_fScaleChangeTime;
 
         char* EffectName = new char[256];
         memcpy_s(EffectName, sizeof(char) * 256, m_CurrentName, sizeof(char) * 256);
@@ -520,7 +674,17 @@ void CImguiMgr::CreateEffect()
         CEffectMesh::MESH_DESC desc = {};
 
         desc.vCenter = m_vCenter;
-        desc.vScale = m_vScale;
+        desc.vStartScale = m_vScale;
+        desc.vMiddleScale = m_vMiddleScale;
+        desc.vEndScale = m_vEndScale;
+
+        desc.bUVLoop = m_bMaskUVLoop;
+        desc.bLoop = m_IsLoop;
+
+        desc.vColor = m_vColor;
+        desc.vDuration = m_vDuration;
+
+        desc.fScaleChangeTime = m_fScaleChangeTime;
 
         char* EffectName = new char[256];
         memcpy_s(EffectName, sizeof(char) * 256, m_CurrentName, sizeof(char) * 256);
@@ -530,7 +694,25 @@ void CImguiMgr::CreateEffect()
 
         _tchar szMeshName[MAX_PATH] = TEXT("");
         MultiByteToWideChar(CP_ACP, 0, m_MeshesList[m_iMeshNum], (_int)strlen(m_MeshesList[m_iMeshNum]), szMeshName, MAX_PATH);
+
+        desc.szMaskTexKey = new char[256];
+        desc.szNoiseTexKey = new char[256];
+
+        memcpy_s(desc.szMaskTexKey, sizeof(char) * 256, m_MaskList[m_iMaskNum], sizeof(char) * 256);
+        memcpy_s(desc.szNoiseTexKey, sizeof(char) * 256, m_NoiseList[m_iNoiseNum], sizeof(char) * 256);
+
+        desc.bMask = m_IsMaskTex;
+        desc.bNoise = m_IsNoiseTex;
+
+        desc.vMaskDir = m_vMaskDirection;
+        desc.vNoiseDir = m_vNoiseDirection;
+        desc.fMaskSpeed = m_fMaskSpeed;
+        desc.fNoiseSpeed = m_fNoiseSpeed;
+        desc.vLerpColor = m_vLerpColor;
+     
+
         shared_ptr<CEffectMesh> pParticle = CEffectMesh::Create(szFullPath, szMeshName, &desc, EffectName);
+
 
         m_EffectNameList.push_back(EffectName);
         m_pEffectPreset->AddEffect(pParticle);

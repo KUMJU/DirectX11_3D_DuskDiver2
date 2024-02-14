@@ -134,56 +134,16 @@ HRESULT CTerrain::Bind_ShaderResources()
 	if (FAILED(m_pTextureCom[TYPE_DIFFUSE]->BindShaderResource(m_pShader, "g_DiffuseTexture", 0)))
 		return E_FAIL;
 
-	//if (FAILED(m_pTextureCom[TYPE_MASK]->BindShaderResource(m_pShader, "g_MaskTexture", 0)))
+
+	//_float4 fCamPos = CGameInstance::GetInstance()->GetCamPosition();
+	//if (FAILED(m_pShader->BindRawValue("g_vCamPosition", &fCamPos, sizeof(_float4))))
 	//	return E_FAIL;
 
-	//if (m_IsBrushVisible) {
-	//	if (FAILED(m_pTextureCom[TYPE_BRUSH]->BindShaderResource(m_pShader, "g_BrushTexture", 0)))
-	//		return E_FAIL;
 
-	//	if (FAILED(m_pShader->BindRawValue("g_vBrushPos", &m_vBrushPos, sizeof(_float3))))
-	//		return E_FAIL;
-	//}
 
-	_float4 fCamPos = CGameInstance::GetInstance()->GetCamPosition();
-	if (FAILED(m_pShader->BindRawValue("g_vCamPosition", &fCamPos, sizeof(_float4))))
+	if (FAILED(m_pShader->Begin(0)))
 		return E_FAIL;
 
-	const LIGHT_DESC* pLightDesc = CGameInstance::GetInstance()->GetLightDesc(0);
-	if (nullptr == pLightDesc)
-		return E_FAIL;
-
-
-	if (FAILED(m_pShader->BindRawValue("g_vLightDiffuse", &pLightDesc->vDiffuse, sizeof(_float4))))
-		return E_FAIL;
-	if (FAILED(m_pShader->BindRawValue("g_vLightAmbient", &pLightDesc->vAmbient, sizeof(_float4))))
-		return E_FAIL;
-	if (FAILED(m_pShader->BindRawValue("g_vLightSpecular", &pLightDesc->vSpecular, sizeof(_float4))))
-		return E_FAIL;
-
-	_uint iPassIndex = { 0 };
-
-	if (LIGHT_DESC::TYPE::TYPE_DIRECTIONAL == pLightDesc->eType) {
-
-		if (FAILED(m_pShader->BindRawValue("g_vLightDir", &pLightDesc->vDirection, sizeof(_float4))))
-			return E_FAIL;
-
-		iPassIndex = 1;
-	}
-	else if (LIGHT_DESC::TYPE::TYPE_POINT == pLightDesc->eType) {
-
-		if (FAILED(m_pShader->BindRawValue("g_vLightPos", &pLightDesc->vPosition, sizeof(_float4))))
-			return E_FAIL;
-
-		if (FAILED(m_pShader->BindRawValue("g_fLightRange", &pLightDesc->fRange, sizeof(_float))))
-			return E_FAIL;
-
-		iPassIndex = 0;
-
-	}
-
-	if (FAILED(m_pShader->Begin(iPassIndex)))
-		return E_FAIL;
 
 	return S_OK;
 }

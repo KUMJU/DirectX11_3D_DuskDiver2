@@ -4,9 +4,14 @@ matrix		g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 texture2D g_Texture;
 
 vector g_vLightDir;
+
 texture2D g_NormalTexture;
 texture2D g_DiffuseTexture;
 texture2D g_ShadeTexture;
+texture2D g_GlowTexture;
+
+float g_fScreenWidth;
+float g_fScreenHeight;
 
 struct VS_IN
 {
@@ -20,8 +25,6 @@ struct VS_OUT
     float2 vTexcoord : TEXCOORD0;
 
 };
-
-
 
 VS_OUT VS_MAIN(VS_IN In)
 {
@@ -37,7 +40,6 @@ VS_OUT VS_MAIN(VS_IN In)
 	
 	return Out;
 }
-
 
 struct PS_IN
 {
@@ -87,12 +89,13 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
         discard;
 	
     vector vShade = g_ShadeTexture.Sample(g_LinearSampler, In.vTexcoord);
-	
+	    
     Out.vColor = vDiffuse * vShade;
 	
     return Out;
 
 }
+
 
 technique11	DefaultTechnique
 {
@@ -140,6 +143,7 @@ technique11	DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_FINAL();
     }
+
 }
 
 

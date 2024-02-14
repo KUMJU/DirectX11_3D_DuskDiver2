@@ -3,6 +3,12 @@
 #include "GameObject.h"
 #include "Tool_Defines.h"
 
+BEGIN(Engine)
+class CModel;
+class CShader;
+END
+
+
 BEGIN(Tool)
 
 class CEffectTestModel : public CGameObject
@@ -21,6 +27,10 @@ public:
 private:
 
 	shared_ptr<class CEffectPreset> m_pEffectPreset = nullptr;
+
+
+	shared_ptr<CModel> m_pModel = nullptr;
+	shared_ptr<CShader> m_pShader = nullptr;
 
 public:
 	static shared_ptr<CEffectTestModel> Create(shared_ptr<class CEffectPreset> _pPreset, const wstring& _strModelName);

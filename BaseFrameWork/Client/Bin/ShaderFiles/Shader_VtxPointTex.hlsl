@@ -25,7 +25,6 @@ VS_OUT VS_MAIN(VS_IN In)
     VS_OUT Out = (VS_OUT) 0;
    
     vector vPosition = vector(In.vPosition, 1.f);
-  //  Out.vPosition = mul(vPosition, g_WorldMatrix);
     Out.vPosition = float4(In.vPosition, 1.f);
     
     Out.vPSize = float2(length(g_WorldMatrix._11_12_13) * In.vPSize.x,

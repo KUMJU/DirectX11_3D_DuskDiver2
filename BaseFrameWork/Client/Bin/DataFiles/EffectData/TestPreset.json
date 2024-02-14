@@ -1,121 +1,90 @@
 {
-	"Elements": {
-		"Laserl": {
-			"Center": {
-				"x": 0.0,
-				"y": 0.0,
-				"z": 0.0
+	"Elements" : 
+	{
+		"sdfd" : 
+		{
+			"Center" : 
+			{
+				"x" : 0.0,
+				"y" : 0.0,
+				"z" : 0.0
 			},
-			"Color": {
-				"x": 1.0,
-				"y": 1.0,
-				"z": 1.0
+			"Color" : 
+			{
+				"x" : 1.0,
+				"y" : 1.0,
+				"z" : 1.0
 			},
-			"DirectMax": {
-				"x": 1.0,
-				"y": 1.0,
-				"z": 1.0
+			"DirectMax" : 
+			{
+				"x" : 1.0,
+				"y" : 1.0,
+				"z" : 1.0
 			},
-			"DirectMin": {
-				"x": -1.0,
-				"y": -1.0,
-				"z": -1.0
+			"DirectMin" : 
+			{
+				"x" : -1.0,
+				"y" : -1.0,
+				"z" : -1.0
 			},
-			"EffectType": 0,
-			"InstanceNum": 50,
-			"LifeTime": {
-				"x": 0.0,
-				"y": 20.0
+			"EffectType" : 0,
+			"InstanceNum" : 100,
+			"LifeTime" : 
+			{
+				"x" : 0.0,
+				"y" : 20.0
 			},
-			"Size": {
-				"x": 0.20000000298023224,
-				"y": 0.20000000298023224
+			"Size" : 
+			{
+				"x" : 0.30000001192092896,
+				"y" : 0.30000001192092896
 			},
-			"Speed": {
-				"x": 4.0,
-				"y": 4.0
+			"Speed" : 
+			{
+				"x" : 3.0,
+				"y" : 3.0
 			},
-			"StartPointMax": {
-				"x": 0.0,
-				"y": 0.0,
-				"z": 0.0
+			"StartPointMax" : 
+			{
+				"x" : 0.0,
+				"y" : 0.0,
+				"z" : 0.0
 			},
-			"StartPointMin": {
-				"x": 0.0,
-				"y": 0.0,
-				"z": 0.0
+			"StartPointMin" : 
+			{
+				"x" : 0.0,
+				"y" : 0.0,
+				"z" : 0.0
 			},
-			"TextureKey": "T_EN0301_LaserBall"
+			"TextureKey" : "Snow"
 		},
-		"Snow": {
-			"Center": {
-				"x": 0.0,
-				"y": 0.0,
-				"z": 0.0
+		"sdfd2" : 
+		{
+			"Center" : 
+			{
+				"x" : 0.0,
+				"y" : 0.0,
+				"z" : 0.0
 			},
-			"Color": {
-				"x": 1.0,
-				"y": 1.0,
-				"z": 1.0
+			"Color" : 
+			{
+				"x" : 1.0,
+				"y" : 1.0,
+				"z" : 1.0
 			},
-			"DirectMax": {
-				"x": 1.0,
-				"y": 1.0,
-				"z": 1.0
+			"EffectType" : 1,
+			"Rotation" : 
+			{
+				"x" : 90.0,
+				"y" : 0.0,
+				"z" : 0.0
 			},
-			"DirectMin": {
-				"x": 0.0,
-				"y": 0.0,
-				"z": 0.0
+			"Scale" : 
+			{
+				"x" : 10.0,
+				"y" : 10.0
 			},
-			"EffectType": 0,
-			"InstanceNum": 100,
-			"LifeTime": {
-				"x": 0.0,
-				"y": 20.0
-			},
-			"Size": {
-				"x": 0.20000000298023224,
-				"y": 0.20000000298023224
-			},
-			"Speed": {
-				"x": 2.0,
-				"y": 2.0
-			},
-			"StartPointMax": {
-				"x": 0.0,
-				"y": 0.0,
-				"z": 0.0
-			},
-			"StartPointMin": {
-				"x": 0.0,
-				"y": 0.0,
-				"z": 0.0
-			},
-			"TextureKey": "Snow"
-		},
-		"SnowTex": {
-			"Center": {
-				"x": 0.0,
-				"y": 0.0,
-				"z": 0.0
-			},
-			"Color": {
-				"x": 1.0,
-				"y": 1.0,
-				"z": 1.0
-			},
-			"EffectType": 1,
-			"Rotation": {
-				"x": 90.0,
-				"y": 0.0,
-				"z": 0.0
-			},
-			"Scale": {
-				"x": 3.0,
-				"y": 3.0
-			},
-			"TextureKey": "Snow"
+			"TextureKey" : "Snow"
 		}
 	},
 	"Preset Info" : 

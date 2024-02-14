@@ -16,6 +16,10 @@ HRESULT CEffectParticle::Initialize(_uint _iInstanceNum, const wstring& _strText
 
     m_InstanceDesc = *_desc;
 
+
+    m_bGlow = m_InstanceDesc.bGlow;
+    m_vGlowColor = m_InstanceDesc.vGlowColor;
+
     if (FAILED(__super::Initialize(nullptr)))
         return E_FAIL;
 
@@ -58,8 +62,15 @@ void CEffectParticle::LateTick(_float _fTimeDelta)
     if (m_IsEnabled == false)
         return;
 
-    if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_NONBLEND, shared_from_this())))
-        return;
+    if (m_bGlow) {
+        if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_GLOW, shared_from_this())))
+            return;
+    }
+    else {
+        if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_NONLIGHT, shared_from_this())))
+            return;
+
+    }
 }
 
 HRESULT CEffectParticle::Render()
@@ -85,7 +96,17 @@ HRESULT CEffectParticle::Render()
     if (FAILED(m_pTexture->BindShaderResource(m_pShader, "g_Texture", 0)))
         return E_FAIL;
 
-    if (FAILED(m_pShader->Begin(0)))
+    _uint iPassNum = 0;
+
+    if (m_bGlow) {
+        iPassNum = 1;
+       
+        if (FAILED(m_pShader->BindRawValue("g_vGlowColor", &m_vGlowColor, sizeof(_float4))))
+            return E_FAIL;
+    }
+
+
+    if (FAILED(m_pShader->Begin(iPassNum)))
         return E_FAIL;
 
     if (FAILED(m_pVIBufferCom->Bind_Buffers()))

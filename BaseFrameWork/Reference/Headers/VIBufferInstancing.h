@@ -25,6 +25,9 @@ public:
 		_float3			vStartPointMin;
 		_float3			vStartPointMax;
 
+		_bool			bGlow;
+		_float4			vGlowColor;
+
 	}INSTANCE_DESC;
 
 

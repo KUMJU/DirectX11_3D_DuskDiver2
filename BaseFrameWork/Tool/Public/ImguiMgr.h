@@ -94,6 +94,8 @@ private:
 	//Texture Name 
 	_uint m_iTextureNum = 0;
 
+	_bool m_bGlow = false;
+	_float4 m_vGlowColor = _float4(0.f, 0.f, 0.f, 1.f);
 
 	/*Particle*/
 	_int m_iInstanceNum = 0;
@@ -103,25 +105,44 @@ private:
 	_float3 m_vRange = _float3();
 	_float2 m_vSize = _float2();
 	_float2 m_vSpeed = _float2();
-	_float4 m_vColor = _float4();
+	_float4 m_vColor = _float4(0.f, 0.f, 0.f, 1.f);
 	_float3 m_vDirMin = _float3();
 	_float3 m_vDirMax = _float3();
 	_float3 m_vStartPosMin = _float3();
 	_float3 m_vStartPosMax = _float3();
 	_float2 m_vDuration = _float2();
 
-	_bool m_bGlow = false;
-	_float4 m_vGlowColor = _float4();
 
-
+	_float m_fScaleChangeTime = 0.f;
+//Texture
 private:
 	_float3 m_vRotation = _float3();
+	_float m_fTurnSpeed = _float();
+	_float4 m_vAxis = _float4(0.f, 0.f, 0.f, 0.f);
+
+	_float2 m_vTexStartScale = _float2();
+	_float2 m_vTexMiddleScale = _float2();
+	_float2 m_vTexEndScale = _float2();
 
 
+//Mesh 
 private:
 	_float3 m_vScale = _float3();
+	_float3 m_vMiddleScale = _float3();
+	_float3 m_vEndScale = _float3();
+	_float4 m_vLerpColor = _float4(0.f, 0.f, 0.f, 1.f);
 
 
+	_bool m_IsMaskTex = false;
+	_bool m_IsNoiseTex = false;
+
+	_bool m_bMaskUVLoop = false;
+
+	_float m_fMaskSpeed = _float();
+	_float m_fNoiseSpeed = _float();
+	
+	_float2 m_vMaskDirection = _float2();
+	_float2 m_vNoiseDirection = _float2();
 
 private:
 	const wstring& m_strBasePath = TEXT("../../Client/Bin/Resources/Base/Effect/");
@@ -134,15 +155,21 @@ private:
 private:
 	
 	vector<char*> m_ImagesList;
+	vector<char*> m_NoiseList;
+	vector<char*> m_MaskList;
 	vector<char*> m_MeshesList;
 
 	_int m_iImageNum = 0;
 	_int m_iMeshNum = 0;
+	_int m_iMaskNum = 0;
+	_int m_iNoiseNum = 0;
 
 private:
 
 	//리스트박스에 세팅 
 	void SettingImageData();
+	void SettingMaskData();
+	void SettingNoiseData();
 	void SettingMeshData();
 
 	void LoadPreset();

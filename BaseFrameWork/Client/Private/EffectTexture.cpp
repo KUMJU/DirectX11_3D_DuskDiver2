@@ -17,7 +17,14 @@ HRESULT CEffectTexture::Initialize(const wstring& _strTextureKey, TEXEFFECT_DESC
 {
 
     m_eEffectType = EFFECT_TYPE::TYPE_TEXTURE;
-    __super::Initialize(nullptr);
+
+
+    CTransform::TRANSFORM_DESC desc = {};
+
+    desc.fRotationPerSet = 10.f;
+    desc.fSpeedPerSet = 0.f;
+
+    __super::Initialize(&desc);
 
     m_pTransformCom->SetState(CTransform::STATE_POSITION, { _TextureDesc->vCenter.x, _TextureDesc->vCenter.y, _TextureDesc->vCenter.z, 1.f });
     m_pTransformCom->SetScaling(_TextureDesc->vScale.x, _TextureDesc->vScale.y, 1.f);
@@ -63,6 +70,8 @@ void CEffectTexture::Tick(_float _fTimeDelta, _matrix _ParentMat)
         return;
 
     m_fAccTime += _fTimeDelta;
+     
+    m_pTransformCom->Turn({ 0.f,1.f, 0.f }, _fTimeDelta);
 
 
     if (m_fAccTime >= m_fDurationStart) {
@@ -92,7 +101,6 @@ void CEffectTexture::LateTick(_float _fTimeDelta)
 HRESULT CEffectTexture::Render()
 {
     _vector worldMat = m_pTransformCom->GetState(CTransform::STATE_POSITION);
-    _float4x4 matWorld;
     m_pTransformCom->SetState(CTransform::STATE_POSITION, m_ParentMat.r[3]);
     if (FAILED(m_pTransformCom->BindShaderResource(m_pShader, "g_WorldMatrix")))
         return E_FAIL;

@@ -7,7 +7,7 @@ CEffect::CEffect()
 
 HRESULT CEffect::Initialize(CTransform::TRANSFORM_DESC* _pDesc)
 {
-    __super::Initialize(nullptr);
+    __super::Initialize(_pDesc);
     return S_OK;
 }
 

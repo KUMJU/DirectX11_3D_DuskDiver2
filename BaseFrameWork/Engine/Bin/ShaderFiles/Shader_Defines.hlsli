@@ -16,6 +16,14 @@ sampler g_PointSampler = sampler_state
     AddressV = WRAP;
 };
 
+
+sampler g_LinearClampSampler = sampler_state
+{
+    Filter = MIN_MAG_MIP_LINEAR;
+    AddressU = CLAMP;
+    AddressV = CLAMP;
+};
+
 /* For.Render_State */
 
 /* Rasterizer State : D3D11_RASTERIZER_DESC */
