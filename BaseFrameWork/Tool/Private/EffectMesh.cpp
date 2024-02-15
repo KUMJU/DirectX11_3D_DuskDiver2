@@ -124,6 +124,7 @@ HRESULT CEffectMesh::Render()
     if (FAILED(m_pShader->BindRawValue("g_fDeltaTime", &m_fTimeDelta, sizeof(_float))))
         return E_FAIL;
 
+
     if (m_MeshDesc.bMask) {
         m_pMaskTexture->BindShaderResource(m_pShader, "g_MaskTexture", 0);
        
@@ -172,6 +173,33 @@ HRESULT CEffectMesh::Render()
     }
 
     return S_OK;
+}
+
+void CEffectMesh::EditEffect(const wstring& _strTextureKey, const wstring& _strModelKey, MESH_DESC* _MeshDesc)
+{
+    ResetEffect();
+
+    m_MeshDesc = *_MeshDesc;
+    m_vCurrentScale = XMLoadFloat3(&m_MeshDesc.vStartScale);
+
+    ComputeInitSetting();
+
+    m_pModel = CGameInstance::GetInstance()->GetModel(_strModelKey);
+
+    _tchar szNoiseKey[MAX_PATH] = TEXT("");
+    MultiByteToWideChar(CP_ACP, 0, m_MeshDesc.szNoiseTexKey, (_int)strlen(m_MeshDesc.szNoiseTexKey), szNoiseKey, MAX_PATH);
+
+    _tchar szMaskKey[MAX_PATH] = TEXT("");
+    MultiByteToWideChar(CP_ACP, 0, m_MeshDesc.szMaskTexKey, (_int)strlen(m_MeshDesc.szMaskTexKey), szMaskKey, MAX_PATH);
+
+    m_pMaskTexture = CGameInstance::GetInstance()->GetTexture(szMaskKey);
+    m_pNoiseTexture = CGameInstance::GetInstance()->GetTexture(szNoiseKey);
+
+    m_pTransformCom->SetScaling(_MeshDesc->vStartScale.x, _MeshDesc->vStartScale.y, _MeshDesc->vStartScale.z);
+    m_pTransformCom->SetState(CTransform::STATE_POSITION, { _MeshDesc->vCenter.x, _MeshDesc->vCenter.y, _MeshDesc->vCenter.z, 1.f });
+
+    m_vColor = _MeshDesc->vColor;
+
 }
 
 void CEffectMesh::ComputeInitSetting()
@@ -304,6 +332,13 @@ void CEffectMesh::ParsingData(Json::Value& _root)
     Loop["EffectLoop"] = m_MeshDesc.bLoop;
 
     EffectInfo["Loop"] = Loop;
+
+    Json::Value ChangeTime;
+
+    ChangeTime["ChangeTime"] = m_MeshDesc.fScaleChangeTime;
+
+    EffectInfo["ChangeTime"] = ChangeTime;
+
 
     _root[m_strEffectName] = EffectInfo;
 

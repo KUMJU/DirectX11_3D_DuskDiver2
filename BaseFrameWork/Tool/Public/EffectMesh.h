@@ -53,10 +53,11 @@ public:
 	virtual HRESULT Render();
 
 public:
+	void EditEffect(const wstring& _strTextureKey, const wstring& _strModelKey, MESH_DESC* _MeshDesc);
+
+
+private:
 	void ComputeInitSetting();
-
-
-public:
 	void ScaleLerp();
 
 

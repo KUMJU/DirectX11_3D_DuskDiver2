@@ -14,6 +14,7 @@
 
 BEGIN(Engine)
 class CModel;
+class CAnimation;
 END
 
 BEGIN(Tool)
@@ -63,6 +64,7 @@ private:
 	void CreateEffect();
 	void CreatePreset();
 
+	void EditEffect();
 
 private:
 	/**개별 이펙트 이름**/
@@ -240,6 +242,20 @@ private:
 private:
 	ImGuizmo::OPERATION m_CurrentGizmoOperation;
 	ImGuizmo::MODE m_CurrentGizmoMode = ImGuizmo::WORLD;
+
+private:
+	void TestModelTool();
+
+
+private:
+
+	_int m_iAnimNum = 1;
+
+	shared_ptr<class CEffectTestModel> m_pTestModel = nullptr;
+	shared_ptr<CModel> m_pPlrModel = nullptr;
+
+	vector<shared_ptr<CAnimation>> m_pAnimList;
+
 };
 
 END

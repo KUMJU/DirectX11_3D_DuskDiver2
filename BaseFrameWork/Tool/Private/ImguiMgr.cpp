@@ -27,6 +27,9 @@
 #include "Json/json.h"
 #include "Json/json-forwards.h"
 
+#include "EffectTestModel.h"
+#include "Animation.h"
+
 IMPLEMENT_SINGLETON(CImguiMgr)
 
 static const float identityMatrix[16] =
@@ -66,6 +69,11 @@ HRESULT CImguiMgr::Initialize()
     m_pEffectPreset = CEffectPreset::Create();
     CGameInstance::GetInstance()->AddObject(LEVEL_EDIT, TEXT("Layer_Effect"), m_pEffectPreset);
 
+    m_pTestModel = CEffectTestModel::Create();
+    CGameInstance::GetInstance()->AddObject(LEVEL_EDIT, TEXT("Layer_Player"), m_pTestModel);
+
+    m_pPlrModel = m_pTestModel->GetModel();
+    m_pAnimList = m_pPlrModel->GetAnimations();
 
     //메쉬& 텍스쳐 리스트 세팅
     SettingImageData();
@@ -102,6 +110,7 @@ HRESULT CImguiMgr::Render(void)
 
     StartFrame();
 
+    TestModelTool();
     EffectSetting();
     EffectListView();
 
@@ -175,13 +184,14 @@ void CImguiMgr::EffectSetting() {
     if (ImGui::Button("Create")) {
 
         CreateEffect();
+        m_pTestModel->ChangeAnimation(m_iAnimNum);
+
 
     }ImGui::SameLine();
 
     if (ImGui::Button("Edit")) {
 
-        //CreateEffect();
-
+        EditEffect();
     }
 
 
@@ -224,6 +234,7 @@ void CImguiMgr::EffectListView()
     if (ImGui::Button("Preset Play")) {
 
         m_pEffectPreset->PlayEffect();   
+        m_pTestModel->ChangeAnimation(m_iAnimNum);
 
     }
 
@@ -274,6 +285,31 @@ void CImguiMgr::EffectListView()
 
 }
 
+void CImguiMgr::TestModelTool()
+{
+    ImGui::Begin("Model Tool");
+
+    ImGui::InputInt("Anim Num", &m_iAnimNum);
+
+    if(ImGui::Button("Change Anim")) {
+        m_pTestModel->ChangeAnimation(m_iAnimNum);
+    }
+
+    _int TrackPos = (_int)(m_pAnimList[m_iAnimNum]->GetCurrentTrackPosition());
+    _int Duration = (_int)(m_pAnimList[m_iAnimNum]->GetAnimDuration());
+
+
+    m_fTotalDuration.y = Duration;
+
+
+    ImGui::SliderInt("Lines", &TrackPos, 0, Duration);
+
+    ImGui::End();
+
+
+}
+
+
 void CImguiMgr::BasicEffectSetting()
 {
  
@@ -314,7 +350,7 @@ void CImguiMgr::ParticleEffectSetting()
     ImGui::InputFloat2("Size", &m_vSize.x); // x : MinSpeed y: MaxSpeed
     ImGui::InputFloat2("Speed", &m_vSpeed.x);
 
-    ImGui::ColorEdit3("Color", &m_vColor.x);
+    ImGui::ColorEdit4("Color", &m_vColor.x);
 
     ImGui::SeparatorText("Direction");
 
@@ -329,7 +365,7 @@ void CImguiMgr::ParticleEffectSetting()
 
     ImGui::SeparatorText("Glow");
     ImGui::Checkbox("Using Glow", &m_bGlow);
-    ImGui::ColorEdit3("Glow Color", &m_vGlowColor.x);
+    ImGui::ColorEdit4("Glow Color", &m_vGlowColor.x);
 
     ImGui::SeparatorText("Alpha");
     //Alpha Lerp
@@ -340,7 +376,7 @@ void CImguiMgr::TextureEffectSetting()
 {
 
     ImGui::InputFloat3("Center", &m_vCenter.x);
-    ImGui::ColorEdit3("Color", &m_vColor.x);
+    ImGui::ColorEdit4("Color", &m_vColor.x);
     ImGui::InputFloat2("Duration", &m_vDuration.x);
 
     ImGui::SeparatorText("Scale Info");
@@ -386,8 +422,8 @@ void CImguiMgr::MeshEffectSetting()
 
     ImGui::InputFloat3("Center", &m_vCenter.x);
 
-    ImGui::ColorEdit3("Color", &m_vColor.x);
-    ImGui::ColorEdit3("Color Lerp", &m_vLerpColor.x);
+    ImGui::ColorEdit4("Color", &m_vColor.x);
+    ImGui::ColorEdit4("Color Lerp", &m_vLerpColor.x);
 
     ImGui::SeparatorText("Mask Texture");
 
@@ -570,7 +606,10 @@ void CImguiMgr::LoadPreset()
 
     _int iEffectNum = root.size();
 
-    Json::ValueIterator iter = root.begin();
+    Json::Value PresetInfo = root["Preset Info"];
+
+    Json::Value Element = root["Elements"];
+    Json::ValueIterator iter = Element.begin();
 
     m_EffectNameList.clear();
 
@@ -579,12 +618,107 @@ void CImguiMgr::LoadPreset()
         string KeyName;
         KeyName = iter.key().asString();
 
+        _int iEffectType = Element[KeyName]["EffectType"].asInt();
+       
+        Json::Value Elements = Element[KeyName];
+
+        shared_ptr<CEffectMesh> pEffect;
+
+
+        if(0 == iEffectType){
+
+            //Particle
+        }
+        else if(1== iEffectType){
+
+            //Texture
+
+        }
+        else if (2 == iEffectType) {
+            //Mesh
+
+            CEffectMesh::MESH_DESC desc = {};
+
+            // pEffect = CEffectMesh::Create()
+            desc.vCenter = { Elements["Center"]["x"].asFloat(),
+            Elements["Center"]["y"].asFloat(),
+            Elements["Center"]["z"].asFloat() };
+
+            desc.vStartScale = { Elements["StartScale"]["x"].asFloat(),
+            Elements["StartScale"]["y"].asFloat(),
+            Elements["StartScale"]["z"].asFloat() };
+
+            desc.vMiddleScale = { Elements["MiddleScale"]["x"].asFloat(),
+            Elements["MiddleScale"]["y"].asFloat(),
+            Elements["MiddleScale"]["z"].asFloat() };
+
+            desc.vEndScale = { Elements["EndScale"]["x"].asFloat(),
+            Elements["EndScale"]["y"].asFloat(),
+            Elements["EndScale"]["z"].asFloat() };
+
+            desc.bUVLoop = Elements["Loop"]["UVLoop"].asBool();
+            desc.bLoop = Elements["Loop"]["EffectLoop"].asBool();
+
+            desc.vColor = { Elements["Color"]["x"].asFloat(),
+            Elements["Color"]["y"].asFloat(),
+            Elements["Color"]["z"].asFloat(),
+            1.f};
+
+            desc.vDuration = { Elements["Duration"]["x"].asFloat(),
+            Elements["Duration"]["y"].asFloat() };
+
+            desc.fScaleChangeTime = Elements["ChangeTime"]["ChangeTime"].asFloat();
+
+            string strNoisePath = Elements["Noise"]["TexKey"].asString();
+
+            _int iNoiseTexNum = 0;
+            for (auto& iter : m_NoiseList) {
+
+                if (!strcmp(iter, strNoisePath.c_str())) {
+
+                    m_iNoiseNum = iNoiseTexNum;
+                    break;
+                }
+                else {
+                    ++iNoiseTexNum;
+                }
+
+            }
+
+            _tchar szMeshName[MAX_PATH] = TEXT("");
+            MultiByteToWideChar(CP_ACP, 0, m_MeshesList[m_iMeshNum], (_int)strlen(m_MeshesList[m_iMeshNum]), szMeshName, MAX_PATH);
+
+            desc.szMaskTexKey = new char[256];
+            desc.szNoiseTexKey = new char[256];
+
+            memcpy_s(desc.szMaskTexKey, sizeof(char) * 256, m_MaskList[m_iMaskNum], sizeof(char) * 256);
+            memcpy_s(desc.szNoiseTexKey, sizeof(char) * 256, m_NoiseList[m_iNoiseNum], sizeof(char) * 256);
+
+            desc.bMask = m_IsMaskTex;
+            desc.bNoise = m_IsNoiseTex;
+
+            desc.vMaskDir = m_vMaskDirection;
+            desc.vNoiseDir = m_vNoiseDirection;
+            desc.fMaskSpeed = m_fMaskSpeed;
+            desc.fNoiseSpeed = m_fNoiseSpeed;
+            desc.vLerpColor = m_vLerpColor;
+
+            dynamic_pointer_cast<CEffectMesh>(m_pEffectPreset->GetEffect(m_iEffectSelectIdx))->EditEffect(szFullPath, szMeshName, &desc);
+
+
+        }
+
+
+
         char* szName = new char[256];
         memcpy_s(szName, sizeof(char) * 256, KeyName.c_str(), sizeof(char) * 256);
         m_EffectNameList.push_back(szName);
 
         ++iter;
     }
+    
+    m_pEffectPreset->SetLoop(Element["Loop"].asBool());
+    m_pEffectPreset->SetDuration(Element["Duration"].asFloat());
 
 
 }
@@ -720,6 +854,7 @@ void CImguiMgr::CreateEffect()
 
     }
 
+    m_iEffectSelectIdx = m_EffectNameList.size() - 1;
     m_pEffectPreset->PlayEffect();
   
 
@@ -754,6 +889,89 @@ void CImguiMgr::CreatePreset()
     m_pEffectPreset->DeleteAll();
     m_EffectNameList.clear();
     m_iEffectSelectIdx = 0;
+
+}
+
+void CImguiMgr::EditEffect()
+{
+    if (0 == m_iEffectType) {
+
+
+    }
+    else if (1 == m_iEffectType) {
+
+        CEffectTexture::TEXEFFECT_DESC textureDesc = {};
+
+        textureDesc.vCenter = m_vCenter;
+        textureDesc.vColor = m_vColor;
+        textureDesc.vRotation = m_vRotation;
+        textureDesc.vStartScale = m_vTexStartScale;
+        textureDesc.vMiddleScale = m_vTexMiddleScale;
+        textureDesc.vEndScale = m_vTexEndScale;
+        textureDesc.vDuration = m_vDuration;
+
+        textureDesc.fTurnSpeed = m_fTurnSpeed;
+        textureDesc.vTurnAxis = m_vAxis;
+
+        textureDesc.fScaleChangeTime = m_fScaleChangeTime;
+
+        char* EffectName = new char[256];
+        memcpy_s(EffectName, sizeof(char) * 256, m_CurrentName, sizeof(char) * 256);
+
+        _tchar szFullPath[MAX_PATH] = TEXT("");
+        MultiByteToWideChar(CP_ACP, 0, m_ImagesList[m_iImageNum], (_int)strlen(m_ImagesList[m_iImageNum]), szFullPath, MAX_PATH);
+
+        dynamic_pointer_cast<CEffectTexture>(m_pEffectPreset->GetEffect(m_iEffectSelectIdx))->EditDesc(szFullPath, textureDesc);
+
+
+    }
+    else if (2 == m_iEffectType) {
+
+        CEffectMesh::MESH_DESC desc = {};
+
+        desc.vCenter = m_vCenter;
+        desc.vStartScale = m_vScale;
+        desc.vMiddleScale = m_vMiddleScale;
+        desc.vEndScale = m_vEndScale;
+
+        desc.bUVLoop = m_bMaskUVLoop;
+        desc.bLoop = m_IsLoop;
+
+        desc.vColor = m_vColor;
+        desc.vDuration = m_vDuration;
+
+        desc.fScaleChangeTime = m_fScaleChangeTime;
+
+        char* EffectName = new char[256];
+        memcpy_s(EffectName, sizeof(char) * 256, m_CurrentName, sizeof(char) * 256);
+
+        _tchar szFullPath[MAX_PATH] = TEXT("");
+        MultiByteToWideChar(CP_ACP, 0, m_ImagesList[m_iImageNum], (_int)strlen(m_ImagesList[m_iImageNum]), szFullPath, MAX_PATH);
+
+        _tchar szMeshName[MAX_PATH] = TEXT("");
+        MultiByteToWideChar(CP_ACP, 0, m_MeshesList[m_iMeshNum], (_int)strlen(m_MeshesList[m_iMeshNum]), szMeshName, MAX_PATH);
+
+        desc.szMaskTexKey = new char[256];
+        desc.szNoiseTexKey = new char[256];
+
+        memcpy_s(desc.szMaskTexKey, sizeof(char) * 256, m_MaskList[m_iMaskNum], sizeof(char) * 256);
+        memcpy_s(desc.szNoiseTexKey, sizeof(char) * 256, m_NoiseList[m_iNoiseNum], sizeof(char) * 256);
+
+        desc.bMask = m_IsMaskTex;
+        desc.bNoise = m_IsNoiseTex;
+
+        desc.vMaskDir = m_vMaskDirection;
+        desc.vNoiseDir = m_vNoiseDirection;
+        desc.fMaskSpeed = m_fMaskSpeed;
+        desc.fNoiseSpeed = m_fNoiseSpeed;
+        desc.vLerpColor = m_vLerpColor;
+
+        dynamic_pointer_cast<CEffectMesh>(m_pEffectPreset->GetEffect(m_iEffectSelectIdx))->EditEffect(szFullPath, szMeshName, &desc);
+
+
+    }
+
+
 
 }
 

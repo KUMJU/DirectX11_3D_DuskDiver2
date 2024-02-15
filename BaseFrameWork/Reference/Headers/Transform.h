@@ -63,6 +63,10 @@ public:
 		m_fSpeedPerSec = _fSpeed;
 	}
 
+	void SetTurnSpeed(_float _fTurnSpeed) {
+		m_fRotationPerSet = _fTurnSpeed;
+	}
+
 	//모든 이동에 가능여부 확인
 	void CheckingMove(_fvector _vPosition, shared_ptr<class CNavigation> _pNavigation , _bool& _IsJump);
 	void SetYOffset(_float _fOffset) { m_fYOffset = _fOffset; }

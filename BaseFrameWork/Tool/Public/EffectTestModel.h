@@ -24,6 +24,13 @@ public:
 	virtual void LateTick(_float _fTimeDelta);
 	virtual HRESULT Render();
 
+public:
+	
+	shared_ptr<CModel> GetModel() { return m_pModel; }
+
+	void ChangeAnimation(_uint _iAnimNum);
+
+
 private:
 
 	shared_ptr<class CEffectPreset> m_pEffectPreset = nullptr;
@@ -33,7 +40,7 @@ private:
 	shared_ptr<CShader> m_pShader = nullptr;
 
 public:
-	static shared_ptr<CEffectTestModel> Create(shared_ptr<class CEffectPreset> _pPreset, const wstring& _strModelName);
+	static shared_ptr<CEffectTestModel> Create();
 
 
 };

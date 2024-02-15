@@ -124,7 +124,7 @@ PS_EFFECT_OUT PS_EFFECT_LOOP_MAIN(PS_IN In)
         
         
     Out.vDiffuse.rgb = float3(fR, fG, fB);
-    
+    Out.vDiffuse.a = 1.f;
     
     
     if (g_bDiffuseTex)
@@ -188,17 +188,27 @@ PS_EFFECT_OUT PS_EFFECT_ONCE_MAIN(PS_IN In)
         MaskUVOffset.y += g_vMaskDirection.y * g_vMaskSpeed * g_fDeltaTime;
         
         
-        vector vMask = g_MaskTexture.Sample(g_LinearClampSampler, MaskUVOffset);
+        if (MaskUVOffset.x < 0.f || MaskUVOffset.x > 1.f ||
+            MaskUVOffset.y > 1.f || MaskUVOffset.y < 0.f)
+        {
+            discard;
+            return Out;
+
+        }
+        else
+        {
+            vector vMask = g_MaskTexture.Sample(g_LinearSampler, MaskUVOffset);
 
         
-        Out.vDiffuse.a = vMask.r;
+            Out.vDiffuse.a = vMask.r;
         
-        float fR = lerp(g_vColor.r, g_vLerpColor.r, In.vTexcoord.y);
-        float fG = lerp(g_vColor.g, g_vLerpColor.g, In.vTexcoord.y);
-        float fB = lerp(g_vColor.b, g_vLerpColor.b, In.vTexcoord.y);
+            float fR = lerp(g_vColor.r, g_vLerpColor.r, In.vTexcoord.y);
+            float fG = lerp(g_vColor.g, g_vLerpColor.g, In.vTexcoord.y);
+            float fB = lerp(g_vColor.b, g_vLerpColor.b, In.vTexcoord.y);
         
         
-        Out.vDiffuse.rgb = float3(fR, fG, fB);
+            Out.vDiffuse.rgb = float3(fR, fG, fB);
+        }
         
     }
     

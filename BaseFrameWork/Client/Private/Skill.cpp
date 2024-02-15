@@ -138,6 +138,10 @@ if (!m_IsEnabled)
 
 void CSkill::ActiveSkill()
 {
+	//스킬 트리거 + 사운드 트리거 
+
+
+
 }
 
 void CSkill::SkillReset()

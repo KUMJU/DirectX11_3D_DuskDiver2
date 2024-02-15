@@ -43,16 +43,20 @@ public:
 	virtual void Tick(_float _fTimeDelta);
 	virtual void LateTick(_float _fTimeDelta);
 	virtual HRESULT Render();
-
-private:
-	void ComputeInitData();
-
 public:
 	virtual void ParsingData(Json::Value& _root) override;
 	virtual void ResetEffect();
 
 public:
+
+	void EditDesc(const wstring& _strTextureKey, TEXEFFECT_DESC _desc);
+
+
+private:
+	void ComputeInitData();
+
 	void ScaleLerp();
+
 
 private:
 
