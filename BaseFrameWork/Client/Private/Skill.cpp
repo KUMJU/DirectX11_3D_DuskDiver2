@@ -5,6 +5,8 @@
 #include "GameInstance.h"
 #include "Animation.h"
 
+#include "EffectPreset.h"
+
 CSkill::CSkill()
 {
 }
@@ -112,6 +114,8 @@ void CSkill::Tick(_float _fTimeDelta)
 
 	}
 
+	if(m_pEffectPreset)
+		m_pEffectPreset->Tick(_fTimeDelta);
 
 }
 
@@ -119,6 +123,9 @@ void CSkill::LateTick(_float _fTimeDelta)
 {
 
 	CGameInstance::GetInstance()->AddDebugComponent(m_Collider);
+	
+	if (m_pEffectPreset)
+		m_pEffectPreset->LateTick(_fTimeDelta);
 
 }
 
@@ -136,10 +143,24 @@ if (!m_IsEnabled)
 	return S_OK;
 }
 
+
+void CSkill::SetOwnerTransform(shared_ptr<CTransform> _pOwnerTransform) {
+
+	m_pOwnerTransform = _pOwnerTransform;
+
+	if (m_pEffectPreset) {
+		m_pEffectPreset->SetParentTransform(_pOwnerTransform);
+	}
+
+}
+
 void CSkill::ActiveSkill()
 {
-	//스킬 트리거 + 사운드 트리거 
+	if (m_pEffectPreset) {
 
+		m_pEffectPreset->PlayEffect();
+
+	}
 
 
 }
@@ -148,6 +169,12 @@ void CSkill::SkillReset()
 {
 	m_fSkillActiveTime = 0.f;
 	m_iCurrentSkillOrder = 0;
+
+	if (m_pEffectPreset) {
+		m_pEffectPreset->StopEffect();
+		m_pEffectPreset->ResetEffect();
+	}
+	
 }
 
 void CSkill::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _pCol)

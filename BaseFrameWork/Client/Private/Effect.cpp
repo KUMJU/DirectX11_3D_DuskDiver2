@@ -7,7 +7,7 @@ CEffect::CEffect()
 
 HRESULT CEffect::Initialize(CTransform::TRANSFORM_DESC* _pDesc)
 {
-    __super::Initialize(nullptr);
+    __super::Initialize(_pDesc);
     return S_OK;
 }
 
@@ -21,6 +21,7 @@ void CEffect::Tick(_float _fTimeDelta, _matrix _ParentMat)
 
 void CEffect::LateTick(_float _fTimeDelta)
 {
+
 }
 
 HRESULT CEffect::Render()

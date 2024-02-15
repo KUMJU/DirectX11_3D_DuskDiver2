@@ -51,9 +51,7 @@ protected:
 	//활성화 시간이 지나면 false로 상태를 꺼주고 다시 이펙트 풀로 돌려보낸다 
 	_float2 vDuration = _float2();
 	char* m_strEffectName = {};
-
-
-
+	_matrix m_ParentMat;
 
 };
 

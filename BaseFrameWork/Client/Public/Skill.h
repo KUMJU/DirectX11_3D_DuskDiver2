@@ -3,6 +3,7 @@
 #include "Client_Defines.h"
 
 #include "GameObject.h"
+#include "EffectMgr.h"
 
 BEGIN(Engine)
 class CCollider;
@@ -50,7 +51,7 @@ public:
 	virtual HRESULT Render();
 
 public:
-	void SetOwnerTransform(shared_ptr<CTransform> _pOwnerTransform) { m_pOwnerTransform = _pOwnerTransform; }
+	void SetOwnerTransform(shared_ptr<CTransform> _pOwnerTransform);
 
 
 public:
@@ -130,6 +131,9 @@ protected:
 	_float m_fKnockUpDistance = 0.f;
 
 	wstring m_strCutSceneName = TEXT(""); // 이벤트 카메라에 넘겨줄 이벤트씬 이름
+
+
+	shared_ptr<class CEffectPreset> m_pEffectPreset = nullptr;
 
 	shared_ptr<CAnimation> m_pMainAnimation = nullptr;
 	shared_ptr<CAnimation> m_pAnimation = nullptr;

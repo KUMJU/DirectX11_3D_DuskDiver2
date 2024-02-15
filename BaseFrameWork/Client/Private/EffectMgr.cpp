@@ -45,6 +45,7 @@ void CEffectMgr::LoadEffectPreset()
             wstring strExt = EraseExt(strName);
             wstring strFilePath = m_strBasePath + strName;
             
+
             ReadData(strFilePath, strExt);
         }
     }
@@ -148,17 +149,47 @@ void CEffectMgr::ReadData(const wstring& _strFullPath, const wstring& _strKeyNam
             CEffectTexture::TEXEFFECT_DESC desc = {};
             string strTextureKey = ElementKey["TextureKey"].asString();
 
+            desc.vCenter = { ElementKey["Center"]["x"].asFloat(),
+            ElementKey["Center"]["y"].asFloat(),
+            ElementKey["Center"]["z"].asFloat() };
 
-            desc.vCenter= { ElementKey["Center"]["x"].asFloat(),ElementKey["Center"]["y"].asFloat() ,ElementKey["Center"]["z"].asFloat() };
-            desc.vColor = { ElementKey["Color"]["x"].asFloat(),ElementKey["Color"]["y"].asFloat() ,ElementKey["Color"]["z"].asFloat(), 1.f };
-            desc.vRotation = { ElementKey["Rotation"]["x"].asFloat(),ElementKey["Rotation"]["y"].asFloat() ,ElementKey["Rotation"]["z"].asFloat() };
-            desc.vDuration.x = 5.f;
-            desc.vDuration.y = 15.f;
-            desc.vScale = { ElementKey["Scale"]["x"].asFloat(),ElementKey["Scale"]["y"].asFloat() };
+            desc.vStartScale = { ElementKey["StartScale"]["x"].asFloat(),
+            ElementKey["StartScale"]["y"].asFloat() };
 
+            desc.vMiddleScale = { ElementKey["MiddleScale"]["x"].asFloat(),
+            ElementKey["MiddleScale"]["y"].asFloat() };
+
+            desc.vEndScale = { ElementKey["EndScale"]["x"].asFloat(),
+            ElementKey["EndScale"]["y"].asFloat() };
+
+
+            desc.vRotation = { ElementKey["Rotation"]["x"].asFloat(),
+                                      ElementKey["Rotation"]["y"].asFloat(),
+                                      ElementKey["Rotation"]["z"].asFloat() };
+
+
+            desc.vColor = { ElementKey["Color"]["x"].asFloat(),
+            ElementKey["Color"]["y"].asFloat(),
+            ElementKey["Color"]["z"].asFloat(),
+            ElementKey["Color"]["w"].asFloat() };
+
+
+
+            desc.vDuration = { ElementKey["Duration"]["x"].asFloat(),
+                                      ElementKey["Duration"]["y"].asFloat() };
+
+            desc.fTurnSpeed = ElementKey["Speed"].asFloat();
+
+            desc.vTurnAxis = { ElementKey["Axis"]["x"].asFloat(),
+                                      ElementKey["Axis"]["y"].asFloat(),
+                                      ElementKey["Axis"]["z"].asFloat(),
+                                      0.f };
+
+            desc.fScaleChangeTime = ElementKey["ScaleChageTime"].asFloat();
+
+     
             _tchar szFullPath[MAX_PATH] = TEXT("");
             MultiByteToWideChar(CP_ACP, 0, strTextureKey.c_str(), (_int)strlen(strTextureKey.c_str()), szFullPath, MAX_PATH);
-
 
             shared_ptr<CEffectTexture> pTexEffect = CEffectTexture::Create(szFullPath, &desc, const_cast<char*>(keyName.c_str()));
             pPreset->AddEffect(pTexEffect);
@@ -168,6 +199,65 @@ void CEffectMgr::ReadData(const wstring& _strFullPath, const wstring& _strKeyNam
         //Mesh
         else if (2 == iEffectType) {
 
+            CEffectMesh::MESH_DESC desc = {};
+            desc.vCenter = { ElementKey["Center"]["x"].asFloat(),
+            ElementKey["Center"]["y"].asFloat(),
+            ElementKey["Center"]["z"].asFloat() };
+
+            desc.vStartScale = { ElementKey["StartScale"]["x"].asFloat(),
+            ElementKey["StartScale"]["y"].asFloat(),
+            ElementKey["StartScale"]["z"].asFloat() };
+
+            desc.vMiddleScale = { ElementKey["MiddleScale"]["x"].asFloat(),
+            ElementKey["MiddleScale"]["y"].asFloat(),
+            ElementKey["MiddleScale"]["z"].asFloat() };
+
+            desc.vEndScale = { ElementKey["EndScale"]["x"].asFloat(),
+            ElementKey["EndScale"]["y"].asFloat(),
+            ElementKey["EndScale"]["z"].asFloat() };
+
+            desc.bUVLoop = ElementKey["Loop"]["UVLoop"].asBool();
+            desc.bLoop = ElementKey["Loop"]["EffectLoop"].asBool();
+
+            desc.vColor = { ElementKey["Color"]["x"].asFloat(),
+            ElementKey["Color"]["y"].asFloat(),
+            ElementKey["Color"]["z"].asFloat(),
+            1.f };
+
+            desc.vDuration = { ElementKey["Duration"]["x"].asFloat(),
+            ElementKey["Duration"]["y"].asFloat() };
+
+            desc.fScaleChangeTime = ElementKey["ChangeTime"].asFloat();
+
+            string strMaskPath = ElementKey["Mask"]["TexKey"].asString();
+            string strNoisePath = ElementKey["Noise"]["TexKey"].asString();
+
+            string strMeshName = ElementKey["MeshKey"].asString();
+
+            _tchar szMeshName[MAX_PATH] = TEXT("");
+            MultiByteToWideChar(CP_ACP, 0, strMeshName.c_str(), (_int)strlen(strMeshName.c_str()), szMeshName, MAX_PATH);
+
+            desc.szMaskTexKey = new char[256];
+            desc.szNoiseTexKey = new char[256];
+
+            memcpy_s(desc.szMaskTexKey, sizeof(char) * 256, strMaskPath.c_str(), sizeof(char) * 256);
+            memcpy_s(desc.szNoiseTexKey, sizeof(char) * 256, strNoisePath.c_str(), sizeof(char) * 256);
+
+            desc.bMask = ElementKey["Mask"]["Using"].asBool();
+            desc.bNoise = ElementKey["Noise"]["Using"].asBool();
+
+            desc.vMaskDir = { ElementKey["Mask"]["x"].asFloat(), ElementKey["Mask"]["y"].asFloat() };
+            desc.vNoiseDir = { ElementKey["Noise"]["x"].asFloat(), ElementKey["Noise"]["y"].asFloat() };
+            desc.fMaskSpeed = ElementKey["Mask"]["Speed"].asFloat();
+            desc.fNoiseSpeed = ElementKey["Noise"]["Speed"].asFloat();
+            desc.vLerpColor = { ElementKey["LerpColor"]["x"].asFloat(),
+            ElementKey["LerpColor"]["y"].asFloat(),
+            ElementKey["LerpColor"]["z"].asFloat(),
+            1.f };
+
+            shared_ptr<CEffectMesh> pMeshEffect = CEffectMesh::Create(szMeshName, &desc, const_cast<char*>(keyName.c_str()));
+            pPreset->AddEffect(pMeshEffect);
+            pMeshEffect->SetEnable(false);
         }
 
 

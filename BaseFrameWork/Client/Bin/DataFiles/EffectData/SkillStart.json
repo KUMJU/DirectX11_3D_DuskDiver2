@@ -1,0 +1,192 @@
+{
+	"Elements" : 
+	{
+		"Ground1" : 
+		{
+			"Axis" : 
+			{
+				"x" : 0.0,
+				"y" : 1.0,
+				"z" : 0.0
+			},
+			"Center" : 
+			{
+				"x" : 0.0,
+				"y" : 0.02199999988079071,
+				"z" : 0.0
+			},
+			"Color" : 
+			{
+				"w" : 1.0,
+				"x" : 0.94607841968536377,
+				"y" : 0.80694925785064697,
+				"z" : 0.0
+			},
+			"Duration" : 
+			{
+				"x" : 0.0,
+				"y" : 1.0
+			},
+			"EffectType" : 1,
+			"EndScale" : 
+			{
+				"x" : 0.5,
+				"y" : 0.5
+			},
+			"Loop" : 
+			{
+				"Loop" : false
+			},
+			"MiddleScale" : 
+			{
+				"x" : 2.5,
+				"y" : 2.5
+			},
+			"Rotation" : 
+			{
+				"x" : 90.0,
+				"y" : 0.0,
+				"z" : 0.0
+			},
+			"ScaleChageTime" : 0.69999998807907104,
+			"Speed" : 3.0,
+			"StartScale" : 
+			{
+				"x" : 0.3,
+				"y" : 0.3
+			},
+			"TextureKey" : "T_GroundShape02"
+		},
+		"Ground2" : 
+		{
+			"Axis" : 
+			{
+				"x" : 0.0,
+				"y" : 1.0,
+				"z" : 0.0
+			},
+			"Center" : 
+			{
+				"x" : 0.0,
+				"y" : 0.019999999552965164,
+				"z" : 0.0
+			},
+			"Color" : 
+			{
+				"w" : 1.0,
+				"x" : 1.0,
+				"y" : 1.0,
+				"z" : 1.0
+			},
+			"Duration" : 
+			{
+				"x" : 0.0,
+				"y" : 1.0
+			},
+			"EffectType" : 1,
+			"EndScale" : 
+			{
+				"x" : 0.5,
+				"y" : 0.5
+			},
+			"Loop" : 
+			{
+				"Loop" : false
+			},
+			"MiddleScale" : 
+			{
+				"x" : 2.5,
+				"y" : 2.5
+			},
+			"Rotation" : 
+			{
+				"x" : 90.0,
+				"y" : 0.0,
+				"z" : 0.0
+			},
+			"ScaleChageTime" : 0.69999998807907104,
+			"Speed" : 3.0,
+			"StartScale" : 
+			{
+				"x" : 0.3,
+				"y" : 0.3
+			},
+			"TextureKey" : "T_GroundShape05"
+		},
+		"WindRing" : 
+		{
+			"Center" : 
+			{
+				"x" : 0.0,
+				"y" : 0.80000001192092896,
+				"z" : 0.0
+			},
+			"ChangeTime" : 0.69999998807907104,
+			"Color" : 
+			{
+				"w" : 1.0,
+				"x" : 0.94607841968536377,
+				"y" : 0.80694925785064697,
+				"z" : 0.0
+			},
+			"Duration" : 
+			{
+				"x" : 0.0,
+				"y" : 1.0
+			},
+			"EffectType" : 2,
+			"EndScale" : 
+			{
+				"x" : 1.0,
+				"y" : 1.0,
+				"z" : 1.0
+			},
+			"LerpColor" : 
+			{
+				"w" : 1.0,
+				"x" : 0.94607841968536377,
+				"y" : 0.80694925785064697,
+				"z" : 0.0
+			},
+			"Loop" : 
+			{
+				"EffectLoop" : false,
+				"UVLoop" : true
+			},
+			"Mask" : 
+			{
+				"Speed" : 2.0,
+				"TexKey" : "Mesh(334)",
+				"Using" : true,
+				"x" : 1.0,
+				"y" : 0.0
+			},
+			"MeshKey" : "Wind2",
+			"MiddleScale" : 
+			{
+				"x" : 45.0,
+				"y" : 45.0,
+				"z" : 45.0
+			},
+			"Noise" : 
+			{
+				"Speed" : 1.0,
+				"TexKey" : "T_GPBAR_Swirly_Noise",
+				"Using" : false,
+				"x" : 1.0,
+				"y" : 0.0
+			},
+			"StartScale" : 
+			{
+				"x" : 30.0,
+				"y" : 30.0,
+				"z" : 30.0
+			}
+		}
+	},
+	"Preset Info" : 
+	{
+		"Duration" : 88.0,
+		"Loop" : false
+	}
+}

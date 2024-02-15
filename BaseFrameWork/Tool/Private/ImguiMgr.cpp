@@ -632,14 +632,59 @@ void CImguiMgr::LoadPreset()
         else if(1== iEffectType){
 
             //Texture
+            CEffectTexture::TEXEFFECT_DESC textureDesc = {};
+
+            textureDesc.vCenter = { Elements["Center"]["x"].asFloat(),
+            Elements["Center"]["y"].asFloat(),
+            Elements["Center"]["z"].asFloat() };
+
+            textureDesc.vStartScale = { Elements["StartScale"]["x"].asFloat(),
+           Elements["StartScale"]["y"].asFloat() };
+
+            textureDesc.vMiddleScale = { Elements["MiddleScale"]["x"].asFloat(),
+            Elements["MiddleScale"]["y"].asFloat()};
+
+            textureDesc.vEndScale = { Elements["EndScale"]["x"].asFloat(),
+            Elements["EndScale"]["y"].asFloat()};
+
+
+            textureDesc.vRotation = { Elements["Rotation"]["x"].asFloat(),
+                                      Elements["Rotation"]["y"].asFloat(),
+                                      Elements["Rotation"]["z"].asFloat() };
+
+
+            textureDesc.vColor = { Elements["Color"]["x"].asFloat(),
+            Elements["Color"]["y"].asFloat(),
+            Elements["Color"]["z"].asFloat(),
+            Elements["Color"]["w"].asFloat() };
+
+
+
+            textureDesc.vDuration = { Elements["Duration"]["x"].asFloat(),
+                                      Elements["Duration"]["y"].asFloat() };
+
+            textureDesc.fTurnSpeed = Elements["Speed"].asFloat();
+
+            textureDesc.vTurnAxis = { Elements["Axis"]["x"].asFloat(),
+                                      Elements["Axis"]["y"].asFloat(),
+                                      Elements["Axis"]["z"].asFloat(),
+                                      0.f };
+
+            textureDesc.fScaleChangeTime = Elements["ScaleChageTime"].asFloat();
+
+
+            _tchar szFullPath[MAX_PATH] = TEXT("");
+            MultiByteToWideChar(CP_ACP, 0, Elements["TextureKey"].asString().c_str(), (_int)strlen(Elements["TextureKey"].asString().c_str()), szFullPath, MAX_PATH);
+
+            shared_ptr<CEffectTexture> pEffect = CEffectTexture::Create(szFullPath, &textureDesc, const_cast<char*>(KeyName.c_str()));
+            m_pEffectPreset->AddEffect(pEffect);
+
 
         }
         else if (2 == iEffectType) {
             //Mesh
-
             CEffectMesh::MESH_DESC desc = {};
 
-            // pEffect = CEffectMesh::Create()
             desc.vCenter = { Elements["Center"]["x"].asFloat(),
             Elements["Center"]["y"].asFloat(),
             Elements["Center"]["z"].asFloat() };
@@ -669,43 +714,37 @@ void CImguiMgr::LoadPreset()
 
             desc.fScaleChangeTime = Elements["ChangeTime"]["ChangeTime"].asFloat();
 
+            string strMaskPath = Elements["Mask"]["TexKey"].asString();
             string strNoisePath = Elements["Noise"]["TexKey"].asString();
 
-            _int iNoiseTexNum = 0;
-            for (auto& iter : m_NoiseList) {
+            string strMeshName = Elements["MeshKey"].asString();
 
-                if (!strcmp(iter, strNoisePath.c_str())) {
-
-                    m_iNoiseNum = iNoiseTexNum;
-                    break;
-                }
-                else {
-                    ++iNoiseTexNum;
-                }
-
-            }
+            _tchar szNoiseTexName[MAX_PATH] = TEXT("");
+            MultiByteToWideChar(CP_ACP, 0, strNoisePath.c_str(), (_int)strlen(strNoisePath.c_str()), szNoiseTexName, MAX_PATH);
 
             _tchar szMeshName[MAX_PATH] = TEXT("");
-            MultiByteToWideChar(CP_ACP, 0, m_MeshesList[m_iMeshNum], (_int)strlen(m_MeshesList[m_iMeshNum]), szMeshName, MAX_PATH);
+            MultiByteToWideChar(CP_ACP, 0, strMeshName.c_str(), (_int)strlen(strMeshName.c_str()), szMeshName, MAX_PATH);
 
             desc.szMaskTexKey = new char[256];
             desc.szNoiseTexKey = new char[256];
 
-            memcpy_s(desc.szMaskTexKey, sizeof(char) * 256, m_MaskList[m_iMaskNum], sizeof(char) * 256);
-            memcpy_s(desc.szNoiseTexKey, sizeof(char) * 256, m_NoiseList[m_iNoiseNum], sizeof(char) * 256);
+            memcpy_s(desc.szMaskTexKey, sizeof(char) * 256, strMaskPath.c_str() , sizeof(char) * 256);
+            memcpy_s(desc.szNoiseTexKey, sizeof(char) * 256, strNoisePath.c_str(), sizeof(char) * 256);
 
-            desc.bMask = m_IsMaskTex;
-            desc.bNoise = m_IsNoiseTex;
+            desc.bMask = Elements["Mask"]["Using"].asBool();
+            desc.bNoise = Elements["Noise"]["Using"].asBool();
 
-            desc.vMaskDir = m_vMaskDirection;
-            desc.vNoiseDir = m_vNoiseDirection;
-            desc.fMaskSpeed = m_fMaskSpeed;
-            desc.fNoiseSpeed = m_fNoiseSpeed;
-            desc.vLerpColor = m_vLerpColor;
+            desc.vMaskDir = { Elements["Mask"]["x"].asFloat(), Elements["Mask"]["y"].asFloat() };
+            desc.vNoiseDir = { Elements["Noise"]["x"].asFloat(), Elements["Noise"]["y"].asFloat() };
+            desc.fMaskSpeed = Elements["Mask"]["Speed"].asFloat();
+            desc.fNoiseSpeed = Elements["Noise"]["Speed"].asFloat();
+            desc.vLerpColor = { Elements["LerpColor"]["x"].asFloat(),
+            Elements["LerpColor"]["y"].asFloat(),
+            Elements["LerpColor"]["z"].asFloat(),
+            1.f };
 
-            dynamic_pointer_cast<CEffectMesh>(m_pEffectPreset->GetEffect(m_iEffectSelectIdx))->EditEffect(szFullPath, szMeshName, &desc);
-
-
+            pEffect = CEffectMesh::Create(TEXT(""), szMeshName, &desc, const_cast<char*>(KeyName.c_str()));
+            m_pEffectPreset->AddEffect(pEffect);
         }
 
 

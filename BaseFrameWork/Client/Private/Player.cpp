@@ -43,9 +43,6 @@ HRESULT CPlayer::Initialize()
     m_pBattleModelCom = CGameInstance::GetInstance()->GetModel(TEXT("Hero1_BattleMode_3Anim"));
     m_pBurstModelCom = CGameInstance::GetInstance()->GetModel(TEXT("Hero1_Burst"));
 
-    
-    m_pPreset = CEffectMgr::GetInstance()->FindEffect(TEXT("TestPreset"));
-    m_pPreset->SetParentTransform(m_pTransformCom);
     SetAnimSpeed();
     //Set Models 
 
@@ -201,14 +198,11 @@ void CPlayer::Tick(_float _fTimeDelta)
 
     m_pPlayerSkillset->Tick(_fTimeDelta);
 
-
-    m_bJump;
     for (auto& iter : m_Colliders) {
         iter->Tick(m_pTransformCom->GetWorldMatrix());
         CGameInstance::GetInstance()->AddCollider(CCollisionMgr::COL_PLAYER, iter);
     }
 
-    m_pPreset->Tick(_fTimeDelta);
 
 }
 
@@ -342,9 +336,8 @@ void CPlayer::LateTick(_float _fTimeDelta)
 
     CGameInstance::GetInstance()->AddDebugComponent(m_pNavigationCom);
 
-    m_pPreset->LateTick(_fTimeDelta);
 
-//    m_pPlayerSkillset->l();
+    m_pPlayerSkillset->LateTick(_fTimeDelta);
 
 
 }
@@ -1000,8 +993,6 @@ void CPlayer::KeyInput(_float _fTimeDelta)
             IsLoop = false;
             m_bJump = true;
             IsKeyInput = true;
-
-            m_pPreset->PlayEffect();
         }
     }
 

@@ -166,6 +166,13 @@ void CSkillSet::Tick(_float _fDelatTime)
 
 }
 
+void CSkillSet::LateTick(_float _fDeltaTime)
+{
+	if (ESKILLSTATE::SKILL_END != m_eCurrentSkill) {
+		m_Skills[m_eCurrentSkill]->LateTick(_fDeltaTime);
+	}
+}
+
 void CSkillSet::Render()
 {
 //	if (ESKILLSTATE::SKILL_END != m_eCurrentSkill) {
@@ -191,6 +198,7 @@ _bool CSkillSet::SwitchingSkill(ESKILLSTATE _eChangeSkill)
 			m_eCurrentSkill = _eChangeSkill;
 			m_Skills[m_eCurrentSkill]->SetSkillCancleAble(false);
 			m_Skills[m_eCurrentSkill]->SetEnable(true);
+			m_Skills[m_eCurrentSkill]->ActiveSkill();
 
 		}
 		else {

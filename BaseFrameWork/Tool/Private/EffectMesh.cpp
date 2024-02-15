@@ -17,6 +17,9 @@ HRESULT CEffectMesh::Initialize(const wstring& _strTextureKey, const wstring& _s
     m_MeshDesc = *_MeshDesc;
     m_vCurrentScale = XMLoadFloat3(&m_MeshDesc.vStartScale);
 
+    m_MeshKey = _strModelKey;
+
+
     m_eEffectType = EFFECT_TYPE::TYPE_MESH;
     __super::Initialize(nullptr);
     ComputeInitSetting();
@@ -257,24 +260,27 @@ void CEffectMesh::ParsingData(Json::Value& _root)
     Json::Value Center;
 
     Center["x"] = m_MeshDesc.vCenter.x;
-    Center["y"] = m_MeshDesc.vCenter.x;
-    Center["z"] = m_MeshDesc.vCenter.x;
+    Center["y"] = m_MeshDesc.vCenter.y;
+    Center["z"] = m_MeshDesc.vCenter.z;
 
     EffectInfo["Center"] = Center;
 
     Json::Value Color;
 
     Color["x"] = m_MeshDesc.vColor.x;
-    Color["y"] = m_MeshDesc.vColor.x;
-    Color["z"] = m_MeshDesc.vColor.x;
+    Color["y"] = m_MeshDesc.vColor.y;
+    Color["z"] = m_MeshDesc.vColor.z;
+    Color["w"] = m_MeshDesc.vColor.w;
+
 
     EffectInfo["Color"] = Color;
 
     Json::Value LerpColor;
 
     LerpColor["x"] = m_MeshDesc.vColor.x;
-    LerpColor["y"] = m_MeshDesc.vColor.x;
-    LerpColor["z"] = m_MeshDesc.vColor.x;
+    LerpColor["y"] = m_MeshDesc.vColor.y;
+    LerpColor["z"] = m_MeshDesc.vColor.z;
+    LerpColor["w"] = m_MeshDesc.vColor.w;
 
     EffectInfo["LerpColor"] = LerpColor;
 
@@ -302,6 +308,7 @@ void CEffectMesh::ParsingData(Json::Value& _root)
 
     StartScale["x"] = m_MeshDesc.vStartScale.x;
     StartScale["y"] = m_MeshDesc.vStartScale.y;
+    StartScale["z"] = m_MeshDesc.vStartScale.z;
 
     EffectInfo["StartScale"] = StartScale;
 
@@ -309,6 +316,7 @@ void CEffectMesh::ParsingData(Json::Value& _root)
 
     MiddleScale["x"] = m_MeshDesc.vMiddleScale.x;
     MiddleScale["y"] = m_MeshDesc.vMiddleScale.y;
+    MiddleScale["z"] = m_MeshDesc.vMiddleScale.z;
 
     EffectInfo["MiddleScale"] = MiddleScale;
 
@@ -316,6 +324,7 @@ void CEffectMesh::ParsingData(Json::Value& _root)
 
     EndScale["x"] = m_MeshDesc.vEndScale.x;
     EndScale["y"] = m_MeshDesc.vEndScale.y;
+    EndScale["z"] = m_MeshDesc.vEndScale.z;
 
     EffectInfo["EndScale"] = EndScale;
 
@@ -335,9 +344,7 @@ void CEffectMesh::ParsingData(Json::Value& _root)
 
     Json::Value ChangeTime;
 
-    ChangeTime["ChangeTime"] = m_MeshDesc.fScaleChangeTime;
-
-    EffectInfo["ChangeTime"] = ChangeTime;
+    EffectInfo["ChangeTime"] = m_MeshDesc.fScaleChangeTime;
 
 
     _root[m_strEffectName] = EffectInfo;

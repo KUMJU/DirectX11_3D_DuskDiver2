@@ -51,7 +51,6 @@ HRESULT CEffectTexture::Initialize(const wstring& _strTextureKey, TEXEFFECT_DESC
     m_Components.emplace(TEXT("Com_VIBuffer"), m_pVIBuffer);
 
     m_TextureKey = _strTextureKey;
-    m_TextureDesc = *_TextureDesc;
 
     m_strEffectName = _strName;
 
@@ -164,21 +163,26 @@ void CEffectTexture::ParsingData(Json::Value& _root)
     EffectInfo["EffectType"] = 1;
     EffectInfo["TextureKey"] = strMultiByte;
 
-    Json::Value Center;
+    Json::Value StartScale;
 
-    Center["x"] = m_TextureDesc.vCenter.x;
-    Center["y"] = m_TextureDesc.vCenter.x;
-    Center["z"] = m_TextureDesc.vCenter.x;
+    StartScale["x"] = m_TextureDesc.vStartScale.x;
+    StartScale["y"] = m_TextureDesc.vStartScale.y;
 
-    EffectInfo["Center"] = Center;
+    EffectInfo["StartScale"] = StartScale;
 
-    Json::Value Color;
-    
-    Color["x"] = m_TextureDesc.vColor.x;
-    Color["y"] = m_TextureDesc.vColor.x;
-    Color["z"] = m_TextureDesc.vColor.x;
+    Json::Value MiddleScale;
 
-    EffectInfo["Color"] = Color;
+    MiddleScale["x"] = m_TextureDesc.vMiddleScale.x;
+    MiddleScale["y"] = m_TextureDesc.vMiddleScale.y;
+
+    EffectInfo["MiddleScale"] = MiddleScale;
+
+    Json::Value EndScale;
+
+    EndScale["x"] = m_TextureDesc.vEndScale.x;
+    EndScale["y"] = m_TextureDesc.vEndScale.y;
+
+    EffectInfo["EndScale"] = EndScale;
 
 
     Json::Value Rotation;
@@ -189,15 +193,51 @@ void CEffectTexture::ParsingData(Json::Value& _root)
 
     EffectInfo["Rotation"] = Rotation;
 
+    Json::Value Center;
 
-    Json::Value Scale;
+    Center["x"] = m_TextureDesc.vCenter.x;
+    Center["y"] = m_TextureDesc.vCenter.y;
+    Center["z"] = m_TextureDesc.vCenter.z;
 
-    Scale["x"] = m_TextureDesc.vStartScale.x;
-    Scale["y"] = m_TextureDesc.vStartScale.y;
+    EffectInfo["Center"] = Center;
 
-    EffectInfo["Scale"] = Scale;
+    Json::Value Color;
+    
+    Color["x"] = m_TextureDesc.vColor.x;
+    Color["y"] = m_TextureDesc.vColor.y;
+    Color["z"] = m_TextureDesc.vColor.z;
+    Color["w"] = m_TextureDesc.vColor.w;
 
-   
+    EffectInfo["Color"] = Color;
+
+    Json::Value Duration;
+
+    Duration["x"] = m_TextureDesc.vDuration.x;
+    Duration["y"] = m_TextureDesc.vDuration.y;
+
+    EffectInfo["Duration"] = Duration;
+
+    Json::Value Speed;
+
+    EffectInfo["Speed"] = m_TextureDesc.fTurnSpeed;
+
+
+    Json::Value Axis;
+
+    Axis["x"] = m_TextureDesc.vTurnAxis.x;
+    Axis["y"] = m_TextureDesc.vTurnAxis.y;
+    Axis["z"] = m_TextureDesc.vTurnAxis.z;
+
+    EffectInfo["Axis"] = Axis;
+
+    Json::Value ScaleChageTime;
+
+    EffectInfo["ScaleChageTime"] = m_TextureDesc.fScaleChangeTime;
+  
+    Json::Value Loop;
+    Loop["Loop"] = m_TextureDesc.bLoop;
+    EffectInfo["Loop"] = Loop;
+
     _root[m_strEffectName] = EffectInfo;
 
 

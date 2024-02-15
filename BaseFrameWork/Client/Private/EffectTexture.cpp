@@ -21,23 +21,26 @@ HRESULT CEffectTexture::Initialize(const wstring& _strTextureKey, TEXEFFECT_DESC
 
     CTransform::TRANSFORM_DESC desc = {};
 
-    desc.fRotationPerSet = 10.f;
+    m_TextureDesc = *_TextureDesc;
+    desc.fRotationPerSet = _TextureDesc->fTurnSpeed;
     desc.fSpeedPerSet = 0.f;
 
     __super::Initialize(&desc);
 
+    ComputeInitData();
     m_pTransformCom->SetState(CTransform::STATE_POSITION, { _TextureDesc->vCenter.x, _TextureDesc->vCenter.y, _TextureDesc->vCenter.z, 1.f });
-    m_pTransformCom->SetScaling(_TextureDesc->vScale.x, _TextureDesc->vScale.y, 1.f);
+    m_pTransformCom->SetScaling(_TextureDesc->vStartScale.x, _TextureDesc->vStartScale.y, 1.f);
+
+
 
     m_pTransformCom->RotaitionRollYawPitch(
-        XMConvertToRadians(_TextureDesc->vRotation.x), 
-        XMConvertToRadians(_TextureDesc->vRotation.y), 
+        XMConvertToRadians(_TextureDesc->vRotation.x),
+        XMConvertToRadians(_TextureDesc->vRotation.y),
         XMConvertToRadians(_TextureDesc->vRotation.z));
 
-
- //   m_pTransformCom->Rotation({ 0.f, 0.f, 1.f }, XMConvertToRadians(_TextureDesc->vRotation.z));
-
     m_vColor = _TextureDesc->vColor;
+
+    m_vTurnAxis = XMLoadFloat4(&_TextureDesc->vTurnAxis);
 
     m_pShader = CGameInstance::GetInstance()->GetShader(TEXT("Shader_VtxPointTex"));
  
@@ -49,8 +52,6 @@ HRESULT CEffectTexture::Initialize(const wstring& _strTextureKey, TEXEFFECT_DESC
     m_Components.emplace(TEXT("Com_VIBuffer"), m_pVIBuffer);
 
     m_TextureKey = _strTextureKey;
-    m_TextureDesc = *_TextureDesc;
-
     m_strEffectName = _strName;
 
     m_fDurationStart = _TextureDesc->vDuration.x;
@@ -70,19 +71,17 @@ void CEffectTexture::Tick(_float _fTimeDelta, _matrix _ParentMat)
         return;
 
     m_fAccTime += _fTimeDelta;
-     
-    m_pTransformCom->Turn({ 0.f,1.f, 0.f }, _fTimeDelta);
-
+    m_fTimeDelta = _fTimeDelta;
 
     if (m_fAccTime >= m_fDurationStart) {
 
-        if (m_fAccTime <= m_fDurationEnd) {
+        if (m_fAccTime >= m_fDurationEnd) {
             m_IsEnabled = false;
         }
-
-        //Parent 객체가 있다면 그대로 따라간다
     }
 
+    m_pTransformCom->Turn(m_vTurnAxis, _fTimeDelta);
+    ScaleLerp();
     m_ParentMat = _ParentMat;
 
 
@@ -101,7 +100,8 @@ void CEffectTexture::LateTick(_float _fTimeDelta)
 HRESULT CEffectTexture::Render()
 {
     _vector worldMat = m_pTransformCom->GetState(CTransform::STATE_POSITION);
-    m_pTransformCom->SetState(CTransform::STATE_POSITION, m_ParentMat.r[3]);
+    _vector vNewPos = m_ParentMat.r[3] + XMLoadFloat3(&m_TextureDesc.vCenter);
+    m_pTransformCom->SetState(CTransform::STATE_POSITION, vNewPos);
     if (FAILED(m_pTransformCom->BindShaderResource(m_pShader, "g_WorldMatrix")))
         return E_FAIL;
 
@@ -135,9 +135,51 @@ HRESULT CEffectTexture::Render()
     return S_OK;
 }
 
-void CEffectTexture::ResetEffect()
+
+void CEffectTexture::ComputeInitData()
 {
+    m_fMiddleTime = m_TextureDesc.fScaleChangeTime;
+
+    _float fStartProcessTime = m_fMiddleTime - m_TextureDesc.vDuration.x;
+    _float fEndProcessTime = m_TextureDesc.vDuration.y - m_fMiddleTime;
+
+    //시작~ 중간 차이 계산 
+    m_vStartScaleDiff = _float2({ (m_TextureDesc.vMiddleScale.x - m_TextureDesc.vStartScale.x) / fStartProcessTime,
+    (m_TextureDesc.vMiddleScale.y - m_TextureDesc.vStartScale.y) / fStartProcessTime });
+
+    //중간 ~ 끝 차이 계산
+
+
+    m_vEndScaleDiff = _float2({ (m_TextureDesc.vEndScale.x - m_TextureDesc.vMiddleScale.x) / fEndProcessTime,
+    (m_TextureDesc.vEndScale.y - m_TextureDesc.vMiddleScale.y) / fEndProcessTime });
+
+}
+
+
+void CEffectTexture::ScaleLerp()
+{
+    if (m_fMiddleTime >= m_fAccTime) {
+        m_vCurrentScale += XMLoadFloat2(&m_vStartScaleDiff) * m_fTimeDelta;
+    }
+    else {
+        m_vCurrentScale += XMLoadFloat2(&m_vEndScaleDiff) * m_fTimeDelta;
+    }
+
+    // SetScaling
+    m_pTransformCom->SetScaling(m_vCurrentScale.m128_f32[0],
+        m_vCurrentScale.m128_f32[1],
+        1.f);
+
+
+
+}
+
+
+void CEffectTexture::ResetEffect() {
+
+    m_vCurrentScale = XMLoadFloat2(&m_TextureDesc.vStartScale);
     m_fAccTime = 0.f;
+
 }
 
 shared_ptr<CEffectTexture> CEffectTexture::Create(const wstring& _strTextureKey, TEXEFFECT_DESC* _TextureDesc, char* _strName)

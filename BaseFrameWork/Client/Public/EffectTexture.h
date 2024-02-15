@@ -17,11 +17,20 @@ class CEffectTexture : public CEffect
 {
 public:
 	struct TEXEFFECT_DESC {
-		_float2 vScale; //X, Z 
+		_float2 vStartScale;
+		_float2 vMiddleScale;
+		_float2 vEndScale;
 		_float3 vRotation;
 		_float3 vCenter;
 		_float4 vColor;
 		_float2 vDuration;
+		_float	fTurnSpeed;
+		_float4 vTurnAxis;
+
+		_float fScaleChangeTime;
+
+		_bool bLoop;
+
 	};
 
 public:
@@ -39,6 +48,11 @@ public:
 	virtual void ResetEffect();
 
 private:
+	void ComputeInitData();
+	void ScaleLerp();
+
+
+private:
 
 	_float4 m_vColor = { 1.f, 1.f, 1.f, 1.f };
 	shared_ptr<CVIBuffer_UI> m_pVIBuffer = nullptr;
@@ -53,7 +67,16 @@ private:
 
 
 	_float m_fAccTime = 0.f;
-	_matrix m_ParentMat;
+
+	_vector m_vTurnAxis = _vector();
+	_vector m_vCurrentScale = _vector();
+	_float m_fTimeDelta = 0.f;
+
+private:
+	_float2 m_vStartScaleDiff = _float2();
+	_float2 m_vEndScaleDiff = _float2();
+
+	_float m_fMiddleTime = 0.f;
 
 public:
 	static shared_ptr<CEffectTexture> Create(const wstring& _strTextureKey, TEXEFFECT_DESC* _TextureDesc, char* _strName);

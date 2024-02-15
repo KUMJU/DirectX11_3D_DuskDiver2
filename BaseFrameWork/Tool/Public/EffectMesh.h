@@ -92,6 +92,7 @@ private:
 	
 	/******Alpha******/
 
+	wstring m_ModelKey = TEXT("");
 
 
 public:

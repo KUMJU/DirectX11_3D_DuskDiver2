@@ -26,6 +26,7 @@ public:
 public:
 	void InitializeSkill(shared_ptr<CModel> _pBaseModel, shared_ptr<CModel> _pBurstModel);
 	void Tick(_float _fDelatTime);
+	void LateTick(_float _fDeltaTime);
 	void Render();
 
 public:

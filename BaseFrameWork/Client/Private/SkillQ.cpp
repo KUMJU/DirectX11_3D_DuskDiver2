@@ -4,6 +4,7 @@
 
 #include "GameInstance.h"
 
+#include "EffectPreset.h"
 
 CSkillQ::CSkillQ()
 {
@@ -16,6 +17,8 @@ HRESULT CSkillQ::Initialize()
 
     m_iDamage = 15;
 
+    m_pEffectPreset = CEffectMgr::GetInstance()->FindEffect(TEXT("SkillStart"));
+   // m_pEffectPreset->SetParentTransform(m_pOwnerTransform);
 
     CCollider::COLLIDER_DESC normalAtkDesc = {};
     normalAtkDesc.fRadius = 0.5f;
@@ -52,11 +55,13 @@ void CSkillQ::PriorityTick(_float _fTimeDelta)
 void CSkillQ::Tick(_float _fTimeDelta)
 {
     __super::Tick(_fTimeDelta);
-
+   
 }
 
 void CSkillQ::LateTick(_float _fTimeDelta)
 {
+    __super::LateTick(_fTimeDelta);
+
 }
 
 HRESULT CSkillQ::Render()
