@@ -35,6 +35,13 @@ public:
 		char* szNoiseTexKey;
 		char* szMaskTexKey;
 
+		_bool bAlphaLerp;
+		_float fAlphaSpeed;
+		_float fAlphaStartTime;
+		_float2 vAlphaDir;
+
+		_float3 vRotation;
+
 		_float fScaleChangeTime;
 	};
 
@@ -59,6 +66,7 @@ public:
 private:
 	void ComputeInitSetting();
 	void ScaleLerp();
+	void AlphaLerp();
 
 
 public:
@@ -68,6 +76,7 @@ public:
 	shared_ptr<CTexture> m_pNoiseTexture = nullptr;
 	//vector<shared_ptr<CTexture>> m_pNoiseTexture;
 
+	MESH_DESC GetDesc() { return m_MeshDesc; }
 
 private:
 	_float4 m_vColor = _float4();
@@ -80,10 +89,14 @@ private:
 	_float m_fAccTime = 0.f;
 	_float m_fMiddleTime = 0.f;
 	
+	_float m_fTexAlpha = 0.f;
+
 	wstring m_MeshKey = TEXT("");
 
+	_bool m_bHorizontal = false;
+
 private:
-	
+
 	/******Scale******/
 	_float3 m_vStartScaleDiff = _float3();
 	_float3 m_vEndScaleDiff = _float3();
@@ -92,7 +105,8 @@ private:
 	
 	/******Alpha******/
 
-	wstring m_ModelKey = TEXT("");
+	//Vertical Horizon
+	//
 
 
 public:

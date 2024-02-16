@@ -27,6 +27,7 @@ public:
 	virtual void ParsingData(Json::Value& _root) override;
 
 
+
 public:
 	virtual void ResetEffect();
 

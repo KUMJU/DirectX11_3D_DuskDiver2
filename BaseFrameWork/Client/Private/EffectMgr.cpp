@@ -227,6 +227,10 @@ void CEffectMgr::ReadData(const wstring& _strFullPath, const wstring& _strKeyNam
             desc.vDuration = { ElementKey["Duration"]["x"].asFloat(),
             ElementKey["Duration"]["y"].asFloat() };
 
+            desc.vRotation = { ElementKey["Rotation"]["x"].asFloat(),
+            ElementKey["Rotation"]["y"].asFloat(),
+            ElementKey["Rotation"]["z"].asFloat()};
+
             desc.fScaleChangeTime = ElementKey["ChangeTime"].asFloat();
 
             string strMaskPath = ElementKey["Mask"]["TexKey"].asString();

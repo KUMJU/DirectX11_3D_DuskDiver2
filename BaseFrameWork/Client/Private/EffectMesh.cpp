@@ -41,6 +41,11 @@ HRESULT CEffectMesh::Initialize( const wstring& _strModelKey, MESH_DESC* _MeshDe
     m_pTransformCom->SetScaling(_MeshDesc->vStartScale.x, _MeshDesc->vStartScale.y, _MeshDesc->vStartScale.z);
     m_pTransformCom->SetState(CTransform::STATE_POSITION, { _MeshDesc->vCenter.x, _MeshDesc->vCenter.y, _MeshDesc->vCenter.z, 1.f });
 
+    m_pTransformCom->RotaitionRollYawPitch(
+        XMConvertToRadians(_MeshDesc->vRotation.x),
+        XMConvertToRadians(_MeshDesc->vRotation.y),
+        XMConvertToRadians(_MeshDesc->vRotation.z));
+
     m_strEffectName = _strName;
 
     m_vColor = _MeshDesc->vColor;
@@ -96,12 +101,17 @@ void CEffectMesh::LateTick(_float _fTimeDelta)
 HRESULT CEffectMesh::Render()
 {
     _vector worldMat = m_pTransformCom->GetState(CTransform::STATE_POSITION);
-    _vector vNewPos = m_ParentMat.r[3] + XMLoadFloat3(&m_MeshDesc.vCenter);
-    m_pTransformCom->SetState(CTransform::STATE_POSITION, vNewPos);
     
-    if (FAILED(m_pTransformCom->BindShaderResource(m_pShader, "g_WorldMatrix")))
-        return E_FAIL;
+    _matrix WorldOwnMatrix = m_pTransformCom->GetWorldMatrix();
+    _float4x4 FloatWorld;
+    WorldOwnMatrix = WorldOwnMatrix * m_ParentMat;
 
+    XMStoreFloat4x4(&FloatWorld, WorldOwnMatrix);
+
+    //if (FAILED(m_pTransformCom->BindShaderResource(m_pShader, "g_WorldMatrix")))
+     //   return E_FAIL;
+    if (FAILED(m_pShader->BindMatrix("g_WorldMatrix", &FloatWorld)))
+        return E_FAIL;
 
    // if (FAILED(m_pTransformCom->BindShaderResource(m_pShader, "g_WorldMatrix")))
     //    return E_FAIL;

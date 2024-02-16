@@ -16,6 +16,8 @@ HRESULT CSkillE::Initialize()
     m_iDamage = 10;
     m_eSkillOwner = EOWNER_TYPE::OWNER_PLAYER;
 
+
+
     m_bCancle = true;
 
     CCollider::COLLIDER_DESC normalAtkDesc = {};
@@ -39,8 +41,8 @@ HRESULT CSkillE::Initialize()
     info1.bDownAtk = false;
     info1.fKnockUpDistance = 4.5f;
     info1.fWeight = 2.f;
-    info1.iStartTrackPosition = 29.f;
-    info1.iEndTrackPosition = 34.f;
+    info1.iStartTrackPosition = 32.f;
+    info1.iEndTrackPosition = 36.f;
     info1.CancleAbleRatio = 0.7;
 
 
@@ -94,6 +96,8 @@ void CSkillE::Tick(_float _fTimeDelta)
 
 void CSkillE::LateTick(_float _fTimeDelta)
 {
+    __super::LateTick(_fTimeDelta);
+
 }
 
 HRESULT CSkillE::Render()

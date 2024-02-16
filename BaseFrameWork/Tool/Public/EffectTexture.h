@@ -47,6 +47,8 @@ public:
 	virtual void ParsingData(Json::Value& _root) override;
 	virtual void ResetEffect();
 
+	TEXEFFECT_DESC GetDesc() { return m_TextureDesc; }
+
 public:
 
 	void EditDesc(const wstring& _strTextureKey, TEXEFFECT_DESC _desc);

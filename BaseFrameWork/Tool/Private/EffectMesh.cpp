@@ -20,6 +20,7 @@ HRESULT CEffectMesh::Initialize(const wstring& _strTextureKey, const wstring& _s
     m_MeshKey = _strModelKey;
 
 
+
     m_eEffectType = EFFECT_TYPE::TYPE_MESH;
     __super::Initialize(nullptr);
     ComputeInitSetting();
@@ -32,6 +33,11 @@ HRESULT CEffectMesh::Initialize(const wstring& _strTextureKey, const wstring& _s
 
     _tchar szNoiseKey[MAX_PATH] = TEXT("");
     MultiByteToWideChar(CP_ACP, 0, m_MeshDesc.szNoiseTexKey, (_int)strlen(m_MeshDesc.szNoiseTexKey), szNoiseKey, MAX_PATH);
+
+    m_pTransformCom->RotaitionRollYawPitch(
+        XMConvertToRadians(m_MeshDesc.vRotation.x),
+        XMConvertToRadians(m_MeshDesc.vRotation.y),
+        XMConvertToRadians(m_MeshDesc.vRotation.z));
 
     _tchar szMaskKey[MAX_PATH] = TEXT("");
     MultiByteToWideChar(CP_ACP, 0, m_MeshDesc.szMaskTexKey, (_int)strlen(m_MeshDesc.szMaskTexKey), szMaskKey, MAX_PATH);
@@ -182,8 +188,19 @@ void CEffectMesh::EditEffect(const wstring& _strTextureKey, const wstring& _strM
 {
     ResetEffect();
 
+
+    m_pTransformCom->RotaitionRollYawPitch(
+        XMConvertToRadians(-m_MeshDesc.vRotation.x),
+        XMConvertToRadians(-m_MeshDesc.vRotation.y),
+        XMConvertToRadians(-m_MeshDesc.vRotation.z));
+
     m_MeshDesc = *_MeshDesc;
     m_vCurrentScale = XMLoadFloat3(&m_MeshDesc.vStartScale);
+
+    m_pTransformCom->RotaitionRollYawPitch(
+        XMConvertToRadians(m_MeshDesc.vRotation.x),
+        XMConvertToRadians(m_MeshDesc.vRotation.y),
+        XMConvertToRadians(m_MeshDesc.vRotation.z));
 
     ComputeInitSetting();
 
@@ -207,7 +224,7 @@ void CEffectMesh::EditEffect(const wstring& _strTextureKey, const wstring& _strM
 
 void CEffectMesh::ComputeInitSetting()
 {
-
+    /**스케일 러프**/
     m_fMiddleTime = m_MeshDesc.fScaleChangeTime;
 
     _float fStartProcessTime = m_fMiddleTime - m_MeshDesc.vDuration.x;
@@ -226,6 +243,18 @@ void CEffectMesh::ComputeInitSetting()
     (m_MeshDesc.vEndScale.y - m_MeshDesc.vMiddleScale.y) / fEndProcessTime,
     (m_MeshDesc.vEndScale.z - m_MeshDesc.vMiddleScale.z) / fEndProcessTime });
 
+
+    /***알파러프***/
+    if (m_MeshDesc.bAlphaLerp) {
+        if (m_MeshDesc.vAlphaDir.x != 0.f) {
+            m_bHorizontal = true;
+        }
+        else {
+            m_bHorizontal = false;
+        }
+    }
+
+
 }
 
 void CEffectMesh::ScaleLerp()
@@ -241,6 +270,27 @@ void CEffectMesh::ScaleLerp()
     m_pTransformCom->SetScaling(m_vCurrentScale.m128_f32[0],
         m_vCurrentScale.m128_f32[1],
         m_vCurrentScale.m128_f32[2]);
+
+}
+
+void CEffectMesh::AlphaLerp()
+{
+
+
+
+    if (m_MeshDesc.fAlphaStartTime <= m_fAccTime) {
+
+
+
+    }
+
+
+
+    // 알파러프가 시작될 초 
+    // 현재 알파 러프 진행도
+    // 러프 진행 방향 
+    // discard 되어야하는 부분
+
 
 }
 
@@ -264,6 +314,14 @@ void CEffectMesh::ParsingData(Json::Value& _root)
     Center["z"] = m_MeshDesc.vCenter.z;
 
     EffectInfo["Center"] = Center;
+
+    Json::Value Rotation;
+
+    Rotation["x"] = m_MeshDesc.vRotation.x;
+    Rotation["y"] = m_MeshDesc.vRotation.y;
+    Rotation["z"] = m_MeshDesc.vRotation.z;
+
+    EffectInfo["Rotation"] = Rotation;
 
     Json::Value Color;
 

@@ -80,6 +80,7 @@ HRESULT CImguiMgr::Initialize()
     SettingMaskData();
     SettingNoiseData();
     SettingMeshData();
+    SettingPresetData();
 
 
     return S_OK;
@@ -159,6 +160,7 @@ void CImguiMgr::EffectSetting() {
     ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
     if (ImGui::BeginTabBar("Effect Type", tab_bar_flags))
     {
+
         if (ImGui::BeginTabItem("Particle"))
         {
             m_iEffectType = 0;
@@ -206,8 +208,17 @@ void CImguiMgr::EffectListView()
      
     ImGui::ListBox("Object List", &m_iEffectSelectIdx, m_EffectNameList.data(), (_int)m_EffectNameList.size(), 5);
 
+    if (m_iEffectSelectIdx != m_iPrevEffectSelectIdx && m_iEffectSelectIdx != -1) {
+
+        if (!m_EffectNameList.empty()) {
+            m_iPrevEffectSelectIdx = m_iEffectSelectIdx;
+            SwitchingEffectView();
+        }
+    }
+
+
     if (ImGui::Button("Delete")) {
-       
+
         if (m_iEffectSelectIdx == -1 || m_EffectNameList.empty())
             return;
 
@@ -228,12 +239,12 @@ void CImguiMgr::EffectListView()
     } ImGui::SameLine();
 
     if (ImGui::Button("Clear")) {
-        
+
     }
 
     if (ImGui::Button("Preset Play")) {
 
-        m_pEffectPreset->PlayEffect();   
+        m_pEffectPreset->PlayEffect();
         m_pTestModel->ChangeAnimation(m_iAnimNum);
 
     }
@@ -244,10 +255,10 @@ void CImguiMgr::EffectListView()
 
     }
 
-        
+
     ImGui::Text("Preset");
     ImGui::Separator();
-    
+
 
     ImGui::InputText(" ", m_CurrentPresetName, sizeof(_char) * 256);
     ImGui::SameLine();
@@ -285,6 +296,132 @@ void CImguiMgr::EffectListView()
 
 }
 
+void CImguiMgr::SwitchingEffectView()
+{
+    shared_ptr<CEffect> pEffect = m_pEffectPreset->GetEffect((_uint)m_iEffectSelectIdx);
+    memcpy_s(m_CurrentName, sizeof(m_CurrentName), pEffect->GetEffectName(), sizeof(pEffect->GetEffectName()));
+
+    m_CurrentName;
+    if (pEffect) {
+
+        CEffect::EFFECT_TYPE eType = pEffect->GetEffectType();
+
+
+        if (CEffect::EFFECT_TYPE::TYPE_PARTICLE == eType) {
+            m_iEffectType = 0;
+
+            //ImGui::InputFloat3("Center", &m_vCenter.x);
+            //ImGui::ColorEdit4("Color", &m_vColor.x);
+            //ImGui::InputFloat2("Duration", &m_vDuration.x);
+
+            //ImGui::SeparatorText("Scale Info");
+
+            //ImGui::InputFloat2("Start Scale", &m_vTexStartScale.x);
+            //ImGui::InputFloat2("Middle Scale", &m_vTexMiddleScale.x);
+            //ImGui::InputFloat2("End Scale", &m_vTexEndScale.x);
+            //ImGui::InputFloat("Change Time", &m_fScaleChangeTime);
+
+
+            //ImGui::SeparatorText("Spin Info");
+
+            //ImGui::InputFloat3("Rotation", &m_vRotation.x);
+
+            //ImGui::InputFloat("Turn Speed", &m_fTurnSpeed);
+            //ImGui::InputFloat3("Turn Axis", &m_vAxis.x);
+
+
+
+        }
+        else if (CEffect::EFFECT_TYPE::TYPE_TEXTURE == eType)
+        {
+            m_iEffectType = 1;
+            
+            CEffectTexture::TEXEFFECT_DESC desc = {};
+            desc = dynamic_pointer_cast<CEffectTexture>(pEffect)->GetDesc();
+
+            m_vCenter = desc.vCenter;
+            m_vColor = desc.vColor;
+            m_vDuration = desc.vDuration;
+
+            m_vTexStartScale = desc.vStartScale;
+            m_vTexMiddleScale = desc.vMiddleScale;
+            m_vTexEndScale = desc.vEndScale;
+            m_fScaleChangeTime = desc.fScaleChangeTime;
+            m_vRotation = desc.vRotation;
+            m_fTurnSpeed = desc.fTurnSpeed;
+            m_vAxis = desc.vTurnAxis;
+
+        }
+        else if (CEffect::EFFECT_TYPE::TYPE_MESH == eType){
+
+            m_iEffectType = 2;
+
+            CEffectMesh::MESH_DESC desc = {};
+            desc = dynamic_pointer_cast<CEffectMesh>(pEffect)->GetDesc();
+            m_vDuration = desc.vDuration;
+
+            _int iNewMeshNum = 0;
+
+            //for (auto& szMeshName : m_MeshesList) {
+
+            //    if (!strcmp(szMeshName, desc)) {
+
+            //    }
+
+            //}
+
+            m_vScale = desc.vStartScale;
+            m_vMiddleScale = desc.vMiddleScale;
+            m_vEndScale = desc.vEndScale;
+            m_fScaleChangeTime = desc.fScaleChangeTime;
+            m_vCenter = desc.vCenter;
+            m_vColor = desc.vColor;
+            m_vLerpColor = desc.vLerpColor;
+            m_IsMaskTex = desc.bMask;
+            m_bMaskUVLoop = desc.bUVLoop;
+
+            _int iMaskNum = 0;
+
+            for (auto& szMaskName : m_MaskList) {
+
+                if (!strcmp(szMaskName, desc.szMaskTexKey)) {
+                    m_iMaskNum = iMaskNum;
+                    break;
+                }
+
+                ++iMaskNum;
+            }
+
+            m_vMaskDirection = desc.vMaskDir;
+            m_fMaskSpeed = desc.fMaskSpeed;
+
+
+            m_IsNoiseTex = desc.bNoise;
+
+
+            _int iNoiseNum = 0;
+
+            for (auto& szNoiseName : m_NoiseList) {
+
+                if (!strcmp(szNoiseName, desc.szNoiseTexKey)) {
+                    m_iNoiseNum = iNoiseNum;
+                    break;
+                }
+
+                ++iNoiseNum;
+            }
+
+          
+
+            m_vNoiseDirection = desc.vNoiseDir;
+            m_fNoiseSpeed = desc.fNoiseSpeed;
+
+        }
+
+
+    }
+}
+
 void CImguiMgr::TestModelTool()
 {
     ImGui::Begin("Model Tool");
@@ -297,10 +434,6 @@ void CImguiMgr::TestModelTool()
 
     _int TrackPos = (_int)(m_pAnimList[m_iAnimNum]->GetCurrentTrackPosition());
     _int Duration = (_int)(m_pAnimList[m_iAnimNum]->GetAnimDuration());
-
-
-    m_fTotalDuration.y = Duration;
-
 
     ImGui::SliderInt("Lines", &TrackPos, 0, Duration);
 
@@ -420,6 +553,8 @@ void CImguiMgr::MeshEffectSetting()
     ImGui::InputFloat3("End Scale", &m_vEndScale.x);
     ImGui::InputFloat("Change Time", &m_fScaleChangeTime);
 
+    ImGui::InputFloat3("Rotation", &m_vRotation.x);
+
     ImGui::InputFloat3("Center", &m_vCenter.x);
 
     ImGui::ColorEdit4("Color", &m_vColor.x);
@@ -471,6 +606,43 @@ void CImguiMgr::MeshEffectSetting()
     ImGui::InputFloat2("NoiseTex Direction", &m_vNoiseDirection.x);
     ImGui::InputFloat("Noise UV Speed", &m_fNoiseSpeed);
 
+    ImGui::SeparatorText("Alpha Lerp");
+
+    ImGui::Checkbox("Using Alpha Lerp", &m_bAlphaLerp);
+    
+    ImGui::InputFloat2("Alpha Direction", &m_fAlphaDir.x);
+    ImGui::InputFloat("Alpha Speed", &m_fAlphaSpeed);
+    ImGui::InputFloat("Alpha Start Time", &m_fAlphaStartTime);
+
+
+}
+
+void CImguiMgr::SettingPresetData()
+{
+
+    _wfinddata_t fd;
+    intptr_t lHandle;
+    const wstring& strFullPath = m_strSavePath + TEXT("/*.*");
+
+    if (-1 == (lHandle = _wfindfirst(strFullPath.c_str(), &fd)))
+        return;
+
+    while (0 == _wfindnext(lHandle, &fd))
+    {
+        const wstring& strName = fd.name;
+
+        if (IsFileOrDir(fd) && fd.size != 0 && fd.name[0] != '.') {
+            wstring strName = fd.name;
+            wstring strExt = EraseExt(strName);
+
+            char* strMultiByte = new char[256];
+            WideCharToMultiByte(CP_ACP, 0, strExt.c_str(), -1, strMultiByte, 256, NULL, NULL);
+            m_PresetNameList.push_back(const_cast<char*>(strMultiByte));
+
+        }
+    }
+
+    _findclose(lHandle);
 }
 
 
@@ -557,7 +729,6 @@ void CImguiMgr::SettingNoiseData()
 
 }
 
-
 void CImguiMgr::SettingMeshData()
 {
     _wfinddata_t fd;
@@ -597,21 +768,23 @@ void CImguiMgr::LoadPreset()
     const wstring& strExt = TEXT(".json");
     
     _tchar szFullPath[MAX_PATH] = TEXT("");
-    MultiByteToWideChar(CP_ACP, 0, m_PresetNameList[m_iPresetSelectIdx], (_int)strlen(m_CurrentPresetName), szFullPath, MAX_PATH);
+    MultiByteToWideChar(CP_ACP, 0, m_PresetNameList[m_iPresetSelectIdx], (_int)strlen(m_PresetNameList[m_iPresetSelectIdx]), szFullPath, MAX_PATH);
 
     const wstring& strCompletePath = strFullPath + szFullPath + strExt;
     ifstream in(strCompletePath);
 
     in >> root;
 
-    _int iEffectNum = root.size();
-
     Json::Value PresetInfo = root["Preset Info"];
 
     Json::Value Element = root["Elements"];
+
+    _int iEffectNum = Element.size();
+
     Json::ValueIterator iter = Element.begin();
 
     m_EffectNameList.clear();
+    m_pEffectPreset->DeleteAll();
 
     for (_int i = 0; i < iEffectNum; ++i) {
 
@@ -679,7 +852,6 @@ void CImguiMgr::LoadPreset()
             shared_ptr<CEffectTexture> pEffect = CEffectTexture::Create(szFullPath, &textureDesc, const_cast<char*>(KeyName.c_str()));
             m_pEffectPreset->AddEffect(pEffect);
 
-
         }
         else if (2 == iEffectType) {
             //Mesh
@@ -712,7 +884,7 @@ void CImguiMgr::LoadPreset()
             desc.vDuration = { Elements["Duration"]["x"].asFloat(),
             Elements["Duration"]["y"].asFloat() };
 
-            desc.fScaleChangeTime = Elements["ChangeTime"]["ChangeTime"].asFloat();
+            desc.fScaleChangeTime = Elements["ChangeTime"].asFloat();
 
             string strMaskPath = Elements["Mask"]["TexKey"].asString();
             string strNoisePath = Elements["Noise"]["TexKey"].asString();
@@ -756,9 +928,11 @@ void CImguiMgr::LoadPreset()
         ++iter;
     }
     
-    m_pEffectPreset->SetLoop(Element["Loop"].asBool());
-    m_pEffectPreset->SetDuration(Element["Duration"].asFloat());
+    m_pEffectPreset->SetLoop(PresetInfo["Loop"].asBool());
+    m_IsLoop = PresetInfo["Loop"].asBool();
 
+    m_pEffectPreset->SetDuration(PresetInfo["Duration"].asFloat());
+    m_fTotalDuration.y = PresetInfo["Duration"].asFloat();
 
 }
 
@@ -776,7 +950,6 @@ wstring CImguiMgr::EraseExt(const wstring& _strFileName)
     size_t iCount = _strFileName.find_last_of(TEXT("."));
     return _strFileName.substr(0, iCount);
 }
-
 
 void CImguiMgr::CreateEffect()
 {   
@@ -851,6 +1024,8 @@ void CImguiMgr::CreateEffect()
         desc.vMiddleScale = m_vMiddleScale;
         desc.vEndScale = m_vEndScale;
 
+        desc.vRotation = m_vRotation;
+
         desc.bUVLoop = m_bMaskUVLoop;
         desc.bLoop = m_IsLoop;
 
@@ -858,6 +1033,13 @@ void CImguiMgr::CreateEffect()
         desc.vDuration = m_vDuration;
 
         desc.fScaleChangeTime = m_fScaleChangeTime;
+
+   
+        desc.bAlphaLerp = m_bAlphaLerp;
+        desc.fAlphaStartTime = m_fAlphaStartTime;
+        desc.fAlphaSpeed = m_fAlphaSpeed;
+        desc.vAlphaDir = m_fAlphaDir;
+
 
         char* EffectName = new char[256];
         memcpy_s(EffectName, sizeof(char) * 256, m_CurrentName, sizeof(char) * 256);
@@ -908,7 +1090,7 @@ void CImguiMgr::CreatePreset()
     MultiByteToWideChar(CP_ACP, 0, m_CurrentPresetName, (_int)strlen(m_CurrentPresetName), szFullPath, MAX_PATH);
 
     const wstring& strSavePath = strFullPath + szFullPath + strExt;
-    const wstring& strName = szFullPath + strExt;
+    const wstring& strName = szFullPath;
 
     ofstream out(strSavePath);
 
@@ -924,6 +1106,9 @@ void CImguiMgr::CreatePreset()
     WideCharToMultiByte(CP_ACP, 0, strName.c_str(), -1, strMultiByte, 256, NULL, NULL);
     m_PresetNameList.push_back(const_cast<char*>(strMultiByte));
 
+
+    m_iEffectSelectIdx = 0;
+    m_iPrevEffectIdx = 0;
 
     m_pEffectPreset->DeleteAll();
     m_EffectNameList.clear();
@@ -978,7 +1163,7 @@ void CImguiMgr::EditEffect()
 
         desc.vColor = m_vColor;
         desc.vDuration = m_vDuration;
-
+        desc.vRotation = m_vRotation;
         desc.fScaleChangeTime = m_fScaleChangeTime;
 
         char* EffectName = new char[256];

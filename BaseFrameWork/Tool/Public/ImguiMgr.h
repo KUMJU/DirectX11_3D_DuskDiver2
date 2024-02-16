@@ -52,6 +52,8 @@ private:
 	void EffectSetting();
 	//이펙트 리스트뷰 + 삭제 및 저장 
 	void EffectListView();
+	//리스트뷰에서 이펙트 선택시 변경
+	void SwitchingEffectView();
 
 private:
 
@@ -60,6 +62,8 @@ private:
 	void ParticleEffectSetting();
 	void TextureEffectSetting();
 	void MeshEffectSetting();
+
+	void SettingPresetData();
 
 	void CreateEffect();
 	void CreatePreset();
@@ -77,6 +81,7 @@ private:
 	vector<char*> m_PresetNameList;
 
 	_int m_iEffectSelectIdx = -1;
+	_int m_iPrevEffectSelectIdx = -1;
 	_int m_iPrevEffectIdx = -1;
 
 	_int m_iPresetSelectIdx = -1;
@@ -145,6 +150,16 @@ private:
 	
 	_float2 m_vMaskDirection = _float2();
 	_float2 m_vNoiseDirection = _float2();
+
+
+	//***Mesh Alpha***//
+
+	_bool m_bAlphaLerp = false;
+
+	_float2 m_fAlphaDir = _float2();
+	_float m_fAlphaSpeed = 0.f;
+	_float m_fAlphaStartTime = 0.f;
+
 
 private:
 	const wstring& m_strBasePath = TEXT("../../Client/Bin/Resources/Base/Effect/");

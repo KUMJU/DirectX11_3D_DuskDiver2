@@ -28,6 +28,13 @@ HRESULT CLight::Render(shared_ptr<class CShader> _pShader, shared_ptr<class CVIR
 		iPassIndex = 2;
 	}
 
+	if (FAILED(_pShader->BindRawValue("g_vLightDiffuse", &m_LightDesc.vDiffuse, sizeof(_float4))))
+		return E_FAIL;
+	if (FAILED(_pShader->BindRawValue("g_vLightAmbient", &m_LightDesc.vAmbient, sizeof(_float4))))
+		return E_FAIL;
+	if (FAILED(_pShader->BindRawValue("g_vLightSpecular", &m_LightDesc.vSpecular, sizeof(_float4))))
+		return E_FAIL;
+
 	if (FAILED(_pShader->Begin(iPassIndex)))
 		return E_FAIL;
 

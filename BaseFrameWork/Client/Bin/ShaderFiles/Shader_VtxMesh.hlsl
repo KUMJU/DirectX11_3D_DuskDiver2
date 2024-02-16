@@ -17,6 +17,10 @@ bool g_bNoiseTex = false;
 float g_vNoiseSpeed;
 float2 g_vNoiseDirection;
 
+bool g_bAlpha = false;
+
+int g_fAlphaFlag = 0;
+float g_fTexAlphaRatio = 0.f;
 
 vector g_vColor;
 vector g_vLerpColor;
@@ -38,6 +42,7 @@ struct VS_OUT
     float4 vNormal : NORMAL;
     float2 vTexcoord : TEXCOORD0;
     float4 vWorldPos : TEXCOORD1;
+    float4 vProjPos : TEXCOORD2;
 
 };
 
@@ -55,7 +60,8 @@ VS_OUT VS_MAIN(VS_IN In)
     Out.vTexcoord = In.vTexcoord;
     Out.vWorldPos = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
     Out.vNormal = normalize(mul(vector(In.vNormal, 0.f), g_WorldMatrix));
-    
+    Out.vProjPos = Out.vPosition;
+
     return Out;
 
 }
@@ -66,12 +72,14 @@ struct PS_IN
     float4 vNormal : NORMAL;
     float2 vTexcoord : TEXCOORD0;
     float4 vWorldPos : TEXCOORD1;
+    float4 vProjPos : TEXCOORD2;
 };
 
 struct PS_OUT
 {
     vector vDiffuse : SV_TARGET0;
     vector vNormal : SV_TARGET1;
+    vector vDepth : SV_TARGET2;
     
 };
 
@@ -88,6 +96,7 @@ PS_OUT PS_MAIN(PS_IN In)
 
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
 
     return Out;
 
@@ -104,7 +113,8 @@ PS_OUT PS_COLOR(PS_IN In)
     
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
-    
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
+
     return Out;
 }
 

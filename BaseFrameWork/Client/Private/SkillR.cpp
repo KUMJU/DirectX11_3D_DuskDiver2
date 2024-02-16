@@ -13,6 +13,7 @@ HRESULT CSkillR::Initialize()
     m_iDamage = 20;
 
     m_eSkillOwner = EOWNER_TYPE::OWNER_PLAYER;
+    m_pEffectPreset = CEffectMgr::GetInstance()->FindEffect(TEXT("SkillE"));
 
     m_bCancle = true;
 
@@ -68,6 +69,8 @@ void CSkillR::Tick(_float _fTimeDelta)
 
 void CSkillR::LateTick(_float _fTimeDelta)
 {
+    __super::LateTick(_fTimeDelta);
+
 }
 
 HRESULT CSkillR::Render()

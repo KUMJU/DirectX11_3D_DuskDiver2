@@ -36,6 +36,7 @@ public:
 		char* szMaskTexKey;
 
 		_float fScaleChangeTime;
+		_float3 vRotation;
 	};
 
 

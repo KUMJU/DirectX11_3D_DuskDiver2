@@ -29,6 +29,12 @@ HRESULT CRenderer::Initialize()
 	if (FAILED(CGameInstance::GetInstance()->AddRenderTarget(TEXT("Target_Shade"), ViewPortDesc.Width, ViewPortDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(1.f, 1.f, 1.f, 1.f))))
 		return E_FAIL;
 
+	if (FAILED(CGameInstance::GetInstance()->AddRenderTarget(TEXT("Target_Depth"), ViewPortDesc.Width, ViewPortDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 0.f, 1.f))))
+		return E_FAIL;
+
+	if (FAILED(CGameInstance::GetInstance()->AddRenderTarget(TEXT("Target_Specular"), ViewPortDesc.Width, ViewPortDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
+		return E_FAIL;
+
 	if (FAILED(CGameInstance::GetInstance()->AddRenderTarget(TEXT("Target_Glow"), ViewPortDesc.Width, ViewPortDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(1.f, 1.f, 1.f, 0.f))))
 		return E_FAIL;
 
@@ -40,7 +46,13 @@ HRESULT CRenderer::Initialize()
 	if (FAILED(CGameInstance::GetInstance()->AddMRT(TEXT("MRT_GameObjects"), TEXT("Target_Normal"))))
 		return E_FAIL;
 
+	if (FAILED(CGameInstance::GetInstance()->AddMRT(TEXT("MRT_GameObjects"), TEXT("Target_Depth"))))
+		return E_FAIL;
+
+
 	if (FAILED(CGameInstance::GetInstance()->AddMRT(TEXT("MRT_LightAcc"), TEXT("Target_Shade"))))
+		return E_FAIL;
+	if (FAILED(CGameInstance::GetInstance()->AddMRT(TEXT("MRT_LightAcc"), TEXT("Target_Specular"))))
 		return E_FAIL;
 
 	if (FAILED(CGameInstance::GetInstance()->AddMRT(TEXT("MRT_Glow"), TEXT("Target_Glow"))))
@@ -63,11 +75,15 @@ HRESULT CRenderer::Initialize()
 	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(ViewPortDesc.Width, ViewPortDesc.Height, 0.f, 1.f));
 
 #ifdef _DEBUG
-	if (FAILED(CGameInstance::GetInstance()->ReadyDebug(TEXT("Target_Diffuse"), 150.0f, 150.0f, 300.f, 300.f)))
+	if (FAILED(CGameInstance::GetInstance()->ReadyDebug(TEXT("Target_Diffuse"), 100.0f, 100.0f, 200.0f, 200.0f)))
 		return E_FAIL;
-	if (FAILED(CGameInstance::GetInstance()->ReadyDebug(TEXT("Target_Normal"), 150.0f, 450.0f, 300.f, 300.f)))
+	if (FAILED(CGameInstance::GetInstance()->ReadyDebug(TEXT("Target_Normal"), 100.0f, 300.0f, 200.0f, 200.0f)))
 		return E_FAIL;
-	if (FAILED(CGameInstance::GetInstance()->ReadyDebug(TEXT("Target_Shade"), 450.0f, 150.0f, 300.f, 300.f)))
+	if (FAILED(CGameInstance::GetInstance()->ReadyDebug(TEXT("Target_Depth"), 100.0f, 500.0f, 200.0f, 200.0f)))
+		return E_FAIL;
+	if (FAILED(CGameInstance::GetInstance()->ReadyDebug(TEXT("Target_Shade"), 300.0f, 100.0f, 200.0f, 200.0f)))
+		return E_FAIL;
+	if (FAILED(CGameInstance::GetInstance()->ReadyDebug(TEXT("Target_Specular"), 300.0f, 300.0f, 200.0f, 200.0f)))
 		return E_FAIL;
 #endif // _DEBUG
 
@@ -196,8 +212,21 @@ HRESULT CRenderer::RenderLight()
 	if (FAILED(m_pShader->BindMatrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
+	_float4x4 ProjMatInv = CGameInstance::GetInstance()->GetTransformFloat4x4Inverse(CPipeLine::D3DTS_PROJ);
+	_float4x4 ViewMatInv = CGameInstance::GetInstance()->GetTransformFloat4x4Inverse(CPipeLine::D3DTS_VIEW);
+	_float4 vCamPos = CGameInstance::GetInstance()->GetCamPosition();
+
+	if (FAILED(m_pShader->BindMatrix("g_ProjMatrixInv", &ProjMatInv)))
+		return E_FAIL;
+	if (FAILED(m_pShader->BindMatrix("g_ViewMatrixInv", &ViewMatInv)))
+		return E_FAIL;
+	if (FAILED(m_pShader->BindRawValue("g_vCamPosition", &vCamPos, sizeof(_float4))))
+		return E_FAIL;
+
 	/* 노말 렌더타겟을 쉐이더에 던진다. */
 	if (FAILED(CGameInstance::GetInstance()->BindSRV(TEXT("Target_Normal"), m_pShader, "g_NormalTexture")))
+		return E_FAIL;
+	if (FAILED(CGameInstance::GetInstance()->BindSRV(TEXT("Target_Depth"), m_pShader, "g_DepthTexture")))
 		return E_FAIL;
 
 	/* 빛들을 하나씩 그린다.(사각형버퍼를 셰이드타겟에 그린다.) */
@@ -224,7 +253,7 @@ HRESULT CRenderer::RenderFinal()
 	if (FAILED(CGameInstance::GetInstance()->BindSRV(TEXT("Target_Shade"), m_pShader, "g_ShadeTexture")))
 		return E_FAIL;
 
-	if (FAILED(CGameInstance::GetInstance()->BindSRV(TEXT("Target_Glow"), m_pShader, "g_GlowTexture")))
+	if (FAILED(CGameInstance::GetInstance()->BindSRV(TEXT("Target_Specular"), m_pShader, "g_SpecularTexture")))
 		return E_FAIL;
 
 	m_pShader->Begin(3);

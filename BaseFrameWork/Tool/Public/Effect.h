@@ -36,12 +36,21 @@ public:
 	virtual void LateTick(_float _fTimeDelta);
 	virtual HRESULT Render();
 
-
 public:
 	char* GetEffectName() {
 		return m_strEffectName;
 	}
 
+	EFFECT_TYPE GetEffectType() {
+		return m_eEffectType;
+	}
+
+
+public:
+
+	void SetEffectName(string _strName) {
+		m_strEffectName = const_cast<char*>(_strName.c_str());
+	}
 
 public:
 	//각 이펙트마다 오버라이딩에서 각자 필요한 정보를 저장함
