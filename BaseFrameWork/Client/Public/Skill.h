@@ -71,6 +71,8 @@ public:
 	//n번째 스킬 
 	_uint GetSkillIndex() { return m_iSkillIndex; }
 
+	_bool GetIsBasicCombat() { return m_IsBasicCombat; }
+
 protected:
 	_float m_fSkillDuration = 0.f; //스킬 사용시간
 	_float m_fSkillActiveTime = 0.f; //스킬 전체시간
@@ -81,6 +83,8 @@ protected:
 	EOWNER_TYPE m_eSkillOwner = EOWNER_TYPE::OWNER_END;
 
 	shared_ptr<CTransform> m_pOwnerTransform = nullptr;
+
+	_bool m_IsBasicCombat = false;
 
 //Collide
 protected:

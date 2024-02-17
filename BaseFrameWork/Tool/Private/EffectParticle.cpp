@@ -134,16 +134,24 @@ void CEffectParticle::ParsingData(Json::Value& _root)
     Json::Value Center;
 
     Center["x"] = m_InstanceDesc.vCenter.x;
-    Center["y"] = m_InstanceDesc.vCenter.x;
-    Center["z"] = m_InstanceDesc.vCenter.x;
+    Center["y"] = m_InstanceDesc.vCenter.y;
+    Center["z"] = m_InstanceDesc.vCenter.z;
 
     EffectInfo["Center"] = Center;
+
+    Json::Value Duration;
+
+    Duration["x"] = m_InstanceDesc.vDuration.x;
+    Duration["y"] = m_InstanceDesc.vDuration.y;
+
+    EffectInfo["Duration"] = Duration;
+
 
     Json::Value Color;
 
     Color["x"] =  m_InstanceDesc.vColor.x;
-    Color["y"] =  m_InstanceDesc.vColor.x;
-    Color["z"] =  m_InstanceDesc.vColor.x;
+    Color["y"] =  m_InstanceDesc.vColor.y;
+    Color["z"] =  m_InstanceDesc.vColor.z;
 
     EffectInfo["Color"] = Color;
 

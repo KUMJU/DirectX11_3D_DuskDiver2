@@ -25,6 +25,11 @@ private:
 	virtual void IfEmptyAnimList() override;
 	virtual _bool CalcDistanceOption() override;
 
+
+private:
+	void StartSpecialPattern();
+
+
 private:
 	virtual void SetSpawnState() override;
 

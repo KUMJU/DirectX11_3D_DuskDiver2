@@ -61,6 +61,10 @@ public:
 	virtual void LateTick(_float _fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+public:
+	void EffectTick(_float _fDeltaTime);
+	void EffectLateTick(_float _fDeltaTime);
+
 //Component
 private:
 	shared_ptr<CShader> m_pShader = nullptr;
@@ -259,7 +263,7 @@ private:
 
 
 private:
-	shared_ptr<class CEffectPreset> m_pPreset= nullptr;
+	shared_ptr<class CEffectPreset> m_pDashPreset= nullptr;
 
 
 public:

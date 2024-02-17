@@ -15,6 +15,7 @@ HRESULT CSkill_BurstE::Initialize()
     m_iDamage = 15;
 
     m_eSkillOwner = EOWNER_TYPE::OWNER_PLAYER;
+    m_pEffectPreset = CEffectMgr::GetInstance()->FindEffect(TEXT("BurstE"));
 
 
     CCollider::COLLIDER_DESC normalAtkDesc = {};
@@ -111,6 +112,7 @@ void CSkill_BurstE::Tick(_float _fTimeDelta)
 
 void CSkill_BurstE::LateTick(_float _fTimeDelta)
 {
+    __super::LateTick(_fTimeDelta);
 }
 
 HRESULT CSkill_BurstE::Render()

@@ -286,6 +286,10 @@ _bool CFinalBoss::CalcDistanceOption()
     return true;
 }
 
+void CFinalBoss::StartSpecialPattern()
+{
+}
+
 void CFinalBoss::SetSpawnState()
 {
    // __super::SetSpawnState();

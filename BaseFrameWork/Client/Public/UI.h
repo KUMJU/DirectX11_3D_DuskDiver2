@@ -45,6 +45,16 @@ protected:
 	tagUIInfo m_pUIDefaultInfo;
 	bool m_IsVisible = false;
 	_int m_iPriorityIndex = 0;
+
+protected:
+	_bool m_IsSequanceUI = false;
+
+	_int m_iCol = 0;
+	_int m_iRow = 0;
+
+
+
+
 };
 
 END

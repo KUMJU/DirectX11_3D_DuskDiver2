@@ -42,6 +42,7 @@ public:
 	void SetBurstMode(_bool _isBurst);
 
 	_bool CheckMoveEnable();
+	_bool CheckHitEnable();
 
 private:
 	vector<shared_ptr<class CSkill>> m_Skills;

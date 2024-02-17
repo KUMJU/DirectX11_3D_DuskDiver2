@@ -15,6 +15,7 @@ HRESULT CSkillE::Initialize()
 
     m_iDamage = 10;
     m_eSkillOwner = EOWNER_TYPE::OWNER_PLAYER;
+    m_pEffectPreset = CEffectMgr::GetInstance()->FindEffect(TEXT("SkillR"));
 
 
 

@@ -11,7 +11,7 @@ CAirAtk::CAirAtk()
 HRESULT CAirAtk::Initialize(_uint _iComboNum)
 {
     m_eSkillOwner = EOWNER_TYPE::OWNER_PLAYER;
-
+    m_IsBasicCombat = true;
     m_iDamage = 10;
 
     CCollider::COLLIDER_DESC normalAtkDesc = {};

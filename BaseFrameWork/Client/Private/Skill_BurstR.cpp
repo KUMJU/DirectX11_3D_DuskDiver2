@@ -13,6 +13,8 @@ HRESULT CSkill_BurstR::Initialize()
     m_eSkillOwner = EOWNER_TYPE::OWNER_PLAYER;
 
     m_bMultiAtk = false;
+    m_pEffectPreset = CEffectMgr::GetInstance()->FindEffect(TEXT("BurstR"));
+
 
     m_iDamage = 20;
 
@@ -69,6 +71,8 @@ void CSkill_BurstR::Tick(_float _fTimeDelta)
 
 void CSkill_BurstR::LateTick(_float _fTimeDelta)
 {
+    __super::LateTick(_fTimeDelta);
+
 }
 
 HRESULT CSkill_BurstR::Render()

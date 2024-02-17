@@ -283,6 +283,12 @@
     <Filter Include="03. Manager\05. EffectMgr">
       <UniqueIdentifier>{b1371a94-333d-4779-8033-28a3aa9010df}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\01. UI\04. UI_Sequance">
+      <UniqueIdentifier>{b134363d-ba42-48a1-972f-d40d22184295}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\00.Creature\01. Monster\04. FinalBoss\SpecialPattern">
+      <UniqueIdentifier>{1199a85e-91b9-484d-abea-13f476ae05e1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -570,6 +576,10 @@
     <ClInclude Include="..\Public\EffectTexture.h">
       <Filter>02. GameObject\09. Effect\01. Effect_Texture</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_SequanceTex.h" />
+    <ClInclude Include="..\Public\SpecialBossPattern.h">
+      <Filter>02. GameObject\00.Creature\01. Monster\04. FinalBoss\SpecialPattern</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -838,6 +848,10 @@
     </ClCompile>
     <ClCompile Include="..\Private\EffectTexture.cpp">
       <Filter>02. GameObject\09. Effect\01. Effect_Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_SequanceTex.cpp" />
+    <ClCompile Include="..\Private\SpecialBossPattern.cpp">
+      <Filter>02. GameObject\00.Creature\01. Monster\04. FinalBoss\SpecialPattern</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -18,6 +18,7 @@ HRESULT CSkill_BurstQ::Initialize()
     normalAtkDesc.vCenter = { 0.f, 0.8f, 0.7f };
 
     m_eSkillOwner = EOWNER_TYPE::OWNER_PLAYER;
+    m_pEffectPreset = CEffectMgr::GetInstance()->FindEffect(TEXT("BurstQ1"));
 
 
     SKILLINFO info = {};
@@ -76,6 +77,8 @@ void CSkill_BurstQ::Tick(_float _fTimeDelta)
 
 void CSkill_BurstQ::LateTick(_float _fTimeDelta)
 {
+    __super::LateTick(_fTimeDelta);
+
 }
 
 HRESULT CSkill_BurstQ::Render()

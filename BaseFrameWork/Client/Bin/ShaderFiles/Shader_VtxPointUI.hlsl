@@ -8,6 +8,14 @@ float g_PrevHPRatio;
 
 vector g_RGBColor = vector(1.f, 1.f, 1.f, 1.f);
 
+//가로
+float g_fStartRowRatio = 0;
+float g_fEndRowRatio = 0;
+//세로
+int g_fStartColRatio = 0;
+int g_fEndColRatio = 0;
+
+
 struct VS_IN
 {
     float3 vPosition : POSITION;
@@ -180,6 +188,17 @@ PS_OUT PS_EnemyHPBar(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_SequenceUI(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    
+    
+    
+
+    return Out;
+
+}
 
 technique11 DefaultTechnique
 {

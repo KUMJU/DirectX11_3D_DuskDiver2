@@ -271,6 +271,26 @@ _bool CSkillSet::CheckMoveEnable()
 	return true;
 }
 
+_bool CSkillSet::CheckHitEnable()
+{
+	if (m_eCurrentSkill == ESKILLSTATE::SKILL_END) {
+		return true;
+	}
+	else {
+		if (m_Skills[m_eCurrentSkill]->GetIsBasicCombat()) {
+			m_Skills[m_eCurrentSkill]->SetEnable(false);
+			m_Skills[m_eCurrentSkill]->SkillReset();
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	return false;
+
+}
+
 shared_ptr<CSkillSet> CSkillSet::Create(shared_ptr<CModel> _pBaseModel, shared_ptr<CModel> _pBurstModel)
 {
 	shared_ptr<CSkillSet> pInstance = make_shared<CSkillSet>();

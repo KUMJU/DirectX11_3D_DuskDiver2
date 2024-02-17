@@ -131,8 +131,7 @@ void CEffectMgr::ReadData(const wstring& _strFullPath, const wstring& _strKeyNam
             desc.vSize = { ElementKey["Size"]["x"].asFloat(),ElementKey["Size"]["y"].asFloat()};
             desc.vStartPointMax = { ElementKey["StartPointMax"]["x"].asFloat(),ElementKey["StartPointMax"]["y"].asFloat(),ElementKey["StartPointMax"]["z"].asFloat() };
             desc.vStartPointMin = { ElementKey["StartPointMin"]["x"].asFloat(),ElementKey["StartPointMin"]["y"].asFloat(),ElementKey["StartPointMin"]["z"].asFloat() };
-            desc.vDuration.x = 5.f;
-            desc.vDuration.y = 15.f;
+            desc.vDuration = { ElementKey["Duration"]["x"].asFloat(),ElementKey["Duration"]["y"].asFloat()};
             desc.vSpeed = { ElementKey["Speed"]["x"].asFloat(),ElementKey["Speed"]["y"].asFloat()};
             
             _tchar szFullPath[MAX_PATH] = TEXT("");

@@ -205,6 +205,8 @@ void CEffectMesh::EditEffect(const wstring& _strTextureKey, const wstring& _strM
     ComputeInitSetting();
 
     m_pModel = CGameInstance::GetInstance()->GetModel(_strModelKey);
+    m_MeshKey = _strModelKey;
+
 
     _tchar szNoiseKey[MAX_PATH] = TEXT("");
     MultiByteToWideChar(CP_ACP, 0, m_MeshDesc.szNoiseTexKey, (_int)strlen(m_MeshDesc.szNoiseTexKey), szNoiseKey, MAX_PATH);
@@ -219,6 +221,7 @@ void CEffectMesh::EditEffect(const wstring& _strTextureKey, const wstring& _strM
     m_pTransformCom->SetState(CTransform::STATE_POSITION, { _MeshDesc->vCenter.x, _MeshDesc->vCenter.y, _MeshDesc->vCenter.z, 1.f });
 
     m_vColor = _MeshDesc->vColor;
+    
 
 }
 
@@ -335,10 +338,10 @@ void CEffectMesh::ParsingData(Json::Value& _root)
 
     Json::Value LerpColor;
 
-    LerpColor["x"] = m_MeshDesc.vColor.x;
-    LerpColor["y"] = m_MeshDesc.vColor.y;
-    LerpColor["z"] = m_MeshDesc.vColor.z;
-    LerpColor["w"] = m_MeshDesc.vColor.w;
+    LerpColor["x"] = m_MeshDesc.vLerpColor.x;
+    LerpColor["y"] = m_MeshDesc.vLerpColor.y;
+    LerpColor["z"] = m_MeshDesc.vLerpColor.z;
+    LerpColor["w"] = m_MeshDesc.vLerpColor.w;
 
     EffectInfo["LerpColor"] = LerpColor;
 

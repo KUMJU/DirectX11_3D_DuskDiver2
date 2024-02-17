@@ -46,6 +46,9 @@ HRESULT CPlayer::Initialize()
     SetAnimSpeed();
     //Set Models 
 
+    m_pDashPreset = CEffectMgr::GetInstance()->FindEffect(TEXT("Dash"));
+    m_pDashPreset->SetParentTransform(m_pTransformCom);
+
     m_pModelCom = m_pBattleModelCom;
 
     m_Components.emplace(TEXT("Com_BattleModel"), m_pBattleModelCom);
@@ -203,7 +206,7 @@ void CPlayer::Tick(_float _fTimeDelta)
         CGameInstance::GetInstance()->AddCollider(CCollisionMgr::COL_PLAYER, iter);
     }
 
-
+    EffectTick(_fTimeDelta);
 }
 
 void CPlayer::LateTick(_float _fTimeDelta)
@@ -338,7 +341,7 @@ void CPlayer::LateTick(_float _fTimeDelta)
 
 
     m_pPlayerSkillset->LateTick(_fTimeDelta);
-
+    EffectLateTick(_fTimeDelta);
 
 }
 
@@ -367,6 +370,18 @@ HRESULT CPlayer::Render()
 
 
     return S_OK;
+}
+
+void CPlayer::EffectTick(_float _fDeltaTime)
+{
+    m_pDashPreset->Tick(_fDeltaTime);
+
+}
+
+void CPlayer::EffectLateTick(_float _fDeltaTime)
+{
+    m_pDashPreset->LateTick(_fDeltaTime);
+
 }
 
 
@@ -965,15 +980,16 @@ void CPlayer::KeyInput(_float _fTimeDelta)
     // key input이 되어있다면 바로 대쉬 사용 가능 or Idle 전환 안 하고 run 가능 
     if (GetKeyState('F') & 0x8000)
     {
-        m_pTransformCom->GoStraight(_fTimeDelta, m_pNavigationCom, m_bJump);
-        m_eCurrentState = HEROSTATE::STATE_DASH;
+        if (m_pPlayerSkillset->CheckMoveEnable()) {
+            m_pTransformCom->GoStraight(_fTimeDelta, m_pNavigationCom, m_bJump);
+            m_eCurrentState = HEROSTATE::STATE_DASH;
+            m_pDashPreset->PlayEffect();
+            FinalAnimNum = 81;
 
-        FinalAnimNum = 81;
-
-        IsLoop = false;
-        IsKeyInput = true;
-        m_bDash = true;
-
+            IsLoop = false;
+            IsKeyInput = true;
+            m_bDash = true;
+        }
     }
 
     //Jump
@@ -1361,6 +1377,12 @@ void CPlayer::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _
     }
     else if (EObjType::OBJ_PROJ == _eObjType) {
  
+
+        if (!m_pPlayerSkillset->CheckHitEnable()) {
+            return;
+        }
+
+
         if (m_bSuperArmor)
             return;
 
