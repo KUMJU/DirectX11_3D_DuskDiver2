@@ -99,6 +99,9 @@ void CMole::LateTick(_float _fTimeDelta)
     if (!m_IsEnabled)
         return;
 
+    if (FAILED(CGameInstance::GetInstance()->AddDebugComponent(m_pColider)))
+        return;
+
     if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_NONBLEND, shared_from_this())))
         return;
 
@@ -108,8 +111,6 @@ HRESULT CMole::Render()
 {
     if (!m_IsEnabled)
         return S_OK;
-
-    m_pColider->Render();
 
     if (FAILED(BindShaderResources()))
         return E_FAIL;

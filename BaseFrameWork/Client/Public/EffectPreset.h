@@ -30,6 +30,8 @@ public:
 
 public:
 	void SetParentTransform(shared_ptr<CTransform> _pTransform) { m_pOwnerTransform = _pTransform; }
+	void SetEffectPosition(_vector _vPos);
+	void SetBillboard(_bool _bBillboard);
 
 public:
 

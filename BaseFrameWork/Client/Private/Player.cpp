@@ -116,7 +116,7 @@ void CPlayer::Tick(_float _fTimeDelta)
 
             m_eCurrentState = HEROSTATE::STATE_IDLE;
             m_fransformTime = 0.f;
-            m_NextAnimIndex.push_back({ 44, true });
+           // m_NextAnimIndex.push_back({ 44, true });
             m_bBurstMode = true;
             
         }
@@ -657,6 +657,7 @@ void CPlayer::KeyInput(_float _fTimeDelta)
        // ChangeAnim(30, false);
         m_pModelCom->ChangeAnimation(30);
         m_pBurstModelCom->ChangeAnimation(30);
+        m_iCurrentAnimIdx = 30;
         m_isAnimLoop = false;
 
         //Event_Burst

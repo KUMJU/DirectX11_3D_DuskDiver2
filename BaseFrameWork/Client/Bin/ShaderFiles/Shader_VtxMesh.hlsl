@@ -2,6 +2,7 @@
 #include "Shader_Defines.hlsli"
 
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+float3 g_vCamPos;
 
 texture2D g_DiffuseTexture;
 
@@ -16,6 +17,8 @@ texture2D g_NoiseTexture;
 bool g_bNoiseTex = false;
 float g_vNoiseSpeed;
 float2 g_vNoiseDirection;
+
+bool g_bBillboard = false;
 
 bool g_bAlpha = false;
 
@@ -52,7 +55,28 @@ VS_OUT VS_MAIN(VS_IN In)
     VS_OUT Out = (VS_OUT) 0;
     
     matrix matWV, matWVP;
+       
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+
+    Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+    Out.vTexcoord = In.vTexcoord;
+    Out.vWorldPos = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
+    Out.vNormal = normalize(mul(vector(In.vNormal, 0.f), g_WorldMatrix));
+    Out.vProjPos = Out.vPosition;
+
+   
+
+    return Out;
+
+}
+
+VS_OUT VS_EFFECT_MAIN(VS_IN In)
+{
+    VS_OUT Out = (VS_OUT) 0;
     
+    matrix matWV, matWVP;
+   
     matWV = mul(g_WorldMatrix, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
     
@@ -61,9 +85,10 @@ VS_OUT VS_MAIN(VS_IN In)
     Out.vWorldPos = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
     Out.vNormal = normalize(mul(vector(In.vNormal, 0.f), g_WorldMatrix));
     Out.vProjPos = Out.vPosition;
+    
 
     return Out;
-
+    
 }
 
 struct PS_IN
@@ -275,7 +300,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
-        VertexShader = compile vs_5_0 VS_MAIN();
+        VertexShader = compile vs_5_0 VS_EFFECT_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_EFFECT_LOOP_MAIN();
     }
@@ -286,7 +311,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
-        VertexShader = compile vs_5_0 VS_MAIN();
+        VertexShader = compile vs_5_0 VS_EFFECT_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_EFFECT_ONCE_MAIN();
     }

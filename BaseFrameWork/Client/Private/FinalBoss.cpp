@@ -9,6 +9,8 @@
 
 #include "MonsterSkillSet.h"
 #include "BossHPBar.h"
+#include "SpecialBossPattern.h"
+
 
 CFinalBoss::CFinalBoss()
 {
@@ -59,6 +61,9 @@ HRESULT CFinalBoss::Initialize()
     m_eObjType = EObjType::OBJ_BOSSMONSTER;
 
 
+    m_pSpecialPattern = CSpecialBossPattern::Create(dynamic_pointer_cast<CFinalBoss>(shared_from_this()));
+    CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Event"), m_pSpecialPattern);
+
     m_pSkillSet = CMonsterSkillSet::Create(3, m_pModelCom);
     m_pSkillSet->SetTransform(m_pTransformCom);
 
@@ -70,6 +75,8 @@ HRESULT CFinalBoss::Initialize()
     m_pHPBar->SetEnable(false);
     CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_UI"), m_pHPBar);
 
+
+    m_pModelCom->SetLinearTime(1.2f);
 
     return S_OK;
 }
@@ -85,14 +92,15 @@ void CFinalBoss::Tick(_float _fTimeDelta)
         return;
 
 
-    if (m_eCurrentState != EMONSTER_STATE::STATE_SPAWN && !m_IsAtkCool && m_eCurrentState != EMONSTER_STATE::STATE_ATTACK && !m_bDie) {
+    if (m_eCurrentState != EMONSTER_STATE::STATE_SPAWN && !m_IsAtkCool && m_eCurrentState != EMONSTER_STATE::STATE_ATTACK && !m_bDie&&
+        m_eCurrentState != EMONSTER_STATE::STATE_STUN) {
         _uint iRand = m_iTestNum % 5;
         AttackPattern(iRand);
         m_eCurrentState = EMONSTER_STATE::STATE_ATTACK;
     }
 
 
-    if (!m_bSetOriginLook && !m_bDie) {
+    if (!m_bSetOriginLook && !m_bDie && m_eCurrentState != EMONSTER_STATE::STATE_STUN) {
         _vector vLook = m_pTransformCom->GetState(CTransform::STATE_LOOK);
 
         m_fTurnTime += _fTimeDelta;
@@ -115,7 +123,7 @@ void CFinalBoss::Tick(_float _fTimeDelta)
     }
 
 
-    if (4 == m_iAnimNum && !m_bDie) {
+    if (4 == m_iAnimNum && !m_bDie && m_eCurrentState != EMONSTER_STATE::STATE_STUN) {
 
         if (!m_bLaserOn) {
             m_pSkillSet->SwitchingSkill(CMonsterSkillSet::MON_SKILL4);
@@ -163,7 +171,7 @@ void CFinalBoss::LateTick(_float _fTimeDelta)
     if (!m_IsEnabled)
         return;
 
-    if (m_IsAtkCool && !m_bDie) {
+    if (m_IsAtkCool && !m_bDie && m_eCurrentState != EMONSTER_STATE::STATE_STUN) {
 
         m_bAttackCoolTime += _fTimeDelta;
 
@@ -288,6 +296,26 @@ _bool CFinalBoss::CalcDistanceOption()
 
 void CFinalBoss::StartSpecialPattern()
 {
+    m_bSpecialPatternStart = true;
+    m_eCurrentState = EMONSTER_STATE::STATE_STUN;
+
+    ChangeAnim(16, false);
+    m_NextAnimIndex.push_back({ 15, true });
+    
+    m_pSpecialPattern->PatternStart();
+    
+    //Event -> StartEvent
+
+
+
+
+}
+
+void CFinalBoss::EndSpecialPattern()
+{
+    m_eCurrentState = EMONSTER_STATE::STATE_IDLE;
+    ChangeAnim(14, false);
+
 }
 
 void CFinalBoss::SetSpawnState()
@@ -310,6 +338,11 @@ void CFinalBoss::OnHit()
         ChangeAnim(9, false);
 
     m_pHPBar->SetHP(m_iHP);
+
+    if (m_iHP < 50 && !m_bSpecialPatternStart) {
+        StartSpecialPattern();
+    }
+
 }
 
 shared_ptr<CFinalBoss> CFinalBoss::Create()

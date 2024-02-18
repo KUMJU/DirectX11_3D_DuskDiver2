@@ -9,8 +9,10 @@
 #include "Model.h"
 #include "Skill.h"
 #include "Collider.h"
+#include "Bounding.h"
 
 #include "MonsterSkillSet.h"
+#include "EffectMgr.h"
 
 CMonster::CMonster()
 {
@@ -428,6 +430,7 @@ void CMonster::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> 
             m_bKnockUp = false;
         }
 
+        CEffectMgr::GetInstance()->SetHitMark(XMLoadFloat3(&_pCollider->GetBounding()->GetBoundingSphere()->Center));
 
         m_bCollisionCheck = true;
         //³Ë¹é ¿©ºÎ, ³Ë¾÷ ¿©ºÎ, 

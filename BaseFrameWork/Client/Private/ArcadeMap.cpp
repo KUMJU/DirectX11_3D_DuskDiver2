@@ -40,6 +40,8 @@
 #include "EffectParticle.h"
 #include "EffectMgr.h"
 
+#include "UI_SequenceTex.h"
+
 
 CArcadeMap::CArcadeMap()
 	:CLevel()
@@ -295,7 +297,6 @@ HRESULT CArcadeMap::ReadyLayerUI(const wstring& _strLayerTag)
 	if(FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pInstance)))
 		return E_FAIL;
 	CUIMgr::GetInstance()->AddUI(TEXT("UI_Quest"), pInstance);
-
 
 	return S_OK;
 }

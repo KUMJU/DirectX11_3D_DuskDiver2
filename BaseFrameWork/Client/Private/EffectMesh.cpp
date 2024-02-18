@@ -12,10 +12,18 @@ CEffectMesh::CEffectMesh()
 {
 }
 
+CEffectMesh::CEffectMesh(const CEffectMesh& _rhs)
+    :m_MeshKey(_rhs.m_MeshKey),
+    m_MeshDesc(_rhs.m_MeshDesc)
+{
+}
+
 HRESULT CEffectMesh::Initialize( const wstring& _strModelKey, MESH_DESC* _MeshDesc, char* _strName)
 {
     m_eEffectType = EFFECT_TYPE::TYPE_MESH;
     m_MeshDesc = *_MeshDesc;
+
+    m_MeshKey = _strModelKey;
 
     __super::Initialize(nullptr);
     ComputeInitSetting();
@@ -100,22 +108,7 @@ void CEffectMesh::LateTick(_float _fTimeDelta)
 
 HRESULT CEffectMesh::Render()
 {
-    _vector worldMat = m_pTransformCom->GetState(CTransform::STATE_POSITION);
-    
-    _matrix WorldOwnMatrix = m_pTransformCom->GetWorldMatrix();
-    _float4x4 FloatWorld;
-    WorldOwnMatrix = WorldOwnMatrix * m_ParentMat;
-
-    XMStoreFloat4x4(&FloatWorld, WorldOwnMatrix);
-
-    //if (FAILED(m_pTransformCom->BindShaderResource(m_pShader, "g_WorldMatrix")))
-     //   return E_FAIL;
-    if (FAILED(m_pShader->BindMatrix("g_WorldMatrix", &FloatWorld)))
-        return E_FAIL;
-
-   // if (FAILED(m_pTransformCom->BindShaderResource(m_pShader, "g_WorldMatrix")))
-    //    return E_FAIL;
-
+ 
     _float4x4 ViewMat = CGameInstance::GetInstance()->GetTransformFloat4x4(CPipeLine::D3DTS_VIEW);
 
     if (FAILED(m_pShader->BindMatrix("g_ViewMatrix", &ViewMat)))
@@ -125,6 +118,46 @@ HRESULT CEffectMesh::Render()
 
     if (FAILED(m_pShader->BindMatrix("g_ProjMatrix", &ProjMat)))
         return E_FAIL;
+
+    _matrix WorldOwnMatrix = m_pTransformCom->GetWorldMatrix();
+    _float4x4 FloatWorld;
+
+    //부모 객체가 따로 없으면 0,0,0 혹은 아이덴티티가 들어가서 아무 영향 없다 
+    WorldOwnMatrix.r[3] += m_vParentPos;
+    WorldOwnMatrix = WorldOwnMatrix * m_ParentMat;
+
+
+    XMStoreFloat4x4(&FloatWorld, WorldOwnMatrix);
+
+    //if (FAILED(m_pTransformCom->BindShaderResource(m_pShader, "g_WorldMatrix")))
+     //   return E_FAIL;
+
+    if (m_bBillboard) {
+
+        _float4x4 ViewCopyMat = ViewMat;
+
+        ViewCopyMat._41 = 0.f;
+        ViewCopyMat._42 = 0.f;
+        ViewCopyMat._43 = 0.f;
+
+        _matrix ViewInv = {};
+
+        ViewInv = XMMatrixInverse(NULL, XMLoadFloat4x4(&ViewCopyMat));
+        ViewInv = WorldOwnMatrix * ViewInv;
+        ViewInv.r[3] = WorldOwnMatrix.r[3];
+
+        _float4x4 BillboardWorld = {};
+        XMStoreFloat4x4(&BillboardWorld, ViewInv);
+
+        if (FAILED(m_pShader->BindMatrix("g_WorldMatrix", &BillboardWorld)))
+            return E_FAIL;
+
+    }
+    else {
+        if (FAILED(m_pShader->BindMatrix("g_WorldMatrix", &FloatWorld)))
+            return E_FAIL;
+    }
+
 
     if (FAILED(m_pShader->BindRawValue("g_vColor", &m_vColor, sizeof(_float4))))
         return E_FAIL;
@@ -138,6 +171,10 @@ HRESULT CEffectMesh::Render()
     if (FAILED(m_pShader->BindRawValue("g_fDeltaTime", &m_fTimeDelta, sizeof(_float))))
         return E_FAIL;
 
+    if (FAILED(m_pShader->BindRawValue("g_bBillboard", &m_bBillboard, sizeof(_bool))))
+        return E_FAIL;
+
+    
 
     if (m_MeshDesc.bMask) {
         m_pMaskTexture->BindShaderResource(m_pShader, "g_MaskTexture", 0);
@@ -247,4 +284,16 @@ shared_ptr<CEffectMesh> CEffectMesh::Create( const wstring& _strModelKey, MESH_D
         MSG_BOX("Failed to Create : cEffectMesh");
 
     return pInstance;
+}
+
+shared_ptr<CEffect> CEffectMesh::CloneEffect()
+{
+    shared_ptr<CEffectMesh> pInstance = make_shared<CEffectMesh>();
+
+    if (FAILED(pInstance->Initialize(m_MeshKey, &m_MeshDesc, m_strEffectName))) {
+        MSG_BOX("Failed to Clone : CModel");
+    }
+
+    return pInstance;
+
 }

@@ -1,0 +1,224 @@
+{
+	"Elements" : 
+	{
+		"Particle" : 
+		{
+			"Center" : 
+			{
+				"x" : -0.5,
+				"y" : 0.20000000298023224,
+				"z" : 13.0
+			},
+			"Color" : 
+			{
+				"x" : 0.92647057771682739,
+				"y" : 0.76297575235366821,
+				"z" : 0.0
+			},
+			"DirectMax" : 
+			{
+				"x" : 0.69999998807907104,
+				"y" : 1.0,
+				"z" : 0.69999998807907104
+			},
+			"DirectMin" : 
+			{
+				"x" : -0.69999998807907104,
+				"y" : 0.0,
+				"z" : -0.5
+			},
+			"Duration" : 
+			{
+				"x" : 1.5,
+				"y" : 2.0
+			},
+			"EffectType" : 0,
+			"InstanceNum" : 60,
+			"LifeTime" : 
+			{
+				"x" : 0.0,
+				"y" : 4.0
+			},
+			"Size" : 
+			{
+				"x" : 0.20000000298023224,
+				"y" : 0.5
+			},
+			"Speed" : 
+			{
+				"x" : 15.0,
+				"y" : 20.0
+			},
+			"StartPointMax" : 
+			{
+				"x" : 20.0,
+				"y" : 0.0,
+				"z" : 20.0
+			},
+			"StartPointMin" : 
+			{
+				"x" : -20.0,
+				"y" : 0.0,
+				"z" : 0.0
+			},
+			"TextureKey" : "T_dust_Small"
+		},
+		"SmashWind" : 
+		{
+			"Center" : 
+			{
+				"x" : -0.5,
+				"y" : 0.10000000149011612,
+				"z" : 13.0
+			},
+			"ChangeTime" : 1.2000000476837158,
+			"Color" : 
+			{
+				"w" : 1.0,
+				"x" : 0.0,
+				"y" : 0.0,
+				"z" : 0.0
+			},
+			"Duration" : 
+			{
+				"x" : 1.5,
+				"y" : 2.0
+			},
+			"EffectType" : 2,
+			"EndScale" : 
+			{
+				"x" : 100.0,
+				"y" : 100.0,
+				"z" : 100.0
+			},
+			"LerpColor" : 
+			{
+				"w" : 1.0,
+				"x" : 0.0,
+				"y" : 0.0,
+				"z" : 0.0
+			},
+			"Loop" : 
+			{
+				"EffectLoop" : false,
+				"UVLoop" : false
+			},
+			"Mask" : 
+			{
+				"Speed" : 3.0,
+				"TexKey" : "T_128White",
+				"Using" : true,
+				"x" : 0.0,
+				"y" : 1.0
+			},
+			"MeshKey" : "helfBallGround",
+			"MiddleScale" : 
+			{
+				"x" : 50.0,
+				"y" : 50.0,
+				"z" : 50.0
+			},
+			"Noise" : 
+			{
+				"Speed" : 0.0,
+				"TexKey" : "T_flow_05",
+				"Using" : true,
+				"x" : 0.0,
+				"y" : 0.0
+			},
+			"Rotation" : 
+			{
+				"x" : 0.0,
+				"y" : 0.0,
+				"z" : 0.0
+			},
+			"StartScale" : 
+			{
+				"x" : 1.0,
+				"y" : 1.0,
+				"z" : 1.0
+			}
+		},
+		"SmashWind2" : 
+		{
+			"Center" : 
+			{
+				"x" : -0.5,
+				"y" : 0.20000000298023224,
+				"z" : 13.0
+			},
+			"ChangeTime" : 1.2000000476837158,
+			"Color" : 
+			{
+				"w" : 1.0,
+				"x" : 0.0,
+				"y" : 0.0,
+				"z" : 0.0
+			},
+			"Duration" : 
+			{
+				"x" : 1.5,
+				"y" : 2.0
+			},
+			"EffectType" : 2,
+			"EndScale" : 
+			{
+				"x" : 300.0,
+				"y" : 300.0,
+				"z" : 300.0
+			},
+			"LerpColor" : 
+			{
+				"w" : 1.0,
+				"x" : 0.14047481119632721,
+				"y" : 0.15499129891395569,
+				"z" : 0.38725489377975464
+			},
+			"Loop" : 
+			{
+				"EffectLoop" : false,
+				"UVLoop" : false
+			},
+			"Mask" : 
+			{
+				"Speed" : 3.0,
+				"TexKey" : "T_128White",
+				"Using" : true,
+				"x" : 0.0,
+				"y" : 1.0
+			},
+			"MeshKey" : "helfBallGround",
+			"MiddleScale" : 
+			{
+				"x" : 100.0,
+				"y" : 100.0,
+				"z" : 100.0
+			},
+			"Noise" : 
+			{
+				"Speed" : 0.0,
+				"TexKey" : "T_flow_05",
+				"Using" : true,
+				"x" : 0.0,
+				"y" : 0.0
+			},
+			"Rotation" : 
+			{
+				"x" : 0.0,
+				"y" : 0.0,
+				"z" : 0.0
+			},
+			"StartScale" : 
+			{
+				"x" : 1.0,
+				"y" : 1.0,
+				"z" : 1.0
+			}
+		}
+	},
+	"Preset Info" : 
+	{
+		"Duration" : 4.0,
+		"Loop" : false
+	}
+}

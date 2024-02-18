@@ -522,12 +522,14 @@
     <ClInclude Include="..\Public\Tool_Defines.h">
       <Filter>99. Defines</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\EffectTestModel.h" />
     <ClInclude Include="..\Public\EffectTexture.h">
       <Filter>02. GameObject\09. Effect\01. Effect_Texture</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\EffectMesh.h">
       <Filter>02. GameObject\09. Effect\02. Effect_Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EffectTestModel.h">
+      <Filter>02. GameObject\99. Dummy\EffectTestAnimModel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -771,12 +773,14 @@
     <ClCompile Include="..\Private\EffectPreset.cpp">
       <Filter>02. GameObject\09. Effect\Preset</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\EffectTestModel.cpp" />
     <ClCompile Include="..\Private\EffectTexture.cpp">
       <Filter>02. GameObject\09. Effect\01. Effect_Texture</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\EffectMesh.cpp">
       <Filter>02. GameObject\09. Effect\02. Effect_Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EffectTestModel.cpp">
+      <Filter>02. GameObject\99. Dummy\EffectTestAnimModel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

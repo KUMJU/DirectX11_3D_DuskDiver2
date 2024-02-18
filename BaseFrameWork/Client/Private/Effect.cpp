@@ -28,3 +28,11 @@ HRESULT CEffect::Render()
 {
     return S_OK;
 }
+
+shared_ptr<CEffect> CEffect::CloneEffect()
+{
+    shared_ptr<CEffect> pEffect;
+
+    return pEffect;
+
+}

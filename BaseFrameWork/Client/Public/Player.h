@@ -285,6 +285,15 @@ public:
 	
 	}
 
+	void SetOnFinalEvent(_bool _bOnEvent) {
+		m_IsOnMinigame = _bOnEvent;
+
+		if (_bOnEvent) {
+			ChangeAnim(36, true);
+			m_eCurrentState = HEROSTATE::STATE_SPECIAL_ATTACK;
+		}
+	}
+
 
 	void CommandMinigameSuccess(_uint _iCount);
 

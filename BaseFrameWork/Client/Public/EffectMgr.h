@@ -18,6 +18,8 @@ public:
 	void GetEffect();
 	shared_ptr<class CEffectPreset> FindEffect(const wstring& _strKeyName);
 
+	void SetHitMark(_vector _vPos);
+
 
 private:
 	void ReadData(const wstring&  _strFullPath, const wstring& _strKeyName);
@@ -32,6 +34,10 @@ private:
 private:
 
 	map<wstring, shared_ptr<class CEffectPreset>> m_EffectPresets;
+
+	vector<shared_ptr<class CEffectPreset>> m_HitMarks;
+
+	//HitMark 프리셋을 따로 만든다 vs 흠..ㅋ
 
 };
 

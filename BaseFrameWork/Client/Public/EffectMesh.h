@@ -43,11 +43,15 @@ public:
 
 public:
 	CEffectMesh();
+	CEffectMesh(const CEffectMesh& _rhs);
 	virtual ~CEffectMesh() = default;
 
 
 public:
 	virtual HRESULT Initialize( const wstring& _strModelKey, MESH_DESC* _MeshDesc, char* _strName);
+	
+	
+	
 	virtual void PriorityTick(_float _fTimeDelta);
 	virtual void Tick(_float _fTimeDelta, _matrix _ParentMat = XMMatrixIdentity());
 	virtual void LateTick(_float _fTimeDelta);
@@ -86,16 +90,13 @@ private:
 	_vector m_vCurrentScale = _vector();
 
 	/******Alpha******/
-
-	wstring m_ModelKey = TEXT("");
-
 public:
 	virtual void ResetEffect();
 
 public:
 
 	static shared_ptr<CEffectMesh> Create( const wstring& _strModelKey, MESH_DESC* _MeshDesc, char* _strName);
-
+	shared_ptr<CEffect> CloneEffect();
 
 
 };

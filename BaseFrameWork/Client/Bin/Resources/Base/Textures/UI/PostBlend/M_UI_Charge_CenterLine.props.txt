@@ -1,0 +1,71 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[1] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/TheChase/UI/PostBlend/Center_Line.Center_Line'
+}
+Expressions[24] =
+{
+    Expressions[2] = MaterialExpressionTextureSampleParameter2D'/Game/TheChase/UI/PostBlend/M_UI_Charge_CenterLine.MaterialExpressionTextureSampleParameter2D_0'
+    Expressions[3] = MaterialExpressionScalarParameter'/Game/TheChase/UI/PostBlend/M_UI_Charge_CenterLine.MaterialExpressionScalarParameter_46'
+    Expressions[4] = MaterialExpressionScalarParameter'/Game/TheChase/UI/PostBlend/M_UI_Charge_CenterLine.MaterialExpressionScalarParameter_47'
+    Expressions[5] = MaterialExpressionScalarParameter'/Game/TheChase/UI/PostBlend/M_UI_Charge_CenterLine.MaterialExpressionScalarParameter_48'
+    Expressions[6] = MaterialExpressionScalarParameter'/Game/TheChase/UI/PostBlend/M_UI_Charge_CenterLine.MaterialExpressionScalarParameter_49'
+    Expressions[9] = MaterialExpressionStaticSwitchParameter'/Game/TheChase/UI/PostBlend/M_UI_Charge_CenterLine.MaterialExpressionStaticSwitchParameter_17'
+    Expressions[12] = MaterialExpressionScalarParameter'/Game/TheChase/UI/PostBlend/M_UI_Charge_CenterLine.MaterialExpressionScalarParameter_408'
+    Expressions[15] = MaterialExpressionScalarParameter'/Game/TheChase/UI/PostBlend/M_UI_Charge_CenterLine.MaterialExpressionScalarParameter_116'
+    Expressions[16] = MaterialExpressionScalarParameter'/Game/TheChase/UI/PostBlend/M_UI_Charge_CenterLine.MaterialExpressionScalarParameter_117'
+    Expressions[18] = MaterialExpressionScalarParameter'/Game/TheChase/UI/PostBlend/M_UI_Charge_CenterLine.MaterialExpressionScalarParameter_115'
+    Expressions[19] = MaterialExpressionScalarParameter'/Game/TheChase/UI/PostBlend/M_UI_Charge_CenterLine.MaterialExpressionScalarParameter_119'
+}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] = { ParameterInfos[0]={} }
+            Entries[1] = { ParameterInfos[0]={} }
+            Entries[2] = { ParameterInfos[0]={} }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[0] = {}
+        VectorValues[0] = {}
+        TextureValues[0] = {}
+    }
+    ReferencedTextures[0] = {}
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[1] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/TheChase/UI/PostBlend/Center_Line.Center_Line'
+        Name = Base_Texture
+        Group = 1. Base Texture EXP
+    }
+}
+CollectedScalarParameters[9] =
+{
+    CollectedScalarParameters[0] = { Value=1, Name=Base_U_Tilling, Group=None }
+    CollectedScalarParameters[1] = { Value=1, Name=Base_V_Tilling, Group=None }
+    CollectedScalarParameters[2] = { Value=0, Name=Base_U_Move, Group=None }
+    CollectedScalarParameters[3] = { Value=0, Name=Base_V_Move, Group=None }
+    CollectedScalarParameters[4] = { Value=0, Name=Texture_HueShift, Group=None }
+    CollectedScalarParameters[5] = { Value=1, Name=Opacity_Power, Group=None }
+    CollectedScalarParameters[6] = { Value=1, Name=Opacity_Intensity, Group=None }
+    CollectedScalarParameters[7] = { Value=1, Name=Base_Power, Group=None }
+    CollectedScalarParameters[8] = { Value=1, Name=Base_Intensity, Group=None }
+}
+CollectedVectorParameters[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

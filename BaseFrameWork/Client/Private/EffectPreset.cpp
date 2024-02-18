@@ -3,15 +3,34 @@
 #include "EffectPreset.h"
 #include "Effect.h"
 
+#include "EffectMesh.h"
+
 CEffectPreset::CEffectPreset()
 {
 }
 
 CEffectPreset::CEffectPreset(const CEffectPreset& _rhs)
 	:m_bLoop(_rhs.m_bLoop),
-	m_vTotalDuration(_rhs.m_vTotalDuration),
-	m_Effects(_rhs.m_Effects)
+	m_vTotalDuration(_rhs.m_vTotalDuration)
 {
+	shared_ptr<CEffect> pCloneEffect = nullptr;
+
+	for (auto& pEffect : _rhs.m_Effects) {
+
+		if (CEffect::EFFECT_TYPE::TYPE_PARTICLE == pEffect->GetEffectType()) {
+
+		}
+		else if (CEffect::EFFECT_TYPE::TYPE_TEXTURE == pEffect->GetEffectType()) {
+
+
+		}
+		else if (CEffect::EFFECT_TYPE::TYPE_MESH == pEffect->GetEffectType()) {
+			
+			pCloneEffect = dynamic_pointer_cast<CEffectMesh>(pEffect)->CloneEffect();
+		}
+
+		m_Effects.push_back(pCloneEffect);
+	}
 }
 
 HRESULT CEffectPreset::Initialize(_float _fDuration, _bool _bLoop)
@@ -94,6 +113,20 @@ void CEffectPreset::DeleteEffect(_uint _iEffectIdx)
 
 	m_Effects.erase(iter);
 
+}
+
+void CEffectPreset::SetEffectPosition(_vector _vPos)
+{
+	for (auto& pEffect : m_Effects) {
+		pEffect->SetParentPos(_vPos);
+	}
+}
+
+void CEffectPreset::SetBillboard(_bool _bBillboard)
+{
+	for (auto& pEffect : m_Effects) {
+		pEffect->SetBillboard(_bBillboard);
+	}
 }
 
 void CEffectPreset::PlayEffect()

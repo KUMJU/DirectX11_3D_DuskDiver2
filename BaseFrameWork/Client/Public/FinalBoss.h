@@ -26,8 +26,9 @@ private:
 	virtual _bool CalcDistanceOption() override;
 
 
-private:
+public:
 	void StartSpecialPattern();
+	void EndSpecialPattern();
 
 
 private:
@@ -58,6 +59,11 @@ private:
 private:
 	shared_ptr<CCollider> m_pCollider2 = nullptr;
 
+// Special Pattern 
+private:
+
+	_bool m_bSpecialPatternStart = false;
+	shared_ptr<class CSpecialBossPattern> m_pSpecialPattern = nullptr;
 
 public:
 	static shared_ptr<CFinalBoss> Create();

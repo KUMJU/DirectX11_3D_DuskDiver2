@@ -1,14 +1,51 @@
 #pragma once
 
-class CSpecialBossPattern
+#include "GameObject.h"
+
+BEGIN(Client)
+
+class CSpecialBossPattern : public CGameObject
 {
 public:
 	CSpecialBossPattern();
 	~CSpecialBossPattern() = default;
 
+
 public:
+	virtual HRESULT Initialize(shared_ptr<class CFinalBoss> _pBoss);
+
+	virtual void PriorityTick(_float _fTimeDelta);
+	virtual void Tick(_float _fTimeDelta);
+	virtual void LateTick(_float _fTimeDelta);
+	virtual HRESULT Render();
+
+public:
+	void PatternStart();
+	void StartEvent();
+
+private:
+
+	_int m_iPressNum = 0;
+	_int m_iSuccessNum = 0;
+
+
+private:
+	void KeyInput();
+	void SuccessPattern();
+
+private:
+	weak_ptr<class CFinalBoss> m_pFinalBoss;
+	shared_ptr<class CUI_SequenceTex> m_pGaugeUI = nullptr;
+	shared_ptr<class CPlayer> m_pPlayer = nullptr;
+
+
+public:
+
+	static shared_ptr<CSpecialBossPattern> Create(shared_ptr<class CFinalBoss> _pBoss);
 
 
 
 };
 
+
+END

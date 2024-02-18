@@ -576,9 +576,11 @@
     <ClInclude Include="..\Public\EffectTexture.h">
       <Filter>02. GameObject\09. Effect\01. Effect_Texture</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UI_SequanceTex.h" />
     <ClInclude Include="..\Public\SpecialBossPattern.h">
       <Filter>02. GameObject\00.Creature\01. Monster\04. FinalBoss\SpecialPattern</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_SequenceTex.h">
+      <Filter>02. GameObject\01. UI\04. UI_Sequance</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -849,9 +851,11 @@
     <ClCompile Include="..\Private\EffectTexture.cpp">
       <Filter>02. GameObject\09. Effect\01. Effect_Texture</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UI_SequanceTex.cpp" />
     <ClCompile Include="..\Private\SpecialBossPattern.cpp">
       <Filter>02. GameObject\00.Creature\01. Monster\04. FinalBoss\SpecialPattern</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_SequenceTex.cpp">
+      <Filter>02. GameObject\01. UI\04. UI_Sequance</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

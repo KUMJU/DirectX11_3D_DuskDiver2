@@ -247,7 +247,7 @@
     <ClInclude Include="..\Public\UIPlrHPBar.h" />
     <ClInclude Include="..\Public\UIQuest.h" />
     <ClInclude Include="..\Public\UISkillBar.h" />
-    <ClInclude Include="..\Public\UI_SequanceTex.h" />
+    <ClInclude Include="..\Public\UI_SequenceTex.h" />
     <ClInclude Include="..\Public\WorldHPBar.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
@@ -342,7 +342,7 @@
     <ClCompile Include="..\Private\UIPlrHPBar.cpp" />
     <ClCompile Include="..\Private\UIQuest.cpp" />
     <ClCompile Include="..\Private\UISkillBar.cpp" />
-    <ClCompile Include="..\Private\UI_SequanceTex.cpp" />
+    <ClCompile Include="..\Private\UI_SequenceTex.cpp" />
     <ClCompile Include="..\Private\WorldHPBar.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="pch.cpp">

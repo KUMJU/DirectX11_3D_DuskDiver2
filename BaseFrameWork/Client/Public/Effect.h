@@ -38,6 +38,18 @@ public:
 		return m_strEffectName;
 	}
 
+	EFFECT_TYPE GetEffectType() {
+		return m_eEffectType;
+	}
+
+	void SetParentPos(_vector _vParentPos) {
+		m_vParentPos = _vParentPos;
+	}
+
+	void SetBillboard(_bool _bBillboard) {
+		m_bBillboard = _bBillboard;
+	}
+
 public:
 	virtual void ResetEffect() {};
 
@@ -51,7 +63,16 @@ protected:
 	//활성화 시간이 지나면 false로 상태를 꺼주고 다시 이펙트 풀로 돌려보낸다 
 	_float2 vDuration = _float2();
 	char* m_strEffectName = {};
-	_matrix m_ParentMat;
+
+	_matrix m_ParentMat = XMMatrixIdentity();
+	_vector m_vParentPos = { 0.f, 0.f, 0.f };
+
+	_bool m_bBillboard = false;
+
+public:
+
+	virtual shared_ptr<CEffect> CloneEffect();
+
 
 };
 
