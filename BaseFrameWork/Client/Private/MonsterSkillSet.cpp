@@ -89,6 +89,7 @@ _bool CMonsterSkillSet::SwitchingSkill(ESKILLSTATE _eChangeSkill)
 {
 	m_eCurrentSkill = _eChangeSkill;
 	m_Skills[m_eCurrentSkill]->SetEnable(true);
+	m_Skills[m_eCurrentSkill]->ActiveSkill();
 	ActiveSkill(_eChangeSkill);
 
 	return true;

@@ -49,6 +49,8 @@ public:
 	_float* GetWoldMatFloatArr();
 	void SetWorldMatrix(_float4x4 _worldMat);
 
+	//For AlphaBlend Sort
+	_float GetCamDistance();
 
 public:
 	shared_ptr<CComponent> GetComponent(const wstring& _strComTag);

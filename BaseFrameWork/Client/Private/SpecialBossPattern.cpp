@@ -9,6 +9,8 @@
 #include "GameMgr.h"
 #include "Player.h"
 
+#include "CameraMgr.h"
+
 CSpecialBossPattern::CSpecialBossPattern()
 {
 }
@@ -24,7 +26,7 @@ HRESULT CSpecialBossPattern::Initialize(shared_ptr<class CFinalBoss> _pBoss)
 	TagInfo.fSizeX = 700.f;
 	TagInfo.fSizeY = 90.f;
 	TagInfo.fX = g_iWinSizeX * 0.5f;
-	TagInfo.fY = g_iWinSizeY * 0.5f;
+	TagInfo.fY = g_iWinSizeY * 0.5f + 200.f;
 
 	CUI_SequenceTex::SequenceTexInfo TexInfo = {};
 	TexInfo.bLoop = true;
@@ -76,7 +78,16 @@ void CSpecialBossPattern::PatternStart()
 {
 	m_IsEnabled = true;
 	m_pGaugeUI->SetEnable(true);
-	m_pPlayer->SetOnFinalEvent(true);
+
+	/*Player*/
+	m_pPlayer->SetPosition({ 0.f, 39.5f, -375.f, 1.f });
+	m_pPlayer->SetOnMinigame(true);
+
+	
+	CCameraMgr::GetInstance()->SetFreeCamPos({ 0.f, 42.5f, -405.f, 1.f }, { 0.f, 42.5f, -425.f , 1.f });
+	//플레이어 위치 옮기기 
+	//보스가 쓰러지는 쪽으로 카메라 세팅 
+
 
 }
 

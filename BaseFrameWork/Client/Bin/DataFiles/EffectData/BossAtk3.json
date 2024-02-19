@@ -1,0 +1,86 @@
+{
+	"Elements" : 
+	{
+		"ScreamWind" : 
+		{
+			"Center" : 
+			{
+				"x" : 0.0,
+				"y" : 5.0,
+				"z" : 10.0
+			},
+			"ChangeTime" : 2.2999999523162842,
+			"Color" : 
+			{
+				"w" : 1.0,
+				"x" : 1.0,
+				"y" : 1.0,
+				"z" : 1.0
+			},
+			"Duration" : 
+			{
+				"x" : 2.2000000476837158,
+				"y" : 2.7000000476837158
+			},
+			"EffectType" : 2,
+			"EndScale" : 
+			{
+				"x" : 80.0,
+				"y" : 80.0,
+				"z" : 80.0
+			},
+			"LerpColor" : 
+			{
+				"w" : 1.0,
+				"x" : 1.0,
+				"y" : 1.0,
+				"z" : 0.82843136787414551
+			},
+			"Loop" : 
+			{
+				"EffectLoop" : false,
+				"UVLoop" : false
+			},
+			"Mask" : 
+			{
+				"Speed" : 2.0,
+				"TexKey" : "T_128White",
+				"Using" : true,
+				"x" : 0.0,
+				"y" : -1.0
+			},
+			"MeshKey" : "HemiSphere",
+			"MiddleScale" : 
+			{
+				"x" : 30.0,
+				"y" : 30.0,
+				"z" : 30.0
+			},
+			"Noise" : 
+			{
+				"Speed" : 0.0,
+				"TexKey" : "flow_00",
+				"Using" : true,
+				"x" : 0.0,
+				"y" : 0.0
+			},
+			"Rotation" : 
+			{
+				"x" : 0.0,
+				"y" : -90.0,
+				"z" : 0.0
+			},
+			"StartScale" : 
+			{
+				"x" : 4.0,
+				"y" : 4.0,
+				"z" : 4.0
+			}
+		}
+	},
+	"Preset Info" : 
+	{
+		"Duration" : 4.0,
+		"Loop" : false
+	}
+}

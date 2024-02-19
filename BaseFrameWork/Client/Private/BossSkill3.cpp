@@ -15,6 +15,8 @@ HRESULT CBossSkill3::Initialize()
     SKILLINFO skillDesc = {};
 
     m_eSkillOwner = EOWNER_TYPE::OWNER_MONSTER;
+    m_pEffectPreset = CEffectMgr::GetInstance()->FindEffect(TEXT("BossAtk3"));
+
 
     m_iDamage = 15.f;
 
@@ -29,7 +31,7 @@ HRESULT CBossSkill3::Initialize()
     skillDesc.fDropSpeed = 0.f;
 
 
-    skillDesc.iStartTrackPosition = 45.0;
+    skillDesc.iStartTrackPosition = 55.0;
     skillDesc.iEndTrackPosition = 70.0;
 
     shared_ptr<CCollider> pCollider = CCollider::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), CCollider::TYPE_SPHERE, normalAtkDesc);

@@ -120,4 +120,9 @@ void CCameraMgr::StartEvent(const wstring& _strName)
 void CCameraMgr::SetFreeCamPos(_vector _vPos, _vector _vLook)
 {
 	m_pFreeCam->SetFreeCamPos(_vPos, _vLook);
+
+	if (m_eCurrentCamType != ECAMERATYPE::FREE) {
+		SwitchingCamera(ECAMERATYPE::FREE);
+	}
+
 }

@@ -24,7 +24,13 @@ public:
 public:
 	void SetPlayerHP(_int _iHP);
 
+public:
+	void AddBurstGauge();
+	void SetBurstGauge(_float _fCurrentBurst);
 
+public:
+	void SetSkillGauge(_int _iSkillGauge, _bool _isIncrease);
+	void SetTimeRatio(_float _fTimeRate);
 
 private:
 

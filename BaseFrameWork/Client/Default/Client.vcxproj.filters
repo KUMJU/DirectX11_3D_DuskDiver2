@@ -289,6 +289,9 @@
     <Filter Include="02. GameObject\00.Creature\01. Monster\04. FinalBoss\SpecialPattern">
       <UniqueIdentifier>{1199a85e-91b9-484d-abea-13f476ae05e1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\01. UI\05. UI_BurstGuageBar">
+      <UniqueIdentifier>{948edd82-0876-4bc7-84c2-ccbc411badb7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -582,6 +585,9 @@
     <ClInclude Include="..\Public\UI_SequenceTex.h">
       <Filter>02. GameObject\01. UI\04. UI_Sequance</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UIBurstGaugeBar.h">
+      <Filter>02. GameObject\01. UI\05. UI_BurstGuageBar</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -856,6 +862,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_SequenceTex.cpp">
       <Filter>02. GameObject\01. UI\04. UI_Sequance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UIBurstGaugeBar.cpp">
+      <Filter>02. GameObject\01. UI\05. UI_BurstGuageBar</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

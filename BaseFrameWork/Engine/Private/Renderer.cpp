@@ -144,6 +144,7 @@ HRESULT CRenderer::Render()
 	if (FAILED(RenderBlend()))
 		return E_FAIL;
 
+
 	if (FAILED(RenderUI()))
 		return E_FAIL;
 
@@ -266,6 +267,11 @@ HRESULT CRenderer::RenderFinal()
 
 HRESULT CRenderer::RenderNonLight()
 {
+
+	m_RenderObjects[RENDER_NONLIGHT].sort([](shared_ptr<CGameObject> _pSrc, shared_ptr<CGameObject> _pDst)
+		{
+			return _pSrc->GetCamDistance() > _pDst->GetCamDistance();
+		});
 
 	for (auto& pGameObject : m_RenderObjects[RENDER_NONLIGHT])
 	{

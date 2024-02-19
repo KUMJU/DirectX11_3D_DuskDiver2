@@ -42,7 +42,7 @@ private:
 	_uint m_iTestNum = 0;
 
 
-	_float m_fPattern4DelayTime = 4.f;
+	_float m_fPattern4DelayTime = 10.f;
 	_float m_fPatternCheckTime = 0.f;
 
 	_bool m_bLaserOn = false;
@@ -51,6 +51,10 @@ private:
 
 	_vector m_vOriginLookVec = { 0.f, 0.f, 0.f, 0.f };
 	
+
+private:
+	shared_ptr<class CEffectPreset> m_pLaserEffectPreset = nullptr;
+	shared_ptr<class CEffectPreset> m_pLaserEffectPreset2 = nullptr;
 
 private:
 

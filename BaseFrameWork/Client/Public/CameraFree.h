@@ -27,6 +27,9 @@ private:
 public:
 	void SetFreeCamPos(_vector _vPos, _vector _vLook);
 
+public:
+	void FocusObject(_vector _vCamPos , _vector _vTarget);
+
 private:
 	void KeyInput();
 

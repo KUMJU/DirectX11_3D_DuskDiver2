@@ -17,10 +17,10 @@ HRESULT CBossHPBar::Initialize()
 
     CUI::tagUIInfo UIInfo = {};
 
-    UIInfo.fSizeX = 400.f;
-    UIInfo.fSizeY = 20.f;
+    UIInfo.fSizeX = 450.f;
+    UIInfo.fSizeY = 15.f;
     UIInfo.fX = g_iWinSizeX * 0.5f;
-    UIInfo.fY = g_iWinSizeY * 0.5f - 260.f;
+    UIInfo.fY = g_iWinSizeY * 0.5f - 265.f;
 
     __super::Initialize(UIInfo, 2);
 
@@ -38,8 +38,8 @@ HRESULT CBossHPBar::Initialize()
 
     m_pBackGroundTransform = CTransform::Create(CGameInstance::GetInstance()->GetDeviceInfo(),
         CGameInstance::GetInstance()->GetDeviceContextInfo(),nullptr);
-    m_pBackGroundTransform->SetState(CTransform::STATE_POSITION, { m_pUIDefaultInfo.fX - g_iWinSizeX * 0.5f, -m_pUIDefaultInfo.fY + g_iWinSizeY * 0.5f, 0.f , 1.f });
-    m_pBackGroundTransform->SetScaling(459.f, 60.f, 1.f);
+    m_pBackGroundTransform->SetState(CTransform::STATE_POSITION, { m_pUIDefaultInfo.fX - g_iWinSizeX * 0.5f, -m_pUIDefaultInfo.fY + g_iWinSizeY * 0.5f+ 10.f, 0.f , 1.f });
+    m_pBackGroundTransform->SetScaling(500.f, 60.f, 1.f);
 
     m_pBackGroundBuffer = CVIBuffer_UI::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo());
 
@@ -119,6 +119,10 @@ HRESULT CBossHPBar::Render()
 
     if (FAILED(m_VIRectCom->Render()))
         return E_FAIL;
+
+
+    CGameInstance::GetInstance()->RenderFont(TEXT("Font_Default_KR"), TEXT("È¥µ·ÀÇ ¾ß¼ö"), {g_iWinSizeX * 0.5f- 50.f ,g_iWinSizeY * 0.5f - 300.f}, Colors::White);
+
 
     return S_OK;
 }

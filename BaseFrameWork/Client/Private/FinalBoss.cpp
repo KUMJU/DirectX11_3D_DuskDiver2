@@ -11,6 +11,9 @@
 #include "BossHPBar.h"
 #include "SpecialBossPattern.h"
 
+#include "EffectMgr.h"
+#include "EffectPreset.h"
+
 
 CFinalBoss::CFinalBoss()
 {
@@ -76,6 +79,14 @@ HRESULT CFinalBoss::Initialize()
     CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_UI"), m_pHPBar);
 
 
+    /* */
+
+    m_pLaserEffectPreset = CEffectMgr::GetInstance()->FindEffect(TEXT("BossAtk4Ready"));
+    m_pLaserEffectPreset->SetParentTransform(m_pTransformCom);
+
+    m_pLaserEffectPreset2 = CEffectMgr::GetInstance()->FindEffect(TEXT("BossAtk4"));
+    m_pLaserEffectPreset2->SetParentTransform(m_pTransformCom);
+
     m_pModelCom->SetLinearTime(1.2f);
 
     return S_OK;
@@ -94,7 +105,7 @@ void CFinalBoss::Tick(_float _fTimeDelta)
 
     if (m_eCurrentState != EMONSTER_STATE::STATE_SPAWN && !m_IsAtkCool && m_eCurrentState != EMONSTER_STATE::STATE_ATTACK && !m_bDie&&
         m_eCurrentState != EMONSTER_STATE::STATE_STUN) {
-        _uint iRand = m_iTestNum % 5;
+        _uint iRand = m_iTestNum % 4;
         AttackPattern(iRand);
         m_eCurrentState = EMONSTER_STATE::STATE_ATTACK;
     }
@@ -109,13 +120,14 @@ void CFinalBoss::Tick(_float _fTimeDelta)
 
             m_bSetOriginLook = true;
             m_fTurnTime = 0.f;
-            vLook = XMVectorLerp(vLook, m_vOriginLookVec, 1.f);
+            //m_vOriginLookVec
+            vLook = XMVectorLerp(vLook, {0.f, 0.f, 1.f ,0.f}, 1.f);
             m_pTransformCom->SetState(CTransform::STATE_LOOK, vLook);
             
 
         }
         else {
-            vLook= XMVectorLerp(vLook, m_vOriginLookVec, m_fTurnTime /2.f);
+            vLook= XMVectorLerp(vLook, { 0.f, 0.f, 1.f ,0.f }, m_fTurnTime /2.f);
             m_pTransformCom->SetState(CTransform::STATE_LOOK, vLook);
 
         }
@@ -124,15 +136,25 @@ void CFinalBoss::Tick(_float _fTimeDelta)
 
 
     if (4 == m_iAnimNum && !m_bDie && m_eCurrentState != EMONSTER_STATE::STATE_STUN) {
+       
+        m_fPatternCheckTime += _fTimeDelta;
 
-        if (!m_bLaserOn) {
+        //플레이어 조준 완료, 레이저 발사 
+        if (!m_bLaserOn && m_fPatternCheckTime> 6.f) {
             m_pSkillSet->SwitchingSkill(CMonsterSkillSet::MON_SKILL4);
+            m_pLaserEffectPreset2->PlayEffect();
             m_bLaserOn = true;
 
         }
 
-        CalcPlayerDistance();
-        m_fPatternCheckTime += _fTimeDelta;
+        if (!m_bLaserOn) {
+            m_pLaserEffectPreset->Tick(_fTimeDelta);
+            CalcPlayerDistance();
+        }
+        
+        if (m_bLaserOn) {
+            m_pLaserEffectPreset2->Tick(_fTimeDelta);
+        }
 
         if (m_fPatternCheckTime >= m_fPattern4DelayTime) {
 
@@ -183,6 +205,17 @@ void CFinalBoss::LateTick(_float _fTimeDelta)
             _uint iRand = m_iTestNum % 5;
             AttackPattern(iRand);
             m_eCurrentState = EMONSTER_STATE::STATE_ATTACK;
+        }
+    }
+
+    if (4 == m_iAnimNum && !m_bDie && m_eCurrentState != EMONSTER_STATE::STATE_STUN) {
+
+        if (!m_bLaserOn) {
+            m_pLaserEffectPreset->LateTick(_fTimeDelta);
+        }
+
+        if (m_bLaserOn) {
+            m_pLaserEffectPreset2->LateTick(_fTimeDelta);
         }
     }
 
@@ -256,6 +289,7 @@ void CFinalBoss::AttackPattern(_uint _iAtkNum)
         ChangeAnim(3, false);
         m_NextAnimIndex.push_back({ 4 , true });
         m_vOriginLookVec = m_pTransformCom->GetState(CTransform::STATE_LOOK);
+        m_pLaserEffectPreset->PlayEffect();
         break;
 
     case 4:
@@ -304,17 +338,12 @@ void CFinalBoss::StartSpecialPattern()
     
     m_pSpecialPattern->PatternStart();
     
-    //Event -> StartEvent
-
-
-
-
 }
 
 void CFinalBoss::EndSpecialPattern()
 {
-    m_eCurrentState = EMONSTER_STATE::STATE_IDLE;
-    ChangeAnim(14, false);
+    //m_eCurrentState = EMONSTER_STATE::STATE_IDLE;
+    //ChangeAnim(14, false);
 
 }
 
@@ -333,15 +362,17 @@ void CFinalBoss::SetSpawnState()
 
 void CFinalBoss::OnHit()
 {
-
-    if (m_bDie)
-        ChangeAnim(9, false);
+    // ChangeAnim(9, false);
+    if (m_bDie) {
+        m_bDie = false;
+        StartSpecialPattern();
+    }
 
     m_pHPBar->SetHP(m_iHP);
 
-    if (m_iHP < 50 && !m_bSpecialPatternStart) {
-        StartSpecialPattern();
-    }
+    //if (m_iHP < 50 && !m_bSpecialPatternStart) {
+    //    StartSpecialPattern();
+    //}
 
 }
 

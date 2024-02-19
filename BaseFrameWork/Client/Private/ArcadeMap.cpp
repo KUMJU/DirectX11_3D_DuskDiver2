@@ -36,6 +36,8 @@
 #include "UIMgr.h"
 #include "UIPlrHPBar.h"
 #include "UIQuest.h"
+#include "UISkillBar.h"
+#include "UIBurstGaugeBar.h"
 
 #include "EffectParticle.h"
 #include "EffectMgr.h"
@@ -202,7 +204,7 @@ HRESULT CArcadeMap::ReadyLayerMap(const wstring& _strLayerTag)
 
 	CMonsterPool::SPAWN_INFO info1 = {};
 	info1.iMonsterType = 3;
-	info1.vMonsterPos = _vector({ 0.f, 40.f, -425.f });
+	info1.vMonsterPos = _vector({ 0.f, 39.5f, -425.f });
 	SpawnList.push_back(info1);
 
 	shared_ptr<CMonsterTrigger> pTrigger = CMonsterTrigger::Create(&SpawnList, { 0.f, 40.f, -380.f });
@@ -297,6 +299,32 @@ HRESULT CArcadeMap::ReadyLayerUI(const wstring& _strLayerTag)
 	if(FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pInstance)))
 		return E_FAIL;
 	CUIMgr::GetInstance()->AddUI(TEXT("UI_Quest"), pInstance);
+
+
+	/**Player SkillBar**/
+
+	pInstance = CUISkillBar::Create();
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pInstance)))
+		return E_FAIL;
+
+	CUIMgr::GetInstance()->AddUI(TEXT("UI_SkillBar"), pInstance);
+
+	/**Player BurstBar**/
+
+	pInstance = CUIBurstGaugeBar::Create();
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pInstance)))
+		return E_FAIL;
+
+	CUIMgr::GetInstance()->AddUI(TEXT("UI_BurstBar"), pInstance);
+
+	/**Quest UI**/
+
+	pInstance = CUIQuest::Create();
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pInstance)))
+		return E_FAIL;
+	CUIMgr::GetInstance()->AddUI(TEXT("UI_Quest"), pInstance);
+
+
 
 	return S_OK;
 }

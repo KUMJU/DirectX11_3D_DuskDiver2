@@ -8,6 +8,8 @@ float g_PrevHPRatio;
 
 vector g_RGBColor = vector(1.f, 1.f, 1.f, 1.f);
 
+bool g_bSkillBarState = true;
+
 //°¡·Î
 float g_fStartRowUV;
 float g_fEndRowUV;
@@ -15,6 +17,8 @@ float g_fEndRowUV;
 float g_fStartColUV;
 float g_fEndColUV;
 
+float g_fBurstGaugeRatio = 0.f;
+float g_fSkillGaugeRatio = 0.f;
 
 struct VS_IN
 {
@@ -224,7 +228,7 @@ PS_OUT PS_HPBar(PS_IN In)
 }
 
 
-PS_OUT PS_EnemyHPBar(PS_IN In)
+PS_OUT PS_ENEMY_HPBAR(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
@@ -243,14 +247,40 @@ PS_OUT PS_EnemyHPBar(PS_IN In)
     return Out;
 }
 
-PS_OUT PS_SequenceUI(PS_IN In)
+PS_OUT PS_SKILLBAR(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
 
+    Out.vColor = g_Texture.Sample(g_LinearSampler, In.vTexcoord);
     
-    
-    
+    if (In.vTexcoord.x <= g_fSkillGaugeRatio)
+    {
+        Out.vColor.rgb = float3(0.03f, 0.63f, 0.94f);
+    }
+    else
+    {
+        Out.vColor.rgb = float3(0.25f, 0.25f, 0.25f);
+    }
+ 
+    return Out;
 
+}
+
+PS_OUT PS_BURSTBAR(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+   // Out.vColor = g_Texture.Sample(g_LinearSampler, In.vTexcoord);
+    
+    if (In.vTexcoord.x <= g_fBurstGaugeRatio)
+    {
+        Out.vColor.rgb = float3(0.99f, 0.99f, 0.007f);
+    }
+    else
+    {
+        Out.vColor.rgb = float3(0.25f, 0.25f, 0.25f);
+    }
+ 
     return Out;
 
 }
@@ -295,7 +325,7 @@ technique11 DefaultTechnique
         SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = compile gs_5_0 GS_MAIN();
-        PixelShader = compile ps_5_0 PS_EnemyHPBar();
+        PixelShader = compile ps_5_0 PS_ENEMY_HPBAR();
     }
 
     pass SequenceUI //4
@@ -306,6 +336,26 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = compile gs_5_0 GS_SEQUENCE_MAIN();
         PixelShader = compile ps_5_0 PS_MAIN();
+    }
+
+    pass SkillBar //5
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = compile gs_5_0 GS_MAIN();
+        PixelShader = compile ps_5_0 PS_SKILLBAR();
+    }
+
+    pass BurstBar //6
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = compile gs_5_0 GS_MAIN();
+        PixelShader = compile ps_5_0 PS_BURSTBAR();
     }
 
 }

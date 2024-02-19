@@ -4,6 +4,8 @@
 #include "Collider.h"
 #include "GameInstance.h"
 
+#include "EffectMgr.h"
+
 CBossSkill1::CBossSkill1()
 {
 }
@@ -15,10 +17,11 @@ HRESULT CBossSkill1::Initialize()
     SKILLINFO skillDesc = {};
 
     m_eSkillOwner = EOWNER_TYPE::OWNER_MONSTER;
+    m_pEffectPreset = CEffectMgr::GetInstance()->FindEffect(TEXT("BossAtk1"));
 
     m_iDamage = 15.f;
 
-    normalAtkDesc.fRadius = 10.f;
+    normalAtkDesc.fRadius = 17.f;
     normalAtkDesc.vCenter = { 0.f, 0.f, 2.f };
 
     skillDesc.bKnockUp = false;
@@ -29,8 +32,8 @@ HRESULT CBossSkill1::Initialize()
     skillDesc.fDropSpeed = 0.f;
 
 
-    skillDesc.iStartTrackPosition = 35.0;
-    skillDesc.iEndTrackPosition = 55.0;
+    skillDesc.iStartTrackPosition = 40.0;
+    skillDesc.iEndTrackPosition = 50.0;
 
     shared_ptr<CCollider> pCollider = CCollider::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), CCollider::TYPE_SPHERE, normalAtkDesc);
     pCollider->SetOwner(shared_from_this());

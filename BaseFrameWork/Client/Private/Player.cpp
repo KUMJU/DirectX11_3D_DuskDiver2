@@ -94,7 +94,6 @@ void CPlayer::PriorityTick(_float _fTimeDelta)
 
 void CPlayer::Tick(_float _fTimeDelta)
 {
-
     if (m_bSuperArmor) {
        
         m_fSuperArmorTime += _fTimeDelta;
@@ -107,16 +106,15 @@ void CPlayer::Tick(_float _fTimeDelta)
 
     if (HEROSTATE::STATE_BURST_TRANS == m_eCurrentState) {
 
-        m_fransformTime += _fTimeDelta;
+        m_fTransformTime += _fTimeDelta;
         
-        if (m_fransformTime > 2.8f) {
+        if (m_fTransformTime > 2.8f) {
             
             m_pPlayerSkillset->SetBurstMode(true);
             m_pModelCom = m_pBurstModelCom;
 
             m_eCurrentState = HEROSTATE::STATE_IDLE;
-            m_fransformTime = 0.f;
-           // m_NextAnimIndex.push_back({ 44, true });
+            m_fTransformTime = 0.f;
             m_bBurstMode = true;
             
         }
@@ -165,10 +163,9 @@ void CPlayer::Tick(_float _fTimeDelta)
         }
     }
 
-    if (!m_IsOnMinigame) {
+    if (!m_IsOnMinigame && m_eCurrentState != HEROSTATE::STATE_HIT) {
         //입력 장치 
         MouseInput(_fTimeDelta);
-
         KeyInput(_fTimeDelta);
 
     }
@@ -211,6 +208,8 @@ void CPlayer::Tick(_float _fTimeDelta)
 
 void CPlayer::LateTick(_float _fTimeDelta)
 {
+    CheckTimer(_fTimeDelta);
+
     if (m_iCurrentAnimIdx == 133) {
 
 
@@ -384,6 +383,12 @@ void CPlayer::EffectLateTick(_float _fDeltaTime)
 
 }
 
+void CPlayer::AddBurstGauge()
+{
+    m_fBurstGage += 3.f;
+    CUIMgr::GetInstance()->SetBurstGauge(m_fBurstGage);
+}
+
 
 void CPlayer::SetAnimSpeed()
 {
@@ -425,6 +430,43 @@ HRESULT CPlayer::BindShaderResources()
     if (FAILED(m_pShader->BindMatrix("g_ProjMatrix", &ProjMat)))
         return E_FAIL;
     return S_OK;
+}
+
+void CPlayer::CheckTimer(_float _fTimeDelta)
+{
+    //버스트모드일때
+    if (m_bBurstMode) {
+        m_fBurstAccTime += _fTimeDelta;
+
+        if (m_fBurstAccTime >= m_fBurstTotalTime && m_eCurrentState == HEROSTATE::STATE_IDLE) {
+
+            m_fBurstAccTime = 0.f;
+            m_pModelCom = m_pBattleModelCom;
+            m_bBurstMode = false;
+            ChangeAnim(44, true);
+            m_pPlayerSkillset->SetBurstMode(false);
+
+        }
+    }
+
+
+    //스킬 게이지 체크 
+    if (m_iSkillGage != 4) {
+
+        m_fSkillCoolTime += _fTimeDelta;
+
+        if (m_fSkillCoolTime >= 10.f) {
+            m_iSkillGage += 1;
+            m_fSkillCoolTime = 0.f;
+            CUIMgr::GetInstance()->SetSkillGauge(m_iSkillGage, true);
+
+        }
+        else {
+            CUIMgr::GetInstance()->SetTimeRatio(m_fSkillCoolTime / 10.f);
+        }
+    }
+
+
 }
 
 _bool CPlayer::ChangeAnim(_uint _iAnimNum, _bool _isLoop)
@@ -705,95 +747,111 @@ void CPlayer::KeyInput(_float _fTimeDelta)
 
 
     //Skill1
-    if (GetKeyState('Q') & 0x8000)
+
+    if(CGameInstance::GetInstance()->Key_Down('Q'))
     {
-        DetectMonster();
+        if (m_iSkillGage != 0) {
 
-        if (m_bBurstMode) {
-            if (m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_BURST_Q)) {
-                ChangeAnim(63, false);
-                m_NextAnimIndex.push_back({ 64 , false });
-                m_NextAnimIndex.push_back({ 65 , false });
 
-                m_IsUsingSkill = true;
-                m_bSuperArmor = true;
-                m_fSuperArmorTime = 0.f;
+            DetectMonster();
+            m_iSkillGage -= 1;
+            CUIMgr::GetInstance()->SetSkillGauge(m_iSkillGage, false);
+
+            if (m_bBurstMode) {
+                if (m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_BURST_Q)) {
+                    ChangeAnim(63, false);
+                    m_NextAnimIndex.push_back({ 64 , false });
+                    m_NextAnimIndex.push_back({ 65 , false });
+
+                    m_IsUsingSkill = true;
+                    m_bSuperArmor = true;
+                    m_fSuperArmorTime = 0.f;
+                }
             }
-        }
-        else {
-            if (m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_Q)) {
-                m_eCurrentState = HEROSTATE::STATE_SKILL_Q;
-                ChangeAnim(60, false);
+            else {
+                if (m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_Q)) {
+                    m_eCurrentState = HEROSTATE::STATE_SKILL_Q;
+                    ChangeAnim(60, false);
 
-                m_IsUsingSkill = true;
-                m_bSuperArmor = true;
-                m_fSuperArmorTime = 0.f;
-                //CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
-                //CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_57.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
+                    m_IsUsingSkill = true;
+                    m_bSuperArmor = true;
+                    m_fSuperArmorTime = 0.f;
+                    //CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
+                    //CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_57.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
+                }
             }
+
         }
 
     }
 
     //Skill2
-    if (GetKeyState('E') & 0x8000)
+
+    if (CGameInstance::GetInstance()->Key_Down('E'))
     {
-        DetectMonster();
+        if (m_iSkillGage != 0) {
+            m_iSkillGage -= 1;
+            DetectMonster();
+            CUIMgr::GetInstance()->SetSkillGauge(m_iSkillGage, false);
 
-        if (m_bBurstMode) {
-            if (m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_BURST_E)) {
-                ChangeAnim(71, false);
+            if (m_bBurstMode) {
+                if (m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_BURST_E)) {
+                    ChangeAnim(71, false);
 
-                m_IsUsingSkill = true;
-                m_bSuperArmor = true;
-                m_fSuperArmorTime = 0.f;
+                    m_IsUsingSkill = true;
+                    m_bSuperArmor = true;
+                    m_fSuperArmorTime = 0.f;
+                }
             }
-        }
-        else {
-            if (m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_E)) {
-                m_eCurrentState = HEROSTATE::STATE_SKILL_E;
-                ChangeAnim(61, false);
-                m_IsUsingSkill = true;
-                m_bSuperArmor = true;
-                m_fSuperArmorTime = 0.f;
+            else {
+                if (m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_E)) {
+                    m_eCurrentState = HEROSTATE::STATE_SKILL_E;
+                    ChangeAnim(61, false);
+                    m_IsUsingSkill = true;
+                    m_bSuperArmor = true;
+                    m_fSuperArmorTime = 0.f;
+                }
             }
         }
 
     }
 
-    if (GetKeyState('R') & 0x8000)
+    if (CGameInstance::GetInstance()->Key_Down('R'))
     {
-        m_eCurrentState = HEROSTATE::STATE_SKILL_R;
+        if (m_iSkillGage != 0) {
+            m_iSkillGage -= 1;
+            m_eCurrentState = HEROSTATE::STATE_SKILL_R;
+            CUIMgr::GetInstance()->SetSkillGauge(m_iSkillGage, false);
 
-        if (m_bBurstMode) {
-            if (m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_BURST_R)) {
-                ChangeAnim(133, false);
-                m_NextAnimIndex.push_back({ 136, false });
-                m_NextAnimIndex.push_back({ 137 , false });
+            if (m_bBurstMode) {
+                if (m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_BURST_R)) {
+                    ChangeAnim(133, false);
+                    m_NextAnimIndex.push_back({ 136, false });
+                    m_NextAnimIndex.push_back({ 137 , false });
 
-                m_fJumpSpeed = 2.f;
-                m_bJump = true;
+                    m_fJumpSpeed = 2.f;
+                    m_bJump = true;
 
-                m_IsUsingSkill = true;
-                m_bSuperArmor = true;
-                m_fSuperArmorTime = 0.f;
+                    m_IsUsingSkill = true;
+                    m_bSuperArmor = true;
+                    m_fSuperArmorTime = 0.f;
+                }
+
+            }
+            else {
+                if (m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_R)) {
+                    DetectMonster();
+                    ChangeAnim(62, false);
+
+                    m_IsUsingSkill = true;
+                    m_bSuperArmor = true;
+                    m_fSuperArmorTime = 0.f;
+                }
+
+
             }
 
         }
-        else {
-            if (m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_R)) {
-                DetectMonster();
-                ChangeAnim(62, false);
-
-                m_IsUsingSkill = true;
-                m_bSuperArmor = true;
-                m_fSuperArmorTime = 0.f;
-            }
-           
-
-        }
-
-
     }
     ///////////////////Walk////////////////////////
 

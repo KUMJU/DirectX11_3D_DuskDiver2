@@ -15,11 +15,12 @@ HRESULT CBossSkill2::Initialize()
     SKILLINFO skillDesc = {};
 
     m_eSkillOwner = EOWNER_TYPE::OWNER_MONSTER;
+    m_pEffectPreset = CEffectMgr::GetInstance()->FindEffect(TEXT("BossAtk2"));
 
     m_iDamage = 7.f;
 
     normalAtkDesc.fRadius = 4.f;
-    normalAtkDesc.vCenter = { 0.f, 0.f, 5.f };
+    normalAtkDesc.vCenter = { 0.f, 0.f, 9.f };
 
     skillDesc.bKnockUp = false;
     skillDesc.bDownAtk = true;
@@ -29,8 +30,8 @@ HRESULT CBossSkill2::Initialize()
     skillDesc.fDropSpeed = 0.f;
 
 
-    skillDesc.iStartTrackPosition = 30.0;
-    skillDesc.iEndTrackPosition = 55.0;
+    skillDesc.iStartTrackPosition = 31.0;
+    skillDesc.iEndTrackPosition = 40.0;
 
     shared_ptr<CCollider> pCollider = CCollider::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), CCollider::TYPE_SPHERE, normalAtkDesc);
     pCollider->SetOwner(shared_from_this());

@@ -38,6 +38,9 @@ private:
 	shared_ptr<class CUI_SequenceTex> m_pGaugeUI = nullptr;
 	shared_ptr<class CPlayer> m_pPlayer = nullptr;
 
+private:
+	_bool m_bFirstEventStart = false;
+	_bool m_bSecondEvenetStart = false;
 
 public:
 

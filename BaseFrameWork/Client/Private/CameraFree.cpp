@@ -100,6 +100,15 @@ void CCameraFree::SetFreeCamPos(_vector _vPos, _vector _vLook)
 
 }
 
+void CCameraFree::FocusObject(_vector _vCamPos, _vector _vTarget)
+{
+
+	m_pTransformCom->SetState(CTransform::STATE_POSITION, _vCamPos);
+	m_pTransformCom->LookAt(_vTarget);
+
+
+}
+
 void CCameraFree::KeyInput()
 {
 	if (m_bKeyDeb)

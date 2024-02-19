@@ -78,6 +78,16 @@ void CGameObject::SetWorldMatrix(_float4x4 _worldMat)
 	m_pTransformCom->SetWorldMatrix(_worldMat);
 }
 
+_float CGameObject::GetCamDistance()
+{
+	_float4 vCamPos = CGameInstance::GetInstance()->GetCamPosition();
+	_vector vObjPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+	_float vDistance = XMVector4Length(XMLoadFloat4(&vCamPos) - vObjPos).m128_f32[0];
+
+
+	return vDistance;
+}
+
 shared_ptr<CComponent> CGameObject::GetComponent(const wstring& _strComTag)
 {
 	auto iter = m_Components.find(_strComTag);

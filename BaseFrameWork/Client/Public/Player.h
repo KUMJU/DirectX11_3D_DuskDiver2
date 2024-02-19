@@ -66,6 +66,11 @@ public:
 	void EffectLateTick(_float _fDeltaTime);
 
 //Component
+
+
+public:
+	void AddBurstGauge();
+
 private:
 	shared_ptr<CShader> m_pShader = nullptr;
 
@@ -92,6 +97,7 @@ private:
 
 private:
 	void SetAnimSpeed();
+	void CheckTimer(_float _fTimeDelta);
 
 private:
 	HRESULT AddComponent();
@@ -115,7 +121,11 @@ private:
 
 //º¯½Å~~~~~~~~~!!!!!
 private:
-	_float m_fransformTime = 0.f;
+	_float m_fTransformTime = 0.f;
+
+	_float m_fBurstTotalTime = 50.f;
+	_float m_fBurstAccTime = 0.f;
+
 
 private:
 
@@ -162,8 +172,9 @@ private:
 	_int m_iMaxHp = 100;
 	_int m_iHp = 100;
 
-	_int m_iBurstGage = 100;
-	_int m_iSkillGage = 3;
+	_float m_fBurstGage = 0;
+	_int m_iSkillGage = 4;
+
 
 
 	_bool m_bBurstMode = false;
@@ -240,6 +251,8 @@ private:
 //SkillSystem
 private:
 	_bool m_IsUsingSkill = false;
+
+	_float m_fSkillCoolTime = 0.f;
 
 
 //PlayerHit

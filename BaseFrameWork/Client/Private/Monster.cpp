@@ -431,7 +431,8 @@ void CMonster::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> 
         }
 
         CEffectMgr::GetInstance()->SetHitMark(XMLoadFloat3(&_pCollider->GetBounding()->GetBoundingSphere()->Center));
-
+        
+        m_pTarget->AddBurstGauge();
         m_bCollisionCheck = true;
         //³Ë¹é ¿©ºÎ, ³Ë¾÷ ¿©ºÎ, 
         OnHit();

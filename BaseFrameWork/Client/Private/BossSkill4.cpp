@@ -3,6 +3,7 @@
 
 #include "Collider.h"
 #include "GameInstance.h"
+#include "EffectMgr.h"
 
 CBossSkill4::CBossSkill4()
 {
@@ -18,11 +19,12 @@ HRESULT CBossSkill4::Initialize()
 
     m_iDamage = 15.f;
 
-    normalAtkDesc.vRadians = {XMConvertToRadians(10.f), 0.f, 0.f};
-    normalAtkDesc.vExtents = { 2.f, 2.f, 20.f };
+//   m_pEffectPreset = CEffectMgr::GetInstance()->FindEffect(TEXT("BossAtk4"));
 
+    normalAtkDesc.vRadians = {XMConvertToRadians(7.f), 0.f, 0.f};
+    normalAtkDesc.vExtents = { 2.f, 2.f, 50.f };
     normalAtkDesc.fRadius = 10.f;
-    normalAtkDesc.vCenter = { 0.f, 4.f, -0.6f };
+    normalAtkDesc.vCenter = { 0.f, 5.f, -0.6f };
 
     skillDesc.bKnockUp = false;
     skillDesc.bDownAtk = true;

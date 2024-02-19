@@ -144,6 +144,21 @@ PS_OUT PS_COLOR(PS_IN In)
 }
 
 
+PS_OUT PS_GRAY(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(g_LinearSampler, In.vTexcoord);
+
+    
+    
+    return Out;
+    
+    
+}
+
+
 struct PS_EFFECT_OUT
 {
     vector vDiffuse : SV_TARGET0;    
