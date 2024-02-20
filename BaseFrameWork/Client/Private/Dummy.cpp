@@ -5,6 +5,9 @@
 #include "Shader.h"
 #include "Model.h"
 
+#include "EffectMgr.h"
+#include "EffectPreset.h"
+
 CDummy::CDummy()
 {
 }
@@ -23,6 +26,9 @@ HRESULT CDummy::Initialize(const wstring& _strKey)
     m_pModelCom = CGameInstance::GetInstance()->GetModel(_strKey);
     m_Components.emplace(TEXT("Com_Model"), m_pModelCom);
 
+    //m_pEffectPreset = CEffectMgr::GetInstance()->FindEffect(TEXT("ParticleMap"));
+    //m_pEffectPreset->SetParentTransform(m_pTransformCom);
+    //m_pEffectPreset->PlayEffect();
 	return S_OK;
 }
 
@@ -32,12 +38,16 @@ void CDummy::PriorityTick(_float _fTimeDelta)
 
 void CDummy::Tick(_float _fTimeDelta)
 {
+   // m_pEffectPreset->Tick(_fTimeDelta);
+
 }
 
 void CDummy::LateTick(_float _fTimeDelta)
 {
     if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_NONBLEND, shared_from_this())))
         return;
+
+   // m_pEffectPreset->LateTick(_fTimeDelta);
 
 }
 

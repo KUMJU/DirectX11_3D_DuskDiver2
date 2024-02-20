@@ -39,6 +39,9 @@ public:
 	_vector GetCamPos();
 
 
+public:
+	void FocusPlayer(_vector _vPos , _float _fHeight);
+
 ////////////////////////////이벤트 카메라////////////////////////////
 public:
 	void AddEventPreset(const wstring& _strName, vector<CEventCamera::EVENT_INFO> _info);

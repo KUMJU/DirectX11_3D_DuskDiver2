@@ -35,11 +35,12 @@ public:
 private:
 	list<shared_ptr<class CComponent>> m_DebugCom;
 
+#endif
+
+
 private:
 	wrl::ComPtr<ID3D11Device> m_pDevice = nullptr;
 	wrl::ComPtr<ID3D11DeviceContext> m_pContext = nullptr;
-
-#endif
 
 private:
 	HRESULT RenderPriority();

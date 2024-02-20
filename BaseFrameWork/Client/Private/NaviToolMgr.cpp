@@ -212,9 +212,12 @@ void CNaviToolMgr::Render()
 
 	m_pShader->Begin(0);
 
-
+#ifdef _DEBUG
 	for (auto& iter : m_Cells)
 		iter->Render();
+#endif // _DEBUG
+
+
 }
 
 void CNaviToolMgr::SetTerrainTransform(shared_ptr<CTransform> _pTransform)

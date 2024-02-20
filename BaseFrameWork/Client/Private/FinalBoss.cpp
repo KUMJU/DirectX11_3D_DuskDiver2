@@ -222,9 +222,12 @@ void CFinalBoss::LateTick(_float _fTimeDelta)
 	if (FAILED(m_pGameInstance->AddRenderGroup(CRenderer::RENDER_NONBLEND, shared_from_this())))
 		return;
 
+
+#ifdef _DEBUG
     CGameInstance::GetInstance()->AddDebugComponent(m_pCollider);
     CGameInstance::GetInstance()->AddDebugComponent(m_pCollider2);
 
+#endif
     m_pSkillSet->LateTick(_fTimeDelta);
 
 }

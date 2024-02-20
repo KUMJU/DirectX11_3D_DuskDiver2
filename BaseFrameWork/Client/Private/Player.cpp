@@ -333,11 +333,14 @@ void CPlayer::LateTick(_float _fTimeDelta)
 
     m_IsCollideMonster = false;
 
+#ifdef _DEBUG
+
     for (auto& iter : m_Colliders)
         CGameInstance::GetInstance()->AddDebugComponent(iter);
 
     CGameInstance::GetInstance()->AddDebugComponent(m_pNavigationCom);
 
+#endif
 
     m_pPlayerSkillset->LateTick(_fTimeDelta);
     EffectLateTick(_fTimeDelta);
@@ -435,7 +438,7 @@ HRESULT CPlayer::BindShaderResources()
 void CPlayer::CheckTimer(_float _fTimeDelta)
 {
     //버스트모드일때
-    if (m_bBurstMode) {
+   if (m_bBurstMode) {
         m_fBurstAccTime += _fTimeDelta;
 
         if (m_fBurstAccTime >= m_fBurstTotalTime && m_eCurrentState == HEROSTATE::STATE_IDLE) {
@@ -459,6 +462,7 @@ void CPlayer::CheckTimer(_float _fTimeDelta)
             m_iSkillGage += 1;
             m_fSkillCoolTime = 0.f;
             CUIMgr::GetInstance()->SetSkillGauge(m_iSkillGage, true);
+            //m_pPlayerSkillset->SetBurstMode(false);
 
         }
         else {
@@ -701,6 +705,14 @@ void CPlayer::KeyInput(_float _fTimeDelta)
         m_pBurstModelCom->ChangeAnimation(30);
         m_iCurrentAnimIdx = 30;
         m_isAnimLoop = false;
+
+        //예시
+       /* _vector vPlrPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+        _vector vPlrLook = m_pTransformCom->GetState(CTransform::STATE_LOOK);
+
+        _vector vCamPos = vPlrPos + (vPlrLook * 1.3f) + _vector{0.f, 1.3f, 0.f, 0.f};
+
+        CCameraMgr::GetInstance()->FocusPlayer(vCamPos, 1.2f);*/
 
         //Event_Burst
         //CCameraMgr::GetInstance()->StartEvent(TEXT("Event_Burst"));

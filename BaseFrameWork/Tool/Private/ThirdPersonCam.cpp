@@ -21,6 +21,7 @@ HRESULT CThirdPersonCam::Initialize()
 	ZeroMemory(&TransformDesc, sizeof(CTransform::TRANSFORM_DESC));
 
 	m_TargetPlayer = CGameMgr::GetInstance()->GetPlayer();
+	m_TargetTransform = dynamic_pointer_cast<CTransform>(m_TargetPlayer->GetComponent(TEXT("Com_Transform"))));
 	_vector vPlayerPos = dynamic_pointer_cast<CTransform>(m_TargetPlayer->GetComponent(TEXT("Com_Transform")))->GetState(CTransform::STATE_POSITION);
 	_vector vCamPos = { vPlayerPos.m128_f32[0] , vPlayerPos.m128_f32[1] , vPlayerPos.m128_f32[2] - 5.f, 1.f };
 
@@ -102,33 +103,37 @@ void CThirdPersonCam::LateTick(_float fTimeDelta)
 	if (!m_IsEnabled)
 		return;
 
-	_vector vCamPos = {};
-	_vector vPlayerPos = dynamic_pointer_cast<CTransform>(m_TargetPlayer->GetComponent(TEXT("Com_Transform")))->GetState(CTransform::STATE_POSITION);
-	_long MouseMoveX, MouseMoveY = 0;
 
-	if (MouseMoveX = CGameInstance::GetInstance()->GetDIMouseMove(DIMS_X))
-		if (MouseMoveY = CGameInstance::GetInstance()->GetDIMouseMove(DIMS_Y))
+	if (m_eCamState == ECAM_DEFAULT) {
+		_vector vCamPos = {};
+		_vector vPlayerPos = dynamic_pointer_cast<CTransform>(m_TargetPlayer->GetComponent(TEXT("Com_Transform")))->GetState(CTransform::STATE_POSITION);
+		_long MouseMoveX, MouseMoveY = 0;
 
-	SphericalRotate(fTimeDelta * (_float)MouseMoveX * m_fMouseSensor, fTimeDelta * (_float)MouseMoveY * m_fMouseSensor);
-	vCamPos = ToCartesian();
+		if (MouseMoveX = CGameInstance::GetInstance()->GetDIMouseMove(DIMS_X))
+			if (MouseMoveY = CGameInstance::GetInstance()->GetDIMouseMove(DIMS_Y))
 
-	XMVectorSetY(vPlayerPos, m_fLastYPos);
-	vCamPos += vPlayerPos;
+				SphericalRotate(fTimeDelta * (_float)MouseMoveX * m_fMouseSensor, fTimeDelta * (_float)MouseMoveY * m_fMouseSensor);
+		vCamPos = ToCartesian();
 
-	//선형 보간
-	XMStoreFloat3(&m_vCameraEye, vCamPos);
-	vCamPos = XMVectorSetW(vCamPos, 1.f);
-	vCamPos = XMVectorLerp(XMLoadFloat4(&m_vPreCamPos), vCamPos , 0.3f);
-	XMStoreFloat4(&m_vPreCamPos, vCamPos);
+		XMVectorSetY(vPlayerPos, m_fLastYPos);
+		vCamPos += vPlayerPos;
 
-	CalcLookVectors(vCamPos, vPlayerPos);
+		//선형 보간
+		XMStoreFloat3(&m_vCameraEye, vCamPos);
+		vCamPos = XMVectorSetW(vCamPos, 1.f);
+		vCamPos = XMVectorLerp(XMLoadFloat4(&m_vPreCamPos), vCamPos, 0.3f);
+		XMStoreFloat4(&m_vPreCamPos, vCamPos);
 
-	m_pTransformCom->SetState(CTransform::STATE_POSITION, vCamPos);
-	m_pTransformCom->LookAt(XMVectorSetY(vPlayerPos, XMVectorGetY(vPlayerPos) + m_fHeight));
+		CalcLookVectors(vCamPos, vPlayerPos);
 
-	CCamera::SetUpTransformMatices();
+		m_pTransformCom->SetState(CTransform::STATE_POSITION, vCamPos);
+		m_pTransformCom->LookAt(XMVectorSetY(vPlayerPos, XMVectorGetY(vPlayerPos) + m_fHeight));
 
-	MouseFix();
+		CCamera::SetUpTransformMatices();
+
+		MouseFix();
+
+	}
 
 }
 
@@ -146,6 +151,27 @@ shared_ptr<CThirdPersonCam> CThirdPersonCam::Create()
 		MSG_BOX("Create to Failed : CThirdPersonCam");
 
 	return pInstance;
+}
+
+
+void CThirdPersonCam::FocusPlayer(_vector _vCamPos, _float _fHeight)
+{
+	m_eCamState = ECAM_EVENT;
+
+	m_pTransformCom->SetState(CTransform::STATE_POSITION, _vCamPos);
+	_vector vPlrPos = m_TargetTransform->GetState(CTransform::STATE_POSITION);
+	
+	XMVectorSetY(vPlrPos, vPlrPos.m128_f32[1] + _fHeight);
+	m_pTransformCom->LookAt(vPlrPos);
+
+}
+
+void CThirdPersonCam::ZoomIn()
+{
+}
+
+void CThirdPersonCam::ZoomOut()
+{
 }
 
 void CThirdPersonCam::SphericalCoordinates(_fvector _vTargetPos)
@@ -211,6 +237,10 @@ void CThirdPersonCam::LockOn()
 }
 
 void CThirdPersonCam::CameraEffect()
+{
+}
+
+void CThirdPersonCam::BurstTransform()
 {
 }
 

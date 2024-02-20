@@ -10,6 +10,14 @@ BEGIN(Client)
 class CThirdPersonCam final : public CCamera
 {
 public:
+	enum ECAMSTATE {
+		ECAM_DEFAULT,
+		ECAM_EVENT,
+		ECAM_LERP,
+		ECAM_END
+	};
+
+public:
 	CThirdPersonCam();
 	virtual ~CThirdPersonCam();
 
@@ -23,6 +31,11 @@ private:
 public:
 	_float4 GetCamLookVector() { return m_vLookPlr; }
 
+
+public:
+	void FocusPlayer(_vector _vCamPos, _float _fHeight);
+
+
 private:
 
 	//초기 플레이어 좌표값을 이용해 필요한 값을 계산해두는 함수
@@ -31,6 +44,9 @@ private:
 	void SphericalRotate(_float _fAzimuth , _float _fElevation);
 	//좌표계변환
 	_vector ToCartesian();
+
+private:
+	ECAMSTATE m_eCamState = ECAMSTATE::ECAM_DEFAULT;
 
 
 private:
@@ -65,6 +81,12 @@ private:
 	_float m_fLastYPos = 0.f;
 
 private:
+	_float m_fEventAccTime = 0.f;
+	_float m_fCurrentEventTime = 0.f;
+
+
+
+private:
 	_float3 m_vCameraAt;
 	_float3 m_vCameraEye;
 
@@ -92,6 +114,7 @@ private:
 private:
 	shared_ptr<class CPlayer> m_TargetPlayer = nullptr;
 	shared_ptr<CGameObject> m_pLockOnTarget = nullptr;
+	shared_ptr<CTransform> m_TargetTransform = nullptr;
 
 
 public:

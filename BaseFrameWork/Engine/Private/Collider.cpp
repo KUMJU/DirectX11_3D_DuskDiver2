@@ -66,6 +66,8 @@ void CCollider::Tick(_fmatrix _WorldMatrix)
 
 HRESULT CCollider::Render()
 {
+#ifdef _DEBUG
+
 	m_pContext->GSSetShader(nullptr, nullptr, 0);
 
 	m_pEffect->SetWorld(XMMatrixIdentity());
@@ -80,7 +82,7 @@ HRESULT CCollider::Render()
 	m_pBounding->Render(m_pBatch.get());
 
 	m_pBatch->End();
-
+#endif
 	return S_OK;
 }
 

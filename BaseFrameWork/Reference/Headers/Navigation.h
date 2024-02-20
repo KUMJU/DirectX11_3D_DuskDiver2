@@ -35,10 +35,9 @@ private:
 	vector<shared_ptr<class CCell>> m_Cells;
 	static _float4x4 m_WorldMatrix;
 
-#ifdef _DEBUG
 private:
 	shared_ptr<class CShader> m_pShader = { nullptr };
-#endif
+
 
 private:
 	_float ComputeHeight(_fvector vPosition);

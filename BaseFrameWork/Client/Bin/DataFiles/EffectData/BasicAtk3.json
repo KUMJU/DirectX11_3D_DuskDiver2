@@ -1,0 +1,162 @@
+{
+	"Elements" : 
+	{
+		"GroundWind" : 
+		{
+			"Center" : 
+			{
+				"x" : 0.0,
+				"y" : 0.80000001192092896,
+				"z" : 0.0
+			},
+			"ChangeTime" : 0.43000000715255737,
+			"Color" : 
+			{
+				"w" : 1.0,
+				"x" : 0.17156863212585449,
+				"y" : 1.0,
+				"z" : 0.87817174196243286
+			},
+			"Duration" : 
+			{
+				"x" : 0.40000000596046448,
+				"y" : 0.45
+			},
+			"EffectType" : 2,
+			"EndScale" : 
+			{
+				"x" : 32.0,
+				"y" : 23.0,
+				"z" : 25.0
+			},
+			"LerpColor" : 
+			{
+				"w" : 1.0,
+				"x" : 0.96828144788742065,
+				"y" : 1.0,
+				"z" : 0.73039215803146362
+			},
+			"Loop" : 
+			{
+				"EffectLoop" : false,
+				"UVLoop" : false
+			},
+			"Mask" : 
+			{
+				"Speed" : 1.5,
+				"TexKey" : "T_St3_Land_Wind_00",
+				"Using" : true,
+				"x" : 1.0,
+				"y" : 0.0
+			},
+			"MeshKey" : "Wind2",
+			"MiddleScale" : 
+			{
+				"x" : 32.0,
+				"y" : 23.0,
+				"z" : 25.0
+			},
+			"Noise" : 
+			{
+				"Speed" : 0.0,
+				"TexKey" : "flow_67",
+				"Using" : true,
+				"x" : 0.0,
+				"y" : 0.0
+			},
+			"Rotation" : 
+			{
+				"x" : 0.0,
+				"y" : -40.0,
+				"z" : 30.0
+			},
+			"StartScale" : 
+			{
+				"x" : 25.0,
+				"y" : 25.0,
+				"z" : 25.0
+			}
+		},
+		"GroundWind2" : 
+		{
+			"Center" : 
+			{
+				"x" : 0.0,
+				"y" : 0.10000000149011612,
+				"z" : 0.0
+			},
+			"ChangeTime" : 0.5,
+			"Color" : 
+			{
+				"w" : 1.0,
+				"x" : 1.0,
+				"y" : 1.0,
+				"z" : 1.0
+			},
+			"Duration" : 
+			{
+				"x" : 0.35000000596046448,
+				"y" : 0.64999998807907104
+			},
+			"EffectType" : 2,
+			"EndScale" : 
+			{
+				"x" : 60.0,
+				"y" : 60.0,
+				"z" : 60.0
+			},
+			"LerpColor" : 
+			{
+				"w" : 1.0,
+				"x" : 0.84803920984268188,
+				"y" : 1.0,
+				"z" : 0.91061127185821533
+			},
+			"Loop" : 
+			{
+				"EffectLoop" : false,
+				"UVLoop" : false
+			},
+			"Mask" : 
+			{
+				"Speed" : 3.0,
+				"TexKey" : "T_GPP_Flame_A",
+				"Using" : true,
+				"x" : 0.0,
+				"y" : 1.0
+			},
+			"MeshKey" : "Effect_Wind1",
+			"MiddleScale" : 
+			{
+				"x" : 40.0,
+				"y" : 40.0,
+				"z" : 40.0
+			},
+			"Noise" : 
+			{
+				"Speed" : 0.0,
+				"TexKey" : "flow_67",
+				"Using" : false,
+				"x" : 0.0,
+				"y" : 0.0
+			},
+			"Rotation" : 
+			{
+				"x" : 0.0,
+				"y" : 0.0,
+				"z" : 0.0
+			},
+			"StartScale" : 
+			{
+				"x" : 14.0,
+				"y" : 14.0,
+				"z" : 14.0
+			}
+		}
+	},
+	"Preset Info" : 
+	{
+		"Duration" : 2.0,
+		"Loop" : false
+	}
+}

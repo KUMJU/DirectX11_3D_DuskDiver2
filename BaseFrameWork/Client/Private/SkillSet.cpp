@@ -246,10 +246,12 @@ void CSkillSet::SetBurstMode(_bool _isBurst)
 	}
 	else {
 
-
+		m_isBurstMode = _isBurst;
+		for (auto& iter : m_Skills) {
+			iter->SwitchingBasicMode();
+		}
 
 	}
-
 
 }
 

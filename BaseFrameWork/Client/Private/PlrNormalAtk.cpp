@@ -4,6 +4,8 @@
 
 #include "GameInstance.h"
 
+#include "EffectMgr.h"
+
 CPlrNormalAtk::CPlrNormalAtk()
 {
 }
@@ -33,16 +35,21 @@ HRESULT CPlrNormalAtk::Initialize(_uint _iComboNum)
 
     if (3 == _iComboNum) {
         normalAtkDesc.fRadius = 0.6f;
+        m_pEffectPreset = CEffectMgr::GetInstance()->FindEffect(TEXT("BasicAtk3"));
     }
     if (4 == _iComboNum) {
         normalAtkDesc.fRadius = 0.6f;
         skillDesc.bKnockUp = true;
         skillDesc.fWeight = 1.5f;
         skillDesc.fKnockUpDistance =15.f;
+        m_pEffectPreset = CEffectMgr::GetInstance()->FindEffect(TEXT("BasicAtk4"));
+
 
 
     }
     else if (5 == _iComboNum) {
+
+        m_pEffectPreset = CEffectMgr::GetInstance()->FindEffect(TEXT("BasicAtk5"));
 
         skillDesc.iStartTrackPosition = 28.0;
         skillDesc.iEndTrackPosition = 55.0;
@@ -87,6 +94,7 @@ void CPlrNormalAtk::Tick(_float _fTimeDelta)
 
 void CPlrNormalAtk::LateTick(_float _fTimeDelta)
 {
+    __super::LateTick(_fTimeDelta);
 }
 
 HRESULT CPlrNormalAtk::Render()

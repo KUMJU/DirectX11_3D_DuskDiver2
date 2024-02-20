@@ -14,8 +14,8 @@ CNavigation::CNavigation(wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID3D11D
 CNavigation::CNavigation(const CNavigation& _rhs, _uint _iStartIdx)
 	:CComponent(_rhs),
 	m_Cells(_rhs.m_Cells),
-	m_iCurrentIndex(_iStartIdx),
-	m_pShader(_rhs.m_pShader)
+	m_iCurrentIndex(_iStartIdx)
+	, m_pShader(_rhs.m_pShader)
 {
 }
 
@@ -140,11 +140,13 @@ void CNavigation::CalcCurrentPos(_fvector _vPos)
 	}
 }
 
+#ifdef _DEBUG
+
 HRESULT CNavigation::Render()
 {
 	_float4x4 identity;
 
-	_matrix temp = XMMatrixIdentity();
+	_matrix temp = XMMatrixIdenti                                             ty();
 
 
 	XMStoreFloat4x4(&identity, temp);
@@ -193,6 +195,8 @@ HRESULT CNavigation::Render()
 
 	return S_OK;
 }
+
+#endif
 
 _float CNavigation::ComputeHeight(_fvector vPosition)
 {

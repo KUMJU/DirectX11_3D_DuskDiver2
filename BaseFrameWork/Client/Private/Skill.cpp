@@ -45,6 +45,7 @@ void CSkill::Tick(_float _fTimeDelta)
 				if (m_iCurrentSkillOrder == m_Infos.size()) {
 					m_IsEnabled = false;
 					m_bCancle = true;
+					EndSkill();
 					SkillReset();
 					return;
 				}
@@ -77,6 +78,8 @@ void CSkill::Tick(_float _fTimeDelta)
 	}
 	else {
 
+		_double pp = m_pMainAnims->front()->GetCurrentTrackPosition();
+		_double ss = m_Infos[m_iCurrentSkillOrder].iStartTrackPosition;
 		if (m_pMainAnims->front()->GetCurrentTrackPosition() >= m_Infos[m_iCurrentSkillOrder].iStartTrackPosition) {
 			if (m_Infos[m_iCurrentSkillOrder].iEndTrackPosition <= m_pMainAnims->front()->GetCurrentTrackPosition()) {
 				++m_iCurrentSkillOrder;
@@ -84,6 +87,7 @@ void CSkill::Tick(_float _fTimeDelta)
 				//현재 스킬 인덱스와 size 갯수가 같으면 순회가 끝났다는 의미. 스킬 사용을 끝낸다
 				if (m_iCurrentSkillOrder == m_Infos.size()) {
 					m_IsEnabled = false;
+					EndSkill();
 					SkillReset();
 					return;
 				}
@@ -122,10 +126,15 @@ void CSkill::Tick(_float _fTimeDelta)
 void CSkill::LateTick(_float _fTimeDelta)
 {
 
+#ifdef _DEBUG
 	CGameInstance::GetInstance()->AddDebugComponent(m_Collider);
+#endif // DEBUG
+
 	
 	if (m_pEffectPreset)
 		m_pEffectPreset->LateTick(_fTimeDelta);
+
+	CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_UI, shared_from_this());
 
 }
 
@@ -135,9 +144,14 @@ if (!m_IsEnabled)
 	return S_OK;
 
 #ifdef _DEBUG
-
-	m_Collider->Render();
 	
+	wstring cc = to_wstring(m_iCurrentSkillOrder);
+	CGameInstance::GetInstance()->RenderFont(TEXT("Font_Default_KR"), cc, { g_iWinSizeX * 0.5f - 50.f ,g_iWinSizeY * 0.5f - 230.f }, Colors::White);
+
+
+	wstring ww = to_wstring(m_pMainAnims->front()->GetCurrentTrackPosition());
+	CGameInstance::GetInstance()->RenderFont(TEXT("Font_Default_KR"), ww, { g_iWinSizeX * 0.5f - 50.f ,g_iWinSizeY * 0.5f - 300.f }, Colors::White);
+
 #endif // DEBUG
 
 	return S_OK;
@@ -150,6 +164,10 @@ void CSkill::SetOwnerTransform(shared_ptr<CTransform> _pOwnerTransform) {
 
 	if (m_pEffectPreset) {
 		m_pEffectPreset->SetParentTransform(_pOwnerTransform);
+	}
+
+	if (m_pParticlePreset) {
+		m_pParticlePreset->SetParentTransform(_pOwnerTransform);
 	}
 
 }

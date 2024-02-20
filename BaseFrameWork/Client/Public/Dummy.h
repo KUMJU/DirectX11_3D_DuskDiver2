@@ -31,6 +31,10 @@ private:
 	HRESULT AddComponent();
 	HRESULT BindShaderResources();
 
+
+private:
+	shared_ptr<class CEffectPreset> m_pEffectPreset = nullptr;
+
 public:
 	static shared_ptr<CDummy> Create(const wstring& _strKey);
 

@@ -90,6 +90,7 @@ protected:
 protected:
 	//shared_ptr<CCollider> m_pCollider = nullptr;
 	void OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _pCol) override;
+	virtual void EndSkill() {};
 
 public:
 	_bool GetIsKnokUp() { return m_Infos[m_iCurrentSkillOrder].bKnockUp; }
@@ -115,6 +116,7 @@ public:
 	//For Player//
 	void SetBurstAnimation(shared_ptr<CAnimation> _pAnim) { m_pBurstAnims.push_back(_pAnim); }
 	void SwitchingBurstMode() { m_pMainAnims = &m_pBurstAnims; }
+	void SwitchingBasicMode() { m_pMainAnims = &m_pBattleAnims; }
 
 	_vector GetOwnerPos();
 
@@ -150,6 +152,9 @@ protected:
 	vector<shared_ptr<CAnimation>>* m_pMainAnims;
 	vector<shared_ptr<CAnimation>> m_pBattleAnims;
 	vector<shared_ptr<CAnimation>> m_pBurstAnims;
+
+	shared_ptr<class CEffectPreset> m_pParticlePreset = nullptr;
+
 
 };
 

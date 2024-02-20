@@ -39,8 +39,8 @@
 #include "UISkillBar.h"
 #include "UIBurstGaugeBar.h"
 
-#include "EffectParticle.h"
 #include "EffectMgr.h"
+#include "EffectPreset.h"
 
 #include "UI_SequenceTex.h"
 
@@ -210,6 +210,14 @@ HRESULT CArcadeMap::ReadyLayerMap(const wstring& _strLayerTag)
 	shared_ptr<CMonsterTrigger> pTrigger = CMonsterTrigger::Create(&SpawnList, { 0.f, 40.f, -380.f });
 	CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Event"), pTrigger);
 
+	//shared_ptr<CEffectPreset> pParticle = CEffectMgr::GetInstance()->FindEffect(TEXT("ParticleMap"));
+
+	//if (pParticle) {
+	//	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pParticle)))
+	//		return E_FAIL;
+	//}
+
+	//pParticle->PlayEffect();
 
 	/**파티클 테스트**/
 

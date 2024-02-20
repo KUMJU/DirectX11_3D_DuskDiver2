@@ -10,6 +10,15 @@ BEGIN(Tool)
 class CThirdPersonCam final : public CCamera
 {
 public:
+	enum ECAMSTATE {
+		ECAM_DEFAULT, 
+		ECAM_EVENT, 
+		ECAM_LERP, 
+		ECAM_END
+	};
+
+
+public:
 	CThirdPersonCam();
 	virtual ~CThirdPersonCam();
 
@@ -23,6 +32,9 @@ private:
 public:
 	_float4 GetCamLookVector() { return m_vLookPlr; }
 
+public:
+	void FocusPlayer(_vector _vCamPos , _float _fHeight);
+
 private:
 
 	//초기 플레이어 좌표값을 이용해 필요한 값을 계산해두는 함수
@@ -32,6 +44,8 @@ private:
 	//좌표계변환
 	_vector ToCartesian();
 
+private:
+	ECAMSTATE m_eCamState = ECAMSTATE::ECAM_DEFAULT;
 
 private:
 
@@ -89,8 +103,11 @@ private:
 	void MouseFix();
 
 
+
 private:
 	shared_ptr<class CPlayer> m_TargetPlayer = nullptr;
+	shared_ptr<CTransform> m_TargetTransform = nullptr;
+
 	shared_ptr<CGameObject> m_pLockOnTarget = nullptr;
 
 

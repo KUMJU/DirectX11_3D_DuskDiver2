@@ -99,8 +99,11 @@ void CMole::LateTick(_float _fTimeDelta)
     if (!m_IsEnabled)
         return;
 
+#ifdef _DEBUG
     if (FAILED(CGameInstance::GetInstance()->AddDebugComponent(m_pColider)))
         return;
+#endif // _DEBUG
+
 
     if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_NONBLEND, shared_from_this())))
         return;

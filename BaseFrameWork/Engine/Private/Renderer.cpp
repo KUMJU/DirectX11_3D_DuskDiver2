@@ -161,6 +161,7 @@ HRESULT CRenderer::Render()
 	return S_OK;
 }
 
+#ifdef _DEBUG
 HRESULT CRenderer::AddDebugComponent(shared_ptr<class CComponent> _pComponent)
 {
 
@@ -168,6 +169,7 @@ HRESULT CRenderer::AddDebugComponent(shared_ptr<class CComponent> _pComponent)
 
 	return S_OK;
 }
+#endif // _DEBUG
 
 HRESULT CRenderer::RenderPriority()
 {
@@ -352,6 +354,7 @@ HRESULT CRenderer::RenderUI()
 	return S_OK;
 }
 
+#ifdef _DEBUG
 HRESULT CRenderer::RenderDebug()
 {
 	if (FAILED(m_pShader->BindMatrix("g_ViewMatrix", &m_ViewMatrix)))
@@ -371,6 +374,7 @@ HRESULT CRenderer::RenderDebug()
 
 	return S_OK;
 }
+#endif // _DEBUG
 
 shared_ptr<CRenderer> CRenderer::Create(wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID3D11DeviceContext> _pContext)
 {

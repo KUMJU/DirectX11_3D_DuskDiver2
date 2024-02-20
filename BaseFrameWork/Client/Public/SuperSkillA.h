@@ -17,6 +17,10 @@ public:
 	virtual void LateTick(_float _fTimeDelta);
 	virtual HRESULT Render();
 
+protected:
+	virtual void EndSkill();
+
+
 public:
 
 	static shared_ptr<CSuperSkillA> Create();

@@ -1,0 +1,72 @@
+{
+	"Elements" : 
+	{
+		"MapParticlel" : 
+		{
+			"Center" : 
+			{
+				"x" : 0.0,
+				"y" : 0.0,
+				"z" : 0.0
+			},
+			"Color" : 
+			{
+				"x" : 0.0,
+				"y" : 1.0,
+				"z" : 0.88235282897949219
+			},
+			"DirectMax" : 
+			{
+				"x" : 0.0,
+				"y" : 1.0,
+				"z" : 0.0
+			},
+			"DirectMin" : 
+			{
+				"x" : 0.0,
+				"y" : 0.0,
+				"z" : 0.0
+			},
+			"Duration" : 
+			{
+				"x" : 0.0,
+				"y" : 0.0
+			},
+			"EffectType" : 0,
+			"InstanceNum" : 1000,
+			"LifeTime" : 
+			{
+				"x" : 15.0,
+				"y" : 40.0
+			},
+			"Size" : 
+			{
+				"x" : 0.50999999552965164,
+				"y" : 0.90000000149011612
+			},
+			"Speed" : 
+			{
+				"x" : 2.0,
+				"y" : 6.0
+			},
+			"StartPointMax" : 
+			{
+				"x" : 0.0,
+				"y" : 0.0,
+				"z" : 0.0
+			},
+			"StartPointMin" : 
+			{
+				"x" : 0.0,
+				"y" : 0.0,
+				"z" : 0.0
+			},
+			"TextureKey" : "T_dust_Small"
+		}
+	},
+	"Preset Info" : 
+	{
+		"Duration" : 7.0,
+		"Loop" : true
+	}
+}

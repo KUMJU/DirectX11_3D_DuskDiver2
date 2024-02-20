@@ -49,7 +49,9 @@ void CEffectParticle::Tick(_float _fTimeDelta, _matrix _ParentMat)
 
     if (m_pVIBufferCom->TickInstance(_fTimeDelta))
         m_IsEnabled = false;
+
     m_ParentMat = _ParentMat;
+    
 
 
 }
@@ -59,22 +61,34 @@ void CEffectParticle::LateTick(_float _fTimeDelta)
     if (m_IsEnabled == false)
         return;
 
+
+
     if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_NONLIGHT, shared_from_this())))
         return;
 }
 
 HRESULT CEffectParticle::Render()
 {
-    _vector worldMat = m_pTransformCom->GetState(CTransform::STATE_POSITION);
-    _float4x4 matWorld;
-    m_pTransformCom->SetState(CTransform::STATE_POSITION, m_ParentMat.r[3]);
+    _matrix WorldOwnMatrix = m_pTransformCom->GetWorldMatrix();
+    _float4x4 FloatWorld;
+
+    WorldOwnMatrix.r[3] += m_vParentPos;
+    WorldOwnMatrix = WorldOwnMatrix * m_ParentMat;
+
+    XMStoreFloat4x4(&FloatWorld, WorldOwnMatrix);
+
+    if (FAILED(m_pShader->BindMatrix("g_WorldMatrix", &FloatWorld)))
+        return E_FAIL;
+
+
+    //m_pTransformCom->SetState(CTransform::STATE_POSITION, m_ParentMat.r[3]);
    // XMStoreFloat4x4(&matWorld, m_ParentMat);
 
     /*if (FAILED(m_pShader->BindMatrix("g_WorldMatrix", &matWorld)))
         return E_FAIL;*/
 
-    if (FAILED(m_pTransformCom->BindShaderResource(m_pShader, "g_WorldMatrix")))
-        return E_FAIL;
+    //if (FAILED(m_pTransformCom->BindShaderResource(m_pShader, "g_WorldMatrix")))
+    //    return E_FAIL;
 
     _float4x4 ViewMat = CGameInstance::GetInstance()->GetTransformFloat4x4(CPipeLine::D3DTS_VIEW);
 
@@ -108,6 +122,7 @@ HRESULT CEffectParticle::Render()
 
 void CEffectParticle::ResetEffect()
 {
+    m_bSetParentMat = false;
     m_pVIBufferCom->ResetInstance();
 }
 

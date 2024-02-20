@@ -37,7 +37,9 @@ void CEventTrigger::Tick(_float _fTimeDelta)
 
 void CEventTrigger::LateTick(_float _fTimeDelta)
 {
+#ifdef _DEBUG
 	CGameInstance::GetInstance()->AddDebugComponent(m_pCollider);
+#endif // _DEBUG
 }
 
 HRESULT CEventTrigger::Render()

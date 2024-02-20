@@ -65,9 +65,9 @@ HRESULT CLevelLoading::Render()
 {
 	if (nullptr == m_pLoader)
 		return E_FAIL;
-
+#ifdef _DEBUG
 	m_pLoader->Output_LoadingText();
-
+#endif
 	return S_OK;
 }
 

@@ -221,8 +221,9 @@ void CEnemy01::LateTick(_float _fTimeDelta)
     if (FAILED(m_pGameInstance->AddRenderGroup(CRenderer::RENDER_NONBLEND, shared_from_this())))
         return;
 
+#ifdef _DEBUG
     CGameInstance::GetInstance()->AddDebugComponent(m_pCollider);
-
+#endif
 }
 
 HRESULT CEnemy01::Render()

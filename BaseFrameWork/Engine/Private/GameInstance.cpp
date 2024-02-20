@@ -467,11 +467,13 @@ HRESULT CGameInstance::EndMRT()
 	return m_pTargetMgr->End_MRT();
 }
 
+
 HRESULT CGameInstance::BindSRV(const wstring& _strTargetTag, shared_ptr<class CShader> _pShader, const _char* _pConstantName)
 {
 	return m_pTargetMgr->BindSRV(_strTargetTag, _pShader, _pConstantName);
 }
 
+#ifdef _DEBUG
 HRESULT CGameInstance::ReadyDebug(const wstring& _strTargetTag, _float _fX, _float _fY, _float _fSizeX, _float _fSizeY)
 {
 	return m_pTargetMgr->ReadyDebug(_strTargetTag, _fX, _fY, _fSizeX, _fSizeY);
@@ -482,6 +484,8 @@ HRESULT CGameInstance::RenderMRT(const wstring& _strMRTTag, shared_ptr<class CSh
 	return m_pTargetMgr->RenderMRT(_strMRTTag, _pShader, _pVIBuffer);
 
 }
+#endif
+
 
 wrl::ComPtr<ID3D11Device> CGameInstance::GetDeviceInfo()
 {

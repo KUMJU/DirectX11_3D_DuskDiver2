@@ -31,6 +31,10 @@ private:
 
 	wstring m_TextureKey = TEXT("");
 
+	_bool m_bFollow = false;
+	_bool m_bSetParentMat = false;
+
+
 private:
 	_matrix m_ParentMat;
 
