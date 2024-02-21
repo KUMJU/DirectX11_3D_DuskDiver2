@@ -50,6 +50,15 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(CGameInstance::GetInstance()->AddFont(TEXT("Font_Default_KR"), TEXT("../Bin/Resources/Font/Basic_KR_Bold_15.spritefont"))))
 		return E_FAIL;
 
+	if (FAILED(CGameInstance::GetInstance()->AddFont(TEXT("Font_Number15"), TEXT("../Bin/Resources/Font/NumberFont15pt.spritefont"))))
+		return E_FAIL;
+
+	if (FAILED(CGameInstance::GetInstance()->AddFont(TEXT("Font_Number30"), TEXT("../Bin/Resources/Font/NumberFont30pt.spritefont"))))
+		return E_FAIL;
+
+	if (FAILED(CGameInstance::GetInstance()->AddFont(TEXT("Font_Default_KR_12pt"), TEXT("../Bin/Resources/Font/Basic_KR_Bold_12.spritefont"))))
+		return E_FAIL;
+
 	CGameInstance::GetInstance()->LoadLevelResource(LEVEL_LOGO);
 
 	if (FAILED(OpenLevel(LEVEL_LOGO)))

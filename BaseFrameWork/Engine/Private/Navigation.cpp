@@ -146,7 +146,7 @@ HRESULT CNavigation::Render()
 {
 	_float4x4 identity;
 
-	_matrix temp = XMMatrixIdenti                                             ty();
+	_matrix temp = XMMatrixIdentity();
 
 
 	XMStoreFloat4x4(&identity, temp);

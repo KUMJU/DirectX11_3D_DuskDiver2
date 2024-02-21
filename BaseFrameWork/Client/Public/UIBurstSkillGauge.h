@@ -2,6 +2,8 @@
 
 #include "UI.h"
 
+BEGIN(Client)
+
 class CUIBurstSkillGauge : public CUI
 {
 public:
@@ -32,8 +34,14 @@ private:
 	_float m_fMaxGauge = 100.f;
 	_float m_fCurrentBurstGauge = 0.f;
 
+	_float m_fCurrentRate = 0.f;
+
+private:
+	shared_ptr<class CUI_SequenceTex> m_pUIEffect = nullptr;
+
 public:
 	static shared_ptr<CUIBurstSkillGauge> Create();
 
 };
 
+END

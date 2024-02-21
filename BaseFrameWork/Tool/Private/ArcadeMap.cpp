@@ -33,9 +33,6 @@
 
 #include "MonsterTrigger.h"
 
-#include "UIMgr.h"
-#include "UIPlrHPBar.h"
-#include "UIQuest.h"
 
 #include "EffectParticle.h"
 
@@ -255,40 +252,6 @@ HRESULT CArcadeMap::ReadyLayerEvent(const wstring& _strLayerTag)
 
 HRESULT CArcadeMap::ReadyLayerUI(const wstring& _strLayerTag)
 {
-	shared_ptr<CUI> pInstance;
-
-	CUIBackGround::tagUIInfo UITagInfo;
-	UITagInfo.fSizeX = 463.f * 0.85f;
-	UITagInfo.fSizeY = 179.f * 0.85f;
-	UITagInfo.fX = g_iWinSizeX * 0.5f - 460.f;
-	UITagInfo.fY = g_iWinSizeY * 0.5f- 280.f;
-
-	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, CUIBackGround::Create(UITagInfo, TEXT("hud_status_bg_He01"), 0))))
-		return E_FAIL;
-
-	UITagInfo.fSizeX = 247.f * 0.65f;
-	UITagInfo.fSizeY = 100.f * 0.65f;
-	UITagInfo.fX = g_iWinSizeX * 0.5f - 450.f;
-	UITagInfo.fY = g_iWinSizeY * 0.5f - 310.f;
-
-	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, CUIBackGround::Create(UITagInfo, TEXT("hud_neme_he01"), 1))))
-		return E_FAIL;
-
-
-	/**Player HP Bar**/
-
-	pInstance = CUIPlrHPBar::Create();
-	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pInstance)))
-		return E_FAIL;
-	
-	CUIMgr::GetInstance()->AddUI(TEXT("UI_PlayerHP"), pInstance);
-
-	/**Quest UI**/
-
-	pInstance = CUIQuest::Create();
-	if(FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pInstance)))
-		return E_FAIL;
-	CUIMgr::GetInstance()->AddUI(TEXT("UI_Quest"), pInstance);
 
 
 	return S_OK;

@@ -124,7 +124,7 @@ private:
 private:
 	_float m_fTransformTime = 0.f;
 
-	_float m_fBurstTotalTime = 50.f;
+	_float m_fBurstTotalTime = 30.f;
 	_float m_fBurstAccTime = 0.f;
 
 

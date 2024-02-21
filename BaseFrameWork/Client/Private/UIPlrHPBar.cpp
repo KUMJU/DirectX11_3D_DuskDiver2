@@ -37,6 +37,9 @@ HRESULT CUIPlrHPBar::Initialize()
     m_fCurrentHPRatio = 1.f;
     m_fPrevHPRatio = 1.f;
 
+    m_eUIGroup = CRenderer::UI_CONTENTS;
+
+
     return S_OK;
 }
 
@@ -82,6 +85,11 @@ HRESULT CUIPlrHPBar::Render()
 
     if (FAILED(m_VIRectCom->Render()))
         return E_FAIL;
+
+    wstring strHPRate = to_wstring((_int)(m_fCurrentHPRatio * 100.f)) + TEXT("%");
+
+    CGameInstance::GetInstance()->RenderFont(TEXT("Font_Number15"), strHPRate, { g_iWinSizeX * 0.5f - 355.f ,g_iWinSizeY * 0.5f - 280.f }, Colors::White);
+
 
     return S_OK;
 }

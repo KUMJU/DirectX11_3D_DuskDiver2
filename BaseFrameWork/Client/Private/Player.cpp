@@ -440,19 +440,22 @@ HRESULT CPlayer::BindShaderResources()
 void CPlayer::CheckTimer(_float _fTimeDelta)
 {
     //버스트모드일때
-   //if (m_bBurstMode) {
-   //     m_fBurstAccTime += _fTimeDelta;
+    //여기서 버스트 게이지 차감 
+   if (m_bBurstMode) {
+        m_fBurstAccTime += _fTimeDelta;
+        m_fBurstGage -= 3.f;
 
-   //     if (m_fBurstAccTime >= m_fBurstTotalTime && m_eCurrentState == HEROSTATE::STATE_IDLE) {
 
-   //         m_fBurstAccTime = 0.f;
-   //         m_pModelCom = m_pBattleModelCom;
-   //         m_bBurstMode = false;
-   //         ChangeAnim(44, true);
-   //         m_pPlayerSkillset->SetBurstMode(false);
+        if (m_fBurstAccTime >= m_fBurstTotalTime && m_eCurrentState == HEROSTATE::STATE_IDLE) {
 
-   //     }
-   // }
+            m_fBurstAccTime = 0.f;
+            m_pModelCom = m_pBattleModelCom;
+            m_bBurstMode = false;
+            ChangeAnim(44, true);
+            m_pPlayerSkillset->SetBurstMode(false);
+
+        }
+    }
 
 
     //스킬 게이지 체크 

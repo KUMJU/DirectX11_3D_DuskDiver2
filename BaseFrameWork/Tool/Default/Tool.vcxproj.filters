@@ -43,12 +43,6 @@
     <Filter Include="96. Imgui\03. ImguiGizmo">
       <UniqueIdentifier>{2294b1a6-c2fb-453c-8132-c9613443bed9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\01. UI">
-      <UniqueIdentifier>{275c41ca-57ec-45b2-8480-314b137cf678}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\01. UI\00.UIBackGroud">
-      <UniqueIdentifier>{684e7909-e8c8-4b53-8978-ddbe4e1d1dc3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\02. Camera">
       <UniqueIdentifier>{8939f76b-ec3c-43e9-bc4d-8e8cfc8e1e08}</UniqueIdentifier>
     </Filter>
@@ -229,21 +223,6 @@
     <Filter Include="02. GameObject\08. Quest">
       <UniqueIdentifier>{45aef91b-6ffb-4a7e-80fc-0a573d3c0ebe}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\01. UI\01. UI_HPBar">
-      <UniqueIdentifier>{5ce720eb-c00a-448c-b74c-9bfed6bb293f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\01. UI\01. UI_HPBar\PlayerHPBar">
-      <UniqueIdentifier>{1e06ad0f-de8f-4d23-ac47-80892d4fc04a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\01. UI\01. UI_HPBar\WorldHpBar">
-      <UniqueIdentifier>{5f99ea81-9a2c-4a0c-91e3-551479e4c653}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\01. UI\03. UI_Quest">
-      <UniqueIdentifier>{8797476f-0a21-4aa1-840a-351a29ed8941}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\01. UI\02. UI_PlayerSkillBar">
-      <UniqueIdentifier>{2ab0aa73-66cd-4c70-8c06-474a7fc45af2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\09. Effect">
       <UniqueIdentifier>{f704834f-48cf-49ab-8bdb-c5125713363c}</UniqueIdentifier>
     </Filter>
@@ -261,6 +240,9 @@
     </Filter>
     <Filter Include="02. GameObject\99. Dummy\EffectTestAnimModel">
       <UniqueIdentifier>{36668fe8-e56b-48ba-a7cd-1233b9997c1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ui">
+      <UniqueIdentifier>{defd654b-1834-4906-a904-f7ed85b33f01}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -300,9 +282,6 @@
     <ClInclude Include="..\Public\Terrain.h">
       <Filter>02. GameObject\04. Terrain</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UI.h">
-      <Filter>02. GameObject\01. UI</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\CameraFree.h">
       <Filter>02. GameObject\02. Camera\00. CameraFree</Filter>
     </ClInclude>
@@ -338,9 +317,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Dummy.h">
       <Filter>02. GameObject\99. Dummy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\UIBackGround.h">
-      <Filter>02. GameObject\01. UI\00.UIBackGroud</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\MapObject.h">
       <Filter>02. GameObject\03. MapObject</Filter>
@@ -498,18 +474,6 @@
     <ClInclude Include="..\Public\Coin.h">
       <Filter>02. GameObject\03. MapObject\02. Coin</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UIPlrHPBar.h">
-      <Filter>02. GameObject\01. UI\01. UI_HPBar\PlayerHPBar</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\WorldHPBar.h">
-      <Filter>02. GameObject\01. UI\01. UI_HPBar\WorldHpBar</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\UISkillBar.h">
-      <Filter>02. GameObject\01. UI\02. UI_PlayerSkillBar</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\UIQuest.h">
-      <Filter>02. GameObject\01. UI\03. UI_Quest</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Effect.h">
       <Filter>02. GameObject\09. Effect</Filter>
     </ClInclude>
@@ -530,6 +494,21 @@
     </ClInclude>
     <ClInclude Include="..\Public\EffectTestModel.h">
       <Filter>02. GameObject\99. Dummy\EffectTestAnimModel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UIPlrHPBar.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UIBackGround.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UISkillBar.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UIQuest.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI.h">
+      <Filter>ui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -559,9 +538,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Terrain.cpp">
       <Filter>02. GameObject\04. Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\UI.cpp">
-      <Filter>02. GameObject\01. UI</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CameraFree.cpp">
       <Filter>02. GameObject\02. Camera\00. CameraFree</Filter>
@@ -595,9 +571,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Dummy.cpp">
       <Filter>02. GameObject\99. Dummy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\UIBackGround.cpp">
-      <Filter>02. GameObject\01. UI\00.UIBackGroud</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\MapObject.cpp">
       <Filter>02. GameObject\03. MapObject</Filter>
@@ -752,18 +725,6 @@
     <ClCompile Include="..\Private\Coin.cpp">
       <Filter>02. GameObject\03. MapObject\02. Coin</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UIPlrHPBar.cpp">
-      <Filter>02. GameObject\01. UI\01. UI_HPBar\PlayerHPBar</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\WorldHPBar.cpp">
-      <Filter>02. GameObject\01. UI\01. UI_HPBar\WorldHpBar</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\UISkillBar.cpp">
-      <Filter>02. GameObject\01. UI\02. UI_PlayerSkillBar</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\UIQuest.cpp">
-      <Filter>02. GameObject\01. UI\03. UI_Quest</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Effect.cpp">
       <Filter>02. GameObject\09. Effect</Filter>
     </ClCompile>
@@ -781,6 +742,24 @@
     </ClCompile>
     <ClCompile Include="..\Private\EffectTestModel.cpp">
       <Filter>02. GameObject\99. Dummy\EffectTestAnimModel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UIBackGround.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UIPlrHPBar.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UIQuest.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UISkillBar.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\WorldHPBar.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI.cpp">
+      <Filter>ui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

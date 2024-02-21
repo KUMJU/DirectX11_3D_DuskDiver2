@@ -101,15 +101,12 @@ HRESULT CRenderer::AddRenderGroup(RENDERGROUP _eRenderGroup, shared_ptr<class CG
 	return S_OK;
 }
 
-HRESULT CRenderer::AddUIRenderGroup(shared_ptr<class CGameObject> _pGameObject, _int _iPriorityIndex)
+HRESULT CRenderer::AddUIRenderGroup(shared_ptr<class CGameObject> _pGameObject,  UIGROUP _eUIGroup)
 {
-	if(0 == _iPriorityIndex)
-		m_RenderObjects[RENDER_UI].push_front(_pGameObject);
-	else 
-		m_RenderObjects[RENDER_UI].push_back(_pGameObject);
+	if (_eUIGroup >= UI_END)
+		return E_FAIL;
 
-
-	//std::sort(m_RenderObjects[RENDER_UI].begin(), m_RenderObjects[RENDER_UI].end(), [&]( ) {});
+	m_RenderUIs[_eUIGroup].push_back(_pGameObject);
 
 	return S_OK;
 }
@@ -344,12 +341,13 @@ HRESULT CRenderer::RenderBlend()
 
 HRESULT CRenderer::RenderUI()
 {
-	for (auto& pGameObject : m_RenderObjects[RENDER_UI]) {
-		if (nullptr != pGameObject)
-			pGameObject->Render();
+	for (auto& eUIGroup : m_RenderUIs) {
+		for (auto& pObject : eUIGroup) {
+			if (nullptr != pObject)
+				pObject->Render();
+		}
+		eUIGroup.clear();
 	}
-
-	m_RenderObjects[RENDER_UI].clear();
 
 	return S_OK;
 }

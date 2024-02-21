@@ -7,6 +7,8 @@
 #include "Texture.h"
 #include "VIBuffer_UI.h"
 
+#include "UI_SequenceTex.h"
+
 CUIBurstSkillGauge::CUIBurstSkillGauge()
 {
 }
@@ -36,6 +38,22 @@ HRESULT CUIBurstSkillGauge::Initialize()
 
     m_pBackGroundTransform->SetState(CTransform::STATE_POSITION, { UIInfo.fX - g_iWinSizeX * 0.5f ,-UIInfo.fY + g_iWinSizeY * 0.5f + 10.f , 0.f, 1.f });
     m_pBackGroundTransform->SetScaling(270.f, 270.f, 1.f);
+
+    m_eUIGroup = CRenderer::UI_CONTENTS;
+
+    UIInfo.fSizeX = 200.f;
+    UIInfo.fSizeY = 200.f;
+
+    CUI_SequenceTex::SequenceTexInfo SequeneceInfo = {};
+    SequeneceInfo.bLoop = true;
+    SequeneceInfo.fScrollTime = 0.1f;
+    SequeneceInfo.iCol = 4;
+    SequeneceInfo.iRow = 4;
+
+    m_pUIEffect = CUI_SequenceTex::Create(&UIInfo, TEXT("fx_burst_break"), 2, &SequeneceInfo);
+    m_pUIEffect->SetEnable(true);
+    if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_UI"), m_pUIEffect)))
+        return E_FAIL;
 
     return S_OK;
 }
@@ -104,6 +122,10 @@ HRESULT CUIBurstSkillGauge::Render()
     if (FAILED(m_VIRectCom->Render()))
         return E_FAIL;
 
+
+    wstring strSkillRate = to_wstring((_int)((m_fCurrentRate) * 100) + 100) + TEXT("%");
+    CGameInstance::GetInstance()->RenderFont(TEXT("Font_Number30"), strSkillRate, { g_iWinSizeX * 0.5f - 550.f ,g_iWinSizeY * 0.5f + 10.f }, Colors::White);
+
     return S_OK;
 }
 
@@ -123,6 +145,7 @@ void CUIBurstSkillGauge::ComputeUIAngle()
 {
     float fGaugeRate = m_fCurrentBurstGauge/ (m_fMaxGauge + (m_fMaxGauge * 0.25f));
     m_fCurrentAngle = 360.f * fGaugeRate;
+    m_fCurrentRate = m_fCurrentBurstGauge / m_fMaxGauge;
 }
 
 shared_ptr<CUIBurstSkillGauge> CUIBurstSkillGauge::Create()

@@ -10,17 +10,21 @@ public:
 	enum RENDERGROUP { RENDER_PRIORITY, RENDER_NONBLEND, RENDER_NONLIGHT, RENDER_GLOW, RENDER_BLEND, RENDER_UI, RENDER_END };
 
 public:
+	enum UIGROUP { UI_SCREEN, UI_BACKGROUND, UI_CONTENTS, UI_EFFECT, UI_END};
+
+public:
 	CRenderer(wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID3D11DeviceContext> _pContext);
 	virtual ~CRenderer() = default;
 
 public:	
 	HRESULT Initialize();
 	HRESULT AddRenderGroup(RENDERGROUP _eRenderGroup, shared_ptr<class CGameObject> _pGameObject);
-	HRESULT AddUIRenderGroup(shared_ptr<class CGameObject> _pGameObject, _int _iPriorityIndex);
+	HRESULT AddUIRenderGroup(shared_ptr<class CGameObject> _pGameObject, UIGROUP _eUIGroup);
 	HRESULT Render();
 
 private:
 	list<shared_ptr<class CGameObject>> m_RenderObjects[RENDER_END];
+	list<shared_ptr<class CGameObject>> m_RenderUIs[UI_END];
 
 private:
 	shared_ptr<class CShader> m_pShader = nullptr;

@@ -75,7 +75,7 @@ public: /* For.PipeLine */
 /*Renderer*/
 public:
 	HRESULT AddRenderGroup(CRenderer::RENDERGROUP _eRenderGroup, shared_ptr<class CGameObject> _pGameObject);
-	HRESULT AddUIRenderGroup(shared_ptr<class CGameObject> _pGameObject, _int _iPriorityIdx);
+	HRESULT AddUIRenderGroup(shared_ptr<class CGameObject> _pGameObject, CRenderer::UIGROUP _eUIGroup);
 
 	void SetDebugOnOff();
 

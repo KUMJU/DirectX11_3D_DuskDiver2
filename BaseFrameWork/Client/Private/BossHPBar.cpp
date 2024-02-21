@@ -43,6 +43,8 @@ HRESULT CBossHPBar::Initialize()
 
     m_pBackGroundBuffer = CVIBuffer_UI::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo());
 
+    m_eUIGroup = CRenderer::UI_CONTENTS;
+
     return S_OK;
 }
 

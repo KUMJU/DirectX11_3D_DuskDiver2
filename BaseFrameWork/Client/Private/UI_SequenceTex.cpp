@@ -30,6 +30,8 @@ HRESULT CUI_SequenceTex::Initialize(CUI::tagUIInfo* _info, const wstring& _strTe
 	m_vColUVRatio.x = 0.f;
 	m_vColUVRatio.y = (_float)(1.f) / (_float)m_SequenceInfo.iCol;
 
+	m_eUIGroup = CRenderer::UI_EFFECT;
+
 	return S_OK;
 }
 
@@ -120,6 +122,11 @@ void CUI_SequenceTex::SlideNextTexIdx()
 
 		if (m_SequenceInfo.iCol == m_iCurrentCol) {
 			m_iCurrentCol = 0;
+
+			if (!m_SequenceInfo.bLoop) {
+				m_IsEnabled = false;
+				ResetTexture();
+			}
 		}
 	}
 
@@ -130,6 +137,13 @@ void CUI_SequenceTex::SlideNextTexIdx()
 	m_vColUVRatio.y = (_float)(m_iCurrentCol + 1.f) / (_float)m_SequenceInfo.iCol;
 
 
+}
+
+void CUI_SequenceTex::ResetTexture()
+{
+	m_fAccTime = 0.f;
+	m_iCurrentRow = 0;
+	m_iCurrentCol = 0;
 }
 
 shared_ptr<CUI_SequenceTex> CUI_SequenceTex::Create(CUI::tagUIInfo* _info, const wstring& _strTexKey, _int _iPriorityNum, SequenceTexInfo* _TexInfo)

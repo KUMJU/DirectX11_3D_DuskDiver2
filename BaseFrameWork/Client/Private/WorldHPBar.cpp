@@ -43,6 +43,9 @@ HRESULT CWorldHPBar::Initialize()
 
     m_IsEnabled = false;
 
+    m_eUIGroup = CRenderer::UI_SCREEN;
+
+
     return S_OK;
 }
 

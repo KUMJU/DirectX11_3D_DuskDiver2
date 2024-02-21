@@ -33,6 +33,9 @@ private:
 	_bool m_IsGaugeFull[3] = { true, true, true };
 	_float m_fGaugeRatio[3] = { 0.f, 0.f , 0.f };
 
+private:
+	shared_ptr<class CUI_SequenceTex> m_pUIEffect = nullptr;
+
 public:
 	static shared_ptr<CUIBurstGaugeBar> Create();
 

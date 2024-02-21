@@ -2,6 +2,7 @@
 
 #include "Client_Defines.h"
 #include "GameObject.h"
+#include "Renderer.h"
 
 BEGIN(Engine)
 class CShader;
@@ -37,7 +38,7 @@ protected:
 	shared_ptr<CVIBuffer_UI> m_VIRectCom = nullptr;
 	shared_ptr<CTexture> m_pTextureCom = nullptr;
 
-
+	CRenderer::UIGROUP m_eUIGroup = CRenderer::UIGROUP::UI_BACKGROUND;
 protected:
 	void AddBaseComponent();
 

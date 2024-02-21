@@ -34,10 +34,7 @@ private:
 private:
 
 	map<wstring, shared_ptr<class CEffectPreset>> m_EffectPresets;
-
 	vector<shared_ptr<class CEffectPreset>> m_HitMarks;
-
-	//HitMark 프리셋을 따로 만든다 vs 흠..ㅋ
 
 };
 

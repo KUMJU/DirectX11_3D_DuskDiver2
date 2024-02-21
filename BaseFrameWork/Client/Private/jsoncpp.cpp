@@ -4360,7 +4360,9 @@ static unsigned int utf8ToCodepoint(const char*& s, const char* e) {
   unsigned int firstByte = static_cast<unsigned char>(*s);
 
   if (firstByte < 0x80)
-    return firstByte;
+      return firstByte;
+  else
+      return 7777;
 
   if (firstByte < 0xE0) {
     if (e - s < 2)
@@ -4483,7 +4485,9 @@ static JSONCPP_STRING valueToQuotedStringN(const char* value, unsigned length) {
       // don't escape non-control characters
       // (short escape sequence are applied above)
       if (cp < 0x80 && cp >= 0x20)
-        result += static_cast<char>(cp);
+          result += static_cast<char>(cp);
+      else if (cp == 7777)
+          result += c[0];
       else if (cp < 0x10000) { // codepoint is in Basic Multilingual Plane
         result += "\\u";
         result += toHex16Bit(cp);

@@ -32,6 +32,13 @@ private:
 	_float m_fCurrentGaugingRatio = 0.f;
 	_int m_iFirstEmptyIdx = 4;
 
+	_int m_iPrevFullSkillNum = 3;
+
+private:
+	shared_ptr<class CUI_SequenceTex> m_pUIEffect[4];
+
+
+
 public:
 	static shared_ptr<CUISkillBar> Create();
 

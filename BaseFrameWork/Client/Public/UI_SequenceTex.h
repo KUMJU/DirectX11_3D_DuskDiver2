@@ -36,6 +36,7 @@ public:
 public:
 
 	void SlideNextTexIdx();
+	void ResetTexture();
 
 private:
 	SequenceTexInfo m_SequenceInfo = {};

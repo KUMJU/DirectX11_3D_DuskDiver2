@@ -6,6 +6,8 @@
 #include "Shader.h"
 #include "VIBuffer_UI.h"
 
+#include "UI_SequenceTex.h"
+
 CUIBurstGaugeBar::CUIBurstGaugeBar()
 {
 }
@@ -30,10 +32,33 @@ HRESULT CUIBurstGaugeBar::Initialize()
     UIInfo.fX = 0.f;
     UIInfo.fY = 0.f;
 
-    __super::Initialize(UIInfo, 2);
+    __super::Initialize(UIInfo, 1);
     CUI::AddBaseComponent();
     m_pTextureCom = CGameInstance::GetInstance()->GetTexture(TEXT("hud_img"));
     m_Components.emplace(TEXT("Com_Texture"), m_pTextureCom);
+
+
+    /*Sequence Texture(UI Effect)*/
+
+    UIInfo.fSizeX = 230.f;
+    UIInfo.fSizeY = 75.f;
+    // * 0.5f - 435.f
+    UIInfo.fX = g_iWinSizeX * 0.5f - 433.f;
+    UIInfo.fY = g_iWinSizeY * 0.5f - 240.f;
+
+    CUI_SequenceTex::SequenceTexInfo SequeneceInfo = {};
+    SequeneceInfo.bLoop = true;
+    SequeneceInfo.fScrollTime = 0.1f;
+    SequeneceInfo.iCol = 4;
+    SequeneceInfo.iRow = 4;
+
+    m_pUIEffect = CUI_SequenceTex::Create(&UIInfo, TEXT("fx_BP_battle"), 2, &SequeneceInfo);
+    m_pUIEffect->SetEnable(true);
+    if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_UI"), m_pUIEffect)))
+        return E_FAIL;
+
+    m_eUIGroup = CRenderer::UI_CONTENTS;
+
 
     return S_OK;
 }

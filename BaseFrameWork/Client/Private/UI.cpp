@@ -36,7 +36,7 @@ void CUI::Tick(_float _fTimeDelta)
 
 void CUI::LateTick(_float _fTimeDelta)
 {
-    if (FAILED(CGameInstance::GetInstance()->AddUIRenderGroup(shared_from_this(), m_iPriorityIndex)))
+    if (FAILED(CGameInstance::GetInstance()->AddUIRenderGroup(shared_from_this(), m_eUIGroup)))
         return;
 }
 

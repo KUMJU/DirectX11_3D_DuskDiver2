@@ -597,6 +597,7 @@
     <ClInclude Include="..\Public\UIBurstSkillGauge.h">
       <Filter>02. GameObject\01. UI\06. UI_BurstSkillGauge</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UIDialog.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -878,6 +879,7 @@
     <ClCompile Include="..\Private\UIBurstSkillGauge.cpp">
       <Filter>02. GameObject\01. UI\06. UI_BurstSkillGauge</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\UIDialog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">

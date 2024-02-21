@@ -32,6 +32,8 @@ HRESULT CUIQuest::Initialize()
     m_pTransformCom->Rotation({ 0.f, 0.f, 1.f ,0.f }, XMConvertToRadians(3.5f));
     m_IsEnabled = true;
 
+    m_eUIGroup = CRenderer::UI_CONTENTS;
+
 	return S_OK;
 }
 

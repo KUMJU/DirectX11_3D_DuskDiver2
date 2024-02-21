@@ -302,17 +302,16 @@ HRESULT CGameInstance::AddRenderGroup(CRenderer::RENDERGROUP _eRenderGroup, shar
 	return m_pRenderer->AddRenderGroup(_eRenderGroup, _pGameObject);
 }
 
-HRESULT CGameInstance::AddUIRenderGroup(shared_ptr<class CGameObject> _pGameObject, _int _iPriorityIdx)
+HRESULT CGameInstance::AddUIRenderGroup(shared_ptr<class CGameObject> _pGameObject, CRenderer::UIGROUP _eUIGroup)
 {
 	if (!m_pRenderer)
 		return E_FAIL;
 
-	return m_pRenderer->AddUIRenderGroup( _pGameObject, _iPriorityIdx);
+	return m_pRenderer->AddUIRenderGroup( _pGameObject, _eUIGroup);
 }
 
 void CGameInstance::SetDebugOnOff()
 {
-
 	m_pRenderer->SetDebugModeOnOff();
 
 }

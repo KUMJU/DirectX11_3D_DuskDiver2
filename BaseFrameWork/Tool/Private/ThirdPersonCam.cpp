@@ -21,7 +21,6 @@ HRESULT CThirdPersonCam::Initialize()
 	ZeroMemory(&TransformDesc, sizeof(CTransform::TRANSFORM_DESC));
 
 	m_TargetPlayer = CGameMgr::GetInstance()->GetPlayer();
-	m_TargetTransform = dynamic_pointer_cast<CTransform>(m_TargetPlayer->GetComponent(TEXT("Com_Transform"))));
 	_vector vPlayerPos = dynamic_pointer_cast<CTransform>(m_TargetPlayer->GetComponent(TEXT("Com_Transform")))->GetState(CTransform::STATE_POSITION);
 	_vector vCamPos = { vPlayerPos.m128_f32[0] , vPlayerPos.m128_f32[1] , vPlayerPos.m128_f32[2] - 5.f, 1.f };
 
@@ -166,13 +165,6 @@ void CThirdPersonCam::FocusPlayer(_vector _vCamPos, _float _fHeight)
 
 }
 
-void CThirdPersonCam::ZoomIn()
-{
-}
-
-void CThirdPersonCam::ZoomOut()
-{
-}
 
 void CThirdPersonCam::SphericalCoordinates(_fvector _vTargetPos)
 {
@@ -237,10 +229,6 @@ void CThirdPersonCam::LockOn()
 }
 
 void CThirdPersonCam::CameraEffect()
-{
-}
-
-void CThirdPersonCam::BurstTransform()
 {
 }
 
