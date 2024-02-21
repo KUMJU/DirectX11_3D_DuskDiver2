@@ -20,6 +20,8 @@ float g_fEndColUV;
 float g_fBurstGaugeRatio = 0.f;
 float g_fSkillGaugeRatio = 0.f;
 
+float g_fBurstSkillRadian = 0.f;
+
 struct VS_IN
 {
     float3 vPosition : POSITION;
@@ -269,8 +271,6 @@ PS_OUT PS_SKILLBAR(PS_IN In)
 PS_OUT PS_BURSTBAR(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
-
-   // Out.vColor = g_Texture.Sample(g_LinearSampler, In.vTexcoord);
     
     if (In.vTexcoord.x <= g_fBurstGaugeRatio)
     {
@@ -284,6 +284,45 @@ PS_OUT PS_BURSTBAR(PS_IN In)
     return Out;
 
 }
+
+PS_OUT PS_BURSTSKILLBAR(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+   
+    Out.vColor = g_Texture.Sample(g_LinearSampler, In.vTexcoord);
+
+    float2x2 RotationMat = { cos(radians(-90.f)), 
+        -sin(radians(-90.f)), 
+        sin(radians(-90.f)), 
+        cos(radians(-90.f))};
+    
+    //극축 기준이 (0,0)이라서 변환이 필요함
+    //내가 극축 기준으로 잡고 싶은 좌표는 (0.5f , 1.f)  
+       
+    float2 vDirVec = In.vTexcoord - 0.5f;
+    
+    vDirVec = mul(vDirVec, RotationMat);
+
+    float fPolarCoord = atan2(-vDirVec.y, vDirVec.x);
+   
+    
+    if (fPolarCoord <= g_fBurstSkillRadian)
+    {
+        Out.vColor.rgb = float3(0.99f, 0.99f, 0.007f);
+    }
+    else
+    {
+        Out.vColor.rgb = float3(0.25f, 0.25f, 0.25f);
+    }
+    
+    
+    if (Out.vColor.a == 0.f)
+        discard;
+ 
+    return Out;
+
+}
+
 
 technique11 DefaultTechnique
 {
@@ -356,6 +395,16 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = compile gs_5_0 GS_MAIN();
         PixelShader = compile ps_5_0 PS_BURSTBAR();
+    }
+
+    pass BurstSkillBar //7
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = compile gs_5_0 GS_MAIN();
+        PixelShader = compile ps_5_0 PS_BURSTSKILLBAR();
     }
 
 }

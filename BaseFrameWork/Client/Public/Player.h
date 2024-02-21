@@ -71,6 +71,7 @@ public:
 public:
 	void AddBurstGauge();
 
+
 private:
 	shared_ptr<CShader> m_pShader = nullptr;
 

@@ -38,6 +38,7 @@
 #include "UIQuest.h"
 #include "UISkillBar.h"
 #include "UIBurstGaugeBar.h"
+#include "UIBurstSkillGauge.h"
 
 #include "EffectMgr.h"
 #include "EffectPreset.h"
@@ -324,6 +325,13 @@ HRESULT CArcadeMap::ReadyLayerUI(const wstring& _strLayerTag)
 		return E_FAIL;
 
 	CUIMgr::GetInstance()->AddUI(TEXT("UI_BurstBar"), pInstance);
+
+	/**Player Burst SkillBar**/
+	pInstance = CUIBurstSkillGauge::Create();
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pInstance)))
+		return E_FAIL;
+
+	CUIMgr::GetInstance()->AddUI(TEXT("UI_BurstSkillBar"), pInstance);
 
 	/**Quest UI**/
 

@@ -32,6 +32,9 @@ public:
 	void SetSkillGauge(_int _iSkillGauge, _bool _isIncrease);
 	void SetTimeRatio(_float _fTimeRate);
 
+public:
+	void SetBurstSkillGauge(_float _fCurrentBurst);
+
 private:
 
 	map<wstring, shared_ptr<class CUI>> m_UIList;

@@ -5,6 +5,7 @@
 #include "UIPlrHPBar.h"
 #include "UIBurstGaugeBar.h"
 #include "UISkillBar.h"
+#include "UIBurstSkillGauge.h"
 
 IMPLEMENT_SINGLETON(CUIMgr)
 
@@ -84,4 +85,15 @@ void CUIMgr::SetTimeRatio(_float _fTimeRate)
 	}
 
 
+}
+
+void CUIMgr::SetBurstSkillGauge(_float _fCurrentBurst)
+{
+
+	wstring FindKey = TEXT("UI_BurstSkillBar");
+	shared_ptr<CUI> pSkillBar = FindUI(FindKey);
+
+	if (pSkillBar) {
+		dynamic_pointer_cast<CUIBurstSkillGauge>(pSkillBar)->SetBurstSkillGauge(_fCurrentBurst);
+	}
 }

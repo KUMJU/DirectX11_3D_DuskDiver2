@@ -49,9 +49,6 @@
     <Filter Include="02. GameObject\01. UI">
       <UniqueIdentifier>{275c41ca-57ec-45b2-8480-314b137cf678}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\01. UI\00.UIBackGroud">
-      <UniqueIdentifier>{684e7909-e8c8-4b53-8978-ddbe4e1d1dc3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\02. Camera">
       <UniqueIdentifier>{8939f76b-ec3c-43e9-bc4d-8e8cfc8e1e08}</UniqueIdentifier>
     </Filter>
@@ -289,8 +286,17 @@
     <Filter Include="02. GameObject\00.Creature\01. Monster\04. FinalBoss\SpecialPattern">
       <UniqueIdentifier>{1199a85e-91b9-484d-abea-13f476ae05e1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\01. UI\05. UI_BurstGuageBar">
+    <Filter Include="02. GameObject\01. UI\06. UI_BurstSkillGauge">
+      <UniqueIdentifier>{1fea1e02-c7e8-4e66-a50e-c09584588d97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. UI\05. UI_BurstGaugeBar">
       <UniqueIdentifier>{948edd82-0876-4bc7-84c2-ccbc411badb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. UI\07 .UI_Dialog">
+      <UniqueIdentifier>{d739873e-e924-4bbf-ad96-7a84b15213d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. UI\00. UIBackGroud">
+      <UniqueIdentifier>{684e7909-e8c8-4b53-8978-ddbe4e1d1dc3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -373,7 +379,7 @@
       <Filter>02. GameObject\99. Dummy</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UIBackGround.h">
-      <Filter>02. GameObject\01. UI\00.UIBackGroud</Filter>
+      <Filter>02. GameObject\01. UI\00. UIBackGroud</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\MapObject.h">
       <Filter>02. GameObject\03. MapObject</Filter>
@@ -586,7 +592,10 @@
       <Filter>02. GameObject\01. UI\04. UI_Sequance</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UIBurstGaugeBar.h">
-      <Filter>02. GameObject\01. UI\05. UI_BurstGuageBar</Filter>
+      <Filter>02. GameObject\01. UI\05. UI_BurstGaugeBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UIBurstSkillGauge.h">
+      <Filter>02. GameObject\01. UI\06. UI_BurstSkillGauge</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -654,7 +663,7 @@
       <Filter>02. GameObject\99. Dummy</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UIBackGround.cpp">
-      <Filter>02. GameObject\01. UI\00.UIBackGroud</Filter>
+      <Filter>02. GameObject\01. UI\00. UIBackGroud</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\MapObject.cpp">
       <Filter>02. GameObject\03. MapObject</Filter>
@@ -864,7 +873,10 @@
       <Filter>02. GameObject\01. UI\04. UI_Sequance</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UIBurstGaugeBar.cpp">
-      <Filter>02. GameObject\01. UI\05. UI_BurstGuageBar</Filter>
+      <Filter>02. GameObject\01. UI\05. UI_BurstGaugeBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UIBurstSkillGauge.cpp">
+      <Filter>02. GameObject\01. UI\06. UI_BurstSkillGauge</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

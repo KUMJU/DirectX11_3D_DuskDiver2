@@ -145,12 +145,12 @@ if (!m_IsEnabled)
 
 #ifdef _DEBUG
 	
-	wstring cc = to_wstring(m_iCurrentSkillOrder);
+	/*wstring cc = to_wstring(m_iCurrentSkillOrder);
 	CGameInstance::GetInstance()->RenderFont(TEXT("Font_Default_KR"), cc, { g_iWinSizeX * 0.5f - 50.f ,g_iWinSizeY * 0.5f - 230.f }, Colors::White);
 
 
 	wstring ww = to_wstring(m_pMainAnims->front()->GetCurrentTrackPosition());
-	CGameInstance::GetInstance()->RenderFont(TEXT("Font_Default_KR"), ww, { g_iWinSizeX * 0.5f - 50.f ,g_iWinSizeY * 0.5f - 300.f }, Colors::White);
+	CGameInstance::GetInstance()->RenderFont(TEXT("Font_Default_KR"), ww, { g_iWinSizeX * 0.5f - 50.f ,g_iWinSizeY * 0.5f - 300.f }, Colors::White);*/
 
 #endif // DEBUG
 
