@@ -36,8 +36,17 @@ HRESULT CUIDialog::Initialize()
     //포트레잇
  
 
-    m_pPortraitTexCom = CGameInstance::GetInstance()->GetTexture(TEXT("head_NA001_d"));
-    m_Components.emplace(TEXT("Com_PortraitTexture"), m_pTextureCom);
+    //유모
+    m_pPortraitTexCom[0] = CGameInstance::GetInstance()->GetTexture(TEXT("head_NA001_d"));
+    m_Components.emplace(TEXT("Com_PortraitTexture0"), m_pTextureCom);
+
+    //메그레즈
+    m_pPortraitTexCom[1] = CGameInstance::GetInstance()->GetTexture(TEXT("head_NA017_b"));
+    m_Components.emplace(TEXT("Com_PortraitTexture1"), m_pTextureCom);
+
+    //곰
+    m_pPortraitTexCom[2] = CGameInstance::GetInstance()->GetTexture(TEXT("head_NA011_a"));
+    m_Components.emplace(TEXT("Com_PortraitTexture2"), m_pTextureCom);
 
     m_pPortraitTransCom = CTransform::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), nullptr);
     m_pPortraitTransCom->SetState(CTransform::STATE_POSITION, { UIInfo.fX - g_iWinSizeX * 0.5f - 185.f ,-UIInfo.fY + g_iWinSizeY * 0.5f , 0.f, 1.f });
@@ -54,6 +63,18 @@ void CUIDialog::PriorityTick(_float _fTimeDelta)
 
 void CUIDialog::Tick(_float _fTimeDelta)
 {
+    if (!m_IsEnabled)
+        return;
+
+    m_fAccTime += _fTimeDelta;
+
+    if (m_fAccTime >= 2.f) {
+
+        m_fAccTime = 0.f;
+        ChangeNextData();
+
+    }
+
 }
 
 void CUIDialog::LateTick(_float _fTimeDelta)
@@ -89,7 +110,7 @@ HRESULT CUIDialog::Render()
 
     //포트레잇
 
-    if (FAILED(m_pPortraitTexCom->BindShaderResource(m_pShader, "g_Texture", 0)))
+    if (FAILED(m_pPortraitTexCom[m_iCurrentPortaitIdx]->BindShaderResource(m_pShader, "g_Texture", 0)))
         return E_FAIL;
 
     if (FAILED(m_pPortraitTransCom->BindShaderResource(m_pShader, "g_WorldMatrix")))
@@ -110,6 +131,37 @@ HRESULT CUIDialog::Render()
 
 
     return S_OK;
+}
+
+void CUIDialog::StartDialog(const wstring& _strDialogKey)
+{
+    auto FindKey = m_Scripts.find(_strDialogKey);
+
+    if (FindKey == m_Scripts.end()) {
+        m_CurrentDialog =  &FindKey->second;
+    }
+}
+
+void CUIDialog::ChangeNextData()
+{
+
+    ++m_iCurrentDialogIdx;
+
+    //다이얼로그 종료 
+    if ((*m_CurrentDialog).size() == m_iCurrentDialogIdx) {
+        m_IsEnabled = false;
+        ResetDialogInfo();
+    }
+    //다음 다이얼로그 재생
+    else {
+
+
+
+
+
+    }
+
+
 }
 
 HRESULT CUIDialog::LoadDescriptionData()
@@ -149,19 +201,48 @@ void CUIDialog::ReadData(const wstring& _strFullPath, const wstring& _strKeyName
     _int iElementNum = root.size();
     auto iter = root.begin();
 
+    vector<DialogInfo> TempVec = {};
+    TempVec.reserve(iElementNum);
 
     for (size_t i = 0; i < iElementNum; ++i) {
+
+
+        DialogInfo info = {};
 
         string keyName = iter.key().asString();
 
         string ActorName = root[keyName]["Actor"].asString();
         string Script = root[keyName]["Script"].asString();
 
+        _tchar szFullPath[MAX_PATH] = TEXT("");
+        //변환해줄 때 플래그를 CP_UTF8로 넣어주면 한글이 멀쩡하게 읽힌다! 
+        MultiByteToWideChar(CP_UTF8, 0, Script.c_str(), (_int)strlen(Script.c_str()), szFullPath, MAX_PATH);
 
-        int a = 5;
+        info.strPortraitKey = ActorName;
+        info.strDialog = szFullPath;
+
+        TempVec.push_back(info);
 
         ++iter;
     }
+
+    m_Scripts.emplace(_strKeyName, TempVec);
+
+
+    in.close();
+}
+
+void CUIDialog::SettingDialogInfo()
+{
+
+}
+
+void CUIDialog::ResetDialogInfo()
+{
+    m_iCurrentDialogIdx = 0;
+    m_iCurrentDialogLastIdx = 0;
+    m_fAccTime = 0.f;
+    m_CurrentDialog = nullptr;
 }
 
 _bool CUIDialog::IsFileOrDir(_wfinddata_t _fd)
