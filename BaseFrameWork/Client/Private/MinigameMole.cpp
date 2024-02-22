@@ -10,6 +10,8 @@
 #include "CameraMgr.h"
 #include "EventCamera.h"
 
+#include "UIMgr.h"
+
 CMinigameMole::CMinigameMole()
 {
 }
@@ -356,6 +358,8 @@ void CMinigameMole::ProcessingEvent(_float _fTimeDelta)
 
         m_ActiveMoles.clear();
         m_bStartCutSceneDone = true;
+
+        CUIMgr::GetInstance()->StartMoleMinigame();
     
     }
 

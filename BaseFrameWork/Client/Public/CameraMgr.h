@@ -41,6 +41,7 @@ public:
 
 public:
 	void FocusPlayer(_vector _vPos , _float _fHeight);
+	void StartPlrCamEvent(const wstring& _strEventKey);
 
 ////////////////////////////이벤트 카메라////////////////////////////
 public:

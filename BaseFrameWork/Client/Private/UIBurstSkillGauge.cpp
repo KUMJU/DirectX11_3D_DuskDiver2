@@ -41,17 +41,17 @@ HRESULT CUIBurstSkillGauge::Initialize()
 
     m_eUIGroup = CRenderer::UI_CONTENTS;
 
-    UIInfo.fSizeX = 200.f;
-    UIInfo.fSizeY = 200.f;
+    UIInfo.fSizeX = 300.f;
+    UIInfo.fSizeY = 300.f;
 
     CUI_SequenceTex::SequenceTexInfo SequeneceInfo = {};
-    SequeneceInfo.bLoop = true;
+    SequeneceInfo.bLoop = false;
     SequeneceInfo.fScrollTime = 0.1f;
     SequeneceInfo.iCol = 4;
     SequeneceInfo.iRow = 4;
 
     m_pUIEffect = CUI_SequenceTex::Create(&UIInfo, TEXT("fx_burst_break"), 2, &SequeneceInfo);
-    m_pUIEffect->SetEnable(true);
+   // m_pUIEffect->SetEnable(true);
     if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_UI"), m_pUIEffect)))
         return E_FAIL;
 
@@ -124,15 +124,19 @@ HRESULT CUIBurstSkillGauge::Render()
 
 
     wstring strSkillRate = to_wstring((_int)((m_fCurrentRate) * 100) + 100) + TEXT("%");
-    CGameInstance::GetInstance()->RenderFont(TEXT("Font_Number30"), strSkillRate, { g_iWinSizeX * 0.5f - 550.f ,g_iWinSizeY * 0.5f + 10.f }, Colors::White);
+    CGameInstance::GetInstance()->RenderFont(TEXT("Font_Number30"), strSkillRate, { g_iWinSizeX * 0.5f - 560.f ,g_iWinSizeY * 0.5f + 10.f }, Colors::White);
 
     return S_OK;
 }
 
 void CUIBurstSkillGauge::SetBurstSkillGauge(_float _fGaugeAmount)
 {
+    if (m_fCurrentBurstGauge == m_fMaxGauge)
+        return;
+
     if (_fGaugeAmount >= m_fMaxGauge) {
         m_fCurrentBurstGauge = m_fMaxGauge;
+        m_pUIEffect->SetEnable(true);
     }
     else {
         m_fCurrentBurstGauge = _fGaugeAmount;

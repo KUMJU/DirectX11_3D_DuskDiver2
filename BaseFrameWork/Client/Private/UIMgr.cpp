@@ -6,6 +6,8 @@
 #include "UIBurstGaugeBar.h"
 #include "UISkillBar.h"
 #include "UIBurstSkillGauge.h"
+#include "UIDialog.h"
+#include "UIMiniquest.h"
 
 IMPLEMENT_SINGLETON(CUIMgr)
 
@@ -95,5 +97,36 @@ void CUIMgr::SetBurstSkillGauge(_float _fCurrentBurst)
 
 	if (pSkillBar) {
 		dynamic_pointer_cast<CUIBurstSkillGauge>(pSkillBar)->SetBurstSkillGauge(_fCurrentBurst);
+	}
+}
+
+void CUIMgr::StartDialog(const wstring& _strDialogKey)
+{
+	wstring FindKey = TEXT("UI_Dialog");
+	shared_ptr<CUI> pDialog = FindUI(FindKey);
+
+	if (pDialog) {
+		dynamic_pointer_cast<CUIDialog>(pDialog)->StartDialog(_strDialogKey);
+	}
+}
+
+void CUIMgr::StartMoleMinigame()
+{
+	wstring FindKey = TEXT("UI_Miniquest");
+	shared_ptr<CUI> pMiniquest = FindUI(FindKey);
+
+	if (pMiniquest) {
+		dynamic_pointer_cast<CUIMiniquest>(pMiniquest)->StartMoleGame();
+	}
+
+}
+
+void CUIMgr::StartCoinQuest()
+{
+	wstring FindKey = TEXT("UI_Miniquest");
+	shared_ptr<CUI> pMiniquest = FindUI(FindKey);
+
+	if (pMiniquest) {
+		dynamic_pointer_cast<CUIMiniquest>(pMiniquest)->StartCoinQuest();
 	}
 }

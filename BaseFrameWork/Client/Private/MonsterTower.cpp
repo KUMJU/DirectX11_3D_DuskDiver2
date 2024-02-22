@@ -12,6 +12,8 @@
 
 #include "MinigameHockey.h"
 
+#include "UIMgr.h"
+
 CMonsterTower::CMonsterTower()
 {
 }
@@ -132,6 +134,7 @@ void CMonsterTower::OnCollide(EObjType _eObjType, shared_ptr<CCollider> _pCollid
 			return;
 
 		m_IsActived = true;
+		CUIMgr::GetInstance()->StartDialog(TEXT("StartDialog"));
 	}
 
 	//플레이어 : 밀어내기 처리

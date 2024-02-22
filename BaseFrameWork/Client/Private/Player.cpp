@@ -701,7 +701,7 @@ void CPlayer::KeyInput(_float _fTimeDelta)
 
     ////////////////////////BurstMode////////////////////////
 
-    if (GetKeyState('Z') & 0x8000)
+    if(CGameInstance::GetInstance()->Key_Down('Z'))
     {
         m_eCurrentState = HEROSTATE::STATE_BURST_TRANS;
         IsKeyInput = true;
@@ -711,13 +711,8 @@ void CPlayer::KeyInput(_float _fTimeDelta)
         m_iCurrentAnimIdx = 30;
         m_isAnimLoop = false;
 
-        //¿¹½Ã
-       /* _vector vPlrPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
-        _vector vPlrLook = m_pTransformCom->GetState(CTransform::STATE_LOOK);
 
-        _vector vCamPos = vPlrPos + (vPlrLook * 1.3f) + _vector{0.f, 1.3f, 0.f, 0.f};
-
-        CCameraMgr::GetInstance()->FocusPlayer(vCamPos, 1.2f);*/
+        CCameraMgr::GetInstance()->StartPlrCamEvent(TEXT("BurstTransform"));
 
         //Event_Burst
         //CCameraMgr::GetInstance()->StartEvent(TEXT("Event_Burst"));
@@ -733,20 +728,21 @@ void CPlayer::KeyInput(_float _fTimeDelta)
 
     ////////////////////////Skill////////////////////////
     
-    //Burst : Super1
-    if (GetKeyState('X') & 0x8000)
-    {   
+        //Burst : Super1
+    if (CGameInstance::GetInstance()->Key_Down('X')) {
         if (m_bBurstMode) {
             m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_SUPER1);
             m_eCurrentState = HEROSTATE::STATE_SKILL_Q;
+            CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
+            CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_61.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
+            CCameraMgr::GetInstance()->StartPlrCamEvent(TEXT("SuperSkill1"));
             ChangeAnim(91, false);
             m_IsUsingSkill = true;
             m_bSuperArmor = true;
             m_fSuperArmorTime = 0.f;
         }
-
-
     }
+
 
     //Burst : Super2
     if (GetKeyState('C') & 0x8000)

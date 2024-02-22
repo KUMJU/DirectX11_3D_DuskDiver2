@@ -321,7 +321,7 @@ void CMonster::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> 
 
             CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MON);
             CGameInstance::GetInstance()->PlayAudio(TEXT("flesh_hit_02.wav"), CSoundMgr::CHANNELID::CH_MON, 0.7f);
-
+            
             _int iDamage = 20.f;
 
             m_iHP -= iDamage;

@@ -50,7 +50,11 @@ private:
 	_int m_iCurrentDialogIdx = 0;
 	_int m_iCurrentDialogLastIdx = 0;
 
+	//현재 인물 사진(포트레잇) 정보
 	_int m_iCurrentPortaitIdx = 0;
+	//현재 출력되는 대화 정보 
+	wstring m_iCurrentScript = TEXT("");
+	wstring m_iCurrentCharName = TEXT("");
 
 private:
 	map<wstring, vector<DialogInfo>> m_Scripts;

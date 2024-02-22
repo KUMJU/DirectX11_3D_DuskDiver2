@@ -35,6 +35,12 @@ public:
 public:
 	void SetBurstSkillGauge(_float _fCurrentBurst);
 
+public:
+	void StartDialog(const wstring& _strDialogKey);
+	
+	void StartMoleMinigame();
+	void StartCoinQuest();
+
 private:
 
 	map<wstring, shared_ptr<class CUI>> m_UIList;

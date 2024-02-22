@@ -109,6 +109,11 @@ void CCameraMgr::FocusPlayer(_vector _vPos, _float _fHeight)
 	m_pDefualtCam->FocusPlayer(_vPos, _fHeight);
 }
 
+void CCameraMgr::StartPlrCamEvent(const wstring& _strEventKey)
+{
+	m_pDefualtCam->StartCameraEvent(_strEventKey);
+}
+
 void CCameraMgr::AddEventPreset(const wstring& _strName, vector<CEventCamera::EVENT_INFO> _info)
 {
 	m_pEventCam->AddPreset(_strName, _info);

@@ -30,7 +30,7 @@ HRESULT CThirdPersonCam::Initialize()
 	TransformDesc.fRotationPerSet = XMConvertToRadians(90.0f);
 
 	_float4 fEye, fAt;
-
+	
 	XMStoreFloat4(&fEye, vPlayerPos);
 	XMStoreFloat4(&fAt, vCamPos);
 
@@ -48,6 +48,7 @@ HRESULT CThirdPersonCam::Initialize()
 	m_fRadius = 2.4f;
 	m_fMinRad = 2.2f;
 	m_fMaxRad = 3.1f;
+
 	m_fMinAzimuth = 0.f;
 	m_fMaxAzimuth = 360.f;
 
@@ -56,6 +57,8 @@ HRESULT CThirdPersonCam::Initialize()
 
 	m_fMouseSensor = 0.08f;
 	m_fHeight = 0.9f;
+
+	CreateEventInfo();
 
 	return S_OK;
 }
@@ -112,7 +115,6 @@ void CThirdPersonCam::LateTick(_float fTimeDelta)
 
 		if (MouseMoveX = CGameInstance::GetInstance()->GetDIMouseMove(DIMS_X))
 			if (MouseMoveY = CGameInstance::GetInstance()->GetDIMouseMove(DIMS_Y))
-
 				SphericalRotate(fTimeDelta * (_float)MouseMoveX * m_fMouseSensor, fTimeDelta * (_float)MouseMoveY * m_fMouseSensor);
 		vCamPos = ToCartesian();
 
@@ -122,24 +124,63 @@ void CThirdPersonCam::LateTick(_float fTimeDelta)
 		//선형 보간
 		XMStoreFloat3(&m_vCameraEye, vCamPos);
 		vCamPos = XMVectorSetW(vCamPos, 1.f);
-		vCamPos = XMVectorLerp(XMLoadFloat4(&m_vPreCamPos), vCamPos, 0.3f);
+		//러프 수치를 0.8로 고치니까 카메라 덜컹거림이 사라짐
+		// y만 별도보정 ?
+		vCamPos = XMVectorLerp(XMLoadFloat4(&m_vPreCamPos), vCamPos, 0.5f);
 		XMStoreFloat4(&m_vPreCamPos, vCamPos);
 
 		CalcLookVectors(vCamPos, vPlayerPos);
 
 		m_pTransformCom->SetState(CTransform::STATE_POSITION, vCamPos);
 		m_pTransformCom->LookAt(XMVectorSetY(vPlayerPos, XMVectorGetY(vPlayerPos) + m_fHeight));
-
+		                                          
 		MouseFix();
 
 	}
-	else if (m_eCamState == ECAM_DEFAULT) {
+	else if (m_eCamState == ECAM_EVENT) {
 
+		m_fEventAccTime += fTimeDelta;
 
-		if (m_fEventAccTime > m_fCurrentEventTime) {
-		
+		if ((*m_CurrentCamEvent)[m_iCurrentEventIdx].bRotation) {
+			RotateCamera(fTimeDelta);
 		}
 
+		if ((*m_CurrentCamEvent)[m_iCurrentEventIdx].bZoomin) {
+			ZoomIn(fTimeDelta);
+		}
+
+		if ((*m_CurrentCamEvent)[m_iCurrentEventIdx].bZoomOut) {
+			ZoomOut(fTimeDelta);
+		}
+
+		if ((*m_CurrentCamEvent)[m_iCurrentEventIdx].bMoving) {
+			MovingCamera(fTimeDelta);
+		}
+
+
+		if ((*m_CurrentCamEvent)[m_iCurrentEventIdx].bFocus) {
+			FocusCamera(fTimeDelta);
+		}
+
+
+		if (m_fEventAccTime >= (*m_CurrentCamEvent)[m_iCurrentEventIdx].fAccTime) {
+			++m_iCurrentEventIdx;
+			m_fEventAccTime = 0.f;
+			m_bComputeMoving = false;
+
+			if (m_iCurrentEventIdx == (*m_CurrentCamEvent).size()) {
+
+				m_eCamState = ECAM_DEFAULT;
+				m_fEventAccTime = 0.f;
+				m_fCurrentFovy = 60.f;
+				m_fFovy = XMConvertToRadians(60.f);
+				m_iCurrentEventIdx = 0;
+				m_CurrentCamEvent = nullptr;
+					
+				XMStoreFloat4(&m_vPreCamPos , m_pTransformCom->GetState(CTransform::STATE_POSITION));
+
+			}
+		}
 	}
 
 
@@ -163,15 +204,283 @@ shared_ptr<CThirdPersonCam> CThirdPersonCam::Create()
 	return pInstance;
 }
 
+void CThirdPersonCam::StartCameraEvent(const wstring& _strEventKey)
+{
+	auto iter = m_EventInfos.find(_strEventKey);
+
+	if (iter != m_EventInfos.end()) {
+		m_CurrentCamEvent = &(iter->second);
+		SetInitializePosition(_strEventKey);
+		m_eCamState = ECAM_EVENT;
+	}
+
+}
+
 void CThirdPersonCam::FocusPlayer(_vector _vCamPos, _float _fHeight)
 {
 	m_eCamState = ECAM_EVENT;
-
 	m_pTransformCom->SetState(CTransform::STATE_POSITION, _vCamPos);
 	_vector vPlrPos = m_TargetTransform->GetState(CTransform::STATE_POSITION);
 
 	vPlrPos = XMVectorSetY(vPlrPos, vPlrPos.m128_f32[1] + _fHeight);
 	m_pTransformCom->LookAt(vPlrPos);
+
+	m_fCurrentEventTime = 4.f;
+
+}
+
+void CThirdPersonCam::ZoomIn(_float _fDeltaTime)
+{
+
+	m_fCurrentFovy -= (*m_CurrentCamEvent)[m_iCurrentEventIdx].fSpeed * _fDeltaTime;
+
+	if (m_fCurrentFovy < (*m_CurrentCamEvent)[m_iCurrentEventIdx].fDistanceOffset) {
+		m_fCurrentFovy = (*m_CurrentCamEvent)[m_iCurrentEventIdx].fDistanceOffset;
+	}
+
+	m_fFovy = XMConvertToRadians(m_fCurrentFovy);
+
+
+
+}
+
+void CThirdPersonCam::ZoomOut(_float _fDeltaTime)
+{
+	m_fCurrentFovy += (*m_CurrentCamEvent)[m_iCurrentEventIdx].fSpeed * _fDeltaTime;
+
+	if (m_fCurrentFovy > (*m_CurrentCamEvent)[m_iCurrentEventIdx].fDistanceOffset) {
+		m_fCurrentFovy = (*m_CurrentCamEvent)[m_iCurrentEventIdx].fDistanceOffset;
+	}
+
+	m_fFovy = XMConvertToRadians(m_fCurrentFovy);
+
+}
+
+void CThirdPersonCam::RotateCamera(_float _fDeltaTime)
+{
+
+}
+
+void CThirdPersonCam::MovingCamera(_float _fDeltaTime)
+{
+
+	_vector vPlrPos = m_TargetTransform->GetState(CTransform::STATE_POSITION);
+	_vector vPlrLook = m_TargetTransform->GetState(CTransform::STATE_LOOK);
+
+	_vector vCurrentPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+
+
+	if (!m_bComputeMoving) {
+		_vector vTargetPos = vPlrPos + (vPlrLook * (*m_CurrentCamEvent)[m_iCurrentEventIdx].fDistanceOffset) + _vector({ 0.f, (*m_CurrentCamEvent)[m_iCurrentEventIdx].fYOffset, 0.f, 0.f });
+		m_vDistancePerTick = (vTargetPos -vCurrentPos) / (*m_CurrentCamEvent)[m_iCurrentEventIdx].fAccTime;
+		m_bComputeMoving = true;
+
+	}
+
+	vCurrentPos += (m_vDistancePerTick * _fDeltaTime);
+
+	m_pTransformCom->SetState(CTransform::STATE_POSITION, vCurrentPos);
+	m_pTransformCom->LookAt(vPlrPos + _vector({ 0.f, (*m_CurrentCamEvent)[m_iCurrentEventIdx].fYOffset, 0.f, 0.f }));
+}
+
+void CThirdPersonCam::FocusCamera(_float _fDeltaTime)
+{
+
+	if (!m_bComputeMoving) {
+		_vector vPlrPos = m_TargetTransform->GetState(CTransform::STATE_POSITION);
+		_vector vPlrLook = m_TargetTransform->GetState(CTransform::STATE_LOOK);
+
+		_vector vCurrentPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+		_vector vTargetPos = vPlrPos + (vPlrLook * (*m_CurrentCamEvent)[m_iCurrentEventIdx].fDistanceOffset) + _vector({ 0.f, (*m_CurrentCamEvent)[m_iCurrentEventIdx].fYOffset, 0.f, 0.f });
+		m_pTransformCom->SetState(CTransform::STATE_POSITION, vTargetPos);
+		m_pTransformCom->LookAt(vPlrPos + _vector({ 0.f, (*m_CurrentCamEvent)[m_iCurrentEventIdx].fYOffset, 0.f, 0.f }));
+		m_bComputeMoving = true;
+
+	}
+
+
+}
+
+void CThirdPersonCam::CreateEventInfo()
+{
+
+	/*EventInit*/
+
+	vector<tagEventDesc> BurstEvent = {};
+	tagEventDesc eventDesc1 = {};
+	tagEventDesc eventDesc2 = {};
+	tagEventDesc eventDesc3 = {};
+	tagEventDesc eventDesc4 = {};
+	tagEventDesc eventDesc5 = {};
+
+
+	{
+		eventDesc1.bZoomin = true;
+		eventDesc1.bZoomOut = false;
+		eventDesc1.bRotation = false;
+		eventDesc1.bMoving = false;
+		eventDesc1.bFocus = false;
+
+
+		eventDesc1.fAccTime = 2.f;
+		eventDesc1.fSpeed = 10.f;
+		eventDesc1.fDistanceOffset = 30.f;
+		eventDesc1.fRadian = 0.f;
+		eventDesc1.fYOffset = 1.f;
+
+
+
+		eventDesc2.bZoomin = false;
+		eventDesc2.bZoomOut = false;
+		eventDesc2.bRotation = false;
+		eventDesc2.bMoving = false;
+		eventDesc2.bFocus = false;
+
+
+		eventDesc2.fAccTime = 0.5f;
+		eventDesc2.fSpeed = 0.f;
+		eventDesc2.fDistanceOffset = 0.f;
+		eventDesc2.fRadian = 0.f;
+		eventDesc2.fYOffset = 0.f;
+
+
+		eventDesc3.bZoomin = false;
+		eventDesc3.bZoomOut = true;
+		eventDesc3.bRotation = false;
+		eventDesc3.bMoving = false;
+		eventDesc3.bFocus = false;
+
+
+		eventDesc3.fAccTime = 2.f;
+		eventDesc3.fSpeed = 70.f;
+		eventDesc3.fDistanceOffset = 70.f;
+		eventDesc3.fRadian = 0.f;
+		eventDesc3.fYOffset = 1.f;
+
+		BurstEvent.push_back(eventDesc1);
+		BurstEvent.push_back(eventDesc2);
+		BurstEvent.push_back(eventDesc3);
+
+	}
+
+	m_EventInfos.emplace(TEXT("BurstTransform"), BurstEvent);
+
+	vector<tagEventDesc> SuperSkill = {};
+
+	{	
+	eventDesc1.bZoomin = true;
+	eventDesc1.bZoomOut = false;
+	eventDesc1.bRotation = false;
+	eventDesc1.bMoving = false;
+	eventDesc1.bFocus = false;
+
+
+	eventDesc1.fAccTime = 0.3f;
+	eventDesc1.fSpeed = 50.f;
+	eventDesc1.fDistanceOffset = 30.f;
+	eventDesc1.fRadian = 0.f;
+	eventDesc1.fYOffset = 0.f;
+
+	//////////////////////////////////////////////////
+	eventDesc4.bZoomin = false;
+	eventDesc4.bZoomOut = false;
+	eventDesc4.bRotation = false;
+	eventDesc4.bMoving = false;
+	eventDesc4.bFocus = false;
+
+			 
+	eventDesc4.fAccTime = 0.9f;
+	eventDesc4.fSpeed = 0.f;
+	eventDesc4.fDistanceOffset = 0.f;
+	eventDesc4.fRadian = 0.f;
+	eventDesc4.fYOffset = 0.f;
+
+	///////////////////////////////////////////////
+	eventDesc2.bZoomin = false;
+	eventDesc2.bZoomOut = false;
+	eventDesc2.bRotation = false;
+	eventDesc2.bMoving = true;
+	eventDesc2.bFocus = false;
+
+
+	eventDesc2.fDistanceOffset = 2.4f;
+	eventDesc2.fAccTime = 0.1f;
+	eventDesc2.fYOffset = 1.1f;
+
+	eventDesc3.bZoomin = false;
+	eventDesc3.bZoomOut = false;
+	eventDesc3.bRotation = false;
+	eventDesc3.bMoving = false;
+	eventDesc3.bFocus = false;
+
+	eventDesc3.fAccTime = 1.f;
+
+	eventDesc5.bZoomin = false;
+	eventDesc5.bZoomOut = false;
+	eventDesc5.bRotation = false;
+	eventDesc5.bMoving = false;
+	eventDesc5.bFocus = true;
+			 
+	eventDesc5.fAccTime = 2.f;
+	eventDesc5.fDistanceOffset = -2.3f;
+	eventDesc5.fYOffset = 1.1f;
+
+	SuperSkill.push_back(eventDesc1);
+	SuperSkill.push_back(eventDesc4);
+	SuperSkill.push_back(eventDesc2);
+	SuperSkill.push_back(eventDesc3);
+	SuperSkill.push_back(eventDesc5);
+
+
+	
+	}
+
+	m_EventInfos.emplace(TEXT("SuperSkill1"), SuperSkill);
+
+}
+
+void CThirdPersonCam::SetInitializePosition(const wstring& _strEventKey)
+{
+
+	if (TEXT("BurstTransform") == _strEventKey) {
+		/*Initialize Camera Position*/
+		_vector vPlrPos = m_TargetTransform->GetState(CTransform::STATE_POSITION);
+		_vector vPlrLook = m_TargetTransform->GetState(CTransform::STATE_LOOK);
+
+		_vector vCamPos = vPlrPos + (vPlrLook * 1.6f) + _vector{ 0.f, 1.3f, 0.f, 0.f };
+		m_pTransformCom->SetState(CTransform::STATE_POSITION, vCamPos);
+		_vector vLookPlrPos = vPlrPos + _vector{ 0.f, 0.75f, 0.f, 0.f };
+		m_pTransformCom->LookAt(vLookPlrPos);
+
+		m_fEventAccTime = 0.f;
+
+	}
+	else if (TEXT("SuperSkill1") == _strEventKey) {
+
+		_vector vPlrPos = m_TargetTransform->GetState(CTransform::STATE_POSITION);
+		_vector vPlrLook = m_TargetTransform->GetState(CTransform::STATE_LOOK);
+		_vector vPlrRight = m_TargetTransform->GetState(CTransform::STATE_RIGHT);
+		
+
+		_vector vCamPos = vPlrPos + _vector{ 0.f, 0.8f, 0.f, 0.f } + ((vPlrRight + vPlrLook) * 1.6f);
+		m_pTransformCom->SetState(CTransform::STATE_POSITION, vCamPos);
+		_vector vLookPlrPos = vPlrPos + _vector{ 0.f, 0.7f, 0.f, 0.f };
+
+		m_pTransformCom->LookAt(vLookPlrPos);
+
+		_vector vLookVec = m_pTransformCom->GetState(CTransform::STATE_LOOK);
+		_vector vUpVec = m_pTransformCom->GetState(CTransform::STATE_UP);
+
+		//_float fZRadian = 5.f;
+		//_float fYRadian = -50.f;
+
+		//m_pTransformCom->Rotation({0.f, 0.f, 1.f, 0.f}, XMConvertToRadians(fZRadian));
+		//m_pTransformCom->Rotation({ 0.f, 1.f, 0.f, 0.f }, XMConvertToRadians(fYRadian));
+
+		m_fEventAccTime = 0.f;
+	}
+
+
 }
 
 
@@ -225,6 +534,27 @@ _vector CThirdPersonCam::ToCartesian()
 	_float t = m_fRadius * cosf(m_fElevation);
 	_vector vNewCamPos = { m_fT * cosf(m_fAzimuth) , m_fRadius * sinf(m_fElevation)  , m_fT * sinf(m_fAzimuth) };
 	return vNewCamPos;
+}
+
+void CThirdPersonCam::StaticRotate(_float _fAzimuth, _float _fElevation)
+{
+	m_fAzimuth = _fAzimuth;
+	m_fElevation = _fElevation;
+
+	//MinMax 범위 제한을 위한 부분
+
+	// Same Unity Repeat
+	m_fAzimuth = m_fAzimuth - ((_uint)(m_fAzimuth / 360.f)) * 360.f;
+
+	//Clamp
+	if (m_fElevation >= m_fMaxElevationRad)
+	{
+		m_fElevation = m_fMaxElevationRad;
+	}
+	else if (m_fElevation <= m_fMinElevationRad)
+	{
+		m_fElevation = m_fMinElevationRad;
+	}
 }
 
 void CThirdPersonCam::CalcLookVectors(_fvector _vCamPos, _fvector _vPlrPos)

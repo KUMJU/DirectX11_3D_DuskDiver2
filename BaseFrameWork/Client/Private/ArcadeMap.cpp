@@ -40,6 +40,7 @@
 #include "UIBurstGaugeBar.h"
 #include "UIBurstSkillGauge.h"
 #include "UIDialog.h"
+#include "UIMiniquest.h"
 
 #include "EffectMgr.h"
 #include "EffectPreset.h"
@@ -347,6 +348,13 @@ HRESULT CArcadeMap::ReadyLayerUI(const wstring& _strLayerTag)
 	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pInstance)))
 		return E_FAIL;
 	CUIMgr::GetInstance()->AddUI(TEXT("UI_Dialog"), pInstance);
+
+
+	pInstance = CUIMiniquest::Create();
+
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pInstance)))
+		return E_FAIL;
+	CUIMgr::GetInstance()->AddUI(TEXT("UI_Miniquest"), pInstance);
 
 
 	return S_OK;

@@ -298,6 +298,12 @@
     <Filter Include="02. GameObject\01. UI\00. UIBackGroud">
       <UniqueIdentifier>{684e7909-e8c8-4b53-8978-ddbe4e1d1dc3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\03. MapObject\03. Barrier">
+      <UniqueIdentifier>{2d10460d-fc29-4df7-a536-241965fcf0c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. UI\08. UI_MiniQuest">
+      <UniqueIdentifier>{507270f5-a442-4896-a8c2-5a4cf4cfcb53}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -597,7 +603,15 @@
     <ClInclude Include="..\Public\UIBurstSkillGauge.h">
       <Filter>02. GameObject\01. UI\06. UI_BurstSkillGauge</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UIDialog.h" />
+    <ClInclude Include="..\Public\Barrier.h">
+      <Filter>02. GameObject\03. MapObject\03. Barrier</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UIDialog.h">
+      <Filter>02. GameObject\01. UI\07 .UI_Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UIMiniquest.h">
+      <Filter>02. GameObject\01. UI\08. UI_MiniQuest</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -879,7 +893,15 @@
     <ClCompile Include="..\Private\UIBurstSkillGauge.cpp">
       <Filter>02. GameObject\01. UI\06. UI_BurstSkillGauge</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UIDialog.cpp" />
+    <ClCompile Include="..\Private\Barrier.cpp">
+      <Filter>02. GameObject\03. MapObject\03. Barrier</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UIDialog.cpp">
+      <Filter>02. GameObject\01. UI\07 .UI_Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UIMiniquest.cpp">
+      <Filter>02. GameObject\01. UI\08. UI_MiniQuest</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">

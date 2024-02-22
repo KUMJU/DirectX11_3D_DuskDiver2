@@ -17,6 +17,32 @@ public:
 		ECAM_END
 	};
 
+
+public:
+	enum EVENTTYPE {
+		TYPE_FOCUS,
+		TYPE_ZOOMIN,
+		TYPE_ZOOMOUT,
+		TYPE_ROTATION,
+		TYPE_END
+	};
+
+	struct tagEventDesc {
+		_bool bZoomin;
+		_bool bZoomOut;
+		_bool bRotation;
+		_bool bMoving;
+		_bool bFocus;
+
+		_float fSpeed;
+		_float fRadian;
+		_float fYOffset;
+		_float fDistanceOffset;
+		_float fAccTime;
+		_float3 vEndPosition;
+		_float4 vAxis = {0.f, 0.f ,0.f , 0.f};
+	};
+
 public:
 	CThirdPersonCam();
 	virtual ~CThirdPersonCam();
@@ -31,11 +57,6 @@ private:
 public:
 	_float4 GetCamLookVector() { return m_vLookPlr; }
 
-
-public:
-	void FocusPlayer(_vector _vCamPos, _float _fHeight);
-
-
 private:
 
 	//초기 플레이어 좌표값을 이용해 필요한 값을 계산해두는 함수
@@ -44,6 +65,11 @@ private:
 	void SphericalRotate(_float _fAzimuth , _float _fElevation);
 	//좌표계변환
 	_vector ToCartesian();
+
+private:
+	//구면좌표계를 이용해 회전하지만 기존 값에 더해주는 구조가 아닌 지정된 각도로 돌림 
+	void StaticRotate(_float _fAzimuth, _float _fElevation);
+
 
 private:
 	ECAMSTATE m_eCamState = ECAMSTATE::ECAM_DEFAULT;
@@ -84,7 +110,15 @@ private:
 	_float m_fEventAccTime = 0.f;
 	_float m_fCurrentEventTime = 0.f;
 
+	_float m_fOriginFovy = 60.f;
+	_float m_fCurrentFovy = 60.f;
 
+	_float m_fZoomSpeed = 15.f;
+
+	_int m_iCurrentEventIdx = 0;
+
+	_bool m_bComputeMoving = false;
+	_vector m_vDistancePerTick = _vector();
 
 private:
 	_float3 m_vCameraAt;
@@ -109,6 +143,28 @@ private:
 
 private:
 	void MouseFix();
+
+/***************************/
+//		Camera Event       //
+/***************************/
+
+public:
+	void StartCameraEvent(const wstring& _strEventKey);
+	void FocusPlayer(_vector _vCamPos, _float _fHeight);
+
+	void ZoomIn(_float _fDeltaTime);
+	void ZoomOut(_float _fDeltaTime);
+	void RotateCamera(_float _fDeltaTime);
+	void MovingCamera(_float _fDeltaTime);
+	void FocusCamera(_float _fDeltaTime);
+
+private:
+	void CreateEventInfo();
+	void SetInitializePosition(const wstring& _strEventKey);
+
+private:
+	map<wstring, vector<tagEventDesc>> m_EventInfos;
+	vector<tagEventDesc>* m_CurrentCamEvent;
 
 
 private:

@@ -165,6 +165,7 @@
   <ItemGroup>
     <ClInclude Include="..\Public\AirAtk.h" />
     <ClInclude Include="..\Public\ArcadeMap.h" />
+    <ClInclude Include="..\Public\Barrier.h" />
     <ClInclude Include="..\Public\BattleSystem.h" />
     <ClInclude Include="..\Public\Bear.h" />
     <ClInclude Include="..\Public\BossHPBar.h" />
@@ -253,6 +254,7 @@
     <ClInclude Include="..\Public\UIBurstSkillGauge.h" />
     <ClInclude Include="..\Public\UIDialog.h" />
     <ClInclude Include="..\Public\UIMgr.h" />
+    <ClInclude Include="..\Public\UIMiniquest.h" />
     <ClInclude Include="..\Public\UIPlrHPBar.h" />
     <ClInclude Include="..\Public\UIQuest.h" />
     <ClInclude Include="..\Public\UISkillBar.h" />
@@ -268,6 +270,7 @@
     <ClCompile Include="..\..\..\..\..\..\..\Downloads\ImGuizmo-master\ImGuizmo-master\ImGuizmo.cpp" />
     <ClCompile Include="..\Private\AirAtk.cpp" />
     <ClCompile Include="..\Private\ArcadeMap.cpp" />
+    <ClCompile Include="..\Private\Barrier.cpp" />
     <ClCompile Include="..\Private\BattleSystem.cpp" />
     <ClCompile Include="..\Private\Bear.cpp" />
     <ClCompile Include="..\Private\BossHPBar.cpp" />
@@ -351,6 +354,7 @@
     <ClCompile Include="..\Private\UIBurstSkillGauge.cpp" />
     <ClCompile Include="..\Private\UIDialog.cpp" />
     <ClCompile Include="..\Private\UIMgr.cpp" />
+    <ClCompile Include="..\Private\UIMiniquest.cpp" />
     <ClCompile Include="..\Private\UIPlrHPBar.cpp" />
     <ClCompile Include="..\Private\UIQuest.cpp" />
     <ClCompile Include="..\Private\UISkillBar.cpp" />

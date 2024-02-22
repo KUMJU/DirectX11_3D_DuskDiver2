@@ -54,6 +54,8 @@ HRESULT CUIDialog::Initialize()
     //Dialog Data Loading
     LoadDescriptionData();
 
+    m_IsEnabled = false;
+
     return S_OK;
 }
 
@@ -68,7 +70,7 @@ void CUIDialog::Tick(_float _fTimeDelta)
 
     m_fAccTime += _fTimeDelta;
 
-    if (m_fAccTime >= 2.f) {
+    if (m_fAccTime >= 4.f) {
 
         m_fAccTime = 0.f;
         ChangeNextData();
@@ -79,6 +81,9 @@ void CUIDialog::Tick(_float _fTimeDelta)
 
 void CUIDialog::LateTick(_float _fTimeDelta)
 {
+    if (!m_IsEnabled)
+        return;
+
     __super::LateTick(_fTimeDelta);
 }
 
@@ -126,8 +131,8 @@ HRESULT CUIDialog::Render()
         return E_FAIL;
 
    // wstring strSkillRate = to_wstring((_int)((m_fCurrentRate) * 100) + 100) + TEXT("%");
-    CGameInstance::GetInstance()->RenderFont(TEXT("Font_Default_KR"), TEXT("유모"), {g_iWinSizeX * 0.5f - 125.f ,g_iWinSizeY * 0.5f + 203.f}, Colors::Aquamarine);
-    CGameInstance::GetInstance()->RenderFont(TEXT("Font_Default_KR_12pt"), TEXT("다이얼로그 테스트입니다.\n줄바꿈도 해보겠습니다"), { g_iWinSizeX * 0.5f - 125.f ,g_iWinSizeY * 0.5f + 240.f }, Colors::White);
+    CGameInstance::GetInstance()->RenderFont(TEXT("Font_Default_KR"), m_iCurrentCharName, {g_iWinSizeX * 0.5f - 125.f ,g_iWinSizeY * 0.5f + 203.f}, Colors::Aquamarine);
+    CGameInstance::GetInstance()->RenderFont(TEXT("Font_Default_KR_12pt"), m_iCurrentScript, { g_iWinSizeX * 0.5f - 125.f ,g_iWinSizeY * 0.5f + 240.f }, Colors::White);
 
 
     return S_OK;
@@ -137,14 +142,15 @@ void CUIDialog::StartDialog(const wstring& _strDialogKey)
 {
     auto FindKey = m_Scripts.find(_strDialogKey);
 
-    if (FindKey == m_Scripts.end()) {
+    if (FindKey != m_Scripts.end()) {
         m_CurrentDialog =  &FindKey->second;
+        m_IsEnabled = true;
+        SettingDialogInfo();
     }
 }
 
 void CUIDialog::ChangeNextData()
 {
-
     ++m_iCurrentDialogIdx;
 
     //다이얼로그 종료 
@@ -154,14 +160,8 @@ void CUIDialog::ChangeNextData()
     }
     //다음 다이얼로그 재생
     else {
-
-
-
-
-
+        SettingDialogInfo();
     }
-
-
 }
 
 HRESULT CUIDialog::LoadDescriptionData()
@@ -183,7 +183,7 @@ HRESULT CUIDialog::LoadDescriptionData()
             wstring strName = fd.name;
             wstring strExt = EraseExt(strName);
             wstring strFilePath = m_strBasePath + strName;
-            ReadData(strFilePath, strName);
+            ReadData(strFilePath, strExt);
         }
     }
 
@@ -234,6 +234,23 @@ void CUIDialog::ReadData(const wstring& _strFullPath, const wstring& _strKeyName
 
 void CUIDialog::SettingDialogInfo()
 {
+    if ("YM" == (*m_CurrentDialog)[m_iCurrentDialogIdx].strPortraitKey) {
+        m_iCurrentPortaitIdx = 0;
+        m_iCurrentCharName = TEXT("유모");
+    }
+    else if ("MG" == (*m_CurrentDialog)[m_iCurrentDialogIdx].strPortraitKey) {
+        m_iCurrentPortaitIdx = 1;
+        m_iCurrentCharName = TEXT("메그레즈");
+
+    }
+    else if ("BR" == (*m_CurrentDialog)[m_iCurrentDialogIdx].strPortraitKey) {
+        m_iCurrentPortaitIdx = 2;
+        m_iCurrentCharName = TEXT("수상한 곰");
+
+    }
+
+    m_iCurrentScript = (*m_CurrentDialog)[m_iCurrentDialogIdx].strDialog;
+
 
 }
 

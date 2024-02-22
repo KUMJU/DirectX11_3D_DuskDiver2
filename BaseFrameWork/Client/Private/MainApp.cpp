@@ -85,10 +85,10 @@ HRESULT CMainApp::Render()
 	if (FAILED(CGameInstance::GetInstance()->Draw()))
 		return E_FAIL;
 
-	//if (LEVEL_EDIT == CGameInstance::GetInstance()->GetCurrentLevel()) {
-	//	if (FAILED(CImguiMgr::GetInstance()->Render()))
-	//		return E_FAIL;
-	//}
+	if (LEVEL_EDIT == CGameInstance::GetInstance()->GetCurrentLevel()) {
+		if (FAILED(CImguiMgr::GetInstance()->Render()))
+			return E_FAIL;
+	}
 
 	if (FAILED(CGameInstance::GetInstance()->Present()))
 		return E_FAIL;
