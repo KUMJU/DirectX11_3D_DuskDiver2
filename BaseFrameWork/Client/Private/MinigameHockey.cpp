@@ -10,6 +10,8 @@
 
 #include "MonsterPool.h"
 
+#include "UIMgr.h"
+
 
 CMinigameHockey::CMinigameHockey()
 {
@@ -80,13 +82,25 @@ HRESULT CMinigameHockey::Initialize(CTransform::TRANSFORM_DESC* _pDesc)
     m_MonsterList.push_back(info);
 
     info.iMonsterType = 4;
-    info.vMonsterPos = { 10.f, 30.f , -305.f, 1.f };
+    info.vMonsterPos = { 7.f, 30.f , -300.f, 1.f };
 
     m_MonsterList.push_back(info);
 
 
     info.iMonsterType = 4;
     info.vMonsterPos = { -5.f, 30.f , -315.f, 1.f };
+
+    m_MonsterList.push_back(info);
+
+
+    info.iMonsterType = 4;
+    info.vMonsterPos = { 13.f, 30.f , -313.f, 1.f };
+
+    m_MonsterList.push_back(info);
+
+
+    info.iMonsterType = 4;
+    info.vMonsterPos = { -13.f, 30.f , -295.f, 1.f };
 
     m_MonsterList.push_back(info);
 
@@ -152,10 +166,11 @@ HRESULT CMinigameHockey::Render()
 
 void CMinigameHockey::GameStart()
 {
-
     //몬스터 소환+배틀 시작 
     CMonsterPool::GetInstance()->ActiveMonster(m_MonsterList);
     CBattleSystem::GetInstance()->BattleStart();
+
+    CUIMgr::GetInstance()->StartDialog(TEXT("StartHockeyGame"));
 
     __super::GameStart();
 

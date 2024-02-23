@@ -304,6 +304,9 @@
     <Filter Include="02. GameObject\01. UI\08. UI_MiniQuest">
       <UniqueIdentifier>{507270f5-a442-4896-a8c2-5a4cf4cfcb53}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\01. UI\09. UI_CommandGame">
+      <UniqueIdentifier>{4f70cd7f-4683-45e1-a17f-0a7b8e2caf52}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -612,6 +615,9 @@
     <ClInclude Include="..\Public\UIMiniquest.h">
       <Filter>02. GameObject\01. UI\08. UI_MiniQuest</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UICommandGame.h">
+      <Filter>02. GameObject\01. UI\09. UI_CommandGame</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -901,6 +907,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UIMiniquest.cpp">
       <Filter>02. GameObject\01. UI\08. UI_MiniQuest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UICommandGame.cpp">
+      <Filter>02. GameObject\01. UI\09. UI_CommandGame</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

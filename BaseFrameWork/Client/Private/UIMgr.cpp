@@ -33,6 +33,16 @@ shared_ptr<class CUI> CUIMgr::FindUI(wstring& _strFindKey)
 	return nullptr;
 }
 
+void CUIMgr::SetEnable(wstring& _strFindKey, _bool _bEnable)
+{
+	shared_ptr<CUI> pUI =  FindUI(_strFindKey);
+
+	if (pUI) {
+		pUI->SetEnable(_bEnable);
+	}
+
+}
+
 void CUIMgr::SetPlayerHP(_int _iHP)
 {
 	wstring FindKey = TEXT("UI_PlayerHP");
@@ -128,5 +138,15 @@ void CUIMgr::StartCoinQuest()
 
 	if (pMiniquest) {
 		dynamic_pointer_cast<CUIMiniquest>(pMiniquest)->StartCoinQuest();
+	}
+}
+
+void CUIMgr::SetMiniQuestSuccessNumber(_int _iSucNum)
+{
+	wstring FindKey = TEXT("UI_Miniquest");
+	shared_ptr<CUI> pMiniquest = FindUI(FindKey);
+
+	if (pMiniquest) {
+		dynamic_pointer_cast<CUIMiniquest>(pMiniquest)->SetSuccessNum(_iSucNum);
 	}
 }

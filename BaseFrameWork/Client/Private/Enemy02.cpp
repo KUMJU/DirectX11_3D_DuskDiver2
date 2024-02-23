@@ -73,6 +73,9 @@ void CEnemy02::Tick(_float _fTimeDelta)
     if (!m_IsEnabled)
         return;
 
+    __super::Tick(_fTimeDelta);
+
+
     //공격 쿨타임일때
     if (m_IsAtkCool) {
 
@@ -299,7 +302,7 @@ HRESULT CEnemy02::Render()
         if (FAILED(m_pModelCom->BindBoneMatrices(m_pShader, "g_BoneMatrices", (_uint)i)))
             return E_FAIL;
 
-        if (FAILED(m_pShader->Begin(0)))
+        if (FAILED(m_pShader->Begin(1)))
             return E_FAIL;
 
         if (FAILED(m_pModelCom->Render((_uint)i)))

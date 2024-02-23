@@ -168,7 +168,6 @@ protected:
 
 	_float m_fKnockUpSpeed = 0.f;
 	_float m_fDropSpeed = 15.f;
-	_bool m_bHit = false;
 
 
 protected:
@@ -185,6 +184,14 @@ protected:
 	EMONSTER_STATE m_eCurrentState = EMONSTER_STATE::STATE_IDLE;
 
 	_bool m_bCollisionCheck = false;
+	_bool m_bHit = false;
+
+//림라이트
+protected:
+	_bool m_bRimLight = false;
+	_float m_fHitAccTime = 0.f;
+	_float3 m_vRimColor = { 1.f, 0.f, 0.f };
+
 
 protected:
 	shared_ptr<CMonsterSkillSet> m_pSkillSet = nullptr;

@@ -40,7 +40,7 @@ HRESULT CUIMiniquest::Initialize()
         nullptr);
 
     m_pIconTransform->SetScaling( 80.f, 80.f, 1.f );
-    m_pIconTransform->SetState(CTransform::STATE_POSITION, { UIInfo.fX - g_iWinSizeX * 0.5f - 160.f ,-UIInfo.fY + g_iWinSizeY * 0.5f , 0.f, 1.f });
+    m_pIconTransform->SetState(CTransform::STATE_POSITION, { UIInfo.fX - g_iWinSizeX * 0.5f - 115.f ,-UIInfo.fY + g_iWinSizeY * 0.5f , 0.f, 1.f });
     m_Components.emplace(TEXT("Com_IconTransform"), m_pIconTransform);
 
     m_eUIGroup = CRenderer::UI_BACKGROUND;

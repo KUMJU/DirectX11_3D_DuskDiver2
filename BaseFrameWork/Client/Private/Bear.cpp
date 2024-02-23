@@ -99,6 +99,21 @@ HRESULT CBear::Render()
     return S_OK;
 }
 
+void CBear::ChangeModel(_int _iModelNum)
+{
+    if (1 == _iModelNum) {
+        m_pModelCom = CGameInstance::GetInstance()->GetModel(TEXT("Mole_BearAa"));
+
+    }
+    else if (2 == _iModelNum) {
+        m_pModelCom = CGameInstance::GetInstance()->GetModel(TEXT("Mole_FakeBear"));
+    }
+    else if (3 == _iModelNum) {
+        m_pModelCom = m_pHitModel;
+    }
+
+}
+
 void CBear::OnHit()
 {
 

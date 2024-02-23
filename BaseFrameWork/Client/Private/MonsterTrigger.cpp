@@ -2,6 +2,8 @@
 #include "MonsterTrigger.h"
 #include "BattleSystem.h"
 
+#include "GameInstance.h"
+
 CMonsterTrigger::CMonsterTrigger()
 {
 }
@@ -48,6 +50,10 @@ void CMonsterTrigger::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCol
 {
 
 	if (EObjType::OBJ_PROJ == _eObjType) {
+
+		CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MAPSE);
+		CGameInstance::GetInstance()->PlayAudio(TEXT("se_enemy_spawn1.wav"), CSoundMgr::CHANNELID::CH_MAPSE, 1.f);
+		
 		CMonsterPool::GetInstance()->ActiveMonster(m_SpawnMonsterList);
 		CBattleSystem::GetInstance()->BattleStart();
 

@@ -252,6 +252,7 @@
     <ClInclude Include="..\Public\UI.h" />
     <ClInclude Include="..\Public\UIBackGround.h" />
     <ClInclude Include="..\Public\UIBurstSkillGauge.h" />
+    <ClInclude Include="..\Public\UICommandGame.h" />
     <ClInclude Include="..\Public\UIDialog.h" />
     <ClInclude Include="..\Public\UIMgr.h" />
     <ClInclude Include="..\Public\UIMiniquest.h" />
@@ -352,6 +353,7 @@
     <ClCompile Include="..\Private\UI.cpp" />
     <ClCompile Include="..\Private\UIBackGround.cpp" />
     <ClCompile Include="..\Private\UIBurstSkillGauge.cpp" />
+    <ClCompile Include="..\Private\UICommandGame.cpp" />
     <ClCompile Include="..\Private\UIDialog.cpp" />
     <ClCompile Include="..\Private\UIMgr.cpp" />
     <ClCompile Include="..\Private\UIMiniquest.cpp" />

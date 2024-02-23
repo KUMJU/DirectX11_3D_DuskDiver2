@@ -294,6 +294,11 @@ _float4 CGameInstance::GetCamPosition()
 	return m_pPipeLine->GetCamPosition();
 }
 
+_float4 CGameInstance::GetCamLook()
+{
+	return m_pPipeLine->GetCamLook();
+}
+
 HRESULT CGameInstance::AddRenderGroup(CRenderer::RENDERGROUP _eRenderGroup, shared_ptr<class CGameObject> _pGameObject)
 {
 	if (!m_pRenderer)

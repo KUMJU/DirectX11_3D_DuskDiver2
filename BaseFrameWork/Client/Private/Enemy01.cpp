@@ -76,6 +76,8 @@ void CEnemy01::Tick(_float _fTimeDelta)
     if (!m_IsEnabled)
         return;
 
+    __super::Tick(_fTimeDelta);
+
 
     if (m_IsAtkCool) {
         m_IsNearPlr = false;
@@ -246,7 +248,7 @@ HRESULT CEnemy01::Render()
         if (FAILED(m_pModelCom->BindBoneMatrices(m_pShader, "g_BoneMatrices", (_uint)i)))
             return E_FAIL;
 
-        if (FAILED(m_pShader->Begin(0)))
+        if (FAILED(m_pShader->Begin(1)))
             return E_FAIL;
 
         if (FAILED(m_pModelCom->Render((_uint)i)))

@@ -40,6 +40,15 @@ void CMonster::PriorityTick(_float _fTimeDelta)
 
 void CMonster::Tick(_float _fTimeDelta)
 {
+    if (m_bRimLight) {
+        m_fHitAccTime += _fTimeDelta;
+
+        if (m_fHitAccTime >= 0.3f) {
+            m_fHitAccTime = 0.f;
+            m_bRimLight = false;
+        }
+    }
+
 }
 
 void CMonster::LateTick(_float _fTimeDelta)
@@ -283,6 +292,21 @@ HRESULT CMonster::BindShaderResources()
     if (FAILED(m_pShader->BindMatrix("g_ProjMatrix", &ProjMat)))
         return E_FAIL;
 
+    if (FAILED(m_pShader->BindRawValue("g_bRimLight", &m_bRimLight, sizeof(_bool)))) {
+        return E_FAIL;
+    }
+
+    if (m_bRimLight) {
+        if (FAILED(m_pShader->BindRawValue("g_vRimColor", &m_vRimColor, sizeof(_float3)))) {
+            return E_FAIL;
+        }
+
+        _float4 vCamLook = CGameInstance::GetInstance()->GetCamLook();
+
+        if (FAILED(m_pShader->BindRawValue("g_vCamLook", &vCamLook, sizeof(_float4)))) {
+            return E_FAIL;
+        }
+    }
 
     return S_OK;
 }
@@ -322,7 +346,7 @@ void CMonster::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> 
             CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MON);
             CGameInstance::GetInstance()->PlayAudio(TEXT("flesh_hit_02.wav"), CSoundMgr::CHANNELID::CH_MON, 0.7f);
             
-            _int iDamage = 20.f;
+            _int iDamage = 10.f;
 
             m_iHP -= iDamage;
 
@@ -431,7 +455,8 @@ void CMonster::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> 
         }
 
         CEffectMgr::GetInstance()->SetHitMark(XMLoadFloat3(&_pCollider->GetBounding()->GetBoundingSphere()->Center));
-        
+        m_bRimLight = true;
+
         m_pTarget->AddBurstGauge();
         m_bCollisionCheck = true;
         //³Ë¹é ¿©ºÎ, ³Ë¾÷ ¿©ºÎ, 

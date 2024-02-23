@@ -58,6 +58,9 @@ HRESULT CTargetMgr::BeginMRT(const wstring& strMRTTag)
     list<shared_ptr<CRenderTarget>>* pMRTList = FindMRT(strMRTTag);
     ID3D11RenderTargetView* pRTVs[8] = { nullptr };
 
+    ID3D11ShaderResourceView* null[] = { nullptr };
+    m_pContext->PSSetShaderResources(0, 1, null);
+
     m_pContext->OMGetRenderTargets(1, &m_pBackBufferView, &m_pDepthStencilView);
 
     _uint iNumRTVs = { 0 };
@@ -66,9 +69,6 @@ HRESULT CTargetMgr::BeginMRT(const wstring& strMRTTag)
         pRenderTarget->Clear();
         pRTVs[iNumRTVs++] = pRenderTarget->GetRTV().Get();
     }
-
-    ID3D11ShaderResourceView* null[] = { nullptr };
-    m_pContext->PSSetShaderResources(0, 1, null);
 
     m_pContext->OMSetRenderTargets(iNumRTVs, pRTVs, m_pDepthStencilView.Get());
 

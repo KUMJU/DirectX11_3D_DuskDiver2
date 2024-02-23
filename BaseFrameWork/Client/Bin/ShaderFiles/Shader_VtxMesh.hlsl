@@ -8,6 +8,7 @@ texture2D g_DiffuseTexture;
 
 bool g_bDiffuseTex = false;
 
+/*메쉬 이펙트*/
 texture2D g_MaskTexture;
 bool g_bMaskTex = false;
 float g_vMaskSpeed;
@@ -29,6 +30,12 @@ vector g_vColor;
 vector g_vLerpColor;
 
 float g_fDeltaTime;
+
+/*림라이트*/
+bool g_bLimLight = false;
+float3 g_vRimColor;
+float4 g_vCamLook;
+
 
 struct VS_IN
 {
@@ -58,7 +65,7 @@ VS_OUT VS_MAIN(VS_IN In)
        
     matWV = mul(g_WorldMatrix, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
-
+    
     Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
     Out.vTexcoord = In.vTexcoord;
     Out.vWorldPos = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
@@ -118,11 +125,10 @@ PS_OUT PS_MAIN(PS_IN In)
     if (vMtrlDiffuse.a < 0.1f)
         discard;
     
-
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
-
+    
     return Out;
 
 }
@@ -143,6 +149,37 @@ PS_OUT PS_COLOR(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_LIMLIGHT(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+   
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(g_LinearSampler, In.vTexcoord);
+   
+    if (vMtrlDiffuse.a < 0.1f)
+        discard;
+    
+    //림라이트를 켜주는 메쉬 
+
+    
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
+
+    
+    if (g_bLimLight)
+    {
+        float rim = 1 - saturate(dot(In.vNormal, -g_vCamLook));
+        rim = pow(rim, 2.f);
+        
+        float3 rimColor = rim * g_vRimColor;
+        Out.vDiffuse.rgb = Out.vDiffuse.rgb + rimColor.rgb;
+    }
+    
+    
+    return Out;
+
+}
 
 PS_OUT PS_GRAY(PS_IN In)
 {
@@ -329,6 +366,17 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_EFFECT_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_EFFECT_ONCE_MAIN();
+    }
+
+    pass LimLight // 4
+    {
+        SetRasterizerState(RS_None_Cull);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_LIMLIGHT();
     }
 
 }

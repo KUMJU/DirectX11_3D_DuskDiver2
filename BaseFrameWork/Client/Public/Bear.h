@@ -22,6 +22,9 @@ public:
 	virtual HRESULT Render();
 
 public:
+	void ChangeModel(_int _iModelNum);
+
+public:
 	virtual void OnHit() override;
 	virtual void SetSpawnState() override;
 

@@ -21,6 +21,7 @@ HRESULT CMinigameCommand::Initialize()
 	__super::Initialize();
 
 	m_eMinigameType = EMINIGAME_TYPE::GAME_COMMAND;
+	SetModelPool();
 	SetAnswerLists();
 
 	shared_ptr<CMinigameTrigger> pTrigger = CMinigameTrigger::Create(dynamic_pointer_cast<CMinigame>(shared_from_this()), { 0.f, 25.f, -170.f });
@@ -61,6 +62,14 @@ void CMinigameCommand::LateTick(_float _fTimeDelta)
 	if (m_bStartCutSceneDone) {
 		CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_UI, shared_from_this());
 	}
+	else {
+
+
+
+
+
+	}
+
 }
 
 HRESULT CMinigameCommand::Render()
@@ -68,86 +77,6 @@ HRESULT CMinigameCommand::Render()
 	if (!m_bProcessing)
 		return S_OK;
 
-	/********정답 커맨드 출력 *********/
-
-	wstring strBaseText = TEXT("Answer Command: ");
-	wstring strCurrentCommand = TEXT("");
-
-	for (auto& iter : m_AnswerCommand[m_iCurrentRound]) {
-		
-		switch (iter)
-		{
-		case 0 :
-			strCurrentCommand = TEXT("상");
-			break;
-		case 1:
-			strCurrentCommand = TEXT("하");
-			break;
-		case 2:
-			strCurrentCommand = TEXT("좌");
-			break;
-		case 3:
-			strCurrentCommand = TEXT("우");
-			break;
-		case 4:
-			strCurrentCommand = TEXT("A");
-			break;
-		case 5:
-			strCurrentCommand = TEXT("B");
-			break;
-		default:
-			break;
-		}
-
-		strBaseText += strCurrentCommand;
-	}
-
-	if (FAILED(CGameInstance::GetInstance()->RenderFont(TEXT("Font_Default"), strBaseText, _float2(300.f, 30.f), XMVectorSet(1.f, 1.f, 0.f, 1.f))))
-		return E_FAIL;
-
-
-	/********플레이어 커맨드 출력 *********/
-	strBaseText = TEXT("Player Command: ");
-	strCurrentCommand = TEXT("");
-
-	for (auto& iter : m_PlayerCommand) {
-
-		switch (iter)
-		{
-		case 0:
-			strCurrentCommand = TEXT("상");
-
-
-
-
-
-
-
-			break;
-		case 1:
-			strCurrentCommand = TEXT("하");
-			break;
-		case 2:
-			strCurrentCommand = TEXT("좌");
-			break;
-		case 3:
-			strCurrentCommand = TEXT("우");
-			break;
-		case 4:
-			strCurrentCommand = TEXT("A");
-			break;
-		case 5:
-			strCurrentCommand = TEXT("B");
-			break;
-		default:
-			break;
-		}
-
-		strBaseText += strCurrentCommand;
-	}
-
-	if (FAILED(CGameInstance::GetInstance()->RenderFont(TEXT("Font_Default"), strBaseText, _float2(300.f, 500.f), XMVectorSet(1.f, 1.f, 0.f, 1.f))))
-		return E_FAIL;
 
 	return S_OK;
 }
@@ -223,71 +152,64 @@ void CMinigameCommand::ProcessingEvent(_float _fTimeDelta)
 
 void CMinigameCommand::CheckCommandList(_uint _iNewCmd)
 {
-
-	//정답일경우
-	if (_iNewCmd == m_AnswerCommand[m_iCurrentRound][m_iCurrentCommandIdx]) {
-
-		++m_iCurrentCommandIdx;
-		m_PlayerCommand.push_back(_iNewCmd);
-
-		if (m_PlayerCommand.size() == m_AnswerCommand[m_iCurrentRound].size()) {
-
-		//	m_pPlayer->CommandMinigameSuccess(m_iCurrentRound);
-
-			++m_iCurrentRound;
-			m_PlayerCommand.clear();
-			m_iCurrentCommandIdx = 0;
-
-			if (3 == m_iCurrentRound) {
-				GameEnd();
-			}
-		}
-
+	//정답일때
+	if (m_AnswerCommand.front() == _iNewCmd) {
+		m_AnswerCommand.pop_front();
+		m_ActiveBear.pop_front();
+		++m_iCurrentAccomplish;
 	}
-	//오답일경우
 	else {
-		m_PlayerCommand.clear();
-		m_iCurrentCommandIdx = 0;
-	}
 
+
+	}
 
 }
 
 void CMinigameCommand::SetAnswerLists()
 {
+	//50개만 맞춰도 종료되게 
+	for (_int i = 0; i < 100; ++i) {
+		_uint iRandomNum = rand() % 4;
+		m_AnswerCommand.push_back(iRandomNum);
+	}
 
-	/********정답1**********/
-	vector<_uint> Answer1;
+	auto iter = m_AnswerCommand.begin();
 
-	Answer1.push_back(0);
-	Answer1.push_back(1);
-	Answer1.push_back(2);
-	Answer1.push_back(3);
+	for (_int i = 0; i < 6; ++i) {
+		AddBearList(*iter);
+		++iter;
+	}
 
-	m_AnswerCommand[0] = Answer1;
+}
 
-	/********정답2*********/
+void CMinigameCommand::SetModelPool()
+{
+	for (_int i = 0; i < 6; ++i) {
 
-	vector<_uint> Answer2;
+		shared_ptr<CBear> pBear = CBear::Create();
+		m_BearPool[0].push_back(pBear);
+	}
 
-	Answer2.push_back(3);
-	Answer2.push_back(2);
-	Answer2.push_back(1);
-	Answer2.push_back(0);
+	for (_int i = 0; i < 6; ++i) {
 
-	m_AnswerCommand[1] = Answer2;
+		shared_ptr<CBear> pBear = CBear::Create();
+		pBear->ChangeModel(1);
+		m_BearPool[1].push_back(pBear);
+	}
 
+	for (_int i = 0; i < 6; ++i) {
 
-	/********정답3*********/
+		shared_ptr<CBear> pBear = CBear::Create();
+		pBear->ChangeModel(2);
+		m_BearPool[2].push_back(pBear);
+	}
 
-	vector<_uint> Answer3;
+	for (_int i = 0; i < 6; ++i) {
 
-	Answer3.push_back(2);
-	Answer3.push_back(1);
-	Answer3.push_back(2);
-	Answer3.push_back(3);
-
-	m_AnswerCommand[2] = Answer3;
+		shared_ptr<CBear> pBear = CBear::Create();
+		pBear->ChangeModel(3);
+		m_BearPool[3].push_back(pBear);
+	}
 
 
 }
@@ -311,6 +233,18 @@ void CMinigameCommand::KeyInput()
 	if (CGameInstance::GetInstance()->Key_Down(VK_RIGHT)) {
 		CheckCommandList(3);
 
+	}
+
+}
+
+void CMinigameCommand::AddBearList(_int _iModelNum)
+{
+	for (auto& iter : m_BearPool[_iModelNum]) {
+
+		if (!iter->IsEnabled()) {
+			m_ActiveBear.push_back(iter);
+			break;
+		}
 	}
 
 }

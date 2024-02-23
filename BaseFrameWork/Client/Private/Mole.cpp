@@ -25,12 +25,17 @@ HRESULT CMole::Initialize(_uint _iTypeNum)
     //정답 
     if (0 == m_MoleTypeNum) {
         m_pModelCom = CGameInstance::GetInstance()->GetModel(TEXT("Mole_BearAa"));
+        m_vRimColor = { 0.f, 0.f ,1.f };
     }
     else if (1 == m_MoleTypeNum) {
         m_pModelCom = CGameInstance::GetInstance()->GetModel(TEXT("Mole_BearA"));
+        m_vRimColor = { 1.f, 0.f ,0.f };
+
     }
     else if (2 == m_MoleTypeNum) {
         m_pModelCom = CGameInstance::GetInstance()->GetModel(TEXT("Mole_FakeBear"));
+        m_vRimColor = { 1.f, 0.f ,0.f };
+
     }
 
     m_pTransformCom->SetScaling(10.f, 10.f, 10.f);
@@ -38,9 +43,10 @@ HRESULT CMole::Initialize(_uint _iTypeNum)
     m_IsEnabled = false;
     m_pShader = CGameInstance::GetInstance()->GetShader(TEXT("Shader_VtxMesh"));
 
+    m_eObjType = OBJ_MONSTER;
 
     CCollider::COLLIDER_DESC desc = {};
-    desc.fRadius = 0.2f;
+    desc.fRadius = 0.3f;
     desc.vCenter = { 0.f, 0.1f, 0.f };
 
     m_pColider = CCollider::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), CCollider::TYPE_SPHERE, desc);
@@ -62,6 +68,16 @@ void CMole::Tick(_float _fTimeDelta)
 {
     if (!m_IsEnabled)
         return;
+
+    if (m_bHit)
+    {
+        m_fHitTime += _fTimeDelta;
+
+        if (m_fHitTime >= 1.f) {
+            m_fHitTime = false;
+            m_bHit = false;
+        }
+    }
 
     if (m_iCurrentSlotNum != 100) {
 
@@ -120,12 +136,29 @@ HRESULT CMole::Render()
 
     _uint iNumMeshes = m_pModelCom->GetNumMeshes();
 
+    if (FAILED(m_pShader->BindRawValue("g_bLimLight", &m_bHit, sizeof(_bool)))) {
+        return E_FAIL;
+    }
+
+    if (m_bHit) {
+        if (FAILED(m_pShader->BindRawValue("g_vRimColor", &m_vRimColor, sizeof(_float3)))) {
+            return E_FAIL;
+        }
+
+        _float4 vCamLook = CGameInstance::GetInstance()->GetCamLook();
+
+        if (FAILED(m_pShader->BindRawValue("g_vCamLook", &vCamLook, sizeof(_float4)))) {
+            return E_FAIL;
+        }
+    }
+
+
     for (size_t i = 0; i < iNumMeshes; i++) {
 
         if (FAILED(m_pModelCom->BindMaterialShaderResource(m_pShader, (_uint)i, aiTextureType::aiTextureType_DIFFUSE, "g_DiffuseTexture")))
             return E_FAIL;
 
-        if (FAILED(m_pShader->Begin(0)))
+        if (FAILED(m_pShader->Begin(4)))
             return E_FAIL;
 
         if (FAILED(m_pModelCom->Render((_uint)i)))
@@ -142,6 +175,9 @@ void CMole::OnCollide(EObjType _eObjType, shared_ptr<CCollider> _pCollider)
 
         if (m_bCollLock)
             return;
+
+        m_bHit = true;
+        CGameInstance::GetInstance()->PlayAudio(TEXT("flesh_hit_02.wav"), CSoundMgr::CHANNELID::CH_MONHIT, 1.f);
 
         //정답
         if (0 == m_MoleTypeNum) {

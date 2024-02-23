@@ -50,7 +50,7 @@ private:
 	_float m_fTurnTime = 0.f;
 
 	_vector m_vOriginLookVec = { 0.f, 0.f, 0.f, 0.f };
-	
+
 
 private:
 	shared_ptr<class CEffectPreset> m_pLaserEffectPreset = nullptr;

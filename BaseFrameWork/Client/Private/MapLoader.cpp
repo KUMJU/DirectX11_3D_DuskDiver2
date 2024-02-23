@@ -64,7 +64,7 @@ void CMapLoader::LoadCellData(const wstring& _strPath)
 {
 
 	shared_ptr<CNavigation> pNavigation = CNavigation::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), _strPath);
-	pNavigation->Tick(XMLoadFloat4x4(&m_WorldMatrix));
+	pNavigation->Tick(XMLoadFloat4x4(&m_WorldMatrix));    
 	m_pNavigationCom = pNavigation;
 
 

@@ -71,6 +71,7 @@ public: /* For.PipeLine */
 	_float4x4 GetTransformFloat4x4Inverse(CPipeLine::D3DTRANSFORMSTATE _eState);
 	_matrix GetTransformMatrixInverse(CPipeLine::D3DTRANSFORMSTATE _eState);
 	_float4 GetCamPosition();
+	_float4 GetCamLook();
 
 /*Renderer*/
 public:

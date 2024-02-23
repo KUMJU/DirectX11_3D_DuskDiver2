@@ -102,6 +102,7 @@ void CFinalBoss::Tick(_float _fTimeDelta)
     if (!m_IsEnabled)
         return;
 
+    __super::Tick(_fTimeDelta);
 
     if (m_eCurrentState != EMONSTER_STATE::STATE_SPAWN && !m_IsAtkCool && m_eCurrentState != EMONSTER_STATE::STATE_ATTACK && !m_bDie&&
         m_eCurrentState != EMONSTER_STATE::STATE_STUN) {
@@ -251,7 +252,7 @@ HRESULT CFinalBoss::Render()
         if (FAILED(m_pModelCom->BindBoneMatrices(m_pShader, "g_BoneMatrices", (_uint)i)))
             return E_FAIL;
 
-        if (FAILED(m_pShader->Begin(0)))
+        if (FAILED(m_pShader->Begin(1)))
             return E_FAIL;
 
         if (FAILED(m_pModelCom->Render((_uint)i)))
@@ -370,6 +371,7 @@ void CFinalBoss::OnHit()
         m_bDie = false;
         StartSpecialPattern();
     }
+
 
     m_pHPBar->SetHP(m_iHP);
 

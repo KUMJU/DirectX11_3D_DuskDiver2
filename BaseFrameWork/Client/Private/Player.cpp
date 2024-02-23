@@ -705,7 +705,10 @@ void CPlayer::KeyInput(_float _fTimeDelta)
     {
         m_eCurrentState = HEROSTATE::STATE_BURST_TRANS;
         IsKeyInput = true;
-       // ChangeAnim(30, false);
+
+        CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
+        CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_59.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
+
         m_pModelCom->ChangeAnimation(30);
         m_pBurstModelCom->ChangeAnimation(30);
         m_iCurrentAnimIdx = 30;

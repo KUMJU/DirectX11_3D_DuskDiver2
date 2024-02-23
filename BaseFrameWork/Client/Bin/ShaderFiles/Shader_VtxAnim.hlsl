@@ -6,6 +6,11 @@ matrix g_BoneMatrices[512];
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 texture2D g_DiffuseTexture;
 
+/*림라이트*/
+bool g_bRimLight = false;
+float3 g_vRimColor;
+float4 g_vCamLook;
+
 struct VS_IN
 {
     float3 vPosition : POSITION;
@@ -95,9 +100,39 @@ PS_OUT PS_MAIN(PS_IN In)
 
 }
 
+PS_OUT PS_RIMLIGHT(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+   
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(g_LinearSampler, In.vTexcoord);
+   
+    if (vMtrlDiffuse.a < 0.1f)
+        discard;
+    
+    
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    //Far 받아와서 처리 
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
+
+    
+    if (g_bRimLight)
+    {
+        float rim = 1 - saturate(dot(In.vNormal, -g_vCamLook));
+        rim = pow(rim, 2.f);
+        
+        float3 rimColor = rim * g_vRimColor;
+        Out.vDiffuse.rgb = Out.vDiffuse.rgb + rimColor.rgb;
+    }
+    
+    return Out;
+
+}
+
 technique11 DefaultTechnique
 {
-    pass Default
+    pass Default //1
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -106,6 +141,17 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();
+    }
+
+    pass RimLight //2 
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_RIMLIGHT();
     }
 
 }

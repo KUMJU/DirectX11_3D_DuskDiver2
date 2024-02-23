@@ -18,7 +18,7 @@ public:
 //common
 public:
 	shared_ptr<class CUI> FindUI(wstring& _strFindKey);
-
+	void SetEnable(wstring& _strFindKey, _bool _bEnable);
 
 //Specific Function
 public:
@@ -40,6 +40,7 @@ public:
 	
 	void StartMoleMinigame();
 	void StartCoinQuest();
+	void SetMiniQuestSuccessNumber(_int _iSucNum);
 
 private:
 

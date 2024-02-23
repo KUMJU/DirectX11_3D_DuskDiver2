@@ -170,29 +170,18 @@ void CMinigameMole::LateTick(_float _fTimeDelta)
                 iter->LateTick(_fTimeDelta);
 
         }
+        else {
+            for (auto& iter : m_ActiveMoles)
+                iter->LateTick(_fTimeDelta);
+        }
 
-        CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_UI, shared_from_this());
+        CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_NONBLEND, shared_from_this());
     }
 
 }
 
 HRESULT CMinigameMole::Render()
 {
-    if (m_bProcessing) {
-
-        for (auto& iter : m_ActiveMoles)
-            iter->Render();
-      
-        wstring strBaseText = TEXT("Score: ");
-        wstring strCurrentScore = to_wstring(m_iCurrentScore);
-
-        strBaseText = strBaseText + strCurrentScore;
-
-        if (FAILED(CGameInstance::GetInstance()->RenderFont(TEXT("Font_Default"), strBaseText, _float2(700.f, 30.f), XMVectorSet(1.f, 1.f, 0.f, 1.f))))
-            return E_FAIL;
-
-    }
-
     return S_OK;
 }
 
@@ -211,6 +200,8 @@ void CMinigameMole::GameEnd()
 {
     __super::GameEnd();
 
+   // CUIMgr::GetInstance()->SetEnable(TEXT("UI_Miniquest"), false);
+
     for (auto& iter : m_ActiveMoles) {
         iter->SetEnable(false);
     }
@@ -221,8 +212,10 @@ void CMinigameMole::GameEnd()
 void CMinigameMole::GetScore()
 {
     ++m_iCurrentScore;
+    CUIMgr::GetInstance()->SetMiniQuestSuccessNumber(m_iCurrentScore);
 
-    if (m_iCurrentScore >= 5) {
+
+    if (m_iCurrentScore >= 10) {
         GameEnd();
     }
 }
@@ -253,6 +246,10 @@ void CMinigameMole::SpawnMole()
                 m_HoleSlot[iPickHoleNum] = true;
                 bPass = true;
                 m_fSpawnCoolTime = 0.f;
+
+                CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MON);
+                CGameInstance::GetInstance()->PlayAudio(TEXT("SE_Mole_Appear.wav"), CSoundMgr::CHANNELID::CH_MON, 2.f);
+
                 break;
             }
         }

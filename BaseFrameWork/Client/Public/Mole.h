@@ -54,6 +54,11 @@ private:
 	_uint m_iCurrentSlotNum = 100;
 
 private:
+	_bool m_bHit = false;
+	_float3 m_vRimColor;
+	_float m_fHitTime = 0.f;
+
+private:
 	shared_ptr<CCollider> m_pColider = nullptr;
 	shared_ptr<CModel> m_pModelCom = nullptr;
 	shared_ptr<CShader> m_pShader = nullptr;
