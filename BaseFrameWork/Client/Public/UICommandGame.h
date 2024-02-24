@@ -17,6 +17,10 @@ public:
 	virtual HRESULT Render() override;
 
 public:
+	//게이지바
+	//키 입력 설명 
+
+
 
 
 private:

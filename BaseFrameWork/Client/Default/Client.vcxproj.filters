@@ -307,6 +307,9 @@
     <Filter Include="02. GameObject\01. UI\09. UI_CommandGame">
       <UniqueIdentifier>{4f70cd7f-4683-45e1-a17f-0a7b8e2caf52}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\01. UI\10. UI_ScreenEffect">
+      <UniqueIdentifier>{a23853f8-b3b7-4e9b-94e6-2b2045fb083f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -618,6 +621,7 @@
     <ClInclude Include="..\Public\UICommandGame.h">
       <Filter>02. GameObject\01. UI\09. UI_CommandGame</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UIScreenEffect.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -911,6 +915,7 @@
     <ClCompile Include="..\Private\UICommandGame.cpp">
       <Filter>02. GameObject\01. UI\09. UI_CommandGame</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\UIScreenEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">

@@ -7,6 +7,7 @@
 
 #include "GameInstance.h"
 
+
 CBear::CBear()
 {
 }
@@ -43,6 +44,8 @@ HRESULT CBear::Initialize()
     m_pCollider->SetOwner(shared_from_this());
 
 
+    
+
     m_eMonsterType = EMONSTER_TYPE::MONSTER_NORMAL;
 
 
@@ -57,6 +60,43 @@ void CBear::Tick(_float _fTimeDelta)
 {
     if (!m_IsEnabled)
         return;
+    
+    if (m_bShaking) {
+        m_fShakingAccTime += _fTimeDelta;
+        
+        if (m_fShakingAccTime >= 0.5f && !m_bChangeDir) {
+
+            m_bChangeDir = true;
+
+        }
+        else if (m_fShakingAccTime >= 1.f) {
+            m_fShakingAccTime = 0.f;
+        }
+
+        Shaking(_fTimeDelta);
+    }
+
+
+    if (m_bMove) {
+        
+        m_fMovingTime += _fTimeDelta;
+
+
+        if (m_fMovingTime >= 0.2f) {
+
+            m_bMove = false;
+            m_pTransformCom->SetState(CTransform::STATE_POSITION, m_vDstPos);
+            m_fMovingTime = 0.f;
+            
+        }
+        else {
+            _vector vCurrentPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+            vCurrentPos += m_vMoveDistancePerTick * _fTimeDelta;
+            m_pTransformCom->SetState(CTransform::STATE_POSITION, XMVectorSetW(vCurrentPos, 1.f));
+        }
+
+
+    }
 
     m_pCollider->Tick(m_pTransformCom->GetWorldMatrix());
     CGameInstance::GetInstance()->AddCollider(CCollisionMgr::COL_MONSTER, m_pCollider);
@@ -76,8 +116,6 @@ HRESULT CBear::Render()
 {
     if (!m_IsEnabled)
         return S_OK;
-
-    m_pCollider->Render();
 
     if (FAILED(BindShaderResources()))
         return E_FAIL;
@@ -117,12 +155,36 @@ void CBear::ChangeModel(_int _iModelNum)
 void CBear::OnHit()
 {
 
-    int a = 45;
 
 }
 
 void CBear::SetSpawnState()
 {
+}
+
+void CBear::Shaking(_float _fTimeDelta)
+{
+    _float fDistance = m_fShakingSpeed * _fTimeDelta * m_iDir;
+
+    _vector vPos= m_pTransformCom->GetState(CTransform::STATE_POSITION);
+    _vector vRight = m_pTransformCom->GetState(CTransform::STATE_RIGHT);
+
+    m_fXOffset += fDistance;
+
+    XMVectorSetX(vRight, vPos.m128_f32[0] + fDistance);
+
+}
+
+void CBear::MovingFront(_vector _vDstPos)
+{
+
+    _vector vCurrentPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+    m_vMoveDistancePerTick = ((_vDstPos - vCurrentPos) / 0.2f);
+    m_bMove = true;
+
+    m_vDstPos = _vDstPos;
+    m_fMovingTime = 0.f;
+
 }
 
 shared_ptr<CBear> CBear::Create()

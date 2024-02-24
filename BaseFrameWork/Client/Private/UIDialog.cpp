@@ -70,7 +70,7 @@ void CUIDialog::Tick(_float _fTimeDelta)
 
     m_fAccTime += _fTimeDelta;
 
-    if (m_fAccTime >= 4.f) {
+    if (m_fAccTime >= 3.f) {
 
         m_fAccTime = 0.f;
         ChangeNextData();

@@ -136,7 +136,7 @@ HRESULT CMole::Render()
 
     _uint iNumMeshes = m_pModelCom->GetNumMeshes();
 
-    if (FAILED(m_pShader->BindRawValue("g_bLimLight", &m_bHit, sizeof(_bool)))) {
+    if (FAILED(m_pShader->BindRawValue("g_bRimLight", &m_bHit, sizeof(_bool)))) {
         return E_FAIL;
     }
 

@@ -30,7 +30,33 @@ public:
 
 	virtual void AttackPattern(_uint _iAtkNum) {};
 	virtual void IfEmptyAnimList(void) {};
-	virtual _bool CalcDistanceOption(void) { return true;  };
+	virtual _bool CalcDistanceOption(void) { return true;};
+
+	void MovingFront(_vector _vDstPos);
+
+
+private:
+	void Shaking(_float _fTimeDelta);
+
+private:
+	_float m_fMovingTime = false;
+	_bool m_bMove = false;
+	_vector m_vMoveDistancePerTick = _vector();
+	_vector m_vDstPos = _vector();
+
+private:
+
+	_bool m_bShaking = false;
+	_float m_fXOffset = 0.f;
+	_float m_fTotalOffset = 0.3f;
+	_float m_fShakingSpeed = 2.f;
+
+	_bool m_bChangeDir = false;
+	_float m_iDir = -1.f;
+
+	_float m_fShakingAccTime = 0.f;
+
+
 private:
 	//맞으면 얼굴이 바뀐다 x0 < 이런식으로..
 	shared_ptr<CModel> m_pHitModel = nullptr;

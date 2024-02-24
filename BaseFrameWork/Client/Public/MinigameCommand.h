@@ -58,18 +58,33 @@ private:
 	list<shared_ptr<class CBear>> m_ActiveBear;
 	list<shared_ptr<class CBear>> m_BearPool[4];
 
+private:
+	shared_ptr<class CUICommandGame> m_pMinigameUI = nullptr;
 
 private:
 	_float m_fBearDropSpeed = 0.f;
 	_float m_fCurrentHeight = 0.f;
 
 	_vector m_vInitPos = _vector();
-
 	_int m_iCurrentAccomplish = 0;
+
+	_bool m_bDialogPrint = false;
+	_bool m_bZoomInCamEvent = false;
+	_bool m_bBearFaceChangeEvent = false;
+
+private:
+	_float4 m_vLinePositions[6];
 
 private:
 	shared_ptr<class CPlayer> m_pPlayer = nullptr;
 	shared_ptr<class CBear> m_pBear = nullptr;
+
+
+private:
+
+	shared_ptr<class CUI_SequenceTex> m_pSuccessImg = nullptr;
+	shared_ptr<class CUI_SequenceTex> m_pSparkleImg = nullptr;
+
 
 
 public:

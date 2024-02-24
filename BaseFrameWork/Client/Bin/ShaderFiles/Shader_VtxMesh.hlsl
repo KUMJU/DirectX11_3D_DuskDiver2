@@ -32,7 +32,7 @@ vector g_vLerpColor;
 float g_fDeltaTime;
 
 /*림라이트*/
-bool g_bLimLight = false;
+bool g_bRimLight = false;
 float3 g_vRimColor;
 float4 g_vCamLook;
 
@@ -167,7 +167,7 @@ PS_OUT PS_LIMLIGHT(PS_IN In)
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
 
     
-    if (g_bLimLight)
+    if (g_bRimLight)
     {
         float rim = 1 - saturate(dot(In.vNormal, -g_vCamLook));
         rim = pow(rim, 2.f);

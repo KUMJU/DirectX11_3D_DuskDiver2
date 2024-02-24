@@ -65,12 +65,14 @@ private:
 	_float m_fDurationStart = 0.f;
 	_float m_fDurationEnd = 0.f;
 
-
 	_float m_fAccTime = 0.f;
 
 	_vector m_vTurnAxis = _vector();
 	_vector m_vCurrentScale = _vector();
 	_float m_fTimeDelta = 0.f;
+
+	_bool m_fSequenceTex = false;
+	
 
 private:
 	_float2 m_vStartScaleDiff = _float2();
