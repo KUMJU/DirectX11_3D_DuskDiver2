@@ -30,6 +30,9 @@ void CUIBackGround::Tick(_float _fTimeDelta)
 
 void CUIBackGround::LateTick(_float _fTimeDelta)
 {
+    if (!m_IsEnabled)
+        return;
+
    CUI::LateTick(_fTimeDelta);
 }
 

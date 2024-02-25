@@ -24,6 +24,9 @@ HRESULT CLogo::Initialize()
     if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
         return E_FAIL;
 
+    CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_com_Title01.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
+    CGameInstance::GetInstance()->PlayBGM(TEXT("BGM_Title.wav"), 1.f);
+
     return S_OK;
 }
 
@@ -98,6 +101,9 @@ void CLogo::KeyInput()
 
     if (GetKeyState(VK_RETURN) & 0x8000)
     {
+
+        CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_BGM);
+
         if (0 == m_iSelectIndex) {
             if (FAILED(CGameInstance::GetInstance()->OpenLevel(LEVEL_LOADING, CLevelLoading::Create(LEVEL_ARCADE))))
                 return;

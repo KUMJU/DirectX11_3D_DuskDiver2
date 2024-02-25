@@ -22,6 +22,9 @@ float g_fSkillGaugeRatio = 0.f;
 
 float g_fBurstSkillRadian = 0.f;
 
+float g_fCommandSuccessRate = 0.f;
+float g_fScreenFXAlpha = 0.f;
+
 struct VS_IN
 {
     float3 vPosition : POSITION;
@@ -337,6 +340,54 @@ PS_OUT PS_BURSTSKILLBAR(PS_IN In)
 }
 
 
+PS_OUT PS_COMMADGAUGE(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    Out.vColor = g_Texture.Sample(g_LinearSampler, In.vTexcoord);
+    
+    if (In.vTexcoord.x > g_fCommandSuccessRate)
+    {
+        Out.vColor.rgb = float3(0.25f, 0.25f, 0.25f);
+
+    }
+ 
+    return Out;
+
+}
+
+
+PS_OUT PS_SCREENEFFECT(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    Out.vColor = g_Texture.Sample(g_LinearSampler, In.vTexcoord);
+  
+    if (Out.vColor.a == 0)
+    {
+        discard;
+    }
+    else
+    {
+        Out.vColor.a = Out.vColor.a * g_fScreenFXAlpha;
+    
+    }
+     
+    return Out;
+
+}
+
+PS_OUT PS_FADE(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    Out.vColor.rgb = float3(0.f, 0.f, 0.f);
+    Out.vColor.a =  g_fScreenFXAlpha;
+     
+    return Out;
+
+}
+
 technique11 DefaultTechnique
 {
     //pass를 여러개로 나눠서 한 셰이더 파일 안에 여러 진입점, 다른 효과를 줄 수도 있음
@@ -428,6 +479,37 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = compile gs_5_0 GS_MAIN();
         PixelShader = compile ps_5_0 PS_MAIN_BLEND();
+    }
+
+    pass CommandGauge //9
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = compile gs_5_0 GS_MAIN();
+        PixelShader = compile ps_5_0 PS_COMMADGAUGE();
+    }
+
+    pass ScreenEffect //10
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = compile gs_5_0 GS_MAIN();
+        PixelShader = compile ps_5_0 PS_SCREENEFFECT();
+    }
+
+
+    pass Fade //11
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = compile gs_5_0 GS_MAIN();
+        PixelShader = compile ps_5_0 PS_FADE();
     }
 
 

@@ -21,26 +21,35 @@ void CBattleSystem::Initialize()
 void CBattleSystem::BattleStart()
 {
 	m_bOnBattle = true;
+	m_bEventDone = false;
 	m_pPlayer->SetOnBattle(true);
 }
 
 void CBattleSystem::BattleEnd()
 {
 	m_bOnBattle = false;
+	m_bEventDone = false;
 	m_pPlayer->SetOnBattle(false);
 
 }
 
 void CBattleSystem::Tick(_float _fTimeDelta)
 {
+
+	if (m_bEventDone)
+		return;
+	
+
 	if (m_bSlowMotion) {
 
 		m_fSlowTIme += _fTimeDelta;
 
-		if (m_fSlowTIme > 0.25f) {
+		if (m_fSlowTIme > 0.5f) {
 			m_bSlowMotion = false;
 			m_fSlowTIme = 0.f;
+			m_bEventDone = true;
 			CGameInstance::GetInstance()->SetTimerOffset(TEXT("Timer_60"), 1.f);
+			return;
 		}
 	}
 
@@ -84,5 +93,7 @@ void CBattleSystem::Tick(_float _fTimeDelta)
 
 void CBattleSystem::KillLastOne()
 {
+	CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MONHIT);
+	CGameInstance::GetInstance()->PlayAudio(TEXT("se_slowmotion_finish.wav"), CSoundMgr::CHANNELID::CH_MONHIT, 1.3f);
 	CGameInstance::GetInstance()->SetTimerOffset(TEXT("Timer_60"), 0.3f);
 }

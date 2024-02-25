@@ -53,7 +53,8 @@ HRESULT CUIBurstGaugeBar::Initialize()
     SequeneceInfo.iRow = 4;
 
     m_pUIEffect = CUI_SequenceTex::Create(&UIInfo, TEXT("fx_BP_battle"), 2, &SequeneceInfo);
-    m_pUIEffect->SetEnable(true);
+    m_pUIEffect->SetEnable(false);
+
     if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_UI"), m_pUIEffect)))
         return E_FAIL;
 
@@ -73,6 +74,9 @@ void CUIBurstGaugeBar::Tick(_float _fTimeDelta)
 
 void CUIBurstGaugeBar::LateTick(_float _fTimeDelta)
 {
+    if (!m_IsEnabled)
+        return;
+
     CUI::LateTick(_fTimeDelta);
 }
 

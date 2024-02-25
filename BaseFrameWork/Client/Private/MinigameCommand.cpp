@@ -37,18 +37,18 @@ HRESULT CMinigameCommand::Initialize()
 	
 	CUI::tagUIInfo UIInfo = {};
 
-	UIInfo.fSizeX = 350.f;
-	UIInfo.fSizeY = 350.f;
-	UIInfo.fX = g_iWinSizeX * 0.5f + 180.f;
+	UIInfo.fSizeX = 250.f;
+	UIInfo.fSizeY = 250.f;
+	UIInfo.fX = g_iWinSizeX * 0.5f + 200.f;
 	UIInfo.fY = g_iWinSizeY * 0.5f;
 
 	CUI_SequenceTex::SequenceTexInfo SequeneceInfo = {};
 	SequeneceInfo.bLoop = false;
-	SequeneceInfo.fScrollTime = 0.1f;
-	SequeneceInfo.iCol = 2;
-	SequeneceInfo.iRow = 2;
+	SequeneceInfo.fScrollTime = 0.05f;
+	SequeneceInfo.iCol = 4;
+	SequeneceInfo.iRow = 4;
 
-	m_pSparkleImg =  CUI_SequenceTex::Create(&UIInfo, TEXT("T_Star_01"), 2, &SequeneceInfo);
+	m_pSparkleImg =  CUI_SequenceTex::Create(&UIInfo, TEXT("T_AOG_Bling_4x4"), 2, &SequeneceInfo);
 	m_pSparkleImg->SetEnable(false);
 
 	UIInfo.fSizeX = 300.f;
@@ -79,6 +79,20 @@ void CMinigameCommand::Tick(_float _fTimeDelta)
 	if (!m_bProcessing)
 		return;
 
+	if (m_bClearGame) {
+		m_fClearAccTime += _fTimeDelta;
+
+		if (m_fClearAccTime >= 3.f && !m_bFadeIn) {
+			CUIMgr::GetInstance()->StartScreenEffect(CUIScreenEffect::TYPE_FADE);
+			m_bFadeIn = true;
+		}
+
+		if (m_fClearAccTime >= 5.f) {
+			GameEnd();
+		}
+	}
+
+
 	if (!m_bStartCutSceneDone) {
 		ProcessingEvent(_fTimeDelta);
 		m_pSparkleImg->Tick(_fTimeDelta);
@@ -91,7 +105,8 @@ void CMinigameCommand::Tick(_float _fTimeDelta)
 		iter->Tick(_fTimeDelta);
 	}
 	m_pSuccessImg->Tick(_fTimeDelta);
-	
+	m_pMinigameUI->Tick(_fTimeDelta);
+
 
 }
 
@@ -131,7 +146,8 @@ void CMinigameCommand::GameStart()
 	__super::GameStart();
 	StartEventCutScene();
 	m_pPlayer->SetOnMinigame(true);
-	
+	m_pMinigameUI->GameStart();
+
 	//플레이어 키인풋 막아주기 + 마우스 인풋 막아주기 
 	//아예 그냥 미니게임 변수를 줘서 어쩌고 저쩌고 한번에 처리해버리기 
 }
@@ -144,8 +160,17 @@ void CMinigameCommand::GameEnd()
 	CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_BGM);
 	CGameInstance::GetInstance()->PlayBGM(TEXT("BGM_MainTheme.wav"),1.f);
 
+	CUIMgr::GetInstance()->HUDOn();
 	CCameraMgr::GetInstance()->SwitchingCamera(CCameraMgr::ECAMERATYPE::THIRDPERSON);
 
+}
+
+void CMinigameCommand::GameClear()
+{
+	m_bClearGame = true;
+	m_pMinigameUI->GameClear();
+	CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_EFFECT);
+	CGameInstance::GetInstance()->PlayAudio(TEXT("se_Item_CrystCube_Open_Luxury.wav"), CSoundMgr::CHANNELID::CH_EFFECT, 1.f);
 }
 
 void CMinigameCommand::StartEventCutScene()
@@ -192,7 +217,7 @@ void CMinigameCommand::ProcessingEvent(_float _fTimeDelta)
 
 	}
 
-	if (m_fEventProcessTime > 4.f && !m_bZoomInCamEvent) {
+	if (m_fEventProcessTime > 5.f && !m_bZoomInCamEvent) {
 		m_bZoomInCamEvent = true;
 
 		CCameraMgr::GetInstance()->SetFreeCamPos({ m_vInitPos.m128_f32[0], 24.5f, -169.8f, 1.f},
@@ -205,11 +230,19 @@ void CMinigameCommand::ProcessingEvent(_float _fTimeDelta)
 		m_bBearFaceChangeEvent = true;
 		m_pBear->ChangeModel(1);
 		m_pSparkleImg->SetEnable(true);
+
+		CUIMgr::GetInstance()->StartScreenEffect(CUIScreenEffect::TYPE_SPEEDLINE);
 		CGameInstance::GetInstance()->PlayAudio(TEXT("se_enemy_warning.wav"), CSoundMgr::CHANNELID::CH_EFFECT, 1.f);
 	}
 
+	if (m_fEventProcessTime > 8.f && !m_bFadeIn) {
+		m_bFadeIn = true;
+		CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MAPSE);
+		CGameInstance::GetInstance()->PlayAudio(TEXT("se_CloseView.wav"), CSoundMgr::CHANNELID::CH_MAPSE, 1.f);
+		CUIMgr::GetInstance()->StartScreenEffect(CUIScreenEffect::TYPE_FADE);
+	}
 
-	if (8.f < m_fEventProcessTime) {
+	if (10.f < m_fEventProcessTime) {
 
 		//실질적인 게임 시작
 		CCameraMgr::GetInstance()->SetFreeCamPos({0, 27.5f, -169.f, 1.f},
@@ -225,7 +258,11 @@ void CMinigameCommand::ProcessingEvent(_float _fTimeDelta)
 			++iter;
 		}
 
+		CUIMgr::GetInstance()->CloseAllUI();
+
 		m_pMinigameUI->SetEnable(true);
+
+		m_bFadeIn = false;
 
 		CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_BGM);
 		CGameInstance::GetInstance()->PlayBGM(TEXT("BGM_CommandMinigame.wav"), 1.f);
@@ -245,11 +282,13 @@ void CMinigameCommand::CheckCommandList(_uint _iNewCmd)
 		m_ActiveBear.pop_front();
 		++m_iCurrentAccomplish;
 	
+		m_pMinigameUI->SetCompleteNum(m_iCurrentAccomplish);
 		m_pSuccessImg->SetEnable(true);
 
 		if (m_iCurrentAccomplish >= 20) {
 
-			GameEnd();
+			GameClear();
+			//GameEnd();
 		}
 		else {
 
@@ -265,12 +304,24 @@ void CMinigameCommand::CheckCommandList(_uint _iNewCmd)
 
 			AddBearList(*iter);
 			CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MONHIT);
-			CGameInstance::GetInstance()->PlayAudio(TEXT("SE_Command_Success.wav"), CSoundMgr::CHANNELID::CH_MONHIT, 1.f);
+			CGameInstance::GetInstance()->PlayAudio(TEXT("SE_Command_Success.wav"), CSoundMgr::CHANNELID::CH_MONHIT, 1.7f);
+		
+			if (m_iCurrentAccomplish == 10) {
+
+				for (auto& iter : m_BearPool) {
+					for (auto& pBear : iter) {
+						pBear->StartTurn();
+					}
+				}
+
+			}
+		
 		}
 
 	
 	}
 	else {
+		m_ActiveBear.front()->SetShaking(1.4f, 0.5f);
 
 		CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MONHIT);
 		CGameInstance::GetInstance()->PlayAudio(TEXT("SE_Command_Fail.wav"), CSoundMgr::CHANNELID::CH_MONHIT, 1.5f);

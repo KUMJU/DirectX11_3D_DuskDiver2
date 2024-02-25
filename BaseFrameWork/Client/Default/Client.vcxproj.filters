@@ -621,7 +621,9 @@
     <ClInclude Include="..\Public\UICommandGame.h">
       <Filter>02. GameObject\01. UI\09. UI_CommandGame</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\UIScreenEffect.h" />
+    <ClInclude Include="..\Public\UIScreenEffect.h">
+      <Filter>02. GameObject\01. UI\10. UI_ScreenEffect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -915,7 +917,9 @@
     <ClCompile Include="..\Private\UICommandGame.cpp">
       <Filter>02. GameObject\01. UI\09. UI_CommandGame</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\UIScreenEffect.cpp" />
+    <ClCompile Include="..\Private\UIScreenEffect.cpp">
+      <Filter>02. GameObject\01. UI\10. UI_ScreenEffect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">

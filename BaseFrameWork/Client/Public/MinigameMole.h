@@ -30,7 +30,10 @@ public:
 public:
 	virtual void SetCameraEvent();
 	virtual void StartEventCutScene();
+	virtual void EndEventCutScene();
+	
 	void ProcessingEvent(_float _fTimeDelta);
+	void ProcessingEndEvent(_float _fTimeDelta);
 
 private:
 	_float m_fSpawnCoolTime = 0.f;
@@ -49,9 +52,20 @@ private:
 
 private:
 
+	_bool m_bEndEventStart = false;
+
+	//EndEvent¿ë 
+	shared_ptr<class CBear> m_pBear = nullptr;
+	shared_ptr<class CUI_SequenceTex> m_pDustImg = nullptr;
+
+private:
+
 	_vector vCutEventPos1 = { 0.f, 0.f, 0.f, 0.f };
 	_vector vCutEventPos2 = { 0.f, 0.f, 0.f, 0.f };
 	_vector vCutEventPos3 = { 0.f, 0.f, 0.f, 0.f };
+
+	_vector vEndCutScenePos = _vector();
+
 
 
 public:

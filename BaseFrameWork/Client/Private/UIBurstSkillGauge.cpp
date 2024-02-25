@@ -66,8 +66,11 @@ void CUIBurstSkillGauge::Tick(_float _fTimeDelta)
 {
 }
 
-void CUIBurstSkillGauge::LateTick(_float _fTimeDelta)
+void CUIBurstSkillGauge::LateTick(_float _fTimeDelta) 
 {
+    if (!m_IsEnabled)
+        return;
+
     CUI::LateTick(_fTimeDelta);
 }
 

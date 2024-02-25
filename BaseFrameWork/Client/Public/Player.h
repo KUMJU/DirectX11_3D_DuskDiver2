@@ -265,7 +265,6 @@ private:
 	_bool m_bDown = false;
 	
 	_float m_fDownTime = 0.f;
-
 	_float m_fKnockUpSpeed = 0.f;
 	_float m_fKnockDownSpeed = 10.f;
 

@@ -33,7 +33,8 @@ public:
 	virtual _bool CalcDistanceOption(void) { return true;};
 
 	void MovingFront(_vector _vDstPos);
-
+	void SetShaking(_float _fShakeDistance, _float _fShakeTime);
+	void StartTurn() { m_bTurn = true; }
 
 private:
 	void Shaking(_float _fTimeDelta);
@@ -44,17 +45,23 @@ private:
 	_vector m_vMoveDistancePerTick = _vector();
 	_vector m_vDstPos = _vector();
 
+	_bool m_bFirstShaking = false;
+
+	_bool m_bTurn = false;
 private:
 
 	_bool m_bShaking = false;
 	_float m_fXOffset = 0.f;
 	_float m_fTotalOffset = 0.3f;
-	_float m_fShakingSpeed = 2.f;
+	_float m_fShakingSpeed = 1.4f;
+	_float m_fShakingTotalTime = 0.f;
+	_vector m_vBeforeShakingPos = _vector();
 
 	_bool m_bChangeDir = false;
 	_float m_iDir = -1.f;
 
 	_float m_fShakingAccTime = 0.f;
+	_float m_fShakingTotalAccTime = 0.f;
 
 
 private:

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Client_Defines.h"
+#include "UIScreenEffect.h"
 
 BEGIN(Client)
 
@@ -19,6 +20,9 @@ public:
 public:
 	shared_ptr<class CUI> FindUI(wstring& _strFindKey);
 	void SetEnable(wstring& _strFindKey, _bool _bEnable);
+
+	void CloseAllUI();
+	void HUDOn();
 
 //Specific Function
 public:
@@ -41,6 +45,9 @@ public:
 	void StartMoleMinigame();
 	void StartCoinQuest();
 	void SetMiniQuestSuccessNumber(_int _iSucNum);
+
+public:
+	void StartScreenEffect(CUIScreenEffect::EFFECTTYPE _eEffectType);
 
 private:
 

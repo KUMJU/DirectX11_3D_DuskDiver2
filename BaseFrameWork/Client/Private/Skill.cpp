@@ -174,7 +174,7 @@ void CSkill::SetOwnerTransform(shared_ptr<CTransform> _pOwnerTransform) {
 
 void CSkill::ActiveSkill()
 {
-	if (!m_IsBasicCombat) {
+	if (!m_IsBasicCombat && EOWNER_TYPE::OWNER_PLAYER == m_eSkillOwner) {
 
 		CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_SKILLTRIGER);
 		CGameInstance::GetInstance()->PlayAudio(TEXT("se_ba_skill.wav"), CSoundMgr::CHANNELID::CH_PLR_SKILLTRIGER, 1.f);

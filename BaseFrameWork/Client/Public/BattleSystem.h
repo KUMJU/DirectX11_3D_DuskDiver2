@@ -34,6 +34,7 @@ private:
 
 	_bool m_bOnBattle = false;
 	_bool m_bSlowMotion = false;
+	_bool m_bEventDone = false;
 
 	shared_ptr<CLayers> m_pMonsterLayer = nullptr;
 	shared_ptr<class CPlayer> m_pPlayer = nullptr;

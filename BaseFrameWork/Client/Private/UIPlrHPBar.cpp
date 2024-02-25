@@ -49,6 +49,9 @@ void CUIPlrHPBar::PriorityTick(_float _fTimeDelta)
 
 void CUIPlrHPBar::Tick(_float _fTimeDelta)
 {
+    if (!m_IsEnabled)
+        return;
+
     if (m_IsHPLerp)
         CalcHPDiff(_fTimeDelta);
 
@@ -56,6 +59,9 @@ void CUIPlrHPBar::Tick(_float _fTimeDelta)
 
 void CUIPlrHPBar::LateTick(_float _fTimeDelta)
 {
+    if (!m_IsEnabled)
+        return;
+
     CUI::LateTick(_fTimeDelta);
 }
 

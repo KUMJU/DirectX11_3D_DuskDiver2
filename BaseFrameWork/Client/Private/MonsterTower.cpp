@@ -20,6 +20,10 @@ CMonsterTower::CMonsterTower()
 
 HRESULT CMonsterTower::Initialize(_uint _iTowerIdx)
 {
+
+	//		CUIMgr::GetInstance()->StartDialog(TEXT("StartDialog"));
+
+
 	m_iTowerIdx = _iTowerIdx;
 	__super::Initialize(TEXT("TowerA"),nullptr);
 
@@ -134,7 +138,6 @@ void CMonsterTower::OnCollide(EObjType _eObjType, shared_ptr<CCollider> _pCollid
 			return;
 
 		m_IsActived = true;
-		CUIMgr::GetInstance()->StartDialog(TEXT("StartDialog"));
 	}
 
 	//플레이어 : 밀어내기 처리

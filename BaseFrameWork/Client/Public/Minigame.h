@@ -30,7 +30,8 @@ public:
 	virtual void GameEnd();
 
 	virtual void StartEventCutScene() {};
-
+	virtual void EndEvenetCutScene() {};
+		
 	EMINIGAME_TYPE GetMinigameType() { return m_eMinigameType; }
 
 public:

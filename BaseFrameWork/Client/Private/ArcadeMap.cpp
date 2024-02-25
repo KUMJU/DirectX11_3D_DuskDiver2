@@ -284,7 +284,9 @@ HRESULT CArcadeMap::ReadyLayerUI(const wstring& _strLayerTag)
 	UITagInfo.fX = g_iWinSizeX * 0.5f - 460.f;
 	UITagInfo.fY = g_iWinSizeY * 0.5f- 280.f;
 
-	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, CUIBackGround::Create(UITagInfo, TEXT("hud_status_bg_He01"), 0))))
+	shared_ptr<CUIBackGround> pBackground = CUIBackGround::Create(UITagInfo, TEXT("hud_status_bg_He01"),0);
+
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pBackground)))
 		return E_FAIL;
 
 	UITagInfo.fSizeX = 247.f * 0.65f;
@@ -292,8 +294,13 @@ HRESULT CArcadeMap::ReadyLayerUI(const wstring& _strLayerTag)
 	UITagInfo.fX = g_iWinSizeX * 0.5f - 450.f;
 	UITagInfo.fY = g_iWinSizeY * 0.5f - 310.f;
 
-	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, CUIBackGround::Create(UITagInfo, TEXT("hud_neme_he01"), 1))))
+	shared_ptr<CUIBackGround> pBackground2 = CUIBackGround::Create(UITagInfo, TEXT("hud_neme_he01"),1);
+
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pBackground2)))
 		return E_FAIL;
+
+	CUIMgr::GetInstance()->AddUI(TEXT("UI_HUDBackground1"), pBackground);
+	CUIMgr::GetInstance()->AddUI(TEXT("UI_HUDBackground2"), pBackground2);
 
 
 	/**Player HP Bar**/
@@ -337,10 +344,10 @@ HRESULT CArcadeMap::ReadyLayerUI(const wstring& _strLayerTag)
 
 	/**Quest UI**/
 
-	pInstance = CUIQuest::Create();
-	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pInstance)))
-		return E_FAIL;
-	CUIMgr::GetInstance()->AddUI(TEXT("UI_Quest"), pInstance);
+	//pInstance = CUIQuest::Create();
+	//if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pInstance)))
+	//	return E_FAIL;
+	//CUIMgr::GetInstance()->AddUI(TEXT("UI_Quest"), pInstance);
 
 	/**Dialog UI**/
 
@@ -356,6 +363,10 @@ HRESULT CArcadeMap::ReadyLayerUI(const wstring& _strLayerTag)
 		return E_FAIL;
 	CUIMgr::GetInstance()->AddUI(TEXT("UI_Miniquest"), pInstance);
 
+	pInstance = CUIScreenEffect::Create();
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pInstance)))
+		return E_FAIL;
+	CUIMgr::GetInstance()->AddUI(TEXT("UI_ScreenEffect"), pInstance);
 
 	return S_OK;
 }

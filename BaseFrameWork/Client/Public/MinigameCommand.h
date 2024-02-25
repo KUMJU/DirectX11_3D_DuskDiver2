@@ -34,6 +34,8 @@ public:
 	virtual void GameStart();
 	virtual void GameEnd();
 
+	void GameClear();
+
 public:
 	virtual void StartEventCutScene();
 	virtual void SetCameraEvent();
@@ -71,6 +73,10 @@ private:
 	_bool m_bDialogPrint = false;
 	_bool m_bZoomInCamEvent = false;
 	_bool m_bBearFaceChangeEvent = false;
+	_bool m_bFadeIn = false;
+
+	_bool m_bClearGame = false;
+	_float m_fClearAccTime = 0.f;
 
 private:
 	_float4 m_vLinePositions[6];

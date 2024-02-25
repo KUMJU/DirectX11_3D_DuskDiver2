@@ -74,6 +74,9 @@ void CUISkillBar::Tick(_float _fTimeDelta)
 
 void CUISkillBar::LateTick(_float _fTimeDelta)
 {
+    if (!m_IsEnabled)
+        return;
+
     CUI::LateTick(_fTimeDelta);
 
 }

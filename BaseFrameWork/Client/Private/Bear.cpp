@@ -16,7 +16,7 @@ HRESULT CBear::Initialize()
 {
     CTransform::TRANSFORM_DESC TransformDesc = {};
     TransformDesc.fSpeedPerSet = 0.f;
-    TransformDesc.fRotationPerSet = 2.f;
+    TransformDesc.fRotationPerSet = 3.f;
 
     if (FAILED(__super::Initialize(&TransformDesc)))
         return E_FAIL;
@@ -44,8 +44,6 @@ HRESULT CBear::Initialize()
     m_pCollider->SetOwner(shared_from_this());
 
 
-    
-
     m_eMonsterType = EMONSTER_TYPE::MONSTER_NORMAL;
 
 
@@ -61,19 +59,39 @@ void CBear::Tick(_float _fTimeDelta)
     if (!m_IsEnabled)
         return;
     
+    if (m_bTurn) {
+        m_pTransformCom->Turn({ 0.f, 1.f, 0.f }, _fTimeDelta);
+    }
+
     if (m_bShaking) {
         m_fShakingAccTime += _fTimeDelta;
-        
-        if (m_fShakingAccTime >= 0.5f && !m_bChangeDir) {
+        m_fShakingTotalAccTime += _fTimeDelta;
 
-            m_bChangeDir = true;
-
-        }
-        else if (m_fShakingAccTime >= 1.f) {
+        if (!m_bFirstShaking&& m_fShakingAccTime >= 0.035f) {
+            m_iDir *= -1.f;
             m_fShakingAccTime = 0.f;
+            m_bFirstShaking = true;
+        }
+        else {
+
+            if (m_fShakingAccTime >= 0.07f) {
+                m_iDir *= -1.f;
+                m_fShakingAccTime = 0.f;
+            }
+
+        }
+        
+        if (m_fShakingTotalAccTime >= m_fShakingTotalTime) {
+            m_fShakingTotalAccTime = 0.f;
+            m_fShakingAccTime = 0.f;
+            m_pTransformCom->SetState(CTransform::STATE_POSITION, m_vBeforeShakingPos);
+            m_bShaking = false;
+            m_bFirstShaking = false;
+        }
+        else {
+            Shaking(_fTimeDelta);
         }
 
-        Shaking(_fTimeDelta);
     }
 
 
@@ -164,14 +182,17 @@ void CBear::SetSpawnState()
 
 void CBear::Shaking(_float _fTimeDelta)
 {
-    _float fDistance = m_fShakingSpeed * _fTimeDelta * m_iDir;
-
-    _vector vPos= m_pTransformCom->GetState(CTransform::STATE_POSITION);
+    
+    _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
     _vector vRight = m_pTransformCom->GetState(CTransform::STATE_RIGHT);
 
-    m_fXOffset += fDistance;
+    _vector fDistance = m_fShakingSpeed * vRight * _fTimeDelta * m_iDir;
 
-    XMVectorSetX(vRight, vPos.m128_f32[0] + fDistance);
+
+  //  m_fXOffset += fDistance;
+
+    vPos = XMVectorSetW(vPos + fDistance, 1.f);
+    m_pTransformCom->SetState(CTransform::STATE_POSITION, vPos);
 
 }
 
@@ -185,6 +206,18 @@ void CBear::MovingFront(_vector _vDstPos)
     m_vDstPos = _vDstPos;
     m_fMovingTime = 0.f;
 
+}
+
+void CBear::SetShaking(_float _fShakeDistance, _float _fShakeTime)
+{
+    if (m_bShaking) {
+        m_pTransformCom->SetState(CTransform::STATE_POSITION, m_vBeforeShakingPos);
+    }
+
+    m_fShakingSpeed = _fShakeDistance;
+    m_fShakingTotalTime = _fShakeTime;
+    m_bShaking = true;
+    m_vBeforeShakingPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
 }
 
 shared_ptr<CBear> CBear::Create()

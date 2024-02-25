@@ -11,6 +11,9 @@
 #include "EventCamera.h"
 
 #include "UIMgr.h"
+#include "Bear.h"
+
+#include "UI_SequenceTex.h"
 
 CMinigameMole::CMinigameMole()
 {
@@ -111,6 +114,35 @@ HRESULT CMinigameMole::Initialize(CTransform::TRANSFORM_DESC* _pDesc)
         m_HoleSlot[i] = false;
     }
 
+    m_pBear = CBear::Create();
+
+    vEndCutScenePos = XMLoadFloat4(&m_vMolePos[4]) + _vector({ 0.f , 1.9f, 0.f, 0.f });
+    m_pBear->SetPosition(vEndCutScenePos);
+    m_pBear->ChangeModel(3);
+    dynamic_pointer_cast<CTransform>(m_pBear->GetComponent(TEXT("Com_Transform")))->Rotation({ 0.f, 1.f , 0.f }, XMConvertToRadians(-90.f));
+    dynamic_pointer_cast<CTransform>(m_pBear->GetComponent(TEXT("Com_Transform")))->SetScaling(10.f, 10.f, 10.f);
+
+    m_pBear->SetEnable(false);
+    
+    CUI::tagUIInfo UIInfo = {};
+
+    UIInfo.fSizeX = 250.f;
+    UIInfo.fSizeY = 250.f;
+    UIInfo.fX = g_iWinSizeX * 0.5f;
+    UIInfo.fY = g_iWinSizeY * 0.5f - 70.f;
+
+    CUI_SequenceTex::SequenceTexInfo SequeneceInfo = {};
+    SequeneceInfo.bLoop = false;
+    SequeneceInfo.fScrollTime = 0.02f;
+    SequeneceInfo.iCol = 2;
+    SequeneceInfo.iRow = 2;
+
+
+    m_pDustImg = CUI_SequenceTex::Create(&UIInfo, TEXT("T_ToonSmoke_01"), 2, &SequeneceInfo);
+    m_pDustImg->SetEnable(false);
+    CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Effect"), m_pDustImg);
+
+
     //시작 이벤트 카메라 프리셋 세팅 
     SetCameraEvent();
 
@@ -135,6 +167,12 @@ void CMinigameMole::Tick(_float _fTimeDelta)
             return;
         }
 
+        if (m_bEndEventStart) {
+            ProcessingEndEvent(_fTimeDelta);
+            m_pBear->Tick(_fTimeDelta);
+            return;
+        }
+
         m_fSpawnCoolTime += _fTimeDelta;
         if (m_fSpawnCoolTime >= 2.f) {
             SpawnMole();
@@ -151,7 +189,7 @@ void CMinigameMole::LateTick(_float _fTimeDelta)
 {
     if (m_bProcessing) {
 
-        if (m_bStartCutSceneDone) {
+        if (m_bStartCutSceneDone && !m_bEndEventStart) {
 
 
 
@@ -173,9 +211,10 @@ void CMinigameMole::LateTick(_float _fTimeDelta)
         else {
             for (auto& iter : m_ActiveMoles)
                 iter->LateTick(_fTimeDelta);
-        }
 
-        CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_NONBLEND, shared_from_this());
+            m_pBear->LateTick(_fTimeDelta);
+ 
+        }
     }
 
 }
@@ -184,7 +223,6 @@ HRESULT CMinigameMole::Render()
 {
     return S_OK;
 }
-
 
 void CMinigameMole::GameStart()
 {
@@ -198,15 +236,7 @@ void CMinigameMole::GameStart()
 
 void CMinigameMole::GameEnd()
 {
-    __super::GameEnd();
-
-   // CUIMgr::GetInstance()->SetEnable(TEXT("UI_Miniquest"), false);
-
-    for (auto& iter : m_ActiveMoles) {
-        iter->SetEnable(false);
-    }
-
-
+    EndEventCutScene();
 }
 
 void CMinigameMole::GetScore()
@@ -215,7 +245,7 @@ void CMinigameMole::GetScore()
     CUIMgr::GetInstance()->SetMiniQuestSuccessNumber(m_iCurrentScore);
 
 
-    if (m_iCurrentScore >= 10) {
+    if (m_iCurrentScore >= 2) {
         GameEnd();
     }
 }
@@ -276,8 +306,6 @@ void CMinigameMole::SetCameraEvent()
 
 void CMinigameMole::StartEventCutScene()
 {
-
-
     _vector vStartMolePos1 = XMLoadFloat4(&m_vMolePos[4]) + _vector({0.f, 2.f, 0.f, 0.f});
 
     m_Moles[0].front()->StateReset();
@@ -309,6 +337,30 @@ void CMinigameMole::StartEventCutScene()
 
 
 
+
+}
+
+void CMinigameMole::EndEventCutScene()
+{
+    if (!m_bEndEventStart) {
+
+        CCameraMgr::GetInstance()->SetFreeCamPos({ 82.f, 41.5f, -300.f, 1.f },
+            { 88.f, 41.5f, -300.f, 1.f });
+        CCameraMgr::GetInstance()->SwitchingCamera(CCameraMgr::ECAMERATYPE::FREE);
+
+        for (auto& iter : m_ActiveMoles) {
+            iter->SetEnable(false);
+        }
+
+        CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MONHIT);
+        CGameInstance::GetInstance()->PlayAudio(TEXT("se_MoleSad.wav"), CSoundMgr::CHANNELID::CH_MONHIT, 1.f);
+        m_pBear->SetEnable(true);
+        m_pBear->SetShaking(0.3f, 2.f);
+        m_bEndEventStart = true;
+
+        m_pDustImg->SetEnable(true);
+
+    }
 
 }
 
@@ -355,15 +407,31 @@ void CMinigameMole::ProcessingEvent(_float _fTimeDelta)
 
         m_ActiveMoles.clear();
         m_bStartCutSceneDone = true;
+        m_fEventProcessTime = 0.f;
 
         CUIMgr::GetInstance()->StartMoleMinigame();
     
     }
+}
+
+void CMinigameMole::ProcessingEndEvent(_float _fTimeDelta)
+{
+    m_fEventProcessTime += _fTimeDelta;
+
+    if (m_fEventProcessTime >= 2.f) {
+        
+        vEndCutScenePos -= _vector({ 0.f, 1.f, 0.f, 0.f }) * 2.f * _fTimeDelta;
+        m_pBear->SetPosition(vEndCutScenePos);
+
+    }
 
 
-
-
-
+    if (m_fEventProcessTime >= 4.f) {
+        //배리어 해제
+        m_pBear->SetEnable(false);
+        CCameraMgr::GetInstance()->SwitchingCamera(CCameraMgr::ECAMERATYPE::THIRDPERSON);
+        __super::GameEnd();
+    }
 }
 
 shared_ptr<CMinigameMole> CMinigameMole::Create()

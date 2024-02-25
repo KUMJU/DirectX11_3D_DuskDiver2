@@ -43,6 +43,41 @@ void CUIMgr::SetEnable(wstring& _strFindKey, _bool _bEnable)
 
 }
 
+void CUIMgr::CloseAllUI()
+{
+	for (auto& iter : m_UIList) {
+
+		if (iter.first != TEXT("UI_ScreenEffect")) {
+			iter.second->SetEnable(false);
+		}
+	}
+
+}
+
+void CUIMgr::HUDOn()
+{
+	shared_ptr<CUI> pUI;
+	wstring strUIName = TEXT("UI_PlayerHP");
+
+	FindUI(strUIName)->SetEnable(true);
+
+	strUIName = TEXT("UI_Quest");
+	FindUI(strUIName)->SetEnable(true);
+
+	strUIName = TEXT("UI_SkillBar");
+	FindUI(strUIName)->SetEnable(true);
+
+	strUIName = TEXT("UI_BurstBar");
+	FindUI(strUIName)->SetEnable(true);
+
+	strUIName = TEXT("UI_HUDBackground1");
+	FindUI(strUIName)->SetEnable(true);
+
+	strUIName = TEXT("UI_HUDBackground2");
+	FindUI(strUIName)->SetEnable(true);
+
+}
+
 void CUIMgr::SetPlayerHP(_int _iHP)
 {
 	wstring FindKey = TEXT("UI_PlayerHP");
@@ -149,4 +184,17 @@ void CUIMgr::SetMiniQuestSuccessNumber(_int _iSucNum)
 	if (pMiniquest) {
 		dynamic_pointer_cast<CUIMiniquest>(pMiniquest)->SetSuccessNum(_iSucNum);
 	}
+}
+
+void CUIMgr::StartScreenEffect(CUIScreenEffect::EFFECTTYPE _eEffectType)
+{
+	wstring FindKey = TEXT("UI_ScreenEffect");
+	shared_ptr<CUI> pScreenEffect = FindUI(FindKey);
+
+	if (pScreenEffect) {
+		dynamic_pointer_cast<CUIScreenEffect>(pScreenEffect)->SwitchScreenEffect(_eEffectType);
+	}
+
+
+
 }
