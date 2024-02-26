@@ -149,6 +149,25 @@ PS_OUT PS_COLOR(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_GREYSCALE(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(g_LinearSampler, In.vTexcoord) * g_vColor;
+   
+
+    if (vMtrlDiffuse.a < 0.1f)
+        discard;
+   
+    float greyscaleAverage = (vMtrlDiffuse.r + vMtrlDiffuse.g + vMtrlDiffuse.b) / 3.0f;
+    Out.vDiffuse = float4(greyscaleAverage, greyscaleAverage, greyscaleAverage, vMtrlDiffuse.a);
+    //Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
+
+    return Out;
+}
+
 PS_OUT PS_LIMLIGHT(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
@@ -181,19 +200,6 @@ PS_OUT PS_LIMLIGHT(PS_IN In)
 
 }
 
-PS_OUT PS_GRAY(PS_IN In)
-{
-    PS_OUT Out = (PS_OUT) 0;
-    
-    
-    vector vMtrlDiffuse = g_DiffuseTexture.Sample(g_LinearSampler, In.vTexcoord);
-
-    
-    
-    return Out;
-    
-    
-}
 
 
 struct PS_EFFECT_OUT
@@ -377,6 +383,17 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_LIMLIGHT();
+    }
+
+    pass GreyScale // 5
+    {
+        SetRasterizerState(RS_None_Cull);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_GREYSCALE();
     }
 
 }

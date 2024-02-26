@@ -94,6 +94,7 @@ void CMapLoader::ClassifyObject(const wstring& _strKeyName, _float4x4* _fWorldMa
 
 
 	}else if(TEXT("GoldA") == _strKeyName){
+		_fWorldMat;
 		pInstance = CCoin::Create();
 		CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Object"), pInstance);
 

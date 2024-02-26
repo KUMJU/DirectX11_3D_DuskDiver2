@@ -59,6 +59,17 @@ void CSpecialBossPattern::Tick(_float _fTimeDelta)
 	if (!m_IsEnabled)
 		return;
 
+	if (m_bStartDone) {
+		m_fAccTime += _fTimeDelta;
+
+		if (m_fAccTime >= 3.f && !m_bCamFocusDone) {
+			CCameraMgr::GetInstance()->SetFreeCamPos({ 0.f, 42.5f, -380.f, 1.f }, {0.f, 39.5f, -375.f, 1.f});
+			m_bCamFocusDone = true;
+		}
+
+	}
+
+
 	KeyInput();
 }
 
@@ -80,13 +91,14 @@ void CSpecialBossPattern::PatternStart()
 	m_pGaugeUI->SetEnable(true);
 
 	/*Player*/
-	m_pPlayer->SetPosition({ 0.f, 39.5f, -375.f, 1.f });
 	m_pPlayer->SetOnMinigame(true);
-
+	dynamic_pointer_cast<CTransform>(m_pPlayer->GetComponent(TEXT("Com_Transform")))->SetState(CTransform::STATE_POSITION, { 0.f, 40.f, -375.f, 1.f });
 	
 	CCameraMgr::GetInstance()->SetFreeCamPos({ 0.f, 42.5f, -405.f, 1.f }, { 0.f, 42.5f, -425.f , 1.f });
 	//플레이어 위치 옮기기 
 	//보스가 쓰러지는 쪽으로 카메라 세팅 
+
+	m_bStartDone = true;
 
 
 }

@@ -13,7 +13,7 @@ HRESULT CMinigameTrigger::Initialize(shared_ptr<class CMinigame> _pMinigame, _fl
 	
 	CCollider::COLLIDER_DESC colDesc = {};
 	colDesc.vCenter = { 0.f, 0.3f, 0.f };
-	colDesc.fRadius = 1.f;
+	colDesc.fRadius = 2.f;
 
 	__super::Initialize(colDesc, _vTriggerPos);
 	m_pMinigame = _pMinigame;

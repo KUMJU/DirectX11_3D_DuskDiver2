@@ -112,6 +112,7 @@ void CPlayer::Tick(_float _fTimeDelta)
             
             m_pPlayerSkillset->SetBurstMode(true);
             m_pModelCom = m_pBurstModelCom;
+            CUIMgr::GetInstance()->SetBurstMode();
 
             m_eCurrentState = HEROSTATE::STATE_IDLE;
             m_fTransformTime = 0.f;
@@ -388,10 +389,16 @@ void CPlayer::EffectLateTick(_float _fDeltaTime)
 
 void CPlayer::AddBurstGauge()
 {
-    m_fBurstGage += 3.f;
-    CUIMgr::GetInstance()->SetBurstGauge(m_fBurstGage);
-    CUIMgr::GetInstance()->SetBurstSkillGauge(m_fBurstGage);
-
+    //버스트일때
+    if (m_bBurstMode) {
+        m_fBurstSkillGauge += 3.f;
+        CUIMgr::GetInstance()->SetBurstSkillGauge(m_fBurstSkillGauge);
+    }
+    //버스트 아닐때
+    else {
+        m_fBurstGage += 3.f;
+        CUIMgr::GetInstance()->SetBurstGauge(m_fBurstGage);
+    }
 }
 
 
@@ -632,7 +639,7 @@ void CPlayer::CalcAnimMoveDistance()
     if (79 == m_iCurrentAnimIdx || 76 == m_iCurrentAnimIdx ||
         52 == m_iCurrentAnimIdx || 51 == m_iCurrentAnimIdx || 3 == m_iCurrentAnimIdx || 136 == m_iCurrentAnimIdx
         || 50 == m_iCurrentAnimIdx  || 137 == m_iCurrentAnimIdx || 44 == m_iCurrentAnimIdx||
-        0 == m_iCurrentAnimIdx || 1 == m_iCurrentAnimIdx || 2 == m_iCurrentAnimIdx || 59 == m_iCurrentAnimIdx) {
+        0 == m_iCurrentAnimIdx || 1 == m_iCurrentAnimIdx || 2 == m_iCurrentAnimIdx || 59 == m_iCurrentAnimIdx || 36 == m_iCurrentAnimIdx) {
         m_vPrevAnimPos = { 0.f, 0.f, 0.f };
         m_vCurretnAnimPos = { 0.f, 0.f, 0.f };
         return;
@@ -703,26 +710,28 @@ void CPlayer::KeyInput(_float _fTimeDelta)
 
     if(CGameInstance::GetInstance()->Key_Down('Z'))
     {
-        m_eCurrentState = HEROSTATE::STATE_BURST_TRANS;
-        IsKeyInput = true;
-
-        CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
-        CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_59.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
-
-        m_pModelCom->ChangeAnimation(30);
-        m_pBurstModelCom->ChangeAnimation(30);
-        m_iCurrentAnimIdx = 30;
-        m_isAnimLoop = false;
+        if (!m_bBurstMode) {
 
 
-        CCameraMgr::GetInstance()->StartPlrCamEvent(TEXT("BurstTransform"));
 
-        //Event_Burst
-        //CCameraMgr::GetInstance()->StartEvent(TEXT("Event_Burst"));
+            m_eCurrentState = HEROSTATE::STATE_BURST_TRANS;
+            IsKeyInput = true;
 
-        m_IsUsingSkill = true;
-        m_bSuperArmor = true;
-        m_fSuperArmorTime = 0.f;
+            CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
+            CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_59.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
+
+            m_pModelCom->ChangeAnimation(30);
+            m_pBurstModelCom->ChangeAnimation(30);
+            m_iCurrentAnimIdx = 30;
+            m_isAnimLoop = false;
+
+
+            CCameraMgr::GetInstance()->StartPlrCamEvent(TEXT("BurstTransform"));
+
+            m_IsUsingSkill = true;
+            m_bSuperArmor = true;
+            m_fSuperArmorTime = 0.f;
+        }
 
     }
 
@@ -775,6 +784,8 @@ void CPlayer::KeyInput(_float _fTimeDelta)
 
             if (m_bBurstMode) {
                 if (m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_BURST_Q)) {
+                    m_eCurrentState = HEROSTATE::STATE_SKILL_Q;
+
                     ChangeAnim(63, false);
                     m_NextAnimIndex.push_back({ 64 , false });
                     m_NextAnimIndex.push_back({ 65 , false });
@@ -812,6 +823,7 @@ void CPlayer::KeyInput(_float _fTimeDelta)
 
             if (m_bBurstMode) {
                 if (m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_BURST_E)) {
+                    m_eCurrentState = HEROSTATE::STATE_SKILL_E;
                     ChangeAnim(71, false);
 
                     m_IsUsingSkill = true;

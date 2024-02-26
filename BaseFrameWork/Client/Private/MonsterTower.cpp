@@ -137,6 +137,9 @@ void CMonsterTower::OnCollide(EObjType _eObjType, shared_ptr<CCollider> _pCollid
 		if (m_IsActived)
 			return;
 
+		CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MAPOBJ_SE);
+		CGameInstance::GetInstance()->PlayAudio(TEXT("se_Env12_Tower_Speedup.wav"), CSoundMgr::CHANNELID::CH_MAPOBJ_SE, 1.f);
+
 		m_IsActived = true;
 	}
 

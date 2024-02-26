@@ -310,6 +310,24 @@
     <Filter Include="02. GameObject\01. UI\10. UI_ScreenEffect">
       <UniqueIdentifier>{a23853f8-b3b7-4e9b-94e6-2b2045fb083f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\06. EventTrigger\03. CutSceneTrigger\StartEvent">
+      <UniqueIdentifier>{5abdec45-4e2d-4c19-848c-5e7182b534aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. EventTrigger\03. CutSceneTrigger\CoinQuest">
+      <UniqueIdentifier>{b00439aa-ae50-4838-aa91-ea6eb4c56576}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. UI\11. UI_MapTitle">
+      <UniqueIdentifier>{fc1630b8-878f-4163-bae6-87b305a6d710}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. EventTrigger\03. CutSceneTrigger\CoinBearEvent">
+      <UniqueIdentifier>{f2d13ec9-4523-4c89-876f-04b7911c357c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. EventTrigger\03. CutSceneTrigger\CoinInsertEvent">
+      <UniqueIdentifier>{83fd6bd9-8e13-4d3f-a845-ac570949f9c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\06. EventTrigger\03. CutSceneTrigger\BossEvent">
+      <UniqueIdentifier>{4af3600f-1861-4668-84b1-35976901bbcc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -540,9 +558,6 @@
     <ClInclude Include="..\Public\CutSceneMgr.h">
       <Filter>03. Manager\04. CutSceneMgr</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\CutSceneTrigger.h">
-      <Filter>02. GameObject\06. EventTrigger\03. CutSceneTrigger</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Bear.h">
       <Filter>02. GameObject\00.Creature\01. Monster\05. Bear</Filter>
     </ClInclude>
@@ -623,6 +638,24 @@
     </ClInclude>
     <ClInclude Include="..\Public\UIScreenEffect.h">
       <Filter>02. GameObject\01. UI\10. UI_ScreenEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SceneTriggerStart.h">
+      <Filter>02. GameObject\06. EventTrigger\03. CutSceneTrigger\StartEvent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SceneTriggerCoin.h">
+      <Filter>02. GameObject\06. EventTrigger\03. CutSceneTrigger\CoinQuest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UIMapTitle.h">
+      <Filter>02. GameObject\01. UI\11. UI_MapTitle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SceneTriggerBear.h">
+      <Filter>02. GameObject\06. EventTrigger\03. CutSceneTrigger\CoinBearEvent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SceneTriggerInsert.h">
+      <Filter>02. GameObject\06. EventTrigger\03. CutSceneTrigger\CoinInsertEvent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SceneTriggerBoss.h">
+      <Filter>02. GameObject\06. EventTrigger\03. CutSceneTrigger\BossEvent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -836,9 +869,6 @@
     <ClCompile Include="..\Private\CutSceneMgr.cpp">
       <Filter>03. Manager\04. CutSceneMgr</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\CutSceneTrigger.cpp">
-      <Filter>02. GameObject\06. EventTrigger\03. CutSceneTrigger</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Bear.cpp">
       <Filter>02. GameObject\00.Creature\01. Monster\05. Bear</Filter>
     </ClCompile>
@@ -865,9 +895,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\EffectPreset.cpp">
       <Filter>02. GameObject\09. Effect\Preset</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\BossSkill1.cpp">
-      <Filter>02. GameObject\05. Skill\01. MonsterSkill\03. Skill_FinalBoss\Skill1</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\BossSkill2.cpp">
       <Filter>02. GameObject\05. Skill\01. MonsterSkill\03. Skill_FinalBoss\Skill2</Filter>
@@ -919,6 +946,27 @@
     </ClCompile>
     <ClCompile Include="..\Private\UIScreenEffect.cpp">
       <Filter>02. GameObject\01. UI\10. UI_ScreenEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SceneTriggerStart.cpp">
+      <Filter>02. GameObject\06. EventTrigger\03. CutSceneTrigger\StartEvent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SceneTriggerCoin.cpp">
+      <Filter>02. GameObject\06. EventTrigger\03. CutSceneTrigger\CoinQuest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UIMapTitle.cpp">
+      <Filter>02. GameObject\01. UI\11. UI_MapTitle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SceneTriggerBear.cpp">
+      <Filter>02. GameObject\06. EventTrigger\03. CutSceneTrigger\CoinBearEvent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SceneTriggerInsert.cpp">
+      <Filter>02. GameObject\06. EventTrigger\03. CutSceneTrigger\CoinInsertEvent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SceneTriggerBoss.cpp">
+      <Filter>02. GameObject\06. EventTrigger\03. CutSceneTrigger\BossEvent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BossSkill1.cpp">
+      <Filter>02. GameObject\05. Skill\01. MonsterSkill\03. Skill_FinalBoss</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

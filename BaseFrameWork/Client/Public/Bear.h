@@ -48,6 +48,10 @@ private:
 	_bool m_bFirstShaking = false;
 
 	_bool m_bTurn = false;
+
+	_int m_iHitNum = 0;
+	_bool m_bRunaway = false;
+	_float m_fDialogAccTime = 0.f;
 private:
 
 	_bool m_bShaking = false;
@@ -63,6 +67,8 @@ private:
 	_float m_fShakingAccTime = 0.f;
 	_float m_fShakingTotalAccTime = 0.f;
 
+private:
+	shared_ptr<class CSceneTriggerInsert> m_pTrigger = nullptr;
 
 private:
 	//맞으면 얼굴이 바뀐다 x0 < 이런식으로..

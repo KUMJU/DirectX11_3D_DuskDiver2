@@ -220,8 +220,8 @@ void CMinigameCommand::ProcessingEvent(_float _fTimeDelta)
 	if (m_fEventProcessTime > 5.f && !m_bZoomInCamEvent) {
 		m_bZoomInCamEvent = true;
 
-		CCameraMgr::GetInstance()->SetFreeCamPos({ m_vInitPos.m128_f32[0], 24.5f, -169.8f, 1.f},
-			{ m_vInitPos.m128_f32[0], 24.5f, -171.f , 1.f });
+		CCameraMgr::GetInstance()->SetFreeCamPos({ m_vInitPos.m128_f32[0], 24.5f, -168.8f, 1.f},
+			{ m_vInitPos.m128_f32[0], 24.5f, -170.f , 1.f });
 		CCameraMgr::GetInstance()->SwitchingCamera(CCameraMgr::ECAMERATYPE::FREE);
 	}
 

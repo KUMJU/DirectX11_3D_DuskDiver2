@@ -41,11 +41,17 @@
 #include "UIBurstSkillGauge.h"
 #include "UIDialog.h"
 #include "UIMiniquest.h"
+#include "UIMapTitle.h"
 
 #include "EffectMgr.h"
 #include "EffectPreset.h"
 
 #include "UI_SequenceTex.h"
+
+#include "SceneTriggerStart.h"
+#include "SceneTriggerCoin.h"
+#include "SceneTriggerBear.h"
+#include "SceneTriggerBoss.h"
 
 
 CArcadeMap::CArcadeMap()
@@ -89,8 +95,16 @@ HRESULT CArcadeMap::Initialize()
 	
 
 	CBattleSystem::GetInstance()->Initialize();
-	CGameInstance::GetInstance()->PlayBGM(TEXT("BGM_MainTheme.wav"), 1.f);
 
+	CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_BGM);
+	CGameInstance::GetInstance()->PlayBGM(TEXT("se_EnvLab_Ambience.wav"), 1.f);
+
+
+	CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MAPSE);
+	CGameInstance::GetInstance()->PlayAudio(TEXT("se_DVEnergy_Interaction1.wav"),CSoundMgr::CHANNELID::CH_MAPSE,  1.f);
+
+	CUIMgr::GetInstance()->CloseAllUI();
+	CUIMgr::GetInstance()->StartDialog(TEXT("StartDialog"));
 
 	return S_OK;
 }
@@ -203,29 +217,14 @@ HRESULT CArcadeMap::ReadyLayerMap(const wstring& _strLayerTag)
 
 	/******몬스터 트리거 테스트(중간보스)*******/
 
-	list<CMonsterPool::SPAWN_INFO> SpawnList;
-
+	/*list<CMonsterPool::SPAWN_INFO> SpawnList;
 	CMonsterPool::SPAWN_INFO info1 = {};
 	info1.iMonsterType = 3;
 	info1.vMonsterPos = _vector({ 0.f, 39.5f, -425.f });
 	SpawnList.push_back(info1);
 
 	shared_ptr<CMonsterTrigger> pTrigger = CMonsterTrigger::Create(&SpawnList, { 0.f, 40.f, -380.f });
-	CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Event"), pTrigger);
-
-	//shared_ptr<CEffectPreset> pParticle = CEffectMgr::GetInstance()->FindEffect(TEXT("ParticleMap"));
-
-	//if (pParticle) {
-	//	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pParticle)))
-	//		return E_FAIL;
-	//}
-
-	//pParticle->PlayEffect();
-
-	/**파티클 테스트**/
-
-	//shared_ptr<CGameObject> pParticle = CEffectParticle::Create();
-	//CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Event"), pParticle);
+	CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Event"), pTrigger);*/
 
 
 	return S_OK;
@@ -265,6 +264,21 @@ HRESULT CArcadeMap::ReadyLayerEvent(const wstring& _strLayerTag)
 	shared_ptr<CMinigameCommand> pMinigameCmd = CMinigameCommand::Create();
 	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pMinigameCmd)))
 		return E_FAIL;
+
+	/*시작 이벤트 트리거*/
+	shared_ptr<CSceneTriggerStart> pTrigger2 = CSceneTriggerStart::Create({ 0.f, 10.f, -25.f });
+	CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pTrigger2);
+
+	/*코인 이벤트 트리거*/
+
+	shared_ptr<CSceneTriggerCoin> pTrigger3 = CSceneTriggerCoin::Create({ 0.f, 27.f, -140.f });
+	CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pTrigger3);
+
+	shared_ptr<CSceneTriggerBear> pTrigger4 = CSceneTriggerBear::Create({ -87.f , 43.f, -87.f });
+	CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pTrigger4);
+
+	shared_ptr<CSceneTriggerBoss> pTrigger5 = CSceneTriggerBoss::Create({ 2.f, 40.f, -378.f });
+	CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pTrigger5);
 
 	return S_OK;
 }
@@ -367,6 +381,12 @@ HRESULT CArcadeMap::ReadyLayerUI(const wstring& _strLayerTag)
 	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pInstance)))
 		return E_FAIL;
 	CUIMgr::GetInstance()->AddUI(TEXT("UI_ScreenEffect"), pInstance);
+
+	pInstance = CUIMapTitle::Create();
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pInstance)))
+		return E_FAIL;
+	CUIMgr::GetInstance()->AddUI(TEXT("UI_QeustTitle"), pInstance);
+
 
 	return S_OK;
 }

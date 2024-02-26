@@ -20,6 +20,7 @@ public:
 public:
 	void SetCurrentBurstGauge(_float _fBurstEnergy);
 	void AddBurstGauge();
+	void SetBurstMode(_bool _bBurst);
 
 private:
 	void ComputeRatio();
@@ -32,6 +33,9 @@ private:
 
 	_bool m_IsGaugeFull[3] = { true, true, true };
 	_float m_fGaugeRatio[3] = { 0.f, 0.f , 0.f };
+
+private:
+	_bool m_bBurstMode = false;
 
 private:
 	shared_ptr<class CUI_SequenceTex> m_pUIEffect = nullptr;

@@ -8,6 +8,8 @@
 #include "UIBurstSkillGauge.h"
 #include "UIDialog.h"
 #include "UIMiniquest.h"
+#include "UIMapTitle.h"
+#include "UIQuest.h"
 
 IMPLEMENT_SINGLETON(CUIMgr)
 
@@ -78,6 +80,17 @@ void CUIMgr::HUDOn()
 
 }
 
+void CUIMgr::CloseUI(wstring _strUIKey)
+{
+	shared_ptr<CUI> pUI = FindUI(_strUIKey);
+
+	if (pUI) {
+		pUI->SetEnable(false);
+	}
+
+
+}
+
 void CUIMgr::SetPlayerHP(_int _iHP)
 {
 	wstring FindKey = TEXT("UI_PlayerHP");
@@ -129,6 +142,25 @@ void CUIMgr::SetTimeRatio(_float _fTimeRate)
 
 	if (pSkillBar) {
 		dynamic_pointer_cast<CUISkillBar>(pSkillBar)->SetCurrentGauging(_fTimeRate);
+	}
+
+
+}
+
+void CUIMgr::SetBurstMode()
+{
+	wstring FindKey = TEXT("UI_BurstSkillBar");
+	shared_ptr<CUI> pSkillBar = FindUI(FindKey);
+
+	if (pSkillBar) {
+		pSkillBar->SetEnable(true);
+	}
+
+	wstring FindKey2 = TEXT("UI_BurstBar");
+	shared_ptr<CUI> pBurstBar = FindUI(FindKey2);
+
+	if (pBurstBar) {
+		dynamic_pointer_cast<CUIBurstGaugeBar>(pBurstBar)->SetBurstMode(true);
 	}
 
 
@@ -186,6 +218,17 @@ void CUIMgr::SetMiniQuestSuccessNumber(_int _iSucNum)
 	}
 }
 
+void CUIMgr::AddMiniQuestSuccessNumber()
+{
+	wstring FindKey = TEXT("UI_Miniquest");
+	shared_ptr<CUI> pMiniquest = FindUI(FindKey);
+
+	if (pMiniquest) {
+		dynamic_pointer_cast<CUIMiniquest>(pMiniquest)->AddSuccessNum();
+	}
+
+}
+
 void CUIMgr::StartScreenEffect(CUIScreenEffect::EFFECTTYPE _eEffectType)
 {
 	wstring FindKey = TEXT("UI_ScreenEffect");
@@ -197,4 +240,27 @@ void CUIMgr::StartScreenEffect(CUIScreenEffect::EFFECTTYPE _eEffectType)
 
 
 
+}
+
+void CUIMgr::StartQuest(const wstring& _strQuestInfo)
+{
+
+	wstring FindKey = TEXT("UI_QeustTitle");
+	shared_ptr<CUI> pQuestTitle = FindUI(FindKey);
+
+	if (pQuestTitle) {
+		dynamic_pointer_cast<CUIMapTitle>(pQuestTitle)->StartQuest(_strQuestInfo);
+		SetQuestDesc(_strQuestInfo);
+	}
+
+}
+
+void CUIMgr::SetQuestDesc(const wstring& _strQuestInfo)
+{
+	wstring FindKey = TEXT("UI_Quest");
+	shared_ptr<CUI> pQuest = FindUI(FindKey);
+
+	if (pQuest) {
+		dynamic_pointer_cast<CUIQuest>(pQuest)->SetQuestDesc(_strQuestInfo);
+	}
 }

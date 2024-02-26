@@ -430,7 +430,9 @@ void CMinigameMole::ProcessingEndEvent(_float _fTimeDelta)
         //배리어 해제
         m_pBear->SetEnable(false);
         CCameraMgr::GetInstance()->SwitchingCamera(CCameraMgr::ECAMERATYPE::THIRDPERSON);
+        CUIMgr::GetInstance()->CloseUI(TEXT("UI_Miniquest"));
         __super::GameEnd();
+
     }
 }
 

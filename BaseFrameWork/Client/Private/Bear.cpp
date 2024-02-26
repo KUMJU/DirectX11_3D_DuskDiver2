@@ -5,7 +5,9 @@
 #include "Model.h"
 #include "Collider.h"
 
+#include "UIMgr.h"
 #include "GameInstance.h"
+#include "SceneTriggerInsert.h"
 
 
 CBear::CBear()
@@ -46,6 +48,7 @@ HRESULT CBear::Initialize()
 
     m_eMonsterType = EMONSTER_TYPE::MONSTER_NORMAL;
 
+    m_pTrigger = CSceneTriggerInsert::Create({ -3.f, 27.f, -139.f });
 
     return S_OK;
 }
@@ -116,6 +119,29 @@ void CBear::Tick(_float _fTimeDelta)
 
     }
 
+    if (m_bRunaway) {
+
+        m_fDialogAccTime += _fTimeDelta;
+
+        if (m_fDialogAccTime > 8.f && m_fDialogAccTime < 12.f) {
+            _float fSpeedPerTick = 18.f * _fTimeDelta;
+            _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+
+            vPos.m128_f32[1] += fSpeedPerTick;
+
+            m_pTransformCom->SetState(CTransform::STATE_POSITION, vPos);
+
+        }
+        else if (m_fDialogAccTime >= 12.f) {
+            m_bRunaway = false;
+            m_pTransformCom->Rotation({ 0.f,1.f, 0.f }, XMConvertToRadians(0.f));
+            CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Event"), m_pTrigger);
+        }
+
+
+    }
+
+
     m_pCollider->Tick(m_pTransformCom->GetWorldMatrix());
     CGameInstance::GetInstance()->AddCollider(CCollisionMgr::COL_MONSTER, m_pCollider);
 }
@@ -172,7 +198,16 @@ void CBear::ChangeModel(_int _iModelNum)
 
 void CBear::OnHit()
 {
+    SetShaking(2.f, 0.5f);
+    ++m_iHitNum;
 
+    if (m_iHitNum >= 10) {
+
+        CUIMgr::GetInstance()->StartDialog(TEXT("BearCoinQuest"));
+        m_bRunaway = true;
+        //Dialog
+        //m_bRunaway
+    }
 
 }
 

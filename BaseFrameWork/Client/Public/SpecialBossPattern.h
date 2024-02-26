@@ -28,6 +28,11 @@ private:
 	_int m_iPressNum = 0;
 	_int m_iSuccessNum = 0;
 
+	_bool m_bStartDone = false;
+	_bool m_bCamFocusDone = false;
+	
+	_float m_fAccTime = 0.f;
+
 
 private:
 	void KeyInput();

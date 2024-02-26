@@ -8,7 +8,19 @@ class CSoundMgr
 {
 public:
 	enum class CHANNELID {
-		CH_BGM, CH_PLR_VO, CH_PLR_FX, CH_PLR_SKILLTRIGER, CH_MON, CH_MONHIT, CH_EFFECT, CH_MAPSE, CH_END
+		CH_BGM, 
+		CH_PLR_VO,
+		CH_PLR_FX,
+		CH_PLR_SKILLTRIGER,
+		CH_PLR_WALK_SE,
+		CH_MON,
+		CH_MONHIT,
+		CH_MON_SE,
+		CH_EFFECT,
+		CH_MAPOBJ_SE,
+		CH_MAPSE,
+		CH_UI_FX,
+		CH_END
 	};
 
 public:

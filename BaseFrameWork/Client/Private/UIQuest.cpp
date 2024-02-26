@@ -27,7 +27,7 @@ HRESULT CUIQuest::Initialize()
 	m_pTextureCom = CGameInstance::GetInstance()->GetTexture(TEXT("hud_task"));
     m_Components.emplace(TEXT("Com_Texture"), m_pTextureCom);
 
-    strCurrentQuest = TEXT("이상현상을 제거하라");
+    strCurrentQuest = TEXT("");
 
     m_pTransformCom->Rotation({ 0.f, 0.f, 1.f ,0.f }, XMConvertToRadians(3.5f));
     m_IsEnabled = true;
@@ -86,7 +86,7 @@ HRESULT CUIQuest::Render()
         return E_FAIL;
 
 
-    CGameInstance::GetInstance()->RenderFont(TEXT("Font_Default_KR"), strCurrentQuest, { g_iWinSizeX * 0.5f + 430.f,g_iWinSizeY * 0.5f - 274.f }, Colors::White, XMConvertToRadians(-3.5f));
+    CGameInstance::GetInstance()->RenderFont(TEXT("Font_Default_KR"), strCurrentQuest, { g_iWinSizeX * 0.5f + 395.f,g_iWinSizeY * 0.5f - 270.f }, Colors::White, XMConvertToRadians(-3.5f));
 
 
     return S_OK;

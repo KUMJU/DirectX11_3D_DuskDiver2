@@ -59,6 +59,9 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(CGameInstance::GetInstance()->AddFont(TEXT("Font_Default_KR_12pt"), TEXT("../Bin/Resources/Font/Basic_KR_Bold_12.spritefont"))))
 		return E_FAIL;
 
+	if (FAILED(CGameInstance::GetInstance()->AddFont(TEXT("Font_Title_KR"), TEXT("../Bin/Resources/Font/TitleFont_KR.spritefont"))))
+		return E_FAIL;
+
 	CGameInstance::GetInstance()->LoadLevelResource(LEVEL_LOGO);
 
 	if (FAILED(OpenLevel(LEVEL_LOGO)))

@@ -55,6 +55,16 @@ void CSkillQ::PriorityTick(_float _fTimeDelta)
 void CSkillQ::Tick(_float _fTimeDelta)
 {
     __super::Tick(_fTimeDelta);
+
+    m_fAccTime += _fTimeDelta;
+
+    if (m_fAccTime >= 0.5f && !bVoiceDone) {
+
+        bVoiceDone = true;
+        CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
+        CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_57.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
+    }
+
    
 }
 

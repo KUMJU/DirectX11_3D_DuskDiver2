@@ -33,6 +33,9 @@ public:
 	virtual void LateTick(_float _fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+public:
+	void SetUIRenderGroup(CRenderer::UIGROUP _eGroup) { m_eUIGroup = _eGroup; }
+
 protected:
 	shared_ptr<CShader> m_pShader = nullptr;
 	shared_ptr<CVIBuffer_UI> m_VIRectCom = nullptr;

@@ -23,6 +23,7 @@ public:
 
 	void CloseAllUI();
 	void HUDOn();
+	void CloseUI(wstring _strUIKey);
 
 //Specific Function
 public:
@@ -37,6 +38,7 @@ public:
 	void SetTimeRatio(_float _fTimeRate);
 
 public:
+	void SetBurstMode();
 	void SetBurstSkillGauge(_float _fCurrentBurst);
 
 public:
@@ -45,9 +47,14 @@ public:
 	void StartMoleMinigame();
 	void StartCoinQuest();
 	void SetMiniQuestSuccessNumber(_int _iSucNum);
+	void AddMiniQuestSuccessNumber();
 
 public:
 	void StartScreenEffect(CUIScreenEffect::EFFECTTYPE _eEffectType);
+
+public:
+	void StartQuest(const wstring& _strQuestInfo);
+	void SetQuestDesc(const wstring& _strQuestInfo);
 
 private:
 

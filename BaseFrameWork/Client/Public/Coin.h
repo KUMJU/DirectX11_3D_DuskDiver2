@@ -25,6 +25,19 @@ public:
 	virtual void OnCollide(EObjType _eObjType, shared_ptr<CCollider> _pCollider) override;
 
 private:
+	_float m_fLerpTime = 0.f;
+	_float m_fScaleLerpTotalTime = 0.3f;
+
+
+	_bool m_bCollided = false;
+
+
+	_float3 m_vInitScale = _float3();
+	_float m_fInitYPos = float();
+private:
+	void ScaleLerp();
+
+private:
 	shared_ptr<CCollider> m_pCollider = nullptr;
 
 public:

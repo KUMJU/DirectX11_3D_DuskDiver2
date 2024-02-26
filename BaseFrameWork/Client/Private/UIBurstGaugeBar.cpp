@@ -131,6 +131,16 @@ void CUIBurstGaugeBar::AddBurstGauge()
 
 }
 
+void CUIBurstGaugeBar::SetBurstMode(_bool _bBurst)
+{
+    m_bBurstMode = _bBurst;
+
+    if (m_bBurstMode) {
+        m_pUIEffect->SetEnable(true);
+    }
+
+}
+
 void CUIBurstGaugeBar::ComputeRatio()
 {
     if (m_fCurrentBurstGauge > 90.f) {

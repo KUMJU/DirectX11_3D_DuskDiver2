@@ -173,7 +173,8 @@ private:
 	_int m_iMaxHp = 100;
 	_int m_iHp = 100;
 
-	_float m_fBurstGage = 0;
+	_float m_fBurstGage = 0.f;
+	_float m_fBurstSkillGauge = 0.f;
 	_int m_iSkillGage = 4;
 
 
@@ -302,8 +303,9 @@ public:
 		m_IsOnMinigame = _bOnEvent;
 
 		if (_bOnEvent) {
+			ChangeAnim(44, true);
 			ChangeAnim(36, true);
-			m_eCurrentState = HEROSTATE::STATE_SPECIAL_ATTACK;
+			m_eCurrentState = HEROSTATE::STATE_IDLE;
 		}
 	}
 

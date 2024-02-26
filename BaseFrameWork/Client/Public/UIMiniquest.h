@@ -22,6 +22,7 @@ public:
 
 
 	void SetSuccessNum(_int _iSucNum) { m_iCurrentSuccessNum = _iSucNum; }
+	void AddSuccessNum() { ++m_iCurrentSuccessNum; }
 	void ResetUI();
 
 private:

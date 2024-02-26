@@ -44,11 +44,12 @@ void CBattleSystem::Tick(_float _fTimeDelta)
 
 		m_fSlowTIme += _fTimeDelta;
 
-		if (m_fSlowTIme > 0.5f) {
+		if (m_fSlowTIme > 0.6f) {
 			m_bSlowMotion = false;
 			m_fSlowTIme = 0.f;
 			m_bEventDone = true;
 			CGameInstance::GetInstance()->SetTimerOffset(TEXT("Timer_60"), 1.f);
+			BattleEnd();
 			return;
 		}
 	}
@@ -83,10 +84,10 @@ void CBattleSystem::Tick(_float _fTimeDelta)
 		}
 	}
 
-	if (pMonsterList->empty()) {
+	//if (pMonsterList->empty()) {
 
-		BattleEnd();
-	}
+	//	BattleEnd();
+	//}
 
 	
 }

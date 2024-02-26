@@ -146,6 +146,7 @@ void CUIDialog::StartDialog(const wstring& _strDialogKey)
         m_CurrentDialog =  &FindKey->second;
         m_IsEnabled = true;
         SettingDialogInfo();
+        m_fAccTime = 0.f;
     }
 }
 

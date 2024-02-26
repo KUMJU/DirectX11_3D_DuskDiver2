@@ -388,6 +388,40 @@ PS_OUT PS_FADE(PS_IN In)
 
 }
 
+PS_OUT PS_TITLE(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    Out.vColor = g_Texture.Sample(g_LinearSampler, In.vTexcoord);
+
+    //흰색 색 변경
+    if (Out.vColor.r != 0.f && 
+        Out.vColor.g != 0.f &&
+        Out.vColor.b != 0.f)
+    {
+        float fDiff = 0.f;
+        
+        if (In.vTexcoord.x >= 0.5f)
+        {
+            fDiff = (1.f - In.vTexcoord.x) / 0.5f;
+        }
+        else
+        {
+            fDiff = (In.vTexcoord.x/ 0.5f);
+
+        }
+        Out.vColor.rgb = float3(0.2f * fDiff, 0.3f * fDiff, 0.4f * fDiff);
+    }
+    
+    if (0 == Out.vColor.a )
+        discard;
+     
+    return Out;
+
+}
+
+
+//g_RGBColor
 technique11 DefaultTechnique
 {
     //pass를 여러개로 나눠서 한 셰이더 파일 안에 여러 진입점, 다른 효과를 줄 수도 있음
@@ -511,6 +545,17 @@ technique11 DefaultTechnique
         GeometryShader = compile gs_5_0 GS_MAIN();
         PixelShader = compile ps_5_0 PS_FADE();
     }
+
+    pass Title //12
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = compile gs_5_0 GS_MAIN();
+        PixelShader = compile ps_5_0 PS_TITLE();
+    }
+
 
 
 }

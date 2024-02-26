@@ -55,7 +55,7 @@ public:
 
 public:
 	void FocusObject();
-
+	void MovingCameara(_float _fTimeDelta);
 
 private:
 
@@ -77,6 +77,7 @@ private:
 	vector<EVENT_INFO> m_EventList;
 	map<wstring, vector<EVENT_INFO>> m_PresetList;
 
+	_vector m_vDistancePerTick = _vector();
 public:
 
 	static shared_ptr<CEventCamera> Create();

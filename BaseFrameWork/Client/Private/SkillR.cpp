@@ -65,6 +65,15 @@ void CSkillR::Tick(_float _fTimeDelta)
 {
     __super::Tick(_fTimeDelta);
 
+    m_fAccTime += _fTimeDelta;
+
+    if (m_fAccTime >= 1.f && !bVoiceDone) {
+
+        bVoiceDone = true;
+        CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
+        CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_36.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
+    }
+
 }
 
 void CSkillR::LateTick(_float _fTimeDelta)

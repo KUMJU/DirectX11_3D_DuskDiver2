@@ -38,41 +38,41 @@ void CCameraFree::PriorityTick(_float fTimeDelta)
 		}
 	}
 
-	//KeyInput();
+	/*KeyInput();
 
-	//if (GetKeyState(VK_UP) & 0x8000)
-	//{
-	//	_bool jump = false;
-	//	m_pTransformCom->GoStraight(fTimeDelta, nullptr, jump);
-	//}
+	if (GetKeyState(VK_UP) & 0x8000)
+	{
+		_bool jump = false;
+		m_pTransformCom->GoStraight(fTimeDelta, nullptr, jump);
+	}
 
-	//if (GetKeyState(VK_DOWN) & 0x8000)
-	//{
-	//	m_pTransformCom->GoBackward(fTimeDelta);
-	//}
+	if (GetKeyState(VK_DOWN) & 0x8000)
+	{
+		m_pTransformCom->GoBackward(fTimeDelta);
+	}
 
-	//if (GetKeyState(VK_LEFT) & 0x8000)
-	//{
-	//	m_pTransformCom->GoLeft(fTimeDelta);
-	//}
+	if (GetKeyState(VK_LEFT) & 0x8000)
+	{
+		m_pTransformCom->GoLeft(fTimeDelta);
+	}
 
-	//if (GetKeyState(VK_RIGHT) & 0x8000)
-	//{
-	//	_bool jump = false;
-	//	m_pTransformCom->GoRight(fTimeDelta, nullptr, &jump);
-	//}
+	if (GetKeyState(VK_RIGHT) & 0x8000)
+	{
+		_bool jump = false;
+		m_pTransformCom->GoRight(fTimeDelta, nullptr, &jump);
+	}
 
-	//if (!m_IsCamLock) {
+	if (!m_IsCamLock) {
 
-	//	_long MouseMove = 0;
+		_long MouseMove = 0;
 
-	//	if (MouseMove = CGameInstance::GetInstance()->GetDIMouseMove(DIMS_X))
-	//		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta * MouseMove * m_fMouseSensor);
+		if (MouseMove = CGameInstance::GetInstance()->GetDIMouseMove(DIMS_X))
+			m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta * MouseMove * m_fMouseSensor);
 
-	//	if (MouseMove = CGameInstance::GetInstance()->GetDIMouseMove(DIMS_Y))
-	//		m_pTransformCom->Turn(m_pTransformCom->GetState(CTransform::STATE_RIGHT), fTimeDelta * MouseMove * m_fMouseSensor);
+		if (MouseMove = CGameInstance::GetInstance()->GetDIMouseMove(DIMS_Y))
+			m_pTransformCom->Turn(m_pTransformCom->GetState(CTransform::STATE_RIGHT), fTimeDelta * MouseMove * m_fMouseSensor);
 
-	//}
+	}*/
 
 	if (FAILED(SetUpTransformMatices()))
 		return;

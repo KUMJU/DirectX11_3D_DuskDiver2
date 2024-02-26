@@ -40,7 +40,6 @@ HRESULT CFinalBoss::Initialize()
     m_fTotalCoolTime = 3.f;
 
     m_bLoop = true;
-    m_pModelCom->ChangeAnimation(13);
     m_IsAtkCool = true;
 
     /********Body Collider 1 ************/
@@ -112,7 +111,7 @@ void CFinalBoss::Tick(_float _fTimeDelta)
     }
 
 
-    if (!m_bSetOriginLook && !m_bDie && m_eCurrentState != EMONSTER_STATE::STATE_STUN) {
+    if (!m_bSetOriginLook && !m_bDie && m_eCurrentState != EMONSTER_STATE::STATE_STUN && m_eCurrentState != EMONSTER_STATE::STATE_SPAWN) {
         _vector vLook = m_pTransformCom->GetState(CTransform::STATE_LOOK);
 
         m_fTurnTime += _fTimeDelta;
@@ -136,7 +135,7 @@ void CFinalBoss::Tick(_float _fTimeDelta)
     }
 
 
-    if (4 == m_iAnimNum && !m_bDie && m_eCurrentState != EMONSTER_STATE::STATE_STUN) {
+    if (4 == m_iAnimNum && !m_bDie && m_eCurrentState != EMONSTER_STATE::STATE_STUN && m_eCurrentState != EMONSTER_STATE::STATE_SPAWN) {
        
         m_fPatternCheckTime += _fTimeDelta;
 
@@ -194,7 +193,7 @@ void CFinalBoss::LateTick(_float _fTimeDelta)
     if (!m_IsEnabled)
         return;
 
-    if (m_IsAtkCool && !m_bDie && m_eCurrentState != EMONSTER_STATE::STATE_STUN) {
+    if (m_IsAtkCool && !m_bDie && m_eCurrentState != EMONSTER_STATE::STATE_STUN && m_eCurrentState != EMONSTER_STATE::STATE_SPAWN) {
 
         m_bAttackCoolTime += _fTimeDelta;
 
@@ -209,7 +208,7 @@ void CFinalBoss::LateTick(_float _fTimeDelta)
         }
     }
 
-    if (4 == m_iAnimNum && !m_bDie && m_eCurrentState != EMONSTER_STATE::STATE_STUN) {
+    if (4 == m_iAnimNum && !m_bDie && m_eCurrentState != EMONSTER_STATE::STATE_STUN && m_eCurrentState != EMONSTER_STATE::STATE_SPAWN) {
 
         if (!m_bLaserOn) {
             m_pLaserEffectPreset->LateTick(_fTimeDelta);
@@ -319,7 +318,7 @@ void CFinalBoss::IfEmptyAnimList()
         m_eCurrentState = EMONSTER_STATE::STATE_IDLE;
     }
 
-    if (0 == m_iAnimNum) {
+    if (8 == m_iAnimNum && EMONSTER_STATE::STATE_SPAWN == m_eCurrentState) {
         m_eCurrentState = EMONSTER_STATE::STATE_IDLE;
     }
 
@@ -359,14 +358,13 @@ void CFinalBoss::SetSpawnState()
     m_pHPBar->SetEnable(true);
 
     m_eCurrentState = EMONSTER_STATE::STATE_SPAWN;
-    ChangeAnim(0, false);
+    ChangeAnim(8, false);
     m_iHP = 100;
 
 }
 
 void CFinalBoss::OnHit()
 {
-    // ChangeAnim(9, false);
     if (m_bDie) {
         m_bDie = false;
         StartSpecialPattern();

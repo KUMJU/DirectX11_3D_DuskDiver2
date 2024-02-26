@@ -28,6 +28,7 @@ public:
 		_bool bDownAtk;
 		_bool bDropAtk;
 
+		wstring strHitSound = TEXT("");
 	};
 
 public:
@@ -85,6 +86,10 @@ protected:
 	shared_ptr<CTransform> m_pOwnerTransform = nullptr;
 
 	_bool m_IsBasicCombat = false;
+
+protected:
+	_bool bVoiceDone = false;
+	_float m_fAccTime = 0.f;
 
 //Collide
 protected:

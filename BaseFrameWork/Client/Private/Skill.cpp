@@ -195,6 +195,8 @@ void CSkill::SkillReset()
 {
 	m_fSkillActiveTime = 0.f;
 	m_iCurrentSkillOrder = 0;
+	m_fAccTime = 0.f;
+	bVoiceDone = false;
 
 	if (m_pEffectPreset) {
 		m_pEffectPreset->StopEffect();

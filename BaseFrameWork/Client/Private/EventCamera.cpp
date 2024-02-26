@@ -108,6 +108,7 @@ void CEventCamera::LateTick(_float fTimeDelta)
 		FocusObject();
 		break;
 	case CEventCamera::FUNC_MOVING:
+		MovingCameara(fTimeDelta);
 		break;
 	case CEventCamera::FUNC_SHAKING:
 		break;
@@ -181,6 +182,21 @@ void CEventCamera::FocusObject()
 
 }
 
+void CEventCamera::MovingCameara(_float _fTimeDelta)
+{
+	_vector fDist =  m_vDistancePerTick* _fTimeDelta* (m_EventList)[m_iCurrentIdx].fSpeed;
+	_vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+
+
+	vPos = XMVectorSetW(vPos + fDist, 1.f);
+
+	_vector vLook = XMVectorSetW(vPos + XMLoadFloat3(&(m_EventList)[m_iCurrentIdx].fDistance), 1.f);
+
+	m_pTransformCom->SetState(CTransform::STATE_POSITION, vPos);
+	m_pTransformCom->LookAt(vLook);
+
+}
+
 void CEventCamera::EventInitialize()
 {
 
@@ -221,6 +237,17 @@ void CEventCamera::EventInitialize()
 
 		break;
 	case CEventCamera::FUNC_MOVING:
+
+		  
+		_vector vDistance = XMLoadFloat3(&(m_EventList)[m_iCurrentIdx].vEnd) - XMLoadFloat3(&(m_EventList)[m_iCurrentIdx].vStart);
+		m_vDistancePerTick = vDistance / (m_EventList)[m_iCurrentIdx].fDuration;
+
+		_vector vStartPos = XMVectorSetW(XMLoadFloat3(&(m_EventList)[m_iCurrentIdx].vStart),1.f);
+
+		m_pTransformCom->SetState(CTransform::STATE_POSITION, vStartPos);
+ 
+
+
 		break;
 	case CEventCamera::FUNC_SHAKING:
 		break;
