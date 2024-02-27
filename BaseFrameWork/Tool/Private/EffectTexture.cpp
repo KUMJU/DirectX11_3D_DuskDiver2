@@ -57,6 +57,14 @@ HRESULT CEffectTexture::Initialize(const wstring& _strTextureKey, TEXEFFECT_DESC
     m_fDurationStart = _TextureDesc->vDuration.x;
     m_fDurationEnd = _TextureDesc->vDuration.y;
 
+
+    m_vRowUVRatio.x = 0.f;
+    m_vRowUVRatio.y = (_float)(1.f) / (_float)_TextureDesc->iRow;
+
+    m_vColUVRatio.x = 0.f;
+    m_vColUVRatio.y = (_float)(1.f) / (_float)_TextureDesc->iCol;
+
+
     return S_OK;
 }
 
@@ -79,8 +87,27 @@ void CEffectTexture::Tick(_float _fTimeDelta)
             m_IsEnabled = false;
         }
 
+        if (m_TextureDesc.fScrollTime != 0) {
+
+            m_fSequenceAccTime += _fTimeDelta;
+
+            if (m_fSequenceAccTime >= m_TextureDesc.fScrollTime) {
+
+                SlideNextTexIdx();
+                m_fSequenceAccTime = 0.f;
+
+            }
+
+        }
+
+
+        if (m_vTurnAxis.m128_f32[0] != 0 &&
+            m_vTurnAxis.m128_f32[1] != 0 &&
+            m_vTurnAxis.m128_f32[2] != 0) {
+            m_pTransformCom->Turn(m_vTurnAxis, _fTimeDelta);
+        }
+
         ScaleLerp();
-        m_pTransformCom->Turn(m_vTurnAxis, _fTimeDelta);
     }
 
 }
@@ -110,14 +137,57 @@ HRESULT CEffectTexture::Render()
 
     if (FAILED(m_pShader->BindMatrix("g_ProjMatrix", &ProjMat)))
         return E_FAIL;
-
+    
     if (FAILED(m_pShader->BindRawValue("g_RGBColor", &m_vColor, sizeof(_float4))))
         return E_FAIL;
+
+    _int iPassNum = 0;
+
+    _matrix WorldOwnMatrix = m_pTransformCom->GetWorldMatrix();
+
+    //시퀀스 텍스쳐 
+    if (m_TextureDesc.bSequenceTex) {
+
+
+        _float4x4 ViewCopyMat = ViewMat;
+
+        ViewCopyMat._41 = 0.f;
+        ViewCopyMat._42 = 0.f;
+        ViewCopyMat._43 = 0.f;
+
+        _matrix ViewInv = {};
+
+        ViewInv = XMMatrixInverse(NULL, XMLoadFloat4x4(&ViewCopyMat));
+        ViewInv = WorldOwnMatrix * ViewInv;
+        ViewInv.r[3] = WorldOwnMatrix.r[3];
+
+        _float4x4 BillboardWorld = {};
+        XMStoreFloat4x4(&BillboardWorld, ViewInv);
+
+        if (FAILED(m_pShader->BindMatrix("g_WorldMatrix", &BillboardWorld)))
+            return E_FAIL;
+
+
+        if (FAILED(m_pShader->BindRawValue("g_fStartRowUV", &m_vRowUVRatio.x, sizeof(_float))))
+            return E_FAIL;
+
+        if (FAILED(m_pShader->BindRawValue("g_fEndRowUV", &m_vRowUVRatio.y, sizeof(_float))))
+            return E_FAIL;
+
+        if (FAILED(m_pShader->BindRawValue("g_fStartColUV", &m_vColUVRatio.x, sizeof(_float))))
+            return E_FAIL;
+
+        if (FAILED(m_pShader->BindRawValue("g_fEndColUV", &m_vColUVRatio.y, sizeof(_float))))
+            return E_FAIL;
+
+        iPassNum = 1;
+    }
+
 
     if (FAILED(m_pTexture->BindShaderResource(m_pShader, "g_Texture", 0)))
         return E_FAIL;
 
-    if (FAILED(m_pShader->Begin(0)))
+    if (FAILED(m_pShader->Begin(iPassNum)))
         return E_FAIL;
 
 
@@ -248,6 +318,10 @@ void CEffectTexture::ResetEffect() {
     m_vCurrentScale = XMLoadFloat2(&m_TextureDesc.vStartScale);
     m_fAccTime = 0.f;
 
+    m_iCurrentRow = 0;
+    m_iCurrentCol = 0;
+    
+
 }
 
 void CEffectTexture::EditDesc(const wstring& _strTextureKey, TEXEFFECT_DESC _desc)
@@ -308,6 +382,28 @@ void CEffectTexture::ScaleLerp()
        1.f);
 
 
+
+}
+
+void CEffectTexture::SlideNextTexIdx()
+{
+    ++m_iCurrentRow;
+
+    //가로 끝까지 갔을 때 
+    if (m_TextureDesc.iRow == m_iCurrentRow) {
+        m_iCurrentRow = 0;
+        ++m_iCurrentCol;
+
+        if (m_TextureDesc.iCol == m_iCurrentCol) {
+            m_iCurrentCol = 0;
+        }
+    }
+
+    m_vRowUVRatio.x = (_float)m_iCurrentRow / (_float)m_TextureDesc.iRow;
+    m_vRowUVRatio.y = (_float)(m_iCurrentRow + 1.f) / (_float)m_TextureDesc.iRow;
+
+    m_vColUVRatio.x = (_float)(m_iCurrentCol) / (_float)m_TextureDesc.iCol;
+    m_vColUVRatio.y = (_float)(m_iCurrentCol + 1.f) / (_float)m_TextureDesc.iCol;
 
 }
 

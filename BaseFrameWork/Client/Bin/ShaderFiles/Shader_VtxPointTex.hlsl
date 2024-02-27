@@ -5,6 +5,13 @@ texture2D g_Texture;
 
 vector g_RGBColor = vector(1.f, 1.f, 1.f, 1.f);
 
+//가로
+float g_fStartRowUV;
+float g_fEndRowUV;
+//세로
+float g_fStartColUV;
+float g_fEndColUV;
+
 struct VS_IN
 {
     float3 vPosition : POSITION;
@@ -89,6 +96,44 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> DataStream)
 }
 
 
+[maxvertexcount(6)]
+void GS_SEQUENCE_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> DataStream)
+{
+    GS_OUT Out[4];
+    
+    matrix matVP = mul(g_ViewMatrix, g_ProjMatrix);
+    matVP = mul(g_WorldMatrix, matVP);
+
+    Out[0].vPosition = In[0].vPosition + float4(-0.5f, 0.5f, 0.f, 0.f);
+    Out[0].vPosition = mul(Out[0].vPosition, matVP);
+    Out[0].vTexcoord = float2(g_fStartRowUV, g_fStartColUV);
+    
+    Out[1].vPosition = In[0].vPosition + float4(0.5f, 0.5f, 0.f, 0.f);
+    Out[1].vPosition = mul(Out[1].vPosition, matVP);
+    Out[1].vTexcoord = float2(g_fEndRowUV, g_fStartColUV);
+    
+    //g_fEndColUV g_fStartColUV
+    Out[2].vPosition = In[0].vPosition + float4(0.5f, -0.5f, 0.f, 0.f);
+    Out[2].vPosition = mul(Out[2].vPosition, matVP);
+    Out[2].vTexcoord = float2(g_fEndRowUV, g_fEndColUV);
+    
+    Out[3].vPosition = In[0].vPosition + float4(-0.5f, -0.5f, 0.f, 0.f);
+    Out[3].vPosition = mul(Out[3].vPosition, matVP);
+    Out[3].vTexcoord = float2(g_fStartRowUV, g_fEndColUV);
+
+
+    DataStream.Append(Out[0]);
+    DataStream.Append(Out[1]);
+    DataStream.Append(Out[2]);
+    DataStream.RestartStrip();
+
+    DataStream.Append(Out[0]);
+    DataStream.Append(Out[2]);
+    DataStream.Append(Out[3]);
+
+    
+}
+
 struct PS_IN
 {
     float4 vPosition : SV_POSITION;
@@ -114,11 +159,32 @@ PS_OUT PS_MAIN(PS_IN In)
 
 }
 
+PS_OUT PS_SEQUENCE_MAIN(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    Out.vColor = g_Texture.Sample(g_LinearSampler, In.vTexcoord) * g_RGBColor;
+
+    if (0.2 >= Out.vColor.a)
+        discard;
+    
+    if (0 == Out.vColor.r &&
+        0 == Out.vColor.g &&
+        0 == Out.vColor.b)
+    {
+        discard;
+    }
+    
+        return Out;
+
+}
+
+
 
 
 technique11 DefaultTechnique
 {
-    pass DefaultPass
+    pass DefaultPass // 0
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -126,5 +192,15 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = compile gs_5_0 GS_MAIN();
         PixelShader = compile ps_5_0 PS_MAIN();
+    }
+
+    pass Blend //1 
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = compile gs_5_0 GS_SEQUENCE_MAIN();
+        PixelShader = compile ps_5_0 PS_SEQUENCE_MAIN();
     }
 }

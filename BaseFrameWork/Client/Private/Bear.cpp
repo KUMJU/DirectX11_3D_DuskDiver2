@@ -198,7 +198,7 @@ void CBear::ChangeModel(_int _iModelNum)
 
 void CBear::OnHit()
 {
-    SetShaking(2.f, 0.5f);
+    SetShaking(0.8f, 0.5f);
     ++m_iHitNum;
 
     if (m_iHitNum >= 10) {

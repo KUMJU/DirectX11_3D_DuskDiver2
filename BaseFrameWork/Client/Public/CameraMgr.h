@@ -38,6 +38,9 @@ public:
 	_float4 GetCamLook();
 	_vector GetCamPos();
 
+public:
+	void SetShakingMode(_float _fShakingPow, _float _fShakingTime, _bool m_bXDir);
+
 
 public:
 	void FocusPlayer(_vector _vPos , _float _fHeight);

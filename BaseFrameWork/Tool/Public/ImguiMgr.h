@@ -131,6 +131,10 @@ private:
 	_float2 m_vTexMiddleScale = _float2();
 	_float2 m_vTexEndScale = _float2();
 
+	_bool m_bSequenceTexture = false;
+	_int m_iRow = 0;
+	_int m_iCol = 0;
+	_float m_fScrollTime = 0.f;
 
 //Mesh 
 private:

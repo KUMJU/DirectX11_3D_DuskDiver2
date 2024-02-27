@@ -80,7 +80,12 @@ void CEffectTexture::Tick(_float _fTimeDelta, _matrix _ParentMat)
         }
     }
 
-    m_pTransformCom->Turn(m_vTurnAxis, _fTimeDelta);
+    if (m_vTurnAxis.m128_f32[0] != 0 &&
+        m_vTurnAxis.m128_f32[1] != 0 &&
+        m_vTurnAxis.m128_f32[2] != 0) {
+        m_pTransformCom->Turn(m_vTurnAxis, _fTimeDelta);
+    }
+
     ScaleLerp();
     m_ParentMat = _ParentMat;
 

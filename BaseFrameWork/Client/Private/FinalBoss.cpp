@@ -120,16 +120,18 @@ void CFinalBoss::Tick(_float _fTimeDelta)
 
             m_bSetOriginLook = true;
             m_fTurnTime = 0.f;
-            //m_vOriginLookVec
-            vLook = XMVectorLerp(vLook, {0.f, 0.f, 1.f ,0.f}, 1.f);
-            m_pTransformCom->SetState(CTransform::STATE_LOOK, vLook);
-            
+ 
+            _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+            vPos = vPos + _vector({0.f, 0.f, 1.f, 0.f});
+            m_pTransformCom->LookAtForLandObject(vPos);
 
         }
         else {
             vLook= XMVectorLerp(vLook, { 0.f, 0.f, 1.f ,0.f }, m_fTurnTime /2.f);
-            m_pTransformCom->SetState(CTransform::STATE_LOOK, vLook);
 
+            _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+            vPos = vPos + vLook;
+            m_pTransformCom->LookAtForLandObject(vPos);
         }
 
     }

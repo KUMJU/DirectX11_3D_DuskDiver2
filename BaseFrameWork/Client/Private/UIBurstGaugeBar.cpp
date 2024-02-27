@@ -138,6 +138,9 @@ void CUIBurstGaugeBar::SetBurstMode(_bool _bBurst)
     if (m_bBurstMode) {
         m_pUIEffect->SetEnable(true);
     }
+    else {
+        m_pUIEffect->SetEnable(false);
+    }
 
 }
 

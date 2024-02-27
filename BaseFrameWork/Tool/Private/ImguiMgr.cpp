@@ -527,6 +527,12 @@ void CImguiMgr::TextureEffectSetting()
     ImGui::InputFloat("Turn Speed", &m_fTurnSpeed);
     ImGui::InputFloat3("Turn Axis", &m_vAxis.x);
 
+    ImGui::SeparatorText("Sequence Texture");
+    ImGui::Checkbox("Using SequenceTex", &m_bSequenceTexture);
+    ImGui::InputInt("Row", &m_iRow);
+    ImGui::InputInt("Col", &m_iCol);
+    ImGui::InputFloat("ScrollTime", &m_fScrollTime);
+
 }
 
 void CImguiMgr::MeshEffectSetting()
@@ -1003,6 +1009,11 @@ void CImguiMgr::CreateEffect()
         textureDesc.vTurnAxis = m_vAxis;
 
         textureDesc.fScaleChangeTime = m_fScaleChangeTime;
+
+        textureDesc.bSequenceTex = m_bSequenceTexture;
+        textureDesc.iRow = m_iRow;
+        textureDesc.iCol = m_iCol;
+        textureDesc.fScrollTime = m_fScrollTime;
 
         char* EffectName = new char[256];
         memcpy_s(EffectName, sizeof(char) * 256, m_CurrentName, sizeof(char) * 256);

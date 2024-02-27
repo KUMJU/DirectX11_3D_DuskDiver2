@@ -57,7 +57,7 @@ private:
 	_bool m_bShaking = false;
 	_float m_fXOffset = 0.f;
 	_float m_fTotalOffset = 0.3f;
-	_float m_fShakingSpeed = 1.4f;
+	_float m_fShakingSpeed = 0.3f;
 	_float m_fShakingTotalTime = 0.f;
 	_vector m_vBeforeShakingPos = _vector();
 

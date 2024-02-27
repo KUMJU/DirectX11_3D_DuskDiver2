@@ -39,6 +39,7 @@ public:
 
 public:
 	void SetBurstMode();
+	void BurstModeEnd();
 	void SetBurstSkillGauge(_float _fCurrentBurst);
 
 public:

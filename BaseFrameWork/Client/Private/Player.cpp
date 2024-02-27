@@ -113,7 +113,7 @@ void CPlayer::Tick(_float _fTimeDelta)
             m_pPlayerSkillset->SetBurstMode(true);
             m_pModelCom = m_pBurstModelCom;
             CUIMgr::GetInstance()->SetBurstMode();
-
+            
             m_eCurrentState = HEROSTATE::STATE_IDLE;
             m_fTransformTime = 0.f;
             m_bBurstMode = true;
@@ -391,7 +391,7 @@ void CPlayer::AddBurstGauge()
 {
     //버스트일때
     if (m_bBurstMode) {
-        m_fBurstSkillGauge += 3.f;
+        m_fBurstSkillGauge += 7.f;
         CUIMgr::GetInstance()->SetBurstSkillGauge(m_fBurstSkillGauge);
     }
     //버스트 아닐때
@@ -459,6 +459,7 @@ void CPlayer::CheckTimer(_float _fTimeDelta)
             m_pModelCom = m_pBattleModelCom;
             m_bBurstMode = false;
             ChangeAnim(44, true);
+            CUIMgr::GetInstance()->BurstModeEnd();
             m_pPlayerSkillset->SetBurstMode(false);
 
         }
@@ -1120,7 +1121,7 @@ void CPlayer::KeyInput(_float _fTimeDelta)
 
     if (GetKeyState('1') & 0x8000) {
 
-        CCameraMgr::GetInstance()->SwitchingCamera(CCameraMgr::ECAMERATYPE::FREE);
+      //  CCameraMgr::GetInstance()->SwitchingCamera(CCameraMgr::ECAMERATYPE::FREE);
     }
 
     if (GetKeyState('6') & 0x8000) {
@@ -1129,7 +1130,7 @@ void CPlayer::KeyInput(_float _fTimeDelta)
        // m_pTransformCom->SetState(CTransform::STATE_POSITION, { 5.f , 40.f, -300.f, 1.f });
         //m_pNavigationCom->CalcCurrentPos({ 5.f , 40.f, -300.f, 1.f });
 
-        m_pTransformCom->SetState(CTransform::STATE_POSITION, { 0.f, 40.f, -380.f, 1.f });
+        m_pTransformCom->SetState(CTransform::STATE_POSITION, { -1.5f, 40.f, -365.f, 1.f });
         m_pNavigationCom->CalcCurrentPos({ 0.f, 40.f, -380.f, 1.f });
     }
 
@@ -1499,7 +1500,8 @@ void CPlayer::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _
 
         //Look 몬스터 쪽으로 변경해주기
 
-         
+        CUIMgr::GetInstance()->StartScreenEffect(CUIScreenEffect::TYPE_BLOOD);
+
         _vector vMonPos = pSkill->GetOwnerPos();
         m_pTransformCom->LookAtForLandObject(vMonPos);
 

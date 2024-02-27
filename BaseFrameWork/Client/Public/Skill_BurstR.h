@@ -16,6 +16,10 @@ public:
 	virtual void LateTick(_float _fTimeDelta);
 	virtual HRESULT Render();
 
+private:
+	_float m_fAccTime = 0.f;
+	_bool m_bShaking = false;
+
 public:
 
 	static shared_ptr<CSkill_BurstR> Create();

@@ -4,6 +4,8 @@
 #include "GameInstance.h"
 #include "Navigation.h"
 
+#include "UIMgr.h"
+
 CPortal::CPortal()
 {
 }
@@ -56,6 +58,7 @@ void CPortal::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _
 		shared_ptr<CGameObject> pPlayer = _pCollider->GetOwner();
 
 		_vector vPos = XMLoadFloat3(&vWarpPosition);
+		CUIMgr::GetInstance()->StartDialog(TEXT("AfterWarp"));
 
 		//플레이어 위치 셋팅 + 네비게이션 인덱스 갱신
 		pPlayer->SetPosition(XMVectorSetW(vPos, 1.f));

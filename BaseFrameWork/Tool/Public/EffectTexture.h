@@ -31,6 +31,11 @@ public:
 
 		_bool bLoop;
 
+		_bool bSequenceTex;
+		_int iCol;
+		_int iRow;
+		_float fScrollTime;
+
 	};
 
 public:
@@ -58,7 +63,7 @@ private:
 	void ComputeInitData();
 
 	void ScaleLerp();
-
+	void SlideNextTexIdx();
 
 private:
 
@@ -86,6 +91,18 @@ private:
 	_float2 m_vEndScaleDiff = _float2();
 
 	_float m_fMiddleTime = 0.f;
+
+
+private:
+
+	_uint m_iCurrentRow = 0;
+	_uint m_iCurrentCol = 0;
+
+	// x : StartUV , y : EndUV
+	_float2 m_vColUVRatio = _float2();
+	_float2 m_vRowUVRatio = _float2();
+
+	_float m_fSequenceAccTime = 0.f;
 
 public:
 	static shared_ptr<CEffectTexture> Create(const wstring& _strTextureKey, TEXEFFECT_DESC* _TextureDesc, char* _strName);

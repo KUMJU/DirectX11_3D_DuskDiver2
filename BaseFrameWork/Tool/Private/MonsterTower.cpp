@@ -30,6 +30,8 @@ HRESULT CMonsterTower::Initialize(_uint _iTowerIdx)
 	TowerCollDesc.vExtents = _float3(0.5f, 1.f, 0.5f);
 	TowerCollDesc.fRadius = 1.f;
 
+	m_eObjType = EObjType::OBJ_MONSTER;
+
 	CTransform::TRANSFORM_DESC desc = {};
 	desc.fRotationPerSet = 2.f;
 	m_pRingTransform = CTransform::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), &desc);
@@ -59,14 +61,12 @@ void CMonsterTower::Tick(_float _fTimeDelta)
 void CMonsterTower::LateTick(_float _fTimeDelta)
 {
 	__super::LateTick(_fTimeDelta);
+	CGameInstance::GetInstance()->AddDebugComponent(m_pCollider);
 
 }
 
 HRESULT CMonsterTower::Render()
 {
-
-	m_pCollider->Render();
-
 	__super::Render();
 
 	//g_vColor

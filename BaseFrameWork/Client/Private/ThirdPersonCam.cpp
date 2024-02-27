@@ -136,6 +136,11 @@ void CThirdPersonCam::LateTick(_float fTimeDelta)
 		                                          
 		MouseFix();
 
+		if (m_bShaking) {
+			ShakeCamera(fTimeDelta);
+		}
+
+
 	}
 	else if (m_eCamState == ECAM_EVENT) {
 
@@ -162,11 +167,25 @@ void CThirdPersonCam::LateTick(_float fTimeDelta)
 			FocusCamera(fTimeDelta);
 		}
 
+		if (m_bShaking) {
+			if (!m_bSetInitShaking) {
+				m_vInitPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+				m_bSetInitShaking = true;
+			}
+
+
+			ShakeCamera(fTimeDelta);
+		}
+
 
 		if (m_fEventAccTime >= (*m_CurrentCamEvent)[m_iCurrentEventIdx].fAccTime) {
 			++m_iCurrentEventIdx;
 			m_fEventAccTime = 0.f;
 			m_bComputeMoving = false;
+			m_bSetInitShaking = false;
+			m_fShakingPow = 1.f;
+			m_bYShaking = false;
+			
 
 			if (m_iCurrentEventIdx == (*m_CurrentCamEvent).size()) {
 
@@ -180,6 +199,15 @@ void CThirdPersonCam::LateTick(_float fTimeDelta)
 				XMStoreFloat4(&m_vPreCamPos , m_pTransformCom->GetState(CTransform::STATE_POSITION));
 
 			}
+			else {
+
+				if ((*m_CurrentCamEvent)[m_iCurrentEventIdx].bShaking) {
+
+					m_bShaking = true;
+					m_fTotalShakingTime = (*m_CurrentCamEvent)[m_iCurrentEventIdx].fShakingTime;
+				}
+
+			}
 		}
 	}
 
@@ -191,6 +219,49 @@ void CThirdPersonCam::LateTick(_float fTimeDelta)
 HRESULT CThirdPersonCam::Render()
 {
 	return S_OK;
+}
+
+void CThirdPersonCam::ShakeCamera(_float _fTimeDelta)
+{
+
+	m_fShakingAccTime += _fTimeDelta;
+	if (m_fShakingAccTime > m_fTotalShakingTime)
+	{
+		m_fShakingAccTime = 0.f;
+		m_bShaking = false;
+	}
+
+	_float x = (rand() % 1000 - 500) / 10000.f;
+	_float y = (rand() % 1000 - 500) / 10000.f;
+
+	_vector vCameraShake;
+
+	if (m_bYShaking) {
+		vCameraShake = XMVector3Normalize(m_pTransformCom->GetState(CTransform::STATE_UP))* y * m_fShakingPow;
+	}
+	else {
+		vCameraShake = XMVector3Normalize(m_pTransformCom->GetState(CTransform::STATE_UP)) * y * m_fShakingPow + XMVector3Normalize(m_pTransformCom->GetState(CTransform::STATE_RIGHT)) * x * m_fShakingPow;
+	}
+
+
+	if (ECAMSTATE::ECAM_DEFAULT == m_eCamState) {
+		_vector vCameraPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+		m_pTransformCom->SetState(CTransform::STATE_POSITION, vCameraPos + vCameraShake);
+
+	}
+	else if(ECAMSTATE::ECAM_EVENT == m_eCamState)
+	{
+		m_pTransformCom->SetState(CTransform::STATE_POSITION, m_vInitPos + vCameraShake);
+	}
+
+}
+
+void CThirdPersonCam::ShakeCameraPos(_float _fTimeDelta)
+{
+	float fDistance = m_fShakingPow * _fTimeDelta;
+
+
+
 }
 
 
@@ -320,6 +391,7 @@ void CThirdPersonCam::CreateEventInfo()
 		eventDesc1.bRotation = false;
 		eventDesc1.bMoving = false;
 		eventDesc1.bFocus = false;
+		eventDesc1.bShaking = false;
 
 
 		eventDesc1.fAccTime = 2.f;
@@ -335,6 +407,7 @@ void CThirdPersonCam::CreateEventInfo()
 		eventDesc2.bRotation = false;
 		eventDesc2.bMoving = false;
 		eventDesc2.bFocus = false;
+		eventDesc2.bShaking = false;
 
 
 		eventDesc2.fAccTime = 0.5f;
@@ -349,6 +422,7 @@ void CThirdPersonCam::CreateEventInfo()
 		eventDesc3.bRotation = false;
 		eventDesc3.bMoving = false;
 		eventDesc3.bFocus = false;
+		eventDesc3.bShaking = false;
 
 
 		eventDesc3.fAccTime = 2.f;
@@ -373,6 +447,7 @@ void CThirdPersonCam::CreateEventInfo()
 	eventDesc1.bRotation = false;
 	eventDesc1.bMoving = false;
 	eventDesc1.bFocus = false;
+	eventDesc1.bShaking = false;
 
 
 	eventDesc1.fAccTime = 0.3f;
@@ -387,6 +462,7 @@ void CThirdPersonCam::CreateEventInfo()
 	eventDesc4.bRotation = false;
 	eventDesc4.bMoving = false;
 	eventDesc4.bFocus = false;
+	eventDesc4.bShaking = false;
 
 			 
 	eventDesc4.fAccTime = 0.9f;
@@ -401,6 +477,7 @@ void CThirdPersonCam::CreateEventInfo()
 	eventDesc2.bRotation = false;
 	eventDesc2.bMoving = true;
 	eventDesc2.bFocus = false;
+	eventDesc2.bShaking = false;
 
 
 	eventDesc2.fDistanceOffset = 2.4f;
@@ -412,6 +489,7 @@ void CThirdPersonCam::CreateEventInfo()
 	eventDesc3.bRotation = false;
 	eventDesc3.bMoving = false;
 	eventDesc3.bFocus = false;
+	eventDesc3.bShaking = false;
 
 	eventDesc3.fAccTime = 1.f;
 
@@ -420,10 +498,12 @@ void CThirdPersonCam::CreateEventInfo()
 	eventDesc5.bRotation = false;
 	eventDesc5.bMoving = false;
 	eventDesc5.bFocus = true;
+	eventDesc5.bShaking = true;
 			 
 	eventDesc5.fAccTime = 2.f;
 	eventDesc5.fDistanceOffset = -2.3f;
 	eventDesc5.fYOffset = 1.1f;
+	eventDesc5.fShakingTime = 1.5f;
 
 	SuperSkill.push_back(eventDesc1);
 	SuperSkill.push_back(eventDesc4);
@@ -484,6 +564,17 @@ void CThirdPersonCam::SetInitializePosition(const wstring& _strEventKey)
 }
 
 
+
+void CThirdPersonCam::SetCameraShaking(_float _fShakingPow, _float _fShakingTime, _bool m_bXDir)
+{
+
+	m_bShaking = true;
+
+	m_bYShaking = m_bXDir;
+	m_fTotalShakingTime = _fShakingTime;
+	m_fShakingPow = _fShakingPow;
+
+}
 
 void CThirdPersonCam::SphericalCoordinates(_fvector _vTargetPos)
 {

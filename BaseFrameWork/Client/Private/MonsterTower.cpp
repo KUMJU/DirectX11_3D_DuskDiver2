@@ -42,6 +42,8 @@ HRESULT CMonsterTower::Initialize(_uint _iTowerIdx)
 	m_pCollider = CCollider::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), CCollider::TYPE_SPHERE, TowerCollDesc);
 	m_pCollider->SetOwner(shared_from_this());
 
+	m_eObjType = EObjType::OBJ_MONSTER;
+
 	TowerEventSetting();
 
 	return S_OK;

@@ -127,9 +127,9 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
 	
     vector vShade = g_ShadeTexture.Sample(g_LinearSampler, In.vTexcoord);
     vector vSpecular = g_SpecularTexture.Sample(g_LinearSampler, In.vTexcoord);
-    
+    	
     Out.vColor = vDiffuse * vShade + vSpecular;
-	
+
     return Out;
 
 }

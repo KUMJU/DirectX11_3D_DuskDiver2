@@ -104,6 +104,15 @@ _vector CCameraMgr::GetCamPos()
 	return dynamic_pointer_cast<CTransform>(m_pDefualtCam->GetComponent(TEXT("Com_Transform")))->GetState(CTransform::STATE_POSITION);
 }
 
+void CCameraMgr::SetShakingMode(_float _fShakingPow, _float _fShakingTime, _bool m_bXDir)
+{
+	if (ECAMERATYPE::THIRDPERSON != m_eCurrentCamType)
+		return;
+
+	m_pDefualtCam->SetCameraShaking(_fShakingPow, _fShakingTime, m_bXDir);
+
+}
+
 void CCameraMgr::FocusPlayer(_vector _vPos, _float _fHeight)
 {
 	m_pDefualtCam->FocusPlayer(_vPos, _fHeight);

@@ -126,7 +126,7 @@ void CMinigameCommand::LateTick(_float _fTimeDelta)
 		for (auto& iter : m_ActiveBear) {
 			iter->LateTick(_fTimeDelta);
 		}
-
+		
 		m_pSuccessImg->LateTick(_fTimeDelta);
 		m_pMinigameUI->LateTick(_fTimeDelta);
 	}

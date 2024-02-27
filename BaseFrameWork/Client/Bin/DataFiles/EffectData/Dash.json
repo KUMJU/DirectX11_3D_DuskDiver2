@@ -1,80 +1,68 @@
 {
 	"Elements" : 
 	{
-		"KickWind" : 
-		{
-			"Center" : 
-			{
-				"x" : 0.0,
-				"y" : 0.40000001192092896,
-				"z" : 3.0
+		"KickWind": {
+			"Center": {
+				"x": 0.0,
+				"y": 0.40000001192092896,
+				"z": 0.0
 			},
-			"ChangeTime" : 0.80000001192092896,
-			"Color" : 
-			{
-				"w" : 1.0,
-				"x" : 1.0,
-				"y" : 1.0,
-				"z" : 1.0
+			"ChangeTime": 0.30000001192092896,
+			"Color": {
+				"w": 0.57647061347961426,
+				"x": 0.83921569585800171,
+				"y": 0.99215686321258545,
+				"z": 1.0
 			},
-			"Duration" : 
-			{
-				"x" : 0.10000002384185791,
-				"y" : 0.6999999761581421
+			"Duration": {
+				"x": 0.10000002384185791,
+				"y": 0.6999999761581421
 			},
-			"EffectType" : 2,
-			"EndScale" : 
-			{
-				"x" : 3.0,
-				"y" : 3.0,
-				"z" : 3.0
+			"EffectType": 2,
+			"EndScale": {
+				"x": 20.0,
+				"y": 10.0,
+				"z": 10.0
 			},
-			"LerpColor" : 
-			{
-				"w" : 1.0,
-				"x" : 0.9950980544090271,
-				"y" : 0.9176250696182251,
-				"z" : 0.11707035452127457
+			"LerpColor": {
+				"w": 0.56862747669219971,
+				"x": 0.48627451062202454,
+				"y": 1.0,
+				"z": 0.87843137979507446
 			},
-			"Loop" : 
-			{
-				"EffectLoop" : false,
-				"UVLoop" : false
+			"Loop": {
+				"EffectLoop": false,
+				"UVLoop": false
 			},
-			"Mask" : 
-			{
-				"Speed" : 1.5,
-				"TexKey" : "T_Blade_Moving01",
-				"Using" : true,
-				"x" : 0.0,
-				"y" : -1.0
+			"Mask": {
+				"Speed": 7.0,
+				"TexKey": "T_Smoke_Tile_00",
+				"Using": true,
+				"x": 0.0,
+				"y": 1.0
 			},
-			"MeshKey" : "WindAura3",
-			"MiddleScale" : 
-			{
-				"x" : 3.0,
-				"y" : 3.0,
-				"z" : 3.0
+			"MeshKey": "Fireball_Cyl",
+			"MiddleScale": {
+				"x": 10.0,
+				"y": 4.0,
+				"z": 4.0
 			},
-			"Noise" : 
-			{
-				"Speed" : 0.0,
-				"TexKey" : "T_flow_05",
-				"Using" : true,
-				"x" : 0.0,
-				"y" : 0.0
+			"Noise": {
+				"Speed": 0.0,
+				"TexKey": "flow_67",
+				"Using": true,
+				"x": 0.0,
+				"y": 0.0
 			},
-			"Rotation" : 
-			{
-				"x" : 0.0,
-				"y" : 90.0,
-				"z" : 0.0
+			"Rotation": {
+				"x": 0.0,
+				"y": 90.0,
+				"z": 0.0
 			},
-			"StartScale" : 
-			{
-				"x" : 3.0,
-				"y" : 3.0,
-				"z" : 3.0
+			"StartScale": {
+				"x": 5.0,
+				"y": 2.0,
+				"z": 2.0
 			}
 		}
 	},

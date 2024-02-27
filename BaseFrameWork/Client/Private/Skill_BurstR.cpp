@@ -4,6 +4,8 @@
 #include "Collider.h"
 #include "GameInstance.h"
 
+#include "CameraMgr.h"
+
 CSkill_BurstR::CSkill_BurstR()
 {
 }
@@ -66,6 +68,18 @@ void CSkill_BurstR::PriorityTick(_float _fTimeDelta)
 
 void CSkill_BurstR::Tick(_float _fTimeDelta)
 {
+
+    m_fAccTime += _fTimeDelta;
+    if (!m_bShaking) {
+
+        if (m_fAccTime >= 2.5f) {
+            CCameraMgr::GetInstance()->SetShakingMode(15.f, 0.1f, true);
+            m_bShaking = true;
+        }
+
+    }
+
+
     __super::Tick(_fTimeDelta);
 }
 

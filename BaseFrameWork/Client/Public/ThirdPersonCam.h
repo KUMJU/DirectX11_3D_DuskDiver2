@@ -19,6 +19,13 @@ public:
 
 
 public:
+	enum ESHAKINGTYPE {
+		ST_FOV,
+		ST_POS,
+		ST_END
+	};
+
+public:
 	enum EVENTTYPE {
 		TYPE_FOCUS,
 		TYPE_ZOOMIN,
@@ -33,6 +40,7 @@ public:
 		_bool bRotation;
 		_bool bMoving;
 		_bool bFocus;
+		_bool bShaking;
 
 		_float fSpeed;
 		_float fRadian;
@@ -41,6 +49,7 @@ public:
 		_float fAccTime;
 		_float3 vEndPosition;
 		_float4 vAxis = {0.f, 0.f ,0.f , 0.f};
+		_float fShakingTime;
 	};
 
 public:
@@ -57,6 +66,26 @@ private:
 public:
 	_float4 GetCamLookVector() { return m_vLookPlr; }
 
+
+public:
+	void SetCameraShaking(_float _fShakingPow, _float _fShakingTime, _bool m_bXDir);
+	void ShakeCamera(_float _fTimeDelta); // RandomShakeCamera
+	void ShakeCameraPos(_float _fTimeDelta);
+
+private:
+	_bool m_bShaking = false;
+
+	_bool m_bYShaking = false;
+	_float m_fShakingAccTime = 0.f;
+	_float m_fTotalShakingTime = 0.f;
+	_float m_fShakingPow = 0.f;
+
+	_bool m_bSetInitShaking = false;
+	_vector m_vInitPos = _vector();
+
+	_float m_fYOffset = 0.f;
+	_float m_fXOffset = 0.f;
+	_int m_iShakingCount = 0;
 private:
 
 	//초기 플레이어 좌표값을 이용해 필요한 값을 계산해두는 함수
