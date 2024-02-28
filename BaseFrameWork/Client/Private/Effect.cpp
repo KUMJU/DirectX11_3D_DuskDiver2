@@ -29,6 +29,14 @@ HRESULT CEffect::Render()
     return S_OK;
 }
 
+void CEffect::SetRotation(_float _fX, _float _fY, _float _fZ)
+{
+
+    m_pTransformCom->RotaitionRollYawPitch(XMConvertToRadians(_fX), XMConvertToRadians(_fY), XMConvertToRadians(_fZ));
+
+
+}
+
 shared_ptr<CEffect> CEffect::CloneEffect()
 {
     shared_ptr<CEffect> pEffect;

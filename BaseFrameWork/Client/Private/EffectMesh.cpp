@@ -18,7 +18,7 @@ CEffectMesh::CEffectMesh(const CEffectMesh& _rhs)
 {
 }
 
-HRESULT CEffectMesh::Initialize( const wstring& _strModelKey, MESH_DESC* _MeshDesc, char* _strName)
+HRESULT CEffectMesh::Initialize( const wstring& _strModelKey, MESH_DESC* _MeshDesc, char* _strName, _bool _bLoop)
 {
     m_eEffectType = EFFECT_TYPE::TYPE_MESH;
     m_MeshDesc = *_MeshDesc;
@@ -57,6 +57,7 @@ HRESULT CEffectMesh::Initialize( const wstring& _strModelKey, MESH_DESC* _MeshDe
     m_strEffectName = _strName;
 
     m_vColor = _MeshDesc->vColor;
+    m_bLoop = _bLoop;
 
     return S_OK;
 }
@@ -73,13 +74,13 @@ void CEffectMesh::Tick(_float _fTimeDelta, _matrix _ParentMat)
     m_fTimeDelta = _fTimeDelta;
     m_fAccTime += _fTimeDelta;
 
-    //아직 시작 시간이 아닐때
-    if (m_fAccTime < m_MeshDesc.vDuration.x) {
-        return;
-    }
-
     //루프가 아닐때
     if (!m_MeshDesc.bLoop) {
+
+        //아직 시작 시간이 아닐때
+        if (m_fAccTime < m_MeshDesc.vDuration.x) {
+            return;
+        }
 
         //알파 러프
 
@@ -89,6 +90,9 @@ void CEffectMesh::Tick(_float _fTimeDelta, _matrix _ParentMat)
         }
 
         ScaleLerp();
+        m_ParentMat = _ParentMat;
+    }
+    else {
         m_ParentMat = _ParentMat;
     }
 }
@@ -275,12 +279,12 @@ void CEffectMesh::ResetEffect()
 }
 
 
-shared_ptr<CEffectMesh> CEffectMesh::Create( const wstring& _strModelKey, MESH_DESC* _MeshDesc, char* _strName)
+shared_ptr<CEffectMesh> CEffectMesh::Create( const wstring& _strModelKey, MESH_DESC* _MeshDesc, char* _strName, _bool _bLoop)
 {
 
     shared_ptr<CEffectMesh> pInstance = make_shared<CEffectMesh>();
 
-    if (FAILED(pInstance->Initialize( _strModelKey, _MeshDesc, _strName)))
+    if (FAILED(pInstance->Initialize( _strModelKey, _MeshDesc, _strName , _bLoop)))
         MSG_BOX("Failed to Create : cEffectMesh");
 
     return pInstance;
@@ -290,7 +294,7 @@ shared_ptr<CEffect> CEffectMesh::CloneEffect()
 {
     shared_ptr<CEffectMesh> pInstance = make_shared<CEffectMesh>();
 
-    if (FAILED(pInstance->Initialize(m_MeshKey, &m_MeshDesc, m_strEffectName))) {
+    if (FAILED(pInstance->Initialize(m_MeshKey, &m_MeshDesc, m_strEffectName, m_bLoop))) {
         MSG_BOX("Failed to Clone : CModel");
     }
 

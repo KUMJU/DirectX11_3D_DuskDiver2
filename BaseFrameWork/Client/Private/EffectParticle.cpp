@@ -10,7 +10,13 @@ CEffectParticle::CEffectParticle()
 {
 }
 
-HRESULT CEffectParticle::Initialize(_uint _iInstanceNum, const wstring& _strTextureKey, CVIBufferInstancing::INSTANCE_DESC* _desc, char* _strName)
+CEffectParticle::CEffectParticle(const CEffectParticle& _rhs)
+    :m_InstanceDesc(_rhs.m_InstanceDesc),
+    m_TextureKey(_rhs.m_TextureKey)
+{
+}
+
+HRESULT CEffectParticle::Initialize(_uint _iInstanceNum, const wstring& _strTextureKey, CVIBufferInstancing::INSTANCE_DESC* _desc, char* _strName, _bool _bLoop)
 {
 
     m_InstanceDesc = *_desc;
@@ -30,6 +36,9 @@ HRESULT CEffectParticle::Initialize(_uint _iInstanceNum, const wstring& _strText
     m_strEffectName = _strName;
 
     m_TextureKey = _strTextureKey;
+
+    m_eEffectType = EFFECT_TYPE::TYPE_PARTICLE;
+    m_bLoop = _bLoop;
 
     return S_OK;
 }
@@ -126,12 +135,23 @@ void CEffectParticle::ResetEffect()
     m_pVIBufferCom->ResetInstance();
 }
 
-shared_ptr<CEffectParticle> CEffectParticle::Create(_uint _iInstanceNum, const wstring& _strTextureKey, CVIBufferInstancing::INSTANCE_DESC* _desc, char* _strName)
+shared_ptr<CEffectParticle> CEffectParticle::Create(_uint _iInstanceNum, const wstring& _strTextureKey, CVIBufferInstancing::INSTANCE_DESC* _desc, char* _strName, _bool _bLoop)
 {
     shared_ptr<CEffectParticle> pInstance = make_shared<CEffectParticle>();
 
-    if (FAILED(pInstance->Initialize(_iInstanceNum, _strTextureKey, _desc, _strName)))
+    if (FAILED(pInstance->Initialize(_iInstanceNum, _strTextureKey, _desc, _strName, _bLoop)))
         MSG_BOX("Failed to Create : CEffectParticle");
+
+    return pInstance;
+}
+
+shared_ptr<CEffect> CEffectParticle::CloneEffect()
+{
+    shared_ptr<CEffectParticle> pInstance = make_shared<CEffectParticle>();
+
+    if (FAILED(pInstance->Initialize(m_iInstanceNum, m_TextureKey, &m_InstanceDesc, m_strEffectName, m_bLoop))) {
+        MSG_BOX("Failed to Clone : CModel");
+    }
 
     return pInstance;
 }

@@ -4,6 +4,8 @@
 #include "GameInstance.h"
 #include "Shader.h"
 #include "Model.h"
+#include "ModelMaterial.h"
+#include "Mesh.h"
 
 #include "EffectMgr.h"
 #include "EffectPreset.h"
@@ -58,12 +60,29 @@ HRESULT CDummy::Render()
 
     _uint iNumMeshes = m_pModelCom->GetNumMeshes();
 
+    vector<shared_ptr<CMesh>> Meshes = m_pModelCom->GetMeshes();
+    vector<shared_ptr<CMaterial>>* Materials = m_pModelCom->GetMaterial();
+
     for (size_t i = 0; i < iNumMeshes; i++) {
 
         if (FAILED(m_pModelCom->BindMaterialShaderResource(m_pShader, (_uint)i, aiTextureType::aiTextureType_DIFFUSE, "g_DiffuseTexture")))
             return E_FAIL;
 
-        if (FAILED(m_pShader->Begin(0)))
+        _uint iMaterialIndex = Meshes[i]->GetMaterialIndex();
+        shared_ptr<CTexture> pTexture = (*Materials)[iMaterialIndex]->GetTextures()[aiTextureType::aiTextureType_NORMALS];
+        _uint iPassNum = 0;
+
+
+        if (pTexture) {
+
+            if (FAILED(m_pModelCom->BindMaterialShaderResource(m_pShader, (_uint)i, aiTextureType::aiTextureType_NORMALS, "g_NormalTexture")))
+                return E_FAIL;
+
+            iPassNum = 6;
+           
+        }
+
+        if (FAILED(m_pShader->Begin(iPassNum)))
             return E_FAIL;
 
         if (FAILED(m_pModelCom->Render((_uint)i)))

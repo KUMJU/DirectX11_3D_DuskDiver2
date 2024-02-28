@@ -31,6 +31,7 @@ public:
 public:
 	void SetParentTransform(shared_ptr<CTransform> _pTransform) { m_pOwnerTransform = _pTransform; }
 	void SetEffectPosition(_vector _vPos);
+	void SetEffectRotation(_float fX, _float _fY, _float _fZ);
 	void SetBillboard(_bool _bBillboard);
 
 public:

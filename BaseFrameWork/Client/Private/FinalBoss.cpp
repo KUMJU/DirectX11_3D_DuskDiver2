@@ -86,6 +86,12 @@ HRESULT CFinalBoss::Initialize()
     m_pLaserEffectPreset2 = CEffectMgr::GetInstance()->FindEffect(TEXT("BossAtk4"));
     m_pLaserEffectPreset2->SetParentTransform(m_pTransformCom);
 
+
+    m_pSpawnEffect = CEffectMgr::GetInstance()->FindEffect(TEXT("BossSpawnWind"));
+    m_pSpawnEffect->SetParentTransform(m_pTransformCom);
+    m_pSpawnEffect->SetEnable(false);
+    CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Effect"), m_pSpawnEffect);
+
     m_pModelCom->SetLinearTime(1.2f);
 
     return S_OK;
@@ -359,6 +365,7 @@ void CFinalBoss::SetSpawnState()
   //  m_pHPBar->HPBarReset();
     m_pHPBar->SetEnable(true);
 
+    m_pSpawnEffect->PlayEffect();
     m_eCurrentState = EMONSTER_STATE::STATE_SPAWN;
     ChangeAnim(8, false);
     m_iHP = 100;

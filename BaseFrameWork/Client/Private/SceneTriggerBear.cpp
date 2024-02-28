@@ -79,7 +79,7 @@ void CSceneTriggerBear::SetCameraEvent()
 	StartEvent.eCamFunc = CEventCamera::FUNC_FOCUSING;
 	StartEvent.vStart = { -83.f , 45.f, -85.f };
 	StartEvent.vEnd = { -88.f , 45.f, -90.f };
-	StartEvent.fDuration = 5.f;
+	StartEvent.fDuration = 3.f;
 	StartEvent.fCurrentDuration = 0.f;
 
 	StartEventVector.push_back(StartEvent);

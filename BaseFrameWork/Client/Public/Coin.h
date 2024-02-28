@@ -39,6 +39,11 @@ private:
 
 private:
 	shared_ptr<CCollider> m_pCollider = nullptr;
+	
+private:
+	//Effect
+	shared_ptr<class CEffectPreset> m_pGlowPreset= nullptr;
+	shared_ptr<class CEffectPreset> m_pGetCoinEffect= nullptr;
 
 public:
 	static shared_ptr<CCoin> Create();

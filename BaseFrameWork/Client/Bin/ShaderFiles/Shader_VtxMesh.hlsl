@@ -5,6 +5,7 @@ matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 float3 g_vCamPos;
 
 texture2D g_DiffuseTexture;
+texture2D g_NormalTexture;
 
 bool g_bDiffuseTex = false;
 
@@ -53,6 +54,8 @@ struct VS_OUT
     float2 vTexcoord : TEXCOORD0;
     float4 vWorldPos : TEXCOORD1;
     float4 vProjPos : TEXCOORD2;
+    float4 vTangent : TANGENT;
+    float4 vBinormal : BINORMAL;
 
 };
 
@@ -71,7 +74,8 @@ VS_OUT VS_MAIN(VS_IN In)
     Out.vWorldPos = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
     Out.vNormal = normalize(mul(vector(In.vNormal, 0.f), g_WorldMatrix));
     Out.vProjPos = Out.vPosition;
-
+    Out.vTangent = normalize(mul(vector(In.vTangent, 0.f), g_WorldMatrix));
+    Out.vBinormal = vector(cross(Out.vNormal.xyz, Out.vTangent.xyz), 0.f);
    
 
     return Out;
@@ -126,6 +130,8 @@ struct PS_IN
     float2 vTexcoord : TEXCOORD0;
     float4 vWorldPos : TEXCOORD1;
     float4 vProjPos : TEXCOORD2;
+    float4 vTangent : TANGENT;
+    float4 vBinormal : BINORMAL;
 };
 
 struct PS_OUT
@@ -142,7 +148,31 @@ PS_OUT PS_MAIN(PS_IN In)
 
    
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(g_LinearSampler, In.vTexcoord);
-   
+    vector vNormalDesc = g_NormalTexture.Sample(g_LinearSampler, In.vTexcoord);
+    
+    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
+    float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
+    
+    vNormal = mul(vNormal, WorldMatrix);
+    
+    if (vMtrlDiffuse.a < 0.1f)
+        discard;
+    
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
+    
+    return Out;
+
+}
+
+
+PS_OUT PS_NONNORTEX_MAIN(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(g_LinearSampler, In.vTexcoord);
+    
     if (vMtrlDiffuse.a < 0.1f)
         discard;
     
@@ -158,7 +188,7 @@ PS_OUT PS_COLOR(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
-    vector vMtrlDiffuse = g_DiffuseTexture.Sample(g_LinearSampler, In.vTexcoord) * g_vColor;
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(g_LinearSampler, In.vTexcoord) * g_vColor * 1.5f;
    
     if (vMtrlDiffuse.a < 0.5f)
         discard;
@@ -358,7 +388,7 @@ technique11 DefaultTechnique
 
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN();
+        PixelShader = compile ps_5_0 PS_NONNORTEX_MAIN();
     }
 
     pass Color // 1 
@@ -415,6 +445,17 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_GREYSCALE();
+    }
+
+    pass NonNormalTex // 6
+    {
+        SetRasterizerState(RS_None_Cull);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN();
     }
 
 }

@@ -60,6 +60,25 @@ void CUIScreenEffect::Tick(_float _fTimeDelta)
         }
 
     }
+    else if (CUIScreenEffect::EFFECTTYPE::TYPE_WHITEOUT == m_eEffectType) {
+        m_fAccTime += _fTimeDelta;
+
+        if (m_fAccTime >= m_fTotalTime * 0.5f) {
+            m_fAlpha = (1.f - ((m_fAccTime - (m_fTotalTime * 0.5f)) / (m_fTotalTime * 0.5f)));
+
+        }
+        else {
+            m_fAlpha = 1.f;
+        }
+
+        if (m_fTotalTime <= m_fAccTime) {
+            m_IsEnabled = false;
+            m_fAlpha = 0.f;
+            m_fAccTime = 0.f;
+        }
+
+
+    }
     else {
         m_fAccTime += _fTimeDelta;
         m_fAlpha = (1.f - (m_fAccTime / m_fTotalTime));
@@ -107,6 +126,11 @@ HRESULT CUIScreenEffect::Render()
         iPassNum = 11;
 
     }
+    else if (CUIScreenEffect::EFFECTTYPE::TYPE_WHITEOUT == m_eEffectType) {
+
+        iPassNum = 13;
+
+    }
     else {
 
         if (FAILED(m_pEffectTexture[m_eEffectType]->BindShaderResource(m_pShader, "g_Texture", 0)))
@@ -132,7 +156,8 @@ void CUIScreenEffect::SwitchScreenEffect(EFFECTTYPE _eEffectType)
     if (m_IsEnabled)
         return;
 
-    if (CUIScreenEffect::EFFECTTYPE::TYPE_FADE == _eEffectType) {
+    if (CUIScreenEffect::EFFECTTYPE::TYPE_FADE == _eEffectType || 
+        CUIScreenEffect::EFFECTTYPE::TYPE_WHITEOUT == _eEffectType) {
         m_eUIGroup = CRenderer::UI_EFFECT;
 
     }

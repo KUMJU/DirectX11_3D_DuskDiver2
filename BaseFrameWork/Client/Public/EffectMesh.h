@@ -48,7 +48,7 @@ public:
 
 
 public:
-	virtual HRESULT Initialize( const wstring& _strModelKey, MESH_DESC* _MeshDesc, char* _strName);
+	virtual HRESULT Initialize( const wstring& _strModelKey, MESH_DESC* _MeshDesc, char* _strName, _bool _bLoop);
 	
 	
 	
@@ -95,7 +95,7 @@ public:
 
 public:
 
-	static shared_ptr<CEffectMesh> Create( const wstring& _strModelKey, MESH_DESC* _MeshDesc, char* _strName);
+	static shared_ptr<CEffectMesh> Create( const wstring& _strModelKey, MESH_DESC* _MeshDesc, char* _strName, _bool _bLoop);
 	shared_ptr<CEffect> CloneEffect();
 
 

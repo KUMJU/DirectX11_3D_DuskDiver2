@@ -71,6 +71,15 @@ public:
 	void SetCameraShaking(_float _fShakingPow, _float _fShakingTime, _bool m_bXDir);
 	void ShakeCamera(_float _fTimeDelta); // RandomShakeCamera
 	void ShakeCameraPos(_float _fTimeDelta);
+	void SetFOV(_float _fFov);
+
+public:
+	void SetPositionLerpMove(_vector _vPos, _float _fAccTime);
+	void SetLerpMoveComeBack(_float _fAccTime);
+
+private:
+	_bool m_bLerpStart = false;
+
 
 private:
 	_bool m_bShaking = false;
@@ -86,6 +95,12 @@ private:
 	_float m_fYOffset = 0.f;
 	_float m_fXOffset = 0.f;
 	_int m_iShakingCount = 0;
+
+private:
+	_vector m_vLerpSrcPos = _vector();
+	_vector m_vLerpEndPos = _vector();
+	_float m_fLerpTime = 0.f;
+
 private:
 
 	//초기 플레이어 좌표값을 이용해 필요한 값을 계산해두는 함수

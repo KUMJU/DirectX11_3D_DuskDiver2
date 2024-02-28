@@ -26,6 +26,11 @@ private:
 	_bool m_bCollided = false;
 	_float m_fEventAccTime = 0.f;
 
+//Event Checker
+private:
+	_bool m_bSpawnBoss = false;
+	_bool m_bBossSpawnDone = false;
+
 private:
 	void SpawnBoss();
 

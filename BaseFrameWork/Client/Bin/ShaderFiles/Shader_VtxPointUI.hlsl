@@ -388,6 +388,18 @@ PS_OUT PS_FADE(PS_IN In)
 
 }
 
+
+PS_OUT PS_WHITEOUT(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    Out.vColor.rgb = float3(1.f, 1.f, 1.f);
+    Out.vColor.a = g_fScreenFXAlpha;
+     
+    return Out;
+
+}
+
 PS_OUT PS_TITLE(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
@@ -554,6 +566,16 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = compile gs_5_0 GS_MAIN();
         PixelShader = compile ps_5_0 PS_TITLE();
+    }
+
+    pass WhiteOut //13
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = compile gs_5_0 GS_MAIN();
+        PixelShader = compile ps_5_0 PS_WHITEOUT();
     }
 
 

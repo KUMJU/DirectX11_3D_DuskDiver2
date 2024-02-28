@@ -95,6 +95,7 @@ PS_OUT PS_MAIN(PS_IN In)
     
     Out.vDiffuse = vToonDiffuse;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    
     //Far 받아와서 처리 
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
 

@@ -104,18 +104,14 @@ void CMapLoader::ClassifyObject(const wstring& _strKeyName, _float4x4* _fWorldMa
 		CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Object"), pInstance);
 	}
 
-
-	//_float3 fScale, fRotation, fPostion;
-
-	//ImGuizmo::DecomposeMatrixToComponents(&_fWorldMat->m[0][0], &fPostion.x, &fRotation.x, &fScale.x);
-
-	//shared_ptr<CTransform> pTransform = dynamic_pointer_cast<CTransform>(pInstance->GetComponent(TEXT("Com_Transform")));
-
-	//pTransform->SetScaling(fScale.x, fScale.y, fScale.z);
-	//pTransform->Rotation({0.f,1.f, 0.f}, XMConvertToRadians(180));
-	//pTransform->SetState(CTransform::STATE_POSITION, XMLoadFloat3(&fPostion));
-
 	pInstance->SetWorldMatrix(*_fWorldMat);
+
+
+	//포지션 세팅 이후 빛 세팅 
+	if (TEXT("TowerA") == _strKeyName) {
+		dynamic_pointer_cast<CMonsterTower>(pInstance)->SetTowerLight();
+	}
+
 
 	if (m_IsImguiLoad) {
 		_ObjectList->push_back(pInstance);

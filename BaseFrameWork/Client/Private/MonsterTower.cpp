@@ -155,6 +155,23 @@ void CMonsterTower::TowerActive()
 {
 }
 
+HRESULT CMonsterTower::SetTowerLight()
+{
+	LIGHT_DESC LightDesc = {};
+
+	XMStoreFloat4(&LightDesc.vPosition, m_pTransformCom->GetState(CTransform::STATE_POSITION) + _vector({0.f, 0.7f ,0.f , 0.f}));
+	LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+	LightDesc.fRange = 3.0f;
+	LightDesc.vDiffuse = _float4(0.6f, 0.5f, 0.1f, 1.f);
+	LightDesc.vAmbient = _float4(0.6f, 0.3f, 0.3f, 1.f);
+	LightDesc.vSpecular = LightDesc.vDiffuse;
+
+	if (FAILED(CGameInstance::GetInstance()->AddLight(LightDesc)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 void CMonsterTower::TowerEventSetting()
 {
 

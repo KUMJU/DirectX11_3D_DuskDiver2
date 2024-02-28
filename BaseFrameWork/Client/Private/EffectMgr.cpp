@@ -80,12 +80,25 @@ shared_ptr<CEffectPreset> CEffectMgr::FindEffect(const wstring& _strKeyName)
     shared_ptr<CEffectPreset> pPreset = nullptr;
     pPreset = iter->second;
 
-    //if (iter != m_EffectPresets.end()) {
-    //    pPreset = iter->second;
-    //}
 
     return pPreset;
 
+}
+
+shared_ptr<class CEffectPreset> CEffectMgr::FindAndCloneEffect(const wstring& _strKeyName)
+{
+    auto iter = m_EffectPresets.find(_strKeyName);
+    shared_ptr<CEffectPreset> pOriginPreset = nullptr;
+    shared_ptr<CEffectPreset> pClonePreset = nullptr;
+
+    if (m_EffectPresets.end() != iter) {
+        pOriginPreset = iter->second;
+        pClonePreset = CEffectPreset::Clone(pOriginPreset);
+        pClonePreset->SetEnable(true);
+        CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Effect"), pClonePreset);
+    }
+
+    return pClonePreset;
 }
 
 void CEffectMgr::SetHitMark(_vector _vPos)
@@ -151,7 +164,7 @@ void CEffectMgr::ReadData(const wstring& _strFullPath, const wstring& _strKeyNam
             MultiByteToWideChar(CP_ACP, 0, strTextureKey.c_str(), (_int)strlen(strTextureKey.c_str()), szFullPath, MAX_PATH);
 
             
-            shared_ptr<CEffectParticle> pParticle =  CEffectParticle::Create(iInstanceNum, szFullPath, &desc, const_cast<char*>(keyName.c_str()));
+            shared_ptr<CEffectParticle> pParticle =  CEffectParticle::Create(iInstanceNum, szFullPath, &desc, const_cast<char*>(keyName.c_str()), bLoop);
             pPreset->AddEffect(pParticle);
             pParticle->SetEnable(false);
         }
@@ -271,7 +284,7 @@ void CEffectMgr::ReadData(const wstring& _strFullPath, const wstring& _strKeyNam
             ElementKey["LerpColor"]["z"].asFloat(),
             1.f };
 
-            shared_ptr<CEffectMesh> pMeshEffect = CEffectMesh::Create(szMeshName, &desc, const_cast<char*>(keyName.c_str()));
+            shared_ptr<CEffectMesh> pMeshEffect = CEffectMesh::Create(szMeshName, &desc, const_cast<char*>(keyName.c_str()), bLoop);
             pPreset->AddEffect(pMeshEffect);
             pMeshEffect->SetEnable(false);
         }

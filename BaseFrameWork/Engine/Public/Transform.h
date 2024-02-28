@@ -47,6 +47,10 @@ public:
 		return XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_WorldMatrix));
 	}
 
+	_float3 GetRotationDegree() {
+		return m_fRotationDegree;
+	}
+
 	void SetScaling(_float _fX, _float _fY, _float _fZ);
 
 	void SetState(STATE _eState, _fvector _vState) {
@@ -101,6 +105,7 @@ private:
 
 	_float m_fYOffset = { 0.f };
 
+	_float3 m_fRotationDegree = _float3();
 public:
 
 	static shared_ptr<CTransform> Create(wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID3D11DeviceContext> _pContext, TRANSFORM_DESC * _pDesc = nullptr);

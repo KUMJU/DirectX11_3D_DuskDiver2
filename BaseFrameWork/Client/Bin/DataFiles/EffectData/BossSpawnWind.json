@@ -1,0 +1,87 @@
+{
+	"Elements" : 
+	{
+		
+		"ScreamWind" : 
+		{
+			"Center" : 
+			{
+				"x" : 0.0,
+				"y" : 5.0,
+				"z" : 12.0
+			},
+			"ChangeTime" : 2.2999999523162842,
+			"Color" : 
+			{
+				"w" : 1.0,
+				"x" : 0.88725489377975464,
+				"y" : 1.0,
+				"z" : 1.0
+			},
+			"Duration" : 
+			{
+				"x" : 2.0999999046325684,
+				"y" : 3.0
+			},
+			"EffectType" : 2,
+			"EndScale" : 
+			{
+				"x" : 30.0,
+				"y" : 30.0,
+				"z" : 30.0
+			},
+			"LerpColor" : 
+			{
+				"w" : 1.0,
+				"x" : 0.59688585996627808,
+				"y" : 0.90196079015731812,
+				"z" : 0.83915114402770996
+			},
+			"Loop" : 
+			{
+				"EffectLoop" : false,
+				"UVLoop" : true
+			},
+			"Mask" : 
+			{
+				"Speed" : 4.0,
+				"TexKey" : "T_St3_Land_Wind_00",
+				"Using" : true,
+				"x" : 0.0,
+				"y" : 1.0
+			},
+			"MeshKey" : "SplashCylinder",
+			"MiddleScale" : 
+			{
+				"x" : 30.0,
+				"y" : 30.0,
+				"z" : 30.0
+			},
+			"Noise" : 
+			{
+				"Speed" : 0.0,
+				"TexKey" : "T_Tile_Noise_Tendril_01",
+				"Using" : true,
+				"x" : 0.0,
+				"y" : 0.0
+			},
+			"Rotation" : 
+			{
+				"x" : 90.0,
+				"y" : 0.0,
+				"z" : 0.0
+			},
+			"StartScale" : 
+			{
+				"x" : 1.0,
+				"y" : 1.0,
+				"z" : 1.0
+			}
+		}
+	},
+	"Preset Info" : 
+	{
+		"Duration" : 3.5,
+		"Loop" : false
+	}
+}

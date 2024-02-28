@@ -158,6 +158,7 @@ void CTransform::RotaitionRollYawPitch(_float _fRadianX, _float _fRadianY, _floa
 {
     _matrix RotationMatrix =  XMMatrixRotationRollPitchYaw(_fRadianX, _fRadianY, _fRadianZ);
     _float3 vScaled = GetScaled();
+    m_fRotationDegree = { XMConvertToDegrees(_fRadianX),XMConvertToDegrees(_fRadianY) ,XMConvertToDegrees(_fRadianZ) };
 
     for (size_t i = STATE_RIGHT; i < STATE_POSITION; i++) {
 

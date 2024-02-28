@@ -9,7 +9,7 @@ class CUIScreenEffect : public CUI
 {
 public:
 	enum EFFECTTYPE {
-		TYPE_BLOOD, TYPE_SPEEDLINE, TYPE_REDEDGE, TYPE_FADE, TYPE_END
+		TYPE_BLOOD, TYPE_SPEEDLINE, TYPE_REDEDGE, TYPE_FADE, TYPE_WHITEOUT, TYPE_END
 	};
 
 
@@ -32,7 +32,7 @@ private:
 	_float m_fAccTime = 0.f;
 	_float m_fTotalTime = 0.f;
 	_float m_fAlpha = 0.f;
-	_float m_TotalTimes[4] = { 1.f, 1.f, 2.f, 4.f };
+	_float m_TotalTimes[5] = { 1.f, 1.f, 2.f, 4.f, 3.f };
 
 
 	EFFECTTYPE m_eEffectType = EFFECTTYPE::TYPE_END;

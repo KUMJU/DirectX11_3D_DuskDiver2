@@ -113,6 +113,31 @@ void CCameraMgr::SetShakingMode(_float _fShakingPow, _float _fShakingTime, _bool
 
 }
 
+void CCameraMgr::SetFov(_float _fFov)
+{
+	if (ECAMERATYPE::THIRDPERSON != m_eCurrentCamType)
+		return;
+
+	m_pDefualtCam->SetFOV(_fFov);
+
+}
+
+void CCameraMgr::SetLerpMoving(_vector _vPos, _float _fAccTime)
+{
+	if (ECAMERATYPE::THIRDPERSON != m_eCurrentCamType)
+		return;
+
+	m_pDefualtCam->SetPositionLerpMove(_vPos, _fAccTime);
+}
+
+void CCameraMgr::SetLerpMovingBack( _float _fAccTime)
+{
+	if (ECAMERATYPE::THIRDPERSON != m_eCurrentCamType)
+		return;
+
+	m_pDefualtCam->SetLerpMoveComeBack(_fAccTime);
+}
+
 void CCameraMgr::FocusPlayer(_vector _vPos, _float _fHeight)
 {
 	m_pDefualtCam->FocusPlayer(_vPos, _fHeight);

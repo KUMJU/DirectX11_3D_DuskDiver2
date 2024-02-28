@@ -17,6 +17,7 @@ public:
 	void LoadEffectPreset();
 	void GetEffect();
 	shared_ptr<class CEffectPreset> FindEffect(const wstring& _strKeyName);
+	shared_ptr<class CEffectPreset> FindAndCloneEffect(const wstring& _strKeyName);
 
 	void SetHitMark(_vector _vPos);
 

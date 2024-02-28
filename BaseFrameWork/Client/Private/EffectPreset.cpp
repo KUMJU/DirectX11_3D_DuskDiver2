@@ -4,6 +4,7 @@
 #include "Effect.h"
 
 #include "EffectMesh.h"
+#include "EffectParticle.h"
 
 CEffectPreset::CEffectPreset()
 {
@@ -18,6 +19,7 @@ CEffectPreset::CEffectPreset(const CEffectPreset& _rhs)
 	for (auto& pEffect : _rhs.m_Effects) {
 
 		if (CEffect::EFFECT_TYPE::TYPE_PARTICLE == pEffect->GetEffectType()) {
+			pCloneEffect = dynamic_pointer_cast<CEffectParticle>(pEffect)->CloneEffect();
 
 		}
 		else if (CEffect::EFFECT_TYPE::TYPE_TEXTURE == pEffect->GetEffectType()) {
@@ -118,9 +120,18 @@ void CEffectPreset::DeleteEffect(_uint _iEffectIdx)
 void CEffectPreset::SetEffectPosition(_vector _vPos)
 {
 	for (auto& pEffect : m_Effects) {
-		pEffect->SetParentPos(_vPos);
+		pEffect->SetPosition(_vPos);
 	}
 }
+
+void CEffectPreset::SetEffectRotation(_float fX, _float _fY, _float _fZ)
+{
+	for (auto& pEffect : m_Effects) {
+		pEffect->SetRotation(fX, _fY, _fZ);
+	}
+
+}
+
 
 void CEffectPreset::SetBillboard(_bool _bBillboard)
 {

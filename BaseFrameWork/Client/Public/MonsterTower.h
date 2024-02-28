@@ -29,6 +29,7 @@ public:
 
 public:
 	void TowerActive();
+	HRESULT SetTowerLight();
 
 private:
 	void TowerEventSetting();

@@ -9,6 +9,9 @@ vector g_vLightDir;
 vector g_vLightDiffuse;
 vector g_vLightAmbient;
 vector g_vLightSpecular;
+vector g_vLightPos;
+
+float g_fLightRange;
 
 vector g_vMtrlAmbient = vector(1.f, 1.f, 1.f, 1.f);
 vector g_vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
@@ -116,6 +119,45 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     return Out;
 }
 
+
+PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
+{
+    PS_OUT_LIGHT Out = (PS_OUT_LIGHT) 0;
+	
+    vector vNormalDesc = g_NormalTexture.Sample(g_PointSampler, In.vTexcoord);
+    vector vDepthDesc = g_DepthTexture.Sample(g_PointSampler, In.vTexcoord);
+    vector vWorldPos;
+    
+    vWorldPos.x = In.vTexcoord.x * 2.f - 1.f;
+    vWorldPos.y = In.vTexcoord.y * -2.f + 1.f;
+    vWorldPos.z = vDepthDesc.x;
+    vWorldPos.w = 1.f;
+    
+    //Far받아와서 바꾸기 
+    float fViewZ = vDepthDesc.y * 1000.f;
+
+    vWorldPos = vWorldPos * fViewZ;
+    vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
+    vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
+    
+    vector vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
+    
+    vector vLightDir = vWorldPos - g_vLightPos;
+    float fDistance = length(vLightDir);
+    
+    float fAtt = saturate((g_fLightRange - fDistance) / g_fLightRange);
+    Out.vShade = g_vLightDiffuse * 
+    saturate(saturate(dot(normalize(vLightDir) * -1.f , vNormal)) +
+    (g_vLightAmbient * g_vMtrlAmbient)) * 1.2f * fAtt;
+    
+    vector vReflect = normalize(reflect(normalize(vLightDir), vNormal));
+    vector vLook = vWorldPos - g_vCamPosition;
+    
+    Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * pow(saturate(dot(normalize(vLook) * -1.f, vReflect)), 30.f) * fAtt;
+        
+    return Out;
+}
+
 PS_OUT PS_MAIN_FINAL(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
@@ -152,7 +194,7 @@ technique11	DefaultTechnique
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None_ZTestAndWrite, 0);
-        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetBlendState(BS_Blending, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
@@ -163,11 +205,11 @@ technique11	DefaultTechnique
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None_ZTestAndWrite, 0);
-        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetBlendState(BS_Blending, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN_DIRECTIONAL();
+        PixelShader = compile ps_5_0 PS_MAIN_POINT();
     }
 
 

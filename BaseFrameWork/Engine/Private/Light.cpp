@@ -26,6 +26,13 @@ HRESULT CLight::Render(shared_ptr<class CShader> _pShader, shared_ptr<class CVIR
 	else if (LIGHT_DESC::TYPE_POINT == m_LightDesc.eType)
 	{
 		iPassIndex = 2;
+
+		if (FAILED(_pShader->BindRawValue("g_vLightPos", &m_LightDesc.vPosition, sizeof(_float4))))
+			return E_FAIL;
+
+		if (FAILED(_pShader->BindRawValue("g_fLightRange", &m_LightDesc.fRange, sizeof(_float))))
+			return E_FAIL;
+
 	}
 
 	if (FAILED(_pShader->BindRawValue("g_vLightDiffuse", &m_LightDesc.vDiffuse, sizeof(_float4))))

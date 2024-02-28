@@ -210,7 +210,33 @@ void CThirdPersonCam::LateTick(_float fTimeDelta)
 			}
 		}
 	}
+	else if (m_eCamState == ECAM_LERP) {
 
+		m_fEventAccTime += fTimeDelta;
+
+		if (m_fEventAccTime > m_fLerpTime) {
+
+			if (m_bLerpStart) {
+				m_fEventAccTime = m_fLerpTime;
+			}
+			else {
+				m_fEventAccTime = m_fLerpTime;
+				m_eCamState = ECAMSTATE::ECAM_DEFAULT;
+				m_fEventAccTime = 0.f;
+				return;
+			}
+
+		}
+
+		_vector vLerpPos = XMVectorLerp(m_vLerpSrcPos, m_vLerpEndPos, m_fEventAccTime / m_fLerpTime);
+		m_pTransformCom->SetState(CTransform::STATE_POSITION, XMVectorSetW(vLerpPos, 1.f));
+
+		if (m_bShaking) {
+			m_vInitPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+			ShakeCamera(fTimeDelta);
+		}
+
+	}
 
 	CCamera::SetUpTransformMatices();
 
@@ -229,6 +255,7 @@ void CThirdPersonCam::ShakeCamera(_float _fTimeDelta)
 	{
 		m_fShakingAccTime = 0.f;
 		m_bShaking = false;
+		m_bSetInitShaking = false;
 	}
 
 	_float x = (rand() % 1000 - 500) / 10000.f;
@@ -249,7 +276,8 @@ void CThirdPersonCam::ShakeCamera(_float _fTimeDelta)
 		m_pTransformCom->SetState(CTransform::STATE_POSITION, vCameraPos + vCameraShake);
 
 	}
-	else if(ECAMSTATE::ECAM_EVENT == m_eCamState)
+	else if(ECAMSTATE::ECAM_EVENT == m_eCamState || 
+			ECAMSTATE::ECAM_LERP == m_eCamState)
 	{
 		m_pTransformCom->SetState(CTransform::STATE_POSITION, m_vInitPos + vCameraShake);
 	}
@@ -262,6 +290,37 @@ void CThirdPersonCam::ShakeCameraPos(_float _fTimeDelta)
 
 
 
+}
+
+void CThirdPersonCam::SetFOV(_float _fFov)
+{
+	m_eCamState = ECAM_LERP;
+	m_fFovy = XMConvertToRadians(_fFov);
+}
+
+void CThirdPersonCam::SetPositionLerpMove(_vector _vPos, _float _fAccTime)
+{
+	m_eCamState = ECAM_LERP;
+
+	m_bLerpStart = true;
+
+	m_fEventAccTime = 0.f;
+	m_vLerpSrcPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+	m_vLerpEndPos = _vPos;
+	m_fLerpTime = _fAccTime;
+
+}
+
+void CThirdPersonCam::SetLerpMoveComeBack(_float _fAccTime)
+{
+	m_eCamState = ECAM_LERP;
+
+	m_bLerpStart = false;
+
+	m_fEventAccTime = 0.f;
+	m_vLerpEndPos = m_vLerpSrcPos;
+	m_vLerpSrcPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+	m_fLerpTime = _fAccTime;
 }
 
 

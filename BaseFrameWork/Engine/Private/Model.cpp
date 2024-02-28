@@ -138,6 +138,12 @@ HRESULT CModel::BindMaterialShaderResource(shared_ptr<class CShader> _pShader, _
 {
     _uint iMaterialIndex = m_Meshes[_iMeshIndex]->GetMaterialIndex();
     shared_ptr<CTexture> pTexture =  m_Materials[iMaterialIndex]->GetTextures()[_eMaterialType];
+   
+    if (!pTexture) {
+        return S_OK;
+    }
+
+
     return pTexture->BindShaderResource(_pShader, _pConstantName, 0);
 }
 

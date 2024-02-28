@@ -40,7 +40,9 @@ public:
 
 public:
 	void SetShakingMode(_float _fShakingPow, _float _fShakingTime, _bool m_bXDir);
-
+	void SetFov(_float _fFov);
+	void SetLerpMoving(_vector _vPos, _float _fAccTime);
+	void SetLerpMovingBack( _float _fAccTime);
 
 public:
 	void FocusPlayer(_vector _vPos , _float _fHeight);

@@ -46,6 +46,8 @@ public:
 		m_vParentPos = _vParentPos;
 	}
 
+	void SetRotation(_float _fX, _float _fY, _float _fZ);
+
 	void SetBillboard(_bool _bBillboard) {
 		m_bBillboard = _bBillboard;
 	}
@@ -68,6 +70,7 @@ protected:
 	_vector m_vParentPos = { 0.f, 0.f, 0.f };
 
 	_bool m_bBillboard = false;
+	_bool m_bLoop = false;
 
 public:
 

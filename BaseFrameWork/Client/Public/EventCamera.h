@@ -27,6 +27,7 @@ public:
 		_float3 vEnd;
 		_float3 fDistance;
 		_float fSpeed;
+		_bool bShaking;
 	};
 
 public:
@@ -56,6 +57,7 @@ public:
 public:
 	void FocusObject();
 	void MovingCameara(_float _fTimeDelta);
+//	void Shaking();
 
 private:
 

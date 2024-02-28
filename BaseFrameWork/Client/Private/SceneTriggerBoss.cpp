@@ -3,6 +3,11 @@
 #include "BattleSystem.h"
 #include "GameInstance.h"
 
+#include "UIMgr.h"
+#include "UIScreenEffect.h"
+
+#include "CameraMgr.h"
+
 CSceneTriggerBoss::CSceneTriggerBoss()
 {
 }
@@ -37,10 +42,28 @@ void CSceneTriggerBoss::Tick(_float _fTimeDelta)
 	if (m_bCollided) {
 		m_fEventAccTime += _fTimeDelta;
 
-		if (m_fEventAccTime >= 1.5f) {
+		if (m_fEventAccTime >= 1.5f && !m_bSpawnBoss) {
+			SpawnBoss();
+			
+			m_bSpawnBoss = true;
+		}
+
+		if (m_fEventAccTime >= 3.f && !m_bBossSpawnDone) {
+
+			CCameraMgr::GetInstance()->SetLerpMoving({ 0.f, 46.f, -405.f, 1.f }, 0.5f);
+
 			CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MON_SE);
 			CGameInstance::GetInstance()->PlayAudio(TEXT("EN0301_Snarl02.wav"), CSoundMgr::CHANNELID::CH_MON_SE, 1.3f);
 
+			CCameraMgr::GetInstance()->SetShakingMode(5.f, 1.5f, false);
+
+			m_bBossSpawnDone = true;
+		}
+
+
+		if (m_fEventAccTime >= 4.5f && m_bBossSpawnDone) {
+
+			CCameraMgr::GetInstance()->SetLerpMovingBack(0.5f);
 			m_IsActive = false;
 		}
 
@@ -70,8 +93,13 @@ void CSceneTriggerBoss::SetCameraEvent()
 
 void CSceneTriggerBoss::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _pCollider)
 {
+	if (m_bCollided)
+		return;
+
 	if (EObjType::OBJ_PLAYER == _eObjType) {
-		SpawnBoss();
+
+		CUIMgr::GetInstance()->StartScreenEffect(CUIScreenEffect::TYPE_WHITEOUT);
+
 		m_bCollided = true;
 	}
 }

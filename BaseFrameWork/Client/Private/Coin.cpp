@@ -5,6 +5,12 @@
 #include "GameInstance.h"
 #include "UIMgr.h"
 
+#include "EffectMgr.h"
+#include "EffectPreset.h"
+
+#include "Model.h"
+#include "Shader.h"
+
 CCoin::CCoin()
 {
 }
@@ -23,9 +29,19 @@ HRESULT CCoin::Initialize()
     CoinColDesc.vCenter = _float3(0.f, 0.3f, 0.f);
     CoinColDesc.fRadius = 0.6f;
 
+    m_pTransformCom->Rotation({ 0.f ,1.f ,0.f, 0.f }, XMConvertToRadians(0.f));
+
     m_pCollider = CCollider::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), CCollider::TYPE_SPHERE, CoinColDesc);
     m_pCollider->SetOwner(shared_from_this());
     m_Components.emplace(TEXT("Com_Collider"), m_pCollider);
+
+    m_pGlowPreset = CEffectMgr::GetInstance()->FindAndCloneEffect(TEXT("CoinSparkle"));
+    m_pGlowPreset->SetParentTransform(m_pTransformCom);
+
+    //GetCoin
+    m_pGetCoinEffect = CEffectMgr::GetInstance()->FindAndCloneEffect(TEXT("GetCoin"));
+    m_pGetCoinEffect->SetEnable(false);
+    m_pGetCoinEffect->SetBillboard(true);
 
     m_IsEnabled = true;
     return S_OK;
@@ -87,7 +103,26 @@ void CCoin::LateTick(_float _fTimeDelta)
 
 HRESULT CCoin::Render()
 {
-    __super::Render();
+    if (FAILED(BindShaderResources()))
+        return E_FAIL;
+
+    _uint iNumMeshes = m_pModelCom->GetNumMeshes();
+
+    for (size_t i = 0; i < iNumMeshes; i++) {
+
+        if (FAILED(m_pModelCom->BindMaterialShaderResource(m_pShader, (_uint)i, aiTextureType::aiTextureType_DIFFUSE, "g_DiffuseTexture")))
+            return E_FAIL;
+
+        if (FAILED(m_pModelCom->BindMaterialShaderResource(m_pShader, (_uint)i, aiTextureType::aiTextureType_NORMALS, "g_NormalTexture")))
+            return E_FAIL;
+
+        if (FAILED(m_pShader->Begin(6)))
+            return E_FAIL;
+
+        if (FAILED(m_pModelCom->Render((_uint)i)))
+            return E_FAIL;
+    }
+
 
     return S_OK;
 }
@@ -103,6 +138,15 @@ void CCoin::OnCollide(EObjType _eObjType, shared_ptr<CCollider> _pCollider)
         m_bCollided = true;
         m_vInitScale = m_pTransformCom->GetScaled();
         //코인먹기 
+
+        //이펙트 종료 
+        m_pGlowPreset->StopEffect();
+
+        //코인 먹기 이벤트 시작 
+        m_pGetCoinEffect->SetEffectPosition(m_pTransformCom->GetState(CTransform::STATE_POSITION));
+        m_pGetCoinEffect->PlayEffect();
+
+        
 
         CUIMgr::GetInstance()->AddMiniQuestSuccessNumber();
         CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MAPSE);

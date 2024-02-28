@@ -27,9 +27,11 @@ protected:
 	shared_ptr<CShader> m_pShader = nullptr;
 	shared_ptr<CModel> m_pModelCom = nullptr;
 
+protected:
+	HRESULT BindShaderResources();
+
 private:
 	HRESULT AddComponent();
-	HRESULT BindShaderResources();
 
 public:
 	virtual void OnCollide(EObjType _eObjType, shared_ptr<CCollider> _pCollider) override {};

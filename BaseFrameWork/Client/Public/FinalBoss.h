@@ -63,6 +63,9 @@ private:
 private:
 	shared_ptr<CCollider> m_pCollider2 = nullptr;
 
+private:
+	shared_ptr<CEffectPreset> m_pSpawnEffect = nullptr;
+
 // Special Pattern 
 private:
 

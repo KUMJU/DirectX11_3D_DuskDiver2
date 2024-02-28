@@ -47,6 +47,7 @@ public:
 public:
 	vector<shared_ptr<class CMesh>> GetMeshes() { return m_Meshes; }
 	vector<shared_ptr<class CAnimation>> GetAnimations() { return m_Animations; }
+	vector<shared_ptr<class CMaterial>>* GetMaterial() { return &m_Materials; }
 
 	void SetAnimation(vector<shared_ptr<class CAnimation>> _pAnim) { m_Animations = _pAnim; }
 
