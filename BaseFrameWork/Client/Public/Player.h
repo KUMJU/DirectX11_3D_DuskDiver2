@@ -61,6 +61,7 @@ public:
 	virtual void LateTick(_float _fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+
 public:
 	void EffectTick(_float _fDeltaTime);
 	void EffectLateTick(_float _fDeltaTime);
@@ -70,6 +71,11 @@ public:
 
 public:
 	void AddBurstGauge();
+
+private:
+	HRESULT SetLight();
+
+	_uint m_iFianlEffectLightIdx = 0;
 
 
 private:
@@ -108,6 +114,8 @@ private:
 	void CheckReserveAnimList();
 		
 	void FinishCombo();
+
+
 
 private:
 	HEROSTATE m_eCurrentState = HEROSTATE::STATE_END;
@@ -276,8 +284,11 @@ private:
 	_float m_fKnockDownTime = 0.f;
 
 
+//EffectPreset °ü¸®
 private:
 	shared_ptr<class CEffectPreset> m_pDashPreset= nullptr;
+	vector<shared_ptr<class CEffectPreset>> m_pGuagingPresets;
+
 
 
 public:
@@ -299,18 +310,9 @@ public:
 	
 	}
 
-	void SetOnFinalEvent(_bool _bOnEvent) {
-		m_IsOnMinigame = _bOnEvent;
-
-		if (_bOnEvent) {
-			ChangeAnim(44, true);
-			ChangeAnim(36, true);
-			m_eCurrentState = HEROSTATE::STATE_IDLE;
-		}
-	}
-
-
-	void CommandMinigameSuccess(_uint _iCount);
+	void SetOnFinalEvent(_bool _bOnEvent);
+	void SetGaugingEffect(_int _iEffectIdx);
+	void StartLastAttack();
 
 public:
 	static shared_ptr<CPlayer> Create();

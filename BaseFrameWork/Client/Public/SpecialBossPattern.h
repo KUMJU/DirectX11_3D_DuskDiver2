@@ -30,6 +30,7 @@ private:
 
 	_bool m_bStartDone = false;
 	_bool m_bCamFocusDone = false;
+	_bool m_bSetPosEvent = false;
 	
 	_float m_fAccTime = 0.f;
 
@@ -41,11 +42,14 @@ private:
 private:
 	weak_ptr<class CFinalBoss> m_pFinalBoss;
 	shared_ptr<class CUI_SequenceTex> m_pGaugeUI = nullptr;
+	shared_ptr <class CUIBackGround> m_pKeySpaceBarUI = nullptr;
+
 	shared_ptr<class CPlayer> m_pPlayer = nullptr;
 
 private:
 	_bool m_bFirstEventStart = false;
 	_bool m_bSecondEvenetStart = false;
+	_bool m_bKeyEventComplete = false;
 
 public:
 

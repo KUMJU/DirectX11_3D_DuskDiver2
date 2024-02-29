@@ -171,10 +171,6 @@ HRESULT CHockeyBall::BindShaderResources()
 
     _float4 CamPos = CGameInstance::GetInstance()->GetCamPosition();
 
-    const LIGHT_DESC* pLightDesc = CGameInstance::GetInstance()->GetLightDesc(0);
-    if (nullptr == pLightDesc)
-        return E_FAIL;
-
     return S_OK;
 }
 

@@ -87,9 +87,10 @@ public:
 
 /*Light Mgr*/
 public:
-	HRESULT AddLight(const LIGHT_DESC& _LightDesc);
-	const LIGHT_DESC* GetLightDesc(_uint iIndex) const;
+	HRESULT AddLight(const LIGHT_DESC& _LightDesc, _uint* _iIndex = nullptr);
+	LIGHT_DESC* GetLightDesc(_uint iIndex);
 	HRESULT RenderLight(shared_ptr<class CShader> _pShader, shared_ptr<class CVIRect> _pVIBuffer);
+	void SetLightEnabled(_uint _iIndex, _bool m_IsEnabled);
 
 /*Resource Mgr*/
 public:

@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "CameraMgr.h"
 
-#include "ThirdPersonCam.h"
 #include "CameraFree.h"
 
 #include "GameMgr.h"
@@ -104,6 +103,14 @@ _vector CCameraMgr::GetCamPos()
 	return dynamic_pointer_cast<CTransform>(m_pDefualtCam->GetComponent(TEXT("Com_Transform")))->GetState(CTransform::STATE_POSITION);
 }
 
+void CCameraMgr::SwitchDefaultCamMode(CThirdPersonCam::ECAMSTATE _eCamState)
+{
+	if (!m_pDefualtCam)
+		return;
+
+	m_pDefualtCam->SwitchingCamMode(_eCamState);
+}
+
 void CCameraMgr::SetShakingMode(_float _fShakingPow, _float _fShakingTime, _bool m_bXDir)
 {
 	if (ECAMERATYPE::THIRDPERSON != m_eCurrentCamType)
@@ -146,6 +153,22 @@ void CCameraMgr::FocusPlayer(_vector _vPos, _float _fHeight)
 void CCameraMgr::StartPlrCamEvent(const wstring& _strEventKey)
 {
 	m_pDefualtCam->StartCameraEvent(_strEventKey);
+}
+
+void CCameraMgr::FocusingPlr(_vector vCamPos)
+{
+	if (ECAMERATYPE::THIRDPERSON != m_eCurrentCamType)
+		return;
+
+	m_pDefualtCam->FocusingPlr(vCamPos);
+}
+
+void CCameraMgr::SetFovLerp(_float _fDstFovy)
+{
+	if (ECAMERATYPE::THIRDPERSON != m_eCurrentCamType)
+		return;
+
+	m_pDefualtCam->SetFovLerp(_fDstFovy);
 }
 
 void CCameraMgr::AddEventPreset(const wstring& _strName, vector<CEventCamera::EVENT_INFO> _info)

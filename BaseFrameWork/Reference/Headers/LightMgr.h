@@ -11,11 +11,13 @@ public:
 	~CLightMgr() = default;
 
 public:
-	const LIGHT_DESC* GetLightDesc(_uint _iIndex) const;
+	LIGHT_DESC* GetLightDesc(_uint _iIndex);
+
+	void SetLightEnable(_uint _iIndex, _bool _IsEnabled);
 
 public:
 	HRESULT Initialize();
-	HRESULT AddLight(const LIGHT_DESC& _LightDesc);
+	HRESULT AddLight(const LIGHT_DESC& _LightDesc, _uint* _iIndex = nullptr);
 	HRESULT Render(shared_ptr<class CShader> _pShader, shared_ptr<class CVIRect> _pVIBuffer);
 
 private:

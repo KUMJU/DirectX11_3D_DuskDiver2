@@ -337,16 +337,16 @@ _float3 CGameInstance::MeshPicking(POINT _ptMouse, shared_ptr<class CModel> _pMo
 	return m_pPickingMgr->MeshPicking(_ptMouse, _pModelCom, _pTransCom, _pDistance);
 }
 
-HRESULT CGameInstance::AddLight(const LIGHT_DESC& _LightDesc)
+HRESULT CGameInstance::AddLight(const LIGHT_DESC& _LightDesc, _uint* _iIndex)
 {
 	if (!m_pLightMgr)
 		return E_FAIL;
 
 
-	return m_pLightMgr->AddLight(_LightDesc);
+	return m_pLightMgr->AddLight(_LightDesc, _iIndex);
 }
 
-const LIGHT_DESC* CGameInstance::GetLightDesc(_uint iIndex) const
+LIGHT_DESC* CGameInstance::GetLightDesc(_uint iIndex)
 {
 	return m_pLightMgr->GetLightDesc(iIndex);
 }
@@ -354,6 +354,12 @@ const LIGHT_DESC* CGameInstance::GetLightDesc(_uint iIndex) const
 HRESULT CGameInstance::RenderLight(shared_ptr<class CShader> _pShader, shared_ptr<class CVIRect> _pVIBuffer)
 {
 	return m_pLightMgr->Render(_pShader, _pVIBuffer);;
+}
+
+void CGameInstance::SetLightEnabled(_uint _iIndex, _bool m_IsEnabled)
+{
+	return m_pLightMgr->SetLightEnable(_iIndex, m_IsEnabled);
+
 }
 
 void CGameInstance::LoadLevelResource(_uint _iLevelIndex)

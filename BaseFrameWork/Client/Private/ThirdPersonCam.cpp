@@ -237,6 +237,29 @@ void CThirdPersonCam::LateTick(_float fTimeDelta)
 		}
 
 	}
+	else {
+
+		if (m_bZoomLerp) {
+			m_fZoomLerpTime += fTimeDelta;
+
+			if (m_fZoomLerpTime >= 0.05f) {
+				m_fFovy = m_fDstFovy;
+				m_fZoomLerpTime = 0.f;
+				m_bZoomLerp = false;
+			}
+			else {
+
+				float fFovyRate = (m_fDstFovy - m_fSrcFovy) * (m_fZoomLerpTime / 0.05f);
+				m_fFovy = fFovyRate + m_fSrcFovy;
+			}
+
+
+		}
+
+		if (m_bShaking) {
+			ShakeCamera(fTimeDelta);
+		}
+	}
 
 	CCamera::SetUpTransformMatices();
 
@@ -251,7 +274,8 @@ void CThirdPersonCam::ShakeCamera(_float _fTimeDelta)
 {
 
 	m_fShakingAccTime += _fTimeDelta;
-	if (m_fShakingAccTime > m_fTotalShakingTime)
+	if (m_fShakingAccTime > m_fTotalShakingTime && 
+		m_eCamState != ECAMSTATE::ECAM_FOCUSING)
 	{
 		m_fShakingAccTime = 0.f;
 		m_bShaking = false;
@@ -277,7 +301,8 @@ void CThirdPersonCam::ShakeCamera(_float _fTimeDelta)
 
 	}
 	else if(ECAMSTATE::ECAM_EVENT == m_eCamState || 
-			ECAMSTATE::ECAM_LERP == m_eCamState)
+			ECAMSTATE::ECAM_LERP == m_eCamState ||
+			ECAMSTATE::ECAM_FOCUSING == m_eCamState)
 	{
 		m_pTransformCom->SetState(CTransform::STATE_POSITION, m_vInitPos + vCameraShake);
 	}
@@ -296,6 +321,24 @@ void CThirdPersonCam::SetFOV(_float _fFov)
 {
 	m_eCamState = ECAM_LERP;
 	m_fFovy = XMConvertToRadians(_fFov);
+}
+
+void CThirdPersonCam::FocusingPlr(_vector _vCamPos)
+{
+	m_pTransformCom->SetState(CTransform::STATE_POSITION, _vCamPos);
+	m_pTransformCom->LookAt(dynamic_pointer_cast<CTransform>(m_TargetPlayer->GetComponent(TEXT("Com_Transform")))->GetState(CTransform::STATE_POSITION) + _vector({0.f, 0.4f, 0.f, 0.f}));
+
+	m_eCamState = ECAMSTATE::ECAM_FOCUSING;
+}
+
+void CThirdPersonCam::SetFovLerp(_float _fRaidan)
+{
+	m_bZoomLerp = true;
+	m_fZoomLerpTime = 0.f;
+
+	m_fSrcFovy = m_fFovy;
+	m_fDstFovy = XMConvertToRadians(_fRaidan);
+
 }
 
 void CThirdPersonCam::SetPositionLerpMove(_vector _vPos, _float _fAccTime)
@@ -624,6 +667,16 @@ void CThirdPersonCam::SetInitializePosition(const wstring& _strEventKey)
 
 
 
+void CThirdPersonCam::SwitchingCamMode(ECAMSTATE _eCamState)
+{
+	/*ÃÊ±âÈ­*/
+	m_fFovy = XMConvertToRadians(60.f);
+	m_bShaking = false;
+	m_fEventAccTime = 0.f;
+
+	m_eCamState = _eCamState;
+}
+
 void CThirdPersonCam::SetCameraShaking(_float _fShakingPow, _float _fShakingTime, _bool m_bXDir)
 {
 
@@ -632,6 +685,10 @@ void CThirdPersonCam::SetCameraShaking(_float _fShakingPow, _float _fShakingTime
 	m_bYShaking = m_bXDir;
 	m_fTotalShakingTime = _fShakingTime;
 	m_fShakingPow = _fShakingPow;
+
+	if (m_eCamState == ECAM_FOCUSING) {
+		m_vInitPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+	}
 
 }
 

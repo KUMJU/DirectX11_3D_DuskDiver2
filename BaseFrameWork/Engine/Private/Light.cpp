@@ -14,6 +14,9 @@ HRESULT CLight::Initialize(const LIGHT_DESC& _LightDesc)
 
 HRESULT CLight::Render(shared_ptr<class CShader> _pShader, shared_ptr<class CVIRect> _pVIBuffer)
 {
+	if (!m_bEnable)
+		return S_OK;
+
 	_uint		iPassIndex = { 0 };
 
 	if (LIGHT_DESC::TYPE_DIRECTIONAL == m_LightDesc.eType)

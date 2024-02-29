@@ -2,6 +2,7 @@
 
 #include "Client_Defines.h"
 #include "EventCamera.h"
+#include "ThirdPersonCam.h"
 
 
 BEGIN(Engine)
@@ -39,6 +40,9 @@ public:
 	_vector GetCamPos();
 
 public:
+	void SwitchDefaultCamMode(CThirdPersonCam::ECAMSTATE _eCamState);
+
+public:
 	void SetShakingMode(_float _fShakingPow, _float _fShakingTime, _bool m_bXDir);
 	void SetFov(_float _fFov);
 	void SetLerpMoving(_vector _vPos, _float _fAccTime);
@@ -47,6 +51,8 @@ public:
 public:
 	void FocusPlayer(_vector _vPos , _float _fHeight);
 	void StartPlrCamEvent(const wstring& _strEventKey);
+	void FocusingPlr(_vector vCamPos);
+	void SetFovLerp(_float _fDstFovy);
 
 ////////////////////////////이벤트 카메라////////////////////////////
 public:

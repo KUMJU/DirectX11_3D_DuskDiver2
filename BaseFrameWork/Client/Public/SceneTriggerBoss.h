@@ -30,6 +30,7 @@ private:
 private:
 	_bool m_bSpawnBoss = false;
 	_bool m_bBossSpawnDone = false;
+	_bool m_bShakingEvent = false;
 
 private:
 	void SpawnBoss();

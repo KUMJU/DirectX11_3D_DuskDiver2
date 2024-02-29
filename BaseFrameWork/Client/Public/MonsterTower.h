@@ -50,6 +50,7 @@ private:
 	//shared_ptr<class CEventTrigger> m_pTrigger = nullptr;
 
 	_uint m_iTowerIdx = 0;
+	_uint m_iTowerLightIdx = 0;
 public:
 	static shared_ptr<CMonsterTower> Create(_uint _iTowerIdx);
 

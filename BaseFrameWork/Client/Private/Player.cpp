@@ -85,6 +85,31 @@ HRESULT CPlayer::Initialize()
     m_pPlayerSkillset = CSkillSet::Create(m_pBattleModelCom, m_pBurstModelCom);
     m_pPlayerSkillset->SetPlayerTransform(m_pTransformCom);
 
+
+    /*마지막 연출 게이징 프리셋 세팅*/
+    m_pGuagingPresets.push_back(CEffectMgr::GetInstance()->FindEffect(TEXT("gauging1")));
+    m_pGuagingPresets[0]->SetParentTransform(m_pTransformCom);
+    m_pGuagingPresets[0]->SetEnable(false);
+    CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Effect"), m_pGuagingPresets[0]);
+
+    m_pGuagingPresets.push_back(CEffectMgr::GetInstance()->FindEffect(TEXT("gauging2")));
+    m_pGuagingPresets[1]->SetParentTransform(m_pTransformCom);
+    m_pGuagingPresets[1]->SetEnable(false);
+    CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Effect"), m_pGuagingPresets[1]);
+
+
+    m_pGuagingPresets.push_back(CEffectMgr::GetInstance()->FindEffect(TEXT("gauging3")));
+    m_pGuagingPresets[2]->SetParentTransform(m_pTransformCom);
+    m_pGuagingPresets[2]->SetEnable(false);
+    CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Effect"), m_pGuagingPresets[2]);
+
+    SetLight();
+
+
+    /*
+    if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, nullptr, pDepthStencilTexture.GetAddressOf())))
+        return E_FAIL;
+    */
     return S_OK;
 }
 
@@ -401,6 +426,25 @@ void CPlayer::AddBurstGauge()
     }
 }
 
+HRESULT CPlayer::SetLight()
+{
+    LIGHT_DESC LightDesc = {};
+
+    LightDesc.vPosition = _float4();
+    LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+    LightDesc.fRange = 3.0f;
+    LightDesc.vDiffuse = _float4(1.f, 0.8f, 0.1f, 1.f);
+    LightDesc.vAmbient = _float4(1.f, 0.6f, 0.6f, 1.f);
+    LightDesc.vSpecular = LightDesc.vDiffuse;
+
+    if (FAILED(CGameInstance::GetInstance()->AddLight(LightDesc, &m_iFianlEffectLightIdx)))
+        return E_FAIL;
+
+    CGameInstance::GetInstance()->SetLightEnabled(m_iFianlEffectLightIdx, false);
+
+    return S_OK;
+}
+
 
 void CPlayer::SetAnimSpeed()
 {
@@ -640,7 +684,7 @@ void CPlayer::CalcAnimMoveDistance()
     if (79 == m_iCurrentAnimIdx || 76 == m_iCurrentAnimIdx ||
         52 == m_iCurrentAnimIdx || 51 == m_iCurrentAnimIdx || 3 == m_iCurrentAnimIdx || 136 == m_iCurrentAnimIdx
         || 50 == m_iCurrentAnimIdx  || 137 == m_iCurrentAnimIdx || 44 == m_iCurrentAnimIdx||
-        0 == m_iCurrentAnimIdx || 1 == m_iCurrentAnimIdx || 2 == m_iCurrentAnimIdx || 59 == m_iCurrentAnimIdx || 36 == m_iCurrentAnimIdx) {
+        0 == m_iCurrentAnimIdx || 1 == m_iCurrentAnimIdx || 2 == m_iCurrentAnimIdx || 59 == m_iCurrentAnimIdx) {
         m_vPrevAnimPos = { 0.f, 0.f, 0.f };
         m_vCurretnAnimPos = { 0.f, 0.f, 0.f };
         return;
@@ -1526,6 +1570,41 @@ void CPlayer::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _
 
 }
 
+void CPlayer::SetGaugingEffect(_int _iEffectIdx)
+{
+    if (1 == _iEffectIdx) {
+        LIGHT_DESC* pLightDesc = CGameInstance::GetInstance()->GetLightDesc(m_iFianlEffectLightIdx);
+        XMStoreFloat4(&pLightDesc->vPosition, m_pTransformCom->GetState(CTransform::STATE_POSITION) + _vector({ 0.f, 1.f , 0.f, 0.f }));
+        pLightDesc->fRange = 1.2f;
+        CGameInstance::GetInstance()->SetLightEnabled(m_iFianlEffectLightIdx, true);
+    }
+    else if (2 == _iEffectIdx) {
+        LIGHT_DESC* pLightDesc = CGameInstance::GetInstance()->GetLightDesc(m_iFianlEffectLightIdx);
+        pLightDesc->fRange = 3.f;
+    }
+
+    for (auto& iter : m_pGuagingPresets) {
+        iter->StopEffect();
+        iter->SetEnable(false);
+    }
+    m_pGuagingPresets[_iEffectIdx]->PlayEffect();
+    m_pGuagingPresets[_iEffectIdx]->SetEnable(true);
+
+
+}
+
+void CPlayer::StartLastAttack()
+{
+    for (auto& iter : m_pGuagingPresets) {
+        iter->SetEnable(false);
+    }
+
+
+    //마지막 공격 연출
+    ChangeAnim(92, false);
+    //이펙트 재생 
+}
+
 void CPlayer::OnHit(_float _fTimeDelta)
 {
 
@@ -1614,41 +1693,16 @@ void CPlayer::OnHitHockeyBall()
     m_fGweight = 1.5f;
 }
 
-void CPlayer::CommandMinigameSuccess(_uint _iCount)
-{
-    switch (_iCount)
-    {
-    case 0:
-        if (m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_Q)) {
-            ChangeAnim(60, false);
-            m_NextAnimIndex.push_back({ 44, true });
-        }
 
-        break;
+void CPlayer::SetOnFinalEvent(_bool _bOnEvent) {
+    m_IsOnMinigame = _bOnEvent;
 
-    case 1:
+    if (_bOnEvent) {
+        m_pModelCom = m_pBurstModelCom;
 
-        if (m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_E)) {
-            ChangeAnim(61, false);
-            m_NextAnimIndex.push_back({ 44, true });
-        }
-
-        break;
-
-    case 2:
-
-        if (m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_Q)) {
-            ChangeAnim(91, false);
-            m_NextAnimIndex.push_back({ 44, true });
-        }
-
-        break;
-
-    default:
-        break;
+        ChangeAnim(36, true);
+        m_eCurrentState = HEROSTATE::STATE_IDLE;
     }
-
-
 }
 
 shared_ptr<CPlayer> CPlayer::Create()

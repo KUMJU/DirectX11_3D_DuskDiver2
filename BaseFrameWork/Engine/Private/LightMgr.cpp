@@ -6,7 +6,7 @@ CLightMgr::CLightMgr(wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID3D11Devic
 {
 }
 
-const LIGHT_DESC* CLightMgr::GetLightDesc(_uint _iIndex) const
+LIGHT_DESC* CLightMgr::GetLightDesc(_uint _iIndex)
 {
     auto iter = m_Lights.begin();
 
@@ -16,18 +16,33 @@ const LIGHT_DESC* CLightMgr::GetLightDesc(_uint _iIndex) const
     return (*iter)->GetLightDesc();
 }
 
+void CLightMgr::SetLightEnable(_uint _iIndex, _bool _IsEnabled)
+{
+    auto iter = m_Lights.begin();
+
+    for (size_t i = 0; i < _iIndex; ++i)
+        ++iter;
+
+    (*iter)->SetEnable(_IsEnabled);
+}
+
+
 HRESULT CLightMgr::Initialize()
 {
     return S_OK;
 }
 
-HRESULT CLightMgr::AddLight(const LIGHT_DESC& _LightDesc)
+HRESULT CLightMgr::AddLight(const LIGHT_DESC& _LightDesc, _uint* _iIndex)
 {
     shared_ptr<CLight> pLight = CLight::Create(_LightDesc);
     if (!pLight)
         return E_FAIL;
 
     m_Lights.push_back(pLight);
+
+    if (_iIndex) {
+        *(_iIndex) = m_Lights.size() - 1;
+    }
 
     return S_OK;
 }

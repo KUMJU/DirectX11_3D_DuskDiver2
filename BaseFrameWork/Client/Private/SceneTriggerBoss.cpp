@@ -50,18 +50,20 @@ void CSceneTriggerBoss::Tick(_float _fTimeDelta)
 
 		if (m_fEventAccTime >= 3.f && !m_bBossSpawnDone) {
 
-			CCameraMgr::GetInstance()->SetLerpMoving({ 0.f, 46.f, -405.f, 1.f }, 0.5f);
+			CCameraMgr::GetInstance()->SetLerpMoving({ 0.f, 47.f, -409.f, 1.f }, 0.5f);
 
 			CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MON_SE);
 			CGameInstance::GetInstance()->PlayAudio(TEXT("EN0301_Snarl02.wav"), CSoundMgr::CHANNELID::CH_MON_SE, 1.3f);
 
-			CCameraMgr::GetInstance()->SetShakingMode(5.f, 1.5f, false);
-
 			m_bBossSpawnDone = true;
 		}
 
+		if (m_fEventAccTime >= 3.5f && !m_bShakingEvent) {
+			CCameraMgr::GetInstance()->SetShakingMode(5.f, 1.f, false);
+			m_bShakingEvent = true;
+		}
 
-		if (m_fEventAccTime >= 4.5f && m_bBossSpawnDone) {
+		if (m_fEventAccTime >= 4.8f) {
 
 			CCameraMgr::GetInstance()->SetLerpMovingBack(0.5f);
 			m_IsActive = false;

@@ -5,11 +5,13 @@
 
 #include "FinalBoss.h"
 #include "UI_SequenceTex.h"
+#include "UIBackGround.h"
 
 #include "GameMgr.h"
 #include "Player.h"
 
 #include "CameraMgr.h"
+#include "UIMgr.h"
 
 CSpecialBossPattern::CSpecialBossPattern()
 {
@@ -38,7 +40,16 @@ HRESULT CSpecialBossPattern::Initialize(shared_ptr<class CFinalBoss> _pBoss)
 	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_UI"), m_pGaugeUI)))
 		return E_FAIL;
 
-	//Player 
+	TagInfo.fSizeX = 80.f;
+	TagInfo.fSizeY = 60.f;
+	TagInfo.fX = g_iWinSizeX * 0.5f;
+	TagInfo.fY = g_iWinSizeY * 0.5f + 240.f;
+
+	m_pKeySpaceBarUI = CUIBackGround::Create(TagInfo, TEXT("btn_space"), 2);
+	m_pKeySpaceBarUI->SetEnable(false);
+
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_UI"), m_pKeySpaceBarUI)))
+		return E_FAIL;
 
 	m_pPlayer = CGameMgr::GetInstance()->GetPlayer();
 
@@ -62,8 +73,22 @@ void CSpecialBossPattern::Tick(_float _fTimeDelta)
 	if (m_bStartDone) {
 		m_fAccTime += _fTimeDelta;
 
-		if (m_fAccTime >= 3.f && !m_bCamFocusDone) {
-			CCameraMgr::GetInstance()->SetFreeCamPos({ 0.f, 42.5f, -380.f, 1.f }, {0.f, 39.5f, -375.f, 1.f});
+		if (m_fAccTime >= 0.1f && !m_bSetPosEvent) {
+
+			dynamic_pointer_cast<CTransform>(m_pPlayer->GetComponent(TEXT("Com_Transform")))->SetState(CTransform::STATE_POSITION, { 0.f, 40.f, -410.f, 1.f });
+			dynamic_pointer_cast<CTransform>(m_pPlayer->GetComponent(TEXT("Com_Transform")))->LookAtForLandObject({ 0.f, 42.5f, -425.f , 1.f });
+			
+			m_bSetPosEvent = true;
+		}
+
+		if (m_fAccTime >= 3.2f && !m_bCamFocusDone) {
+			m_pPlayer->SetGaugingEffect(0);
+
+			m_pGaugeUI->SetEnable(true);
+			m_pKeySpaceBarUI->SetEnable(true);
+
+			CCameraMgr::GetInstance()->SwitchingCamera(CCameraMgr::ECAMERATYPE::THIRDPERSON);
+			CCameraMgr::GetInstance()->FocusingPlr({ 0.f, 42.5f, -415.f, 1.f });
 			m_bCamFocusDone = true;
 		}
 
@@ -88,15 +113,11 @@ HRESULT CSpecialBossPattern::Render()
 void CSpecialBossPattern::PatternStart()
 {
 	m_IsEnabled = true;
-	m_pGaugeUI->SetEnable(true);
-
 	/*Player*/
-	m_pPlayer->SetOnMinigame(true);
-	dynamic_pointer_cast<CTransform>(m_pPlayer->GetComponent(TEXT("Com_Transform")))->SetState(CTransform::STATE_POSITION, { 0.f, 40.f, -375.f, 1.f });
-	
+	m_pPlayer->SetOnFinalEvent(true);	
 	CCameraMgr::GetInstance()->SetFreeCamPos({ 0.f, 42.5f, -405.f, 1.f }, { 0.f, 42.5f, -425.f , 1.f });
-	//플레이어 위치 옮기기 
-	//보스가 쓰러지는 쪽으로 카메라 세팅 
+
+	CUIMgr::GetInstance()->StartDialog(TEXT("LastAttack"));
 
 	m_bStartDone = true;
 
@@ -109,17 +130,37 @@ void CSpecialBossPattern::StartEvent()
 
 void CSpecialBossPattern::KeyInput()
 {
+	if (m_bKeyEventComplete)
+		return;
+
 	if (CGameInstance::GetInstance()->Key_Down(VK_SPACE)) {
 
 		++m_iPressNum;
 
 		if (3 == m_iPressNum) {
+
 			m_iPressNum = 0;
 			++m_iSuccessNum;
 			m_pGaugeUI->SlideNextTexIdx();
+
+			if (5 == m_iSuccessNum) {
+				m_pPlayer->SetGaugingEffect(1);
+				CCameraMgr::GetInstance()->SetFovLerp(40.f);
+				CCameraMgr::GetInstance()->SetShakingMode(0.4f, 3.f, false);
+
+			}
+
+			if (10 == m_iSuccessNum) {
+				m_pPlayer->SetGaugingEffect(2);
+				CCameraMgr::GetInstance()->SetFovLerp(25.f);
+				CCameraMgr::GetInstance()->SetShakingMode(1.f, 3.f, false);
+			}
 		}
 
 		if (15 == m_iSuccessNum) {
+			m_pKeySpaceBarUI->SetEnable(false);
+			m_pGaugeUI->SetEnable(false);
+			m_bKeyEventComplete = true;
 			SuccessPattern();
 		}
 
@@ -130,8 +171,9 @@ void CSpecialBossPattern::KeyInput()
 
 void CSpecialBossPattern::SuccessPattern()
 {
-
-	m_pFinalBoss.lock()->EndSpecialPattern();
+	CCameraMgr::GetInstance()->SwitchDefaultCamMode(CThirdPersonCam::ECAM_DEFAULT);
+	m_pPlayer->StartLastAttack();
+	//m_pFinalBoss.lock()->EndSpecialPattern();
 
 }
 

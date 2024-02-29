@@ -1,0 +1,124 @@
+{
+	"Elements": {
+		"RingFloor": {
+			"Center": {
+				"x": 0.0,
+				"y": 0.1,
+				"z": 0.0
+			},
+			"Color": {
+				"x": 1.0,
+				"y": 0.98673588037490845,
+				"z": 0.77450978755950928
+			},
+			"DirectMax": {
+				"x": 1.0,
+				"y": 1.0,
+				"z": 1.0
+			},
+			"DirectMin": {
+				"x": -1.0,
+				"y": 1.0,
+				"z": -1.0
+			},
+			"Duration": {
+				"x": 1.0,
+				"y": 3.0
+			},
+			"EffectType": 0,
+			"InstanceNum": 30,
+			"LifeTime": {
+				"x": 0.0,
+				"y": 4.0
+			},
+			"Size": {
+				"x": 0.10000000149011612,
+				"y": 0.30000002384185791
+			},
+			"Speed": {
+				"x": 1.0,
+				"y": 6.0
+			},
+			"StartPointMax": {
+				"x": 3.0,
+				"y": 0.0,
+				"z": 3.0
+			},
+			"StartPointMin": {
+				"x": -3.0,
+				"y": 0.0,
+				"z": -3.0
+			},
+			"TextureKey": "T_Flare_00"
+		},
+		"Ring": {
+			"Center": {
+				"x": 0.0,
+				"y": 0.10000000149011612,
+				"z": 0.0
+			},
+			"ChangeTime": 2.0,
+			"Color": {
+				"w": 1.0,
+				"x": 1.0,
+				"y": 0.96107268333435059,
+				"z": 0.77941179275512695
+			},
+			"Duration": {
+				"x": 0.0,
+				"y": 3.0
+			},
+			"EffectType": 2,
+			"EndScale": {
+				"x": 2.5,
+				"y": 2.5,
+				"z": 2.5
+			},
+			"LerpColor": {
+				"w": 1.0,
+				"x": 1.0,
+				"y": 0.91695499420166016,
+				"z": 0.29411762952804565
+			},
+			"Loop": {
+				"EffectLoop": true,
+				"UVLoop": true
+			},
+			"Mask": {
+				"Speed": 3.0,
+				"TexKey": "T_Blade_Moving01",
+				"Using": true,
+				"x": 0.0,
+				"y": 1.0
+			},
+			"MeshKey": "RingFloor",
+			"MiddleScale": {
+				"x": 2.5,
+				"y": 2.5,
+				"z": 2.5
+			},
+			"Noise": {
+				"Speed": 0.0,
+				"TexKey": "flow_67",
+				"Using": true,
+				"x": 0.0,
+				"y": 0.0
+			},
+			"Rotation": {
+				"x": 0.0,
+				"y": 0.0,
+				"z": 0.0
+			},
+			"StartScale": {
+				"x": 2.5,
+				"y": 2.5,
+				"z": 2.5
+			}
+		}
+	},
+	"Preset Info" : 
+	{
+		"Duration" : 4.0,
+		"Loop" : true
+	}
+}

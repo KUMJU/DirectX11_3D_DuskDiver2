@@ -14,6 +14,7 @@ public:
 		ECAM_DEFAULT,
 		ECAM_EVENT,
 		ECAM_LERP,
+		ECAM_FOCUSING,
 		ECAM_END
 	};
 
@@ -66,12 +67,18 @@ private:
 public:
 	_float4 GetCamLookVector() { return m_vLookPlr; }
 
+public:
+	void SwitchingCamMode(ECAMSTATE _eCamState);
 
 public:
 	void SetCameraShaking(_float _fShakingPow, _float _fShakingTime, _bool m_bXDir);
 	void ShakeCamera(_float _fTimeDelta); // RandomShakeCamera
 	void ShakeCameraPos(_float _fTimeDelta);
 	void SetFOV(_float _fFov);
+
+public:
+	void FocusingPlr(_vector _vCamPos);
+	void SetFovLerp(_float _fRaidan);
 
 public:
 	void SetPositionLerpMove(_vector _vPos, _float _fAccTime);
@@ -95,6 +102,11 @@ private:
 	_float m_fYOffset = 0.f;
 	_float m_fXOffset = 0.f;
 	_int m_iShakingCount = 0;
+
+	_float m_fZoomLerpTime = 0.f;
+	_bool m_bZoomLerp = false;
+	_float m_fSrcFovy = 0.f;
+	_float m_fDstFovy = 0.f;
 
 private:
 	_vector m_vLerpSrcPos = _vector();

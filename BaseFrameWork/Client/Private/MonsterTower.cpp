@@ -142,6 +142,10 @@ void CMonsterTower::OnCollide(EObjType _eObjType, shared_ptr<CCollider> _pCollid
 		CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MAPOBJ_SE);
 		CGameInstance::GetInstance()->PlayAudio(TEXT("se_Env12_Tower_Speedup.wav"), CSoundMgr::CHANNELID::CH_MAPOBJ_SE, 1.f);
 
+		LIGHT_DESC* pLightDesc =  CGameInstance::GetInstance()->GetLightDesc(m_iTowerLightIdx);
+		pLightDesc->vDiffuse = { 0.9f, 0.4f, 0.1f, 1.f };
+
+
 		m_IsActived = true;
 	}
 
@@ -159,14 +163,14 @@ HRESULT CMonsterTower::SetTowerLight()
 {
 	LIGHT_DESC LightDesc = {};
 
-	XMStoreFloat4(&LightDesc.vPosition, m_pTransformCom->GetState(CTransform::STATE_POSITION) + _vector({0.f, 0.7f ,0.f , 0.f}));
+	XMStoreFloat4(&LightDesc.vPosition, m_pTransformCom->GetState(CTransform::STATE_POSITION) + _vector({0.f, 1.5f ,0.f , 0.f}));
 	LightDesc.eType = LIGHT_DESC::TYPE_POINT;
 	LightDesc.fRange = 3.0f;
 	LightDesc.vDiffuse = _float4(0.6f, 0.5f, 0.1f, 1.f);
-	LightDesc.vAmbient = _float4(0.6f, 0.3f, 0.3f, 1.f);
+	LightDesc.vAmbient = _float4(0.6f, 0.6f, 0.2f, 1.f);
 	LightDesc.vSpecular = LightDesc.vDiffuse;
 
-	if (FAILED(CGameInstance::GetInstance()->AddLight(LightDesc)))
+	if (FAILED(CGameInstance::GetInstance()->AddLight(LightDesc, &m_iTowerLightIdx)))
 		return E_FAIL;
 
 	return S_OK;

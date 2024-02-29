@@ -52,7 +52,7 @@ VS_OUT VS_MAIN(VS_IN In)
     
     vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
     vector vNormal = mul(vector(In.vNormal, 0.f), BoneMatrix);
-
+    
     Out.vPosition = mul(vPosition, matWVP);
     Out.vTexcoord = In.vTexcoord;
     Out.vWorldPos = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
@@ -88,12 +88,12 @@ PS_OUT PS_MAIN(PS_IN In)
    
     
     vector vToonDiffuse = saturate(vMtrlDiffuse);
-    vToonDiffuse = ceil(vToonDiffuse * 10) / 10.f;
+    vToonDiffuse = ceil(vToonDiffuse * 5) / 5.f;
 
     if (vToonDiffuse.a < 0.1f)
         discard;
     
-    Out.vDiffuse = vToonDiffuse;
+    Out.vDiffuse = float4(vToonDiffuse.xyz, 1);
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
     
     //Far 받아와서 처리 

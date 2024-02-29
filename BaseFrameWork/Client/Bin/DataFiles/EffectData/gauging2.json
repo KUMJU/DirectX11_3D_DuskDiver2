@@ -1,0 +1,380 @@
+{
+	"Elements": {
+		"RingFloor": {
+			"Center": {
+				"x": 0.0,
+				"y": 0.09,
+				"z": 0.0
+			},
+			"Color": {
+				"x": 1.0,
+				"y": 0.98673588037490845,
+				"z": 0.77450978755950928
+			},
+			"DirectMax": {
+				"x": 1.0,
+				"y": 1.0,
+				"z": 1.0
+			},
+			"DirectMin": {
+				"x": -1.0,
+				"y": 1.0,
+				"z": -1.0
+			},
+			"Duration": {
+				"x": 1.0,
+				"y": 3.0
+			},
+			"EffectType": 0,
+			"InstanceNum": 30,
+			"LifeTime": {
+				"x": 0.0,
+				"y": 4.0
+			},
+			"Size": {
+				"x": 0.10000000149011612,
+				"y": 0.30000002384185791
+			},
+			"Speed": {
+				"x": 1.0,
+				"y": 6.0
+			},
+			"StartPointMax": {
+				"x": 3.0,
+				"y": 0.0,
+				"z": 3.0
+			},
+			"StartPointMin": {
+				"x": -3.0,
+				"y": 0.0,
+				"z": -3.0
+			},
+			"TextureKey": "T_Flare_00"
+		},
+		"Ring": {
+			"Center": {
+				"x": 0.0,
+				"y": 0.10000000149011612,
+				"z": 0.0
+			},
+			"ChangeTime": 2.0,
+			"Color": {
+				"w": 1.0,
+				"x": 1.0,
+				"y": 0.96107268333435059,
+				"z": 0.77941179275512695
+			},
+			"Duration": {
+				"x": 0.0,
+				"y": 3.0
+			},
+			"EffectType": 2,
+			"EndScale": {
+				"x": 2.5,
+				"y": 2.5,
+				"z": 2.5
+			},
+			"LerpColor": {
+				"w": 1.0,
+				"x": 1.0,
+				"y": 0.91695499420166016,
+				"z": 0.29411762952804565
+			},
+			"Loop": {
+				"EffectLoop": true,
+				"UVLoop": true
+			},
+			"Mask": {
+				"Speed": 3.0,
+				"TexKey": "T_Blade_Moving01",
+				"Using": true,
+				"x": 0.0,
+				"y": 1.0
+			},
+			"MeshKey": "RingFloor",
+			"MiddleScale": {
+				"x": 2.5,
+				"y": 2.5,
+				"z": 2.5
+			},
+			"Noise": {
+				"Speed": 0.0,
+				"TexKey": "flow_67",
+				"Using": true,
+				"x": 0.0,
+				"y": 0.0
+			},
+			"Rotation": {
+				"x": 0.0,
+				"y": 0.0,
+				"z": 0.0
+			},
+			"StartScale": {
+				"x": 2.5,
+				"y": 2.5,
+				"z": 2.5
+			}
+		},
+		"Ball": {
+			"Center": {
+				"x": -0.10000000149011612,
+				"y": 0.34999999403953552,
+				"z": 0.5
+			},
+			"ChangeTime": 2.0,
+			"Color": {
+				"w": 1.0,
+				"x": 1.0,
+				"y": 0.93656277656555176,
+				"z": 0.56862747669219971
+			},
+			"Duration": {
+				"x": 0.0,
+				"y": 3.0
+			},
+			"EffectType": 2,
+			"EndScale": {
+				"x": 0.10000000149011612,
+				"y": 0.10000000149011612,
+				"z": 0.10000000149011612
+			},
+			"LerpColor": {
+				"w": 1.0,
+				"x": 0.9950980544090271,
+				"y": 0.87745386362075806,
+				"z": 0.19511725008487701
+			},
+			"Loop": {
+				"EffectLoop": true,
+				"UVLoop": true
+			},
+			"Mask": {
+				"Speed": 4.0,
+				"TexKey": "T_Storm_Mask_04",
+				"Using": true,
+				"x": 1.0,
+				"y": 0.0
+			},
+			"MeshKey": "ball",
+			"MiddleScale": {
+				"x": 0.10000000149011612,
+				"y": 0.10000000149011612,
+				"z": 0.10000000149011612
+			},
+			"Noise": {
+				"Speed": 0.0,
+				"TexKey": "T_Tile_Noise_Tendril_01",
+				"Using": true,
+				"x": 0.0,
+				"y": 0.0
+			},
+			"Rotation": {
+				"x": 0.0,
+				"y": 0.0,
+				"z": 30.0
+			},
+			"StartScale": {
+				"x": 0.10000000149011612,
+				"y": 0.10000000149011612,
+				"z": 0.10000000149011612
+			}
+		},
+		"LandWind": {
+			"Center": {
+				"x": 0.0,
+				"y": 0.10000000149011612,
+				"z": 0.0
+			},
+			"ChangeTime": 2.0,
+			"Color": {
+				"w": 1.0,
+				"x": 1.0,
+				"y": 0.97765278816223145,
+				"z": 0.84803920984268188
+			},
+			"Duration": {
+				"x": 0.0,
+				"y": 3.0
+			},
+			"EffectType": 2,
+			"EndScale": {
+				"x": 2.0,
+				"y": 2.0,
+				"z": 2.0
+			},
+			"LerpColor": {
+				"w": 1.0,
+				"x": 1.0,
+				"y": 0.93584197759628296,
+				"z": 0.56372547149658203
+			},
+			"Loop": {
+				"EffectLoop": true,
+				"UVLoop": true
+			},
+			"Mask": {
+				"Speed": 2.0,
+				"TexKey": "Mesh(334)",
+				"Using": true,
+				"x": 1.0,
+				"y": 0.0
+			},
+			"MeshKey": "RingFloor",
+			"MiddleScale": {
+				"x": 2.0,
+				"y": 2.0,
+				"z": 2.0
+			},
+			"Noise": {
+				"Speed": 0.0,
+				"TexKey": "T_GPS_Swirly_Noise",
+				"Using": true,
+				"x": 1.0,
+				"y": 1.0
+			},
+			"Rotation": {
+				"x": 0.0,
+				"y": 0.0,
+				"z": 0.0
+			},
+			"StartScale": {
+				"x": 2.0,
+				"y": 2.0,
+				"z": 2.0
+			}
+		},
+		"RingRotate": {
+			"Center": {
+				"x": 0.0,
+				"y": 0.5,
+				"z": 0.0
+			},
+			"ChangeTime": 2.0,
+			"Color": {
+				"w": 1.0,
+				"x": 1.0,
+				"y": 0.97693192958831787,
+				"z": 0.84313726425170898
+			},
+			"Duration": {
+				"x": 0.0,
+				"y": 3.0
+			},
+			"EffectType": 2,
+			"EndScale": {
+				"x": 2.0,
+				"y": 2.0,
+				"z": 2.0
+			},
+			"LerpColor": {
+				"w": 1.0,
+				"x": 1.0,
+				"y": 0.99279123544692993,
+				"z": 0.7549019455909729
+			},
+			"Loop": {
+				"EffectLoop": true,
+				"UVLoop": true
+			},
+			"Mask": {
+				"Speed": 2.0,
+				"TexKey": "T_GPP_Wind_Stripe_A",
+				"Using": true,
+				"x": 1.0,
+				"y": 0.0
+			},
+			"MeshKey": "Ring",
+			"MiddleScale": {
+				"x": 2.0,
+				"y": 2.0,
+				"z": 2.0
+			},
+			"Noise": {
+				"Speed": 0.0,
+				"TexKey": "flow_00",
+				"Using": false,
+				"x": 0.0,
+				"y": 0.0
+			},
+			"Rotation": {
+				"x": 45.0,
+				"y": 0.0,
+				"z": 45.0
+			},
+			"StartScale": {
+				"x": 2.0,
+				"y": 2.0,
+				"z": 2.0
+			}
+		},
+		"RingRotate2": {
+			"Center": {
+				"x": 0.0,
+				"y": 0.5,
+				"z": 0.0
+			},
+			"ChangeTime": 2.0,
+			"Color": {
+				"w": 1.0,
+				"x": 1.0,
+				"y": 0.97693192958831787,
+				"z": 0.84313726425170898
+			},
+			"Duration": {
+				"x": 0.0,
+				"y": 3.0
+			},
+			"EffectType": 2,
+			"EndScale": {
+				"x": 2.0,
+				"y": 2.0,
+				"z": 2.0
+			},
+			"LerpColor": {
+				"w": 1.0,
+				"x": 1.0,
+				"y": 0.98716843128204346,
+				"z": 0.56372547149658203
+			},
+			"Loop": {
+				"EffectLoop": true,
+				"UVLoop": true
+			},
+			"Mask": {
+				"Speed": 2.0,
+				"TexKey": "T_GPP_Wind_Stripe_A",
+				"Using": true,
+				"x": 1.0,
+				"y": 0.0
+			},
+			"MeshKey": "Ring",
+			"MiddleScale": {
+				"x": 2.0,
+				"y": 2.0,
+				"z": 2.0
+			},
+			"Noise": {
+				"Speed": 0.0,
+				"TexKey": "flow_00",
+				"Using": false,
+				"x": 0.0,
+				"y": 0.0
+			},
+			"Rotation": {
+				"x": -45.0,
+				"y": 0.0,
+				"z": -55.0
+			},
+			"StartScale": {
+				"x": 2.0,
+				"y": 2.0,
+				"z": 2.0
+			}
+		}
+	},
+	"Preset Info" : 
+	{
+		"Duration" : 3.0,
+		"Loop" : true
+	}
+}

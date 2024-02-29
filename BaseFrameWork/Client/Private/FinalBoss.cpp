@@ -69,7 +69,7 @@ HRESULT CFinalBoss::Initialize()
     m_pSkillSet = CMonsterSkillSet::Create(3, m_pModelCom);
     m_pSkillSet->SetTransform(m_pTransformCom);
 
-    m_iMaxHP = 100;
+    m_iMaxHP = 50;
     m_iHP = m_iMaxHP;
 
     m_pHPBar = CBossHPBar::Create();
@@ -328,6 +328,7 @@ void CFinalBoss::IfEmptyAnimList()
 
     if (8 == m_iAnimNum && EMONSTER_STATE::STATE_SPAWN == m_eCurrentState) {
         m_eCurrentState = EMONSTER_STATE::STATE_IDLE;
+        m_pHPBar->SetEnable(true);
     }
 
     ChangeAnim(13, true);
@@ -360,15 +361,10 @@ void CFinalBoss::EndSpecialPattern()
 
 void CFinalBoss::SetSpawnState()
 {
-   // __super::SetSpawnState();
-
-  //  m_pHPBar->HPBarReset();
-    m_pHPBar->SetEnable(true);
-
     m_pSpawnEffect->PlayEffect();
     m_eCurrentState = EMONSTER_STATE::STATE_SPAWN;
     ChangeAnim(8, false);
-    m_iHP = 100;
+    m_iHP = 50;
 
 }
 
