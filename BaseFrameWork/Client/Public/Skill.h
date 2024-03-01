@@ -89,6 +89,7 @@ protected:
 
 protected:
 	_bool bVoiceDone = false;
+	_bool bSkillSeDone = false;
 	_float m_fAccTime = 0.f;
 
 //Collide

@@ -87,13 +87,12 @@ PS_OUT PS_MAIN(PS_IN In)
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(g_LinearSampler, In.vTexcoord);
    
     
-    vector vToonDiffuse = saturate(vMtrlDiffuse);
-    vToonDiffuse = ceil(vToonDiffuse * 5) / 5.f;
 
-    if (vToonDiffuse.a < 0.1f)
+
+    if (vMtrlDiffuse.a < 0.1f)
         discard;
     
-    Out.vDiffuse = float4(vToonDiffuse.xyz, 1);
+    Out.vDiffuse = float4(vMtrlDiffuse.xyz, 1);
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
     
     //Far 받아와서 처리 

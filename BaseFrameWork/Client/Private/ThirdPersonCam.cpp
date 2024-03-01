@@ -380,6 +380,11 @@ shared_ptr<CThirdPersonCam> CThirdPersonCam::Create()
 void CThirdPersonCam::StartCameraEvent(const wstring& _strEventKey)
 {
 	auto iter = m_EventInfos.find(_strEventKey);
+	
+	/*ÃÊ±âÈ­*/
+	m_fFovy = XMConvertToRadians(60.f);
+	m_bShaking = false;
+	m_fEventAccTime = 0.f;
 
 	if (iter != m_EventInfos.end()) {
 		m_CurrentCamEvent = &(iter->second);
@@ -617,7 +622,84 @@ void CThirdPersonCam::CreateEventInfo()
 	
 	}
 
+
 	m_EventInfos.emplace(TEXT("SuperSkill1"), SuperSkill);
+
+
+
+	/*Final Attack */
+
+	vector<tagEventDesc> FinalAttack = {};
+
+
+	{
+		eventDesc1.bZoomin = false;
+		eventDesc1.bZoomOut = false;
+		eventDesc1.bRotation = false;
+		eventDesc1.bMoving = false;
+		eventDesc1.bFocus = true;
+		eventDesc1.bShaking = false;
+
+		eventDesc1.fAccTime = 0.1f;
+		eventDesc1.fDistanceOffset = 1.7f;
+		eventDesc1.fYOffset = 1.f;
+
+		eventDesc5.bZoomin = false;
+		eventDesc5.bZoomOut = false;
+		eventDesc5.bRotation = false;
+		eventDesc5.bMoving = false;
+		eventDesc5.bFocus = true;
+		eventDesc5.bShaking = false;
+
+		eventDesc5.fAccTime = 1.7f;
+		eventDesc5.fDistanceOffset = 3.7f;
+		eventDesc5.fYOffset = 1.f;
+
+		eventDesc2.bZoomin = true;
+		eventDesc2.bZoomOut = false;
+		eventDesc2.bRotation = false;
+		eventDesc2.bMoving = false;
+		eventDesc2.bFocus = false;
+		eventDesc2.bShaking = false;
+
+		eventDesc2.fAccTime = 1.f;
+		eventDesc2.fSpeed = 50.f;
+		eventDesc2.fDistanceOffset = 30.f;
+		eventDesc2.fRadian = 0.f;
+		eventDesc2.fYOffset = 0.f;
+
+		eventDesc3.bZoomin = false;
+		eventDesc3.bZoomOut = false;
+		eventDesc3.bRotation = false;
+		eventDesc3.bMoving = false;
+		eventDesc3.bFocus = false;
+		eventDesc3.bShaking = false;
+				 
+		eventDesc3.fAccTime = 1.f;
+
+		eventDesc4.bZoomin = false;
+		eventDesc4.bZoomOut = false;
+		eventDesc4.bRotation = false;
+		eventDesc4.bMoving = false;
+		eventDesc4.bFocus = true;
+		eventDesc4.bShaking = false;
+				 
+		eventDesc4.fAccTime = 7.f;
+		eventDesc4.fDistanceOffset = -4.7f;
+		eventDesc4.fYOffset = 1.3f;
+
+
+
+		FinalAttack.push_back(eventDesc1);
+		FinalAttack.push_back(eventDesc2);
+		FinalAttack.push_back(eventDesc3);
+		FinalAttack.push_back(eventDesc4);
+	//	FinalAttack.push_back(eventDesc5);
+
+	}
+
+	m_EventInfos.emplace(TEXT("FinalAttack"), FinalAttack);
+
 
 }
 

@@ -1,0 +1,252 @@
+{
+	"Elements": {
+		"ParticleGlow": {
+			"Center": {
+				"x": 0.0,
+				"y": 5.0,
+				"z": 5.0
+			},
+			"Color": {
+				"x": 1.0,
+				"y": 0.93944650888442993,
+				"z": 0.58823525905609131
+			},
+			"DirectMax": {
+				"x": 0.40000000596046448,
+				"y": -1.0,
+				"z": 0.40000000596046448
+			},
+			"DirectMin": {
+				"x": -0.40000000596046448,
+				"y": -1.0,
+				"z": -0.40000000596046448
+			},
+			"Duration": {
+				"x": 5.4,
+				"y": 7.8
+			},
+			"EffectType": 0,
+			"InstanceNum": 200,
+			"LifeTime": {
+				"x": 0.80000001192092896,
+				"y": 1.3999999761581421
+			},
+			"Size": {
+				"x": 0.0099999997764825821,
+				"y": 0.10000000149011612
+			},
+			"Speed": {
+				"x": 5.0,
+				"y": 10.0
+			},
+			"StartPointMax": {
+				"x": 2.0,
+				"y": 0.20000000298023224,
+				"z": 2.0
+			},
+			"StartPointMin": {
+				"x": -2.0,
+				"y": 0.0,
+				"z": -2.0
+			},
+			"TextureKey": "T_dust_Small"
+		},
+		"Wind1": {
+			"Center": {
+				"x": 0.0,
+				"y": 0.10000000149011612,
+				"z": 5.0
+			},
+			"ChangeTime": 5.8,
+			"Color": {
+				"w": 1.0,
+				"x": 1.0,
+				"y": 0.93151676654815674,
+				"z": 0.53431373834609985
+			},
+			"Duration": {
+				"x": 4.8,
+				"y": 6.1
+			},
+			"EffectType": 2,
+			"EndScale": {
+				"x": 20.0,
+				"y": 20.0,
+				"z": 20.0
+			},
+			"LerpColor": {
+				"w": 1.0,
+				"x": 1.0,
+				"y": 0.93656289577484131,
+				"z": 0.46078431606292725
+			},
+			"Loop": {
+				"EffectLoop": false,
+				"UVLoop": true
+			},
+			"Mask": {
+				"Speed": 4.0,
+				"TexKey": "T_St3_Land_Wind_00",
+				"Using": true,
+				"x": 1.0,
+				"y": 0.0
+			},
+			"MeshKey": "Tornado_Sub",
+			"MiddleScale": {
+				"x": 10.0,
+				"y": 10.0,
+				"z": 10.0
+			},
+			"Noise": {
+				"Speed": 0.0,
+				"TexKey": "T_GPBAR_Swirly_Noise",
+				"Using": true,
+				"x": 0.0,
+				"y": 0.0
+			},
+			"Rotation": {
+				"x": 0.0,
+				"y": 0.0,
+				"z": 0.0
+			},
+			"StartScale": {
+				"x": 10.0,
+				"y": 10.0,
+				"z": 10.0
+			}
+		},
+		"Wind2": {
+			"Center": {
+				"x": 0.0,
+				"y": 0.10000000149011612,
+				"z": 5.0
+			},
+			"ChangeTime": 5.8,
+			"Color": {
+				"w": 1.0,
+				"x": 1.0,
+				"y": 0.9488179087638855,
+				"z": 0.65196079015731812
+			},
+			"Duration": {
+				"x": 4.8,
+				"y": 6.1
+			},
+			"EffectType": 2,
+			"EndScale": {
+				"x": 20.0,
+				"y": 8.0,
+				"z": 20.0
+			},
+			"LerpColor": {
+				"w": 1.0,
+				"x": 1.0,
+				"y": 0.95790088176727295,
+				"z": 0.64215683937072754
+			},
+			"Loop": {
+				"EffectLoop": false,
+				"UVLoop": true
+			},
+			"Mask": {
+				"Speed": 4.0,
+				"TexKey": "Mesh(334)",
+				"Using": true,
+				"x": 1.0,
+				"y": 0.0
+			},
+			"MeshKey": "Ring",
+			"MiddleScale": {
+				"x": 8.0,
+				"y": 8.0,
+				"z": 8.0
+			},
+			"Noise": {
+				"Speed": 0.0,
+				"TexKey": "flow_67",
+				"Using": true,
+				"x": 0.0,
+				"y": 0.0
+			},
+			"Rotation": {
+				"x": 0.0,
+				"y": 0.0,
+				"z": 0.0
+			},
+			"StartScale": {
+				"x": 8.0,
+				"y": 8.0,
+				"z": 8.0
+			}
+		},
+		"Wind3": {
+			"Center": {
+				"x": 0.0,
+				"y": 1.3999999761581421,
+				"z": 5.0
+			},
+			"ChangeTime": 5.8,
+			"Color": {
+				"w": 1.0,
+				"x": 1.0,
+				"y": 0.9488179087638855,
+				"z": 0.65196079015731812
+			},
+			"Duration": {
+				"x": 4.8,
+				"y": 6.1000001907348633
+			},
+			"EffectType": 2,
+			"EndScale": {
+				"x": 20.0,
+				"y": 20.0,
+				"z": 20.0
+			},
+			"LerpColor": {
+				"w": 1.0,
+				"x": 1.0,
+				"y": 0.95790088176727295,
+				"z": 0.64215683937072754
+			},
+			"Loop": {
+				"EffectLoop": false,
+				"UVLoop": true
+			},
+			"Mask": {
+				"Speed": 4.0,
+				"TexKey": "Mesh(334)",
+				"Using": true,
+				"x": 1.0,
+				"y": 0.0
+			},
+			"MeshKey": "Ring",
+			"MiddleScale": {
+				"x": 10.0,
+				"y": 10.0,
+				"z": 10.0
+			},
+			"Noise": {
+				"Speed": 0.0,
+				"TexKey": "flow_67",
+				"Using": true,
+				"x": 0.0,
+				"y": 0.0
+			},
+			"Rotation": {
+				"x": 0.0,
+				"y": 0.0,
+				"z": 0.0
+			},
+			"StartScale": {
+				"x": 10.0,
+				"y": 10.0,
+				"z": 10.0
+			}
+		}
+	},
+	"Preset Info" : 
+	{
+		"Duration" : 8.0,
+		"Loop" : false
+	}
+}

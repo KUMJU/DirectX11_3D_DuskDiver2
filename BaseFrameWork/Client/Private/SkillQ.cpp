@@ -36,6 +36,7 @@ HRESULT CSkillQ::Initialize()
     info.iStartTrackPosition = 16.f;
     info.iEndTrackPosition = 35.f;
     info.CancleAbleRatio = 0.2;
+    info.strHitSound = TEXT("se_HE01_Skill01_2.wav");
 
     shared_ptr<CCollider> pCollider = CCollider::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), CCollider::TYPE_SPHERE, normalAtkDesc);
     pCollider->SetOwner(shared_from_this());
@@ -63,6 +64,10 @@ void CSkillQ::Tick(_float _fTimeDelta)
         bVoiceDone = true;
         CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
         CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_57.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
+        
+        CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_FX);
+        CGameInstance::GetInstance()->PlayAudio(TEXT("se_HE01_Skill01_4.wav"), CSoundMgr::CHANNELID::CH_PLR_FX, 1.f);
+
     }
 
    

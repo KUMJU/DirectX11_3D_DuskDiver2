@@ -92,10 +92,14 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     vector vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
 	
     
-    Out.vShade = g_vLightDiffuse * 
+    vector vShade = g_vLightDiffuse * 
     saturate(dot(normalize(g_vLightDir) * -1.f, vNormal))+
     (g_vLightAmbient * g_vMtrlAmbient);
 	
+    vector vToonShade = saturate(vShade);
+    vToonShade = 0.5 * smoothstep(0.16, 0.34, vToonShade);
+    Out.vShade = smoothstep(0.33, 0.67, vToonShade);
+   
     vector vReflect = normalize(reflect(normalize(g_vLightDir), vNormal));
     vector vWorldPos;
     

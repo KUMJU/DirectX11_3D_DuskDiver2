@@ -79,6 +79,32 @@ void CSkill_BurstR::Tick(_float _fTimeDelta)
 
     }
 
+    m_fAccTime += _fTimeDelta;
+
+    if (m_fAccTime >= 1.f && !bSkillSeDone) {
+
+        bSkillSeDone = true;
+
+        CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
+        CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_42.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
+
+
+        CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_FX);
+        CGameInstance::GetInstance()->PlayAudio(TEXT("se_HE01_Skill06_1.wav"), CSoundMgr::CHANNELID::CH_PLR_FX, 1.f);
+
+    }
+
+    if (m_fAccTime >= 4.f && !bVoiceDone) {
+
+        bVoiceDone = true;
+        CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_FX);
+        CGameInstance::GetInstance()->PlayAudio(TEXT("se_HE01_Skill06_2.wav"), CSoundMgr::CHANNELID::CH_PLR_FX, 1.f);
+
+        CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
+        CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_47.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
+
+    }
+
 
     __super::Tick(_fTimeDelta);
 }

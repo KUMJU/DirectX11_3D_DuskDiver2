@@ -71,6 +71,8 @@ void CSkill_BurstQ::PriorityTick(_float _fTimeDelta)
 
 void CSkill_BurstQ::Tick(_float _fTimeDelta)
 {
+
+    //se_HE01_Skill05_5
     __super::Tick(_fTimeDelta);
 
 }

@@ -75,8 +75,9 @@ public:
 private:
 	HRESULT SetLight();
 
+	/*플레이어가 제어하는 조명 인덱스*/
 	_uint m_iFianlEffectLightIdx = 0;
-
+	_uint m_iBurstModeLightIdx = 0;
 
 private:
 	shared_ptr<CShader> m_pShader = nullptr;
@@ -127,6 +128,8 @@ private:
 
 	_bool m_IsInBattle = false;
 	_bool m_IsOnMinigame = false;
+
+	_bool m_IsLastAttack = false;
 
 //변신~~~~~~~~~!!!!!
 private:
@@ -287,9 +290,9 @@ private:
 //EffectPreset 관리
 private:
 	shared_ptr<class CEffectPreset> m_pDashPreset= nullptr;
+	shared_ptr<class CEffectPreset> m_pLastAttack= nullptr;
+	shared_ptr<class CEffectPreset> m_pLastAttack2= nullptr;
 	vector<shared_ptr<class CEffectPreset>> m_pGuagingPresets;
-
-
 
 public:
 	virtual void OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _pCollider) override;

@@ -192,6 +192,8 @@ protected:
 	_float m_fHitAccTime = 0.f;
 	_float3 m_vRimColor = { 1.f, 0.f, 0.f };
 
+	random_device m_RandomDevice;
+	mt19937_64 m_RandomNumber;
 
 protected:
 	shared_ptr<CMonsterSkillSet> m_pSkillSet = nullptr;

@@ -67,11 +67,22 @@ void CSkillR::Tick(_float _fTimeDelta)
 
     m_fAccTime += _fTimeDelta;
 
+
+    if (m_fAccTime >= 0.6f && !bSkillSeDone) {
+
+        bSkillSeDone = true;
+  
+        CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_FX);
+        CGameInstance::GetInstance()->PlayAudio(TEXT("se_HE01_Skill04_1.wav"), CSoundMgr::CHANNELID::CH_PLR_FX, 1.f);
+
+    }
+
     if (m_fAccTime >= 1.f && !bVoiceDone) {
 
         bVoiceDone = true;
         CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
         CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_36.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
+    
     }
 
 }

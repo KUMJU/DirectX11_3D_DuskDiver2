@@ -95,6 +95,25 @@ void CSpecialBossPattern::Tick(_float _fTimeDelta)
 	}
 
 
+	if (m_bStartLastAtk) {
+
+		if (m_fAccTime > 5.f && !m_bPlayerEndVoice) {
+			CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
+			CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_65.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.3f);
+			m_bPlayerEndVoice = true;
+		}
+
+		if (m_fAccTime > 5.9f && !m_bTimerSetting) {
+
+			CGameInstance::GetInstance()->SetTimerOffset(TEXT("Timer_60"), 0.3f);
+			CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MONHIT);
+			CGameInstance::GetInstance()->PlayAudio(TEXT("se_slowmotion_finish.wav"), CSoundMgr::CHANNELID::CH_MONHIT, 1.3f);
+			m_bTimerSetting = true;
+		}
+
+
+	}
+
 	KeyInput();
 }
 
@@ -115,7 +134,7 @@ void CSpecialBossPattern::PatternStart()
 	m_IsEnabled = true;
 	/*Player*/
 	m_pPlayer->SetOnFinalEvent(true);	
-	CCameraMgr::GetInstance()->SetFreeCamPos({ 0.f, 42.5f, -405.f, 1.f }, { 0.f, 42.5f, -425.f , 1.f });
+	CCameraMgr::GetInstance()->SetFreeCamPos({ 0.f, 43.f, -407.f, 1.f }, { 0.f, 42.5f, -425.f , 1.f });
 
 	CUIMgr::GetInstance()->StartDialog(TEXT("LastAttack"));
 
@@ -171,8 +190,12 @@ void CSpecialBossPattern::KeyInput()
 
 void CSpecialBossPattern::SuccessPattern()
 {
-	CCameraMgr::GetInstance()->SwitchDefaultCamMode(CThirdPersonCam::ECAM_DEFAULT);
+	//CCameraMgr::GetInstance()->SwitchDefaultCamMode(CThirdPersonCam::ECAM_DEFAULT);
 	m_pPlayer->StartLastAttack();
+	CCameraMgr::GetInstance()->StartPlrCamEvent(TEXT("FinalAttack"));
+
+	m_fAccTime = 0.f;
+	m_bStartLastAtk = true;
 	//m_pFinalBoss.lock()->EndSpecialPattern();
 
 }

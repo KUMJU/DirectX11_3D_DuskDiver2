@@ -18,6 +18,10 @@ public:
 	virtual void LateTick(_float _fTimeDelta);
 	virtual HRESULT Render();
 
+private:
+	_bool m_bTimerSlowMotion = false;
+	_float m_fSkillBAccTime = 0.f;
+
 public:
 
 	static shared_ptr<CSuperSkillB> Create();

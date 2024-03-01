@@ -103,8 +103,8 @@ HRESULT CArcadeMap::Initialize()
 	CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MAPSE);
 	CGameInstance::GetInstance()->PlayAudio(TEXT("se_DVEnergy_Interaction1.wav"),CSoundMgr::CHANNELID::CH_MAPSE,  1.f);
 
-	//CUIMgr::GetInstance()->CloseAllUI();
-	//CUIMgr::GetInstance()->StartDialog(TEXT("StartDialog"));
+	CUIMgr::GetInstance()->CloseAllUI();
+	CUIMgr::GetInstance()->StartDialog(TEXT("StartDialog"));
 
 	return S_OK;
 }
@@ -267,8 +267,8 @@ HRESULT CArcadeMap::ReadyLayerEvent(const wstring& _strLayerTag)
 
 	/*시작 이벤트 트리거*/
 
-	//shared_ptr<CSceneTriggerStart> pTrigger2 = CSceneTriggerStart::Create({ 0.f, 10.f, -25.f });
-	//CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pTrigger2);
+	shared_ptr<CSceneTriggerStart> pTrigger2 = CSceneTriggerStart::Create({ 0.f, 10.f, -25.f });
+	CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pTrigger2);
 
 	/*코인 이벤트 트리거*/
 

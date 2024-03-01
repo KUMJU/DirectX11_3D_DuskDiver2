@@ -82,8 +82,6 @@ void CEffectMesh::Tick(_float _fTimeDelta, _matrix _ParentMat)
             return;
         }
 
-        //알파 러프
-
         if (m_fAccTime >= m_MeshDesc.vDuration.y) {
             m_IsEnabled = false;
             return;
@@ -148,7 +146,7 @@ HRESULT CEffectMesh::Render()
 
         ViewInv = XMMatrixInverse(NULL, XMLoadFloat4x4(&ViewCopyMat));
         ViewInv = WorldOwnMatrix * ViewInv;
-        ViewInv.r[3] = WorldOwnMatrix.r[3];
+        ViewInv.r[3] = WorldOwnMatrix.r[3] + _vector({m_MeshDesc.vCenter.x , m_MeshDesc.vCenter.y, m_MeshDesc.vCenter.z, 0.f});
 
         _float4x4 BillboardWorld = {};
         XMStoreFloat4x4(&BillboardWorld, ViewInv);

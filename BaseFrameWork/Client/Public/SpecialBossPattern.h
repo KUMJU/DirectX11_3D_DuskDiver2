@@ -31,7 +31,10 @@ private:
 	_bool m_bStartDone = false;
 	_bool m_bCamFocusDone = false;
 	_bool m_bSetPosEvent = false;
-	
+	_bool m_bStartLastAtk = false;
+	_bool m_bTimerSetting = false;
+	_bool m_bPlayerEndVoice = false;
+
 	_float m_fAccTime = 0.f;
 
 

@@ -69,7 +69,7 @@ HRESULT CFinalBoss::Initialize()
     m_pSkillSet = CMonsterSkillSet::Create(3, m_pModelCom);
     m_pSkillSet->SetTransform(m_pTransformCom);
 
-    m_iMaxHP = 50;
+    m_iMaxHP = 10;
     m_iHP = m_iMaxHP;
 
     m_pHPBar = CBossHPBar::Create();
@@ -108,6 +108,11 @@ void CFinalBoss::Tick(_float _fTimeDelta)
         return;
 
     __super::Tick(_fTimeDelta);
+
+
+    if (m_bSuperArmor) {
+        CalcSuperArmorTimeBoss(_fTimeDelta);
+    }
 
     if (m_eCurrentState != EMONSTER_STATE::STATE_SPAWN && !m_IsAtkCool && m_eCurrentState != EMONSTER_STATE::STATE_ATTACK && !m_bDie&&
         m_eCurrentState != EMONSTER_STATE::STATE_STUN) {
@@ -335,6 +340,18 @@ void CFinalBoss::IfEmptyAnimList()
 
 }
 
+
+void CFinalBoss::CalcSuperArmorTimeBoss(_float _fTimeDelta)
+{
+    m_bSuperArmorCoolTime += _fTimeDelta;
+
+    if (m_bSuperArmorCoolTime > 0.13f) {
+        m_bSuperArmorCoolTime = 0.f;
+        m_bSuperArmor = false;
+    }
+}
+
+
 _bool CFinalBoss::CalcDistanceOption()
 {
     return true;
@@ -345,9 +362,12 @@ void CFinalBoss::StartSpecialPattern()
     m_bSpecialPatternStart = true;
     m_eCurrentState = EMONSTER_STATE::STATE_STUN;
 
+    m_vRimColor = { 1.f , 0.8f, 0.1f };
+
     ChangeAnim(16, false);
     m_NextAnimIndex.push_back({ 15, true });
     
+    m_bSuperArmor = false;
     m_pSpecialPattern->PatternStart();
     
 }
@@ -364,12 +384,15 @@ void CFinalBoss::SetSpawnState()
     m_pSpawnEffect->PlayEffect();
     m_eCurrentState = EMONSTER_STATE::STATE_SPAWN;
     ChangeAnim(8, false);
-    m_iHP = 50;
+    m_iHP = 10;
 
 }
 
 void CFinalBoss::OnHit()
 {
+    if (m_eCurrentState == EMONSTER_STATE::STATE_STUN)
+        return;
+
     if (m_bDie) {
         m_bDie = false;
         StartSpecialPattern();

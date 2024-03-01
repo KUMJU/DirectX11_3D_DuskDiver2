@@ -31,6 +31,8 @@ HRESULT CMonster::Initialize(CTransform::TRANSFORM_DESC* _pDesc)
         m_pTargetTransCom = dynamic_pointer_cast<CTransform>(m_pTarget->GetComponent(TEXT("Com_Transform")));
     }
 
+    m_RandomNumber = mt19937_64(m_RandomDevice());
+
     return S_OK;
 }
 
@@ -424,7 +426,8 @@ void CMonster::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> 
 
         _int iDamage = pSkill->GetDamage();
 
-        if (EMONSTER_TYPE::MONSTER_MINIGAME != m_eMonsterType) {
+        if (EMONSTER_TYPE::MONSTER_MINIGAME != m_eMonsterType &&
+            m_eCurrentState != EMONSTER_STATE::STATE_STUN) {
             m_iHP -= iDamage;
 
             if (m_iHP <= 0) {
@@ -454,7 +457,25 @@ void CMonster::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> 
             m_bKnockUp = false;
         }
 
-        CEffectMgr::GetInstance()->SetHitMark(XMLoadFloat3(&_pCollider->GetBounding()->GetBoundingSphere()->Center));
+
+        if (m_eCurrentState == EMONSTER_STATE::STATE_STUN) {
+            _vector vPos = XMLoadFloat3(&_pCollider->GetBounding()->GetBoundingSphere()->Center);
+            
+            uniform_real_distribution<float>	fX(-2.f, 2.f);
+            uniform_real_distribution<float>	fY(-1.5f, 1.f);
+
+            _float fXDistance = fX(m_RandomNumber);
+            _float fYDistance = fY(m_RandomNumber);
+
+            vPos = vPos + _vector({ fXDistance ,fYDistance,  0.f});
+
+            CEffectMgr::GetInstance()->SetHitMark(vPos);
+
+        }
+        else {
+            CEffectMgr::GetInstance()->SetHitMark(XMLoadFloat3(&_pCollider->GetBounding()->GetBoundingSphere()->Center));
+        }
+
         m_bRimLight = true;
 
         m_pTarget->AddBurstGauge();

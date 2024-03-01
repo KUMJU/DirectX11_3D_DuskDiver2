@@ -17,8 +17,8 @@ HRESULT CSuperSkillB::Initialize()
     m_bMultiAtk = true;
 
     CCollider::COLLIDER_DESC AtkDesc = {};
-    AtkDesc.fRadius = 2.5f;
-    AtkDesc.vCenter = { 0.f, 1.5f, 1.8f };
+    AtkDesc.fRadius = 4.5f;
+    AtkDesc.vCenter = { 0.f, 1.5f, 2.8f };
 
 
     SKILLINFO info = {};
@@ -27,8 +27,8 @@ HRESULT CSuperSkillB::Initialize()
     info.bDownAtk = false;
     info.fKnockUpDistance = 6.f;
     info.fWeight = 2.f;
-    info.iStartTrackPosition = 45.0;
-    info.iEndTrackPosition = 90.0;
+    info.iStartTrackPosition = 70.0;
+    info.iEndTrackPosition = 115.0;
 
     shared_ptr<CCollider> pCollider = CCollider::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), CCollider::TYPE_SPHERE, AtkDesc);
     pCollider->SetOwner(shared_from_this());
@@ -49,12 +49,12 @@ void CSuperSkillB::PriorityTick(_float _fTimeDelta)
 
 void CSuperSkillB::Tick(_float _fTimeDelta)
 {
-    __super::Tick(_fTimeDelta);
-
+     __super::Tick(_fTimeDelta);
 }
 
 void CSuperSkillB::LateTick(_float _fTimeDelta)
 {
+    __super::LateTick(_fTimeDelta);
 }
 
 HRESULT CSuperSkillB::Render()

@@ -106,7 +106,7 @@ void CEffectMgr::SetHitMark(_vector _vPos)
     for (auto& pHitMark : m_HitMarks) {
 
         if (!pHitMark->IsEnabled()) {
-            pHitMark->SetEffectPosition(_vPos);
+            pHitMark->SetEffectPosition(XMVectorSetW(_vPos, 1.f));
             pHitMark->PlayEffect();
             break;
         }
@@ -296,9 +296,8 @@ void CEffectMgr::ReadData(const wstring& _strFullPath, const wstring& _strKeyNam
 
     //따로 분류하는 이펙트(모두 공용으로 사용할 수 있는 이펙트)
     if (TEXT("HitMark") == _strKeyName) {
-       // m_HitMarks.push_back(pPreset);
 
-        for (size_t iNum = 0; iNum < 5; ++iNum) {
+        for (size_t iNum = 0; iNum < 20; ++iNum) {
             shared_ptr<CEffectPreset> pEffectPresetClone = CEffectPreset::Clone(pPreset);
             m_HitMarks.push_back(pEffectPresetClone);
             pEffectPresetClone->SetEnable(false);
@@ -306,9 +305,9 @@ void CEffectMgr::ReadData(const wstring& _strFullPath, const wstring& _strKeyNam
             CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Effect"), pEffectPresetClone);
         }    
     }
-    else {
+   // else {
         m_EffectPresets.emplace(_strKeyName, pPreset);
-    }
+   // }
 
     in.close();
 

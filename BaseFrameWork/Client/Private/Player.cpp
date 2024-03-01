@@ -103,6 +103,19 @@ HRESULT CPlayer::Initialize()
     m_pGuagingPresets[2]->SetEnable(false);
     CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Effect"), m_pGuagingPresets[2]);
 
+    m_pLastAttack = CEffectMgr::GetInstance()->FindEffect(TEXT("SuperSkillInit"));
+    m_pLastAttack->SetParentTransform(m_pTransformCom);
+    m_pLastAttack->SetEnable(false);
+    CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Effect"), m_pLastAttack);
+    
+    m_pLastAttack2 = CEffectMgr::GetInstance()->FindEffect(TEXT("SuperSkillAfter"));
+    m_pLastAttack2->SetParentTransform(m_pTransformCom);
+    m_pLastAttack2->SetEnable(false);
+    CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Effect"), m_pLastAttack2);
+
+
+    //SuperSkillAfter
+
     SetLight();
 
 
@@ -138,7 +151,8 @@ void CPlayer::Tick(_float _fTimeDelta)
             m_pPlayerSkillset->SetBurstMode(true);
             m_pModelCom = m_pBurstModelCom;
             CUIMgr::GetInstance()->SetBurstMode();
-            
+            CGameInstance::GetInstance()->SetLightEnabled(m_iBurstModeLightIdx, true);
+
             m_eCurrentState = HEROSTATE::STATE_IDLE;
             m_fTransformTime = 0.f;
             m_bBurstMode = true;
@@ -230,6 +244,13 @@ void CPlayer::Tick(_float _fTimeDelta)
     }
 
     EffectTick(_fTimeDelta);
+
+    if (m_bBurstMode) {
+
+        LIGHT_DESC* pLightDesc = CGameInstance::GetInstance()->GetLightDesc(m_iBurstModeLightIdx);
+        XMStoreFloat4(&pLightDesc->vPosition, XMVectorSetW(m_pTransformCom->GetState(CTransform::STATE_POSITION) + _vector({0.f, 1.f, 0.f, 0.f}), 1.f));
+
+    }
 }
 
 void CPlayer::LateTick(_float _fTimeDelta)
@@ -442,6 +463,20 @@ HRESULT CPlayer::SetLight()
 
     CGameInstance::GetInstance()->SetLightEnabled(m_iFianlEffectLightIdx, false);
 
+
+
+    LightDesc.vPosition = _float4();
+    LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+    LightDesc.fRange = 1.4f;
+    LightDesc.vDiffuse = _float4(1.f, 0.8f, 0.1f, 1.f);
+    LightDesc.vAmbient = _float4(1.f, 0.6f, 0.6f, 1.f);
+    LightDesc.vSpecular = LightDesc.vDiffuse;
+
+    if (FAILED(CGameInstance::GetInstance()->AddLight(LightDesc, &m_iBurstModeLightIdx)))
+        return E_FAIL;
+
+    CGameInstance::GetInstance()->SetLightEnabled(m_iBurstModeLightIdx, false);
+
     return S_OK;
 }
 
@@ -504,6 +539,9 @@ void CPlayer::CheckTimer(_float _fTimeDelta)
             m_bBurstMode = false;
             ChangeAnim(44, true);
             CUIMgr::GetInstance()->BurstModeEnd();
+
+            CGameInstance::GetInstance()->SetLightEnabled(m_iBurstModeLightIdx, false);
+
             m_pPlayerSkillset->SetBurstMode(false);
 
         }
@@ -1599,9 +1637,31 @@ void CPlayer::StartLastAttack()
         iter->SetEnable(false);
     }
 
+    CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
+    CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_63.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
+    m_IsLastAttack = true;
+
+    //CGameInstance::GetInstance()->SetLightEnabled(m_iBurstModeLightIdx, true);
+    //CGameInstance::GetInstance()->SetLightEnabled(m_iFianlEffectLightIdx, false);
+
+    LIGHT_DESC* pLightDesc = CGameInstance::GetInstance()->GetLightDesc(m_iFianlEffectLightIdx);
+    _vector vPlrPos = m_pTransformCom->GetState(CTransform::STATE_POSITION) + _vector({0.f, 0.f, -5.f, 0.f});
+
+    XMStoreFloat4(&pLightDesc->vPosition, vPlrPos);
+    pLightDesc->fRange = 10.f;
 
     //마지막 공격 연출
     ChangeAnim(92, false);
+    m_pLastAttack->PlayEffect();
+    m_pLastAttack2->PlayEffect();
+
+    m_pPlayerSkillset->SetBurstMode(true);
+    m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_SUPER2);
+
+    CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_SKILLTRIGER);
+    CGameInstance::GetInstance()->PlayAudio(TEXT("se_HE01_Super02_1.wav"), CSoundMgr::CHANNELID::CH_PLR_SKILLTRIGER, 1.f);
+
+
     //이펙트 재생 
 }
 

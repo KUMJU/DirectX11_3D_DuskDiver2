@@ -34,6 +34,8 @@ public:
 private:
 	virtual void SetSpawnState() override;
 
+	void CalcSuperArmorTimeBoss(_float _fTimeDelta);
+
 protected:
 	virtual void OnHit() override;
 
