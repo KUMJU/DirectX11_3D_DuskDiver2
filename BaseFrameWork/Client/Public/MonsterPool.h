@@ -36,7 +36,7 @@ public:
 
 private:
 	//0 : enemy 1 // 1: enemy2 
-	vector<shared_ptr<class CMonster>> m_Monsters[5];
+	vector<shared_ptr<class CMonster>> m_Monsters[4];
 
 	//특수성이 있는 몬스터라 따로 관리
 	shared_ptr<class CBear> m_pBear = nullptr;

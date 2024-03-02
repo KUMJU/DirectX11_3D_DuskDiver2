@@ -19,20 +19,29 @@ public:
 	HRESULT End_MRT();
 	HRESULT BindSRV(const wstring& _strTargetTag, shared_ptr<class CShader> _pShader, const _char* _pConstantName);
 
+	HRESULT CreateCopyBuffer(_uint iSizeX, _uint iSizeY);
+
 #ifdef _DEBUG
 public:
 	HRESULT ReadyDebug(const wstring& _strTargetTag, _float _fX, _float _fY, _float _fSizeX, _float _fSizeY);
 	HRESULT RenderMRT(const wstring& _strMRTTag, shared_ptr<class CShader> _pShader, shared_ptr<class CVIRect> _pVIBuffer);
 #endif
 
+public:
+	HRESULT BindBackBufferSRV(shared_ptr<class CShader> _pShader, const _char* _pConstantName);
+
 private:
 
 	wrl::ComPtr<ID3D11Device> m_pDevice = nullptr;
 	wrl::ComPtr<ID3D11DeviceContext> m_pContext = nullptr;
 
+	wrl::ComPtr<ID3D11Texture2D> m_pCopyRes = nullptr;
+	wrl::ComPtr<ID3D11ShaderResourceView> m_pBackBufferSRV = nullptr;
+
 
 	ID3D11RenderTargetView* m_pBackBufferView = { nullptr };
 	wrl::ComPtr<ID3D11DepthStencilView> m_pDepthStencilView = { nullptr };
+
 
 private:
 	map<const wstring, shared_ptr<class CRenderTarget>> m_RenderTargets;

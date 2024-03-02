@@ -25,7 +25,7 @@ HRESULT CSceneTriggerBoss::Initialize(_float3 _vTriggerPos)
 
 
 	CMonsterPool::SPAWN_INFO info1 = {};
-	info1.iMonsterType = 3;
+	info1.iMonsterType = 2;
 	info1.vMonsterPos = _vector({ 0.f, 39.5f, -425.f });
 	m_SpawnMonsterList.push_back(info1);
 

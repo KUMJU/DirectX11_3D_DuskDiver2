@@ -112,9 +112,6 @@
     <Filter Include="02. GameObject\00.Creature\01. Monster\02. Enemy03">
       <UniqueIdentifier>{676ea72a-d90f-4e06-8fdc-015f85e26bef}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\00.Creature\01. Monster\03. MiddleBoss">
-      <UniqueIdentifier>{f94656db-269f-4948-b908-bb2a19dc7ce4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\00.Creature\01. Monster\04. FinalBoss">
       <UniqueIdentifier>{719ba536-5e79-4c03-bc04-ed1a3167b66a}</UniqueIdentifier>
     </Filter>
@@ -447,9 +444,6 @@
     <ClInclude Include="..\Public\Enemy02.h">
       <Filter>02. GameObject\00.Creature\01. Monster\01. Enemy02</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\MiddleBoss.h">
-      <Filter>02. GameObject\00.Creature\01. Monster\03. MiddleBoss</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Enemy03.h">
       <Filter>02. GameObject\00.Creature\01. Monster\02. Enemy03</Filter>
     </ClInclude>
@@ -757,9 +751,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Enemy02.cpp">
       <Filter>02. GameObject\00.Creature\01. Monster\01. Enemy02</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\MiddleBoss.cpp">
-      <Filter>02. GameObject\00.Creature\01. Monster\03. MiddleBoss</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Enemy03.cpp">
       <Filter>02. GameObject\00.Creature\01. Monster\02. Enemy03</Filter>

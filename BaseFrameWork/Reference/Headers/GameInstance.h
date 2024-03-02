@@ -126,6 +126,7 @@ public:
 	HRESULT BeginMRT(const wstring& _strMRTTag);
 	HRESULT EndMRT();
 	HRESULT BindSRV(const wstring& _strTargetTag, shared_ptr<class CShader> _pShader, const _char* _pConstantName);
+	HRESULT BindBackBufferSRV(shared_ptr<class CShader> _pShader, const _char* _pConstantName);
 
 #ifdef _DEBUG
 	HRESULT ReadyDebug(const wstring& _strTargetTag, _float _fX, _float _fY, _float _fSizeX, _float _fSizeY);

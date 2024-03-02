@@ -28,6 +28,8 @@ private:
 
 private:
 	shared_ptr<class CShader> m_pShader = nullptr;
+	shared_ptr<class CShader> m_pPostProcessShader = nullptr;
+
 	shared_ptr<class CVIRect> m_pVIBuffer = nullptr;
 
 	_float4x4 m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
@@ -52,8 +54,10 @@ private:
 	HRESULT RenderLight();
 	HRESULT RenderFinal();
 	HRESULT RenderNonLight();
+	HRESULT RenderOutLine();
 	HRESULT RenderGlow();
 	HRESULT RenderBlend();
+	HRESULT RenderDistortion();
 	HRESULT RenderUI();
 
 #ifdef _DEBUG

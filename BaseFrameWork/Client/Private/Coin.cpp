@@ -97,7 +97,9 @@ void CCoin::LateTick(_float _fTimeDelta)
 
     __super::LateTick(_fTimeDelta);
 
+#ifdef _DEBUG
     CGameInstance::GetInstance()->AddDebugComponent(m_pCollider);
+#endif
 
 }
 

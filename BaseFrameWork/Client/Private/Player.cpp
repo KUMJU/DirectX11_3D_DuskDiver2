@@ -119,6 +119,10 @@ HRESULT CPlayer::Initialize()
     SetLight();
 
 
+    /*모션 트레일 테스트*/
+    m_pMotionTrailModel = CGameInstance::GetInstance()->GetModel(TEXT("Hero1_BattleMode_3Anim"));
+
+
     /*
     if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, nullptr, pDepthStencilTexture.GetAddressOf())))
         return E_FAIL;
@@ -402,6 +406,11 @@ HRESULT CPlayer::Render()
 
     _uint iNumMeshes = m_pModelCom->GetNumMeshes();
 
+    /*잔상*/
+
+
+
+
     for (size_t i = 0; i < iNumMeshes; i++) {
 
         if (FAILED(m_pModelCom->BindMaterialShaderResource(m_pShader, (_uint)i, aiTextureType::aiTextureType_DIFFUSE, "g_DiffuseTexture")))
@@ -411,7 +420,7 @@ HRESULT CPlayer::Render()
             return E_FAIL;
 
         if (FAILED(m_pShader->Begin(0)))
-            return E_FAIL; 
+            return E_FAIL;
 
         if (FAILED(m_pModelCom->Render((_uint)i)))
             return E_FAIL;
@@ -1655,6 +1664,7 @@ void CPlayer::StartLastAttack()
     m_pLastAttack->PlayEffect();
     m_pLastAttack2->PlayEffect();
 
+    m_pPlayerSkillset->SetBurstMode(true);
     m_pPlayerSkillset->SetBurstMode(true);
     m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_SUPER2);
 

@@ -3,7 +3,6 @@
 
 #include "Enemy01.h"
 #include "Enemy02.h"
-#include "MiddleBoss.h"
 #include "FinalBoss.h"
 #include "Bear.h"
 
@@ -35,18 +34,12 @@ void CMonsterPool::Initialize()
 		m_Monsters[1].push_back(pMonster);
 	}
 
-	for (_int i = 0; i < 1; ++i) {
-
-		shared_ptr<CMonster> pMonster = CMiddleBoss::Create();
-		pMonster->SetEnable(false);
-		m_Monsters[2].push_back(pMonster);
-	}
 
 	for (_int i = 0; i < 1; ++i) {
 
 		shared_ptr<CMonster> pMonster = CFinalBoss::Create();
 		pMonster->SetEnable(false);
-		m_Monsters[3].push_back(pMonster);
+		m_Monsters[2].push_back(pMonster);
 	}
 
 	for (_int i = 0; i < 5; ++i) {
@@ -54,7 +47,7 @@ void CMonsterPool::Initialize()
 		shared_ptr<CMonster> pMonster = CEnemy01::Create();
 		pMonster->SetHockeyMonster();
 		pMonster->SetEnable(false);
-		m_Monsters[4].push_back(pMonster);
+		m_Monsters[3].push_back(pMonster);
 	}
 
 	m_pBear = CBear::Create();

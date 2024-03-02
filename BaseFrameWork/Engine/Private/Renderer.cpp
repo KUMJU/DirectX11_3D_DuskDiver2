@@ -35,7 +35,11 @@ HRESULT CRenderer::Initialize()
 	if (FAILED(CGameInstance::GetInstance()->AddRenderTarget(TEXT("Target_Specular"), ViewPortDesc.Width, ViewPortDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
 
-	if (FAILED(CGameInstance::GetInstance()->AddRenderTarget(TEXT("Target_Glow"), ViewPortDesc.Width, ViewPortDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(1.f, 1.f, 1.f, 0.f))))
+	if (FAILED(CGameInstance::GetInstance()->AddRenderTarget(TEXT("Target_Glow"), ViewPortDesc.Width, ViewPortDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
+		return E_FAIL;
+
+	//단순 컬러값 검출 
+	if (FAILED(CGameInstance::GetInstance()->AddRenderTarget(TEXT("Target_OutLine"), ViewPortDesc.Width, ViewPortDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(1.f, 1.f, 1.f, 1.f))))
 		return E_FAIL;
 
 
@@ -58,11 +62,17 @@ HRESULT CRenderer::Initialize()
 	if (FAILED(CGameInstance::GetInstance()->AddMRT(TEXT("MRT_Glow"), TEXT("Target_Glow"))))
 		return E_FAIL;
 
+	if (FAILED(CGameInstance::GetInstance()->AddMRT(TEXT("MRT_OutLine"), TEXT("Target_OutLine"))))
+		return E_FAIL;
+
+
+
 	m_pVIBuffer = CVIRect::Create(m_pDevice, m_pContext);
 	if (!m_pVIBuffer)
 		return E_FAIL;
 
 	m_pShader = CGameInstance::GetInstance()->GetShader(TEXT("Shader_Deferred"));
+	m_pPostProcessShader = CGameInstance::GetInstance()->GetShader(TEXT("Shader_PostProcessing"));
 
 	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity());
 	m_WorldMatrix._11 = ViewPortDesc.Width;
@@ -84,6 +94,11 @@ HRESULT CRenderer::Initialize()
 	if (FAILED(CGameInstance::GetInstance()->ReadyDebug(TEXT("Target_Shade"), 300.0f, 100.0f, 200.0f, 200.0f)))
 		return E_FAIL;
 	if (FAILED(CGameInstance::GetInstance()->ReadyDebug(TEXT("Target_Specular"), 300.0f, 300.0f, 200.0f, 200.0f)))
+		return E_FAIL;
+	if (FAILED(CGameInstance::GetInstance()->ReadyDebug(TEXT("Target_OutLine"), 300.0f, 500.0f, 200.0f, 200.0f)))
+		return E_FAIL;
+
+	if (FAILED(CGameInstance::GetInstance()->ReadyDebug(TEXT("Target_Glow"), 500.0f, 100.0f, 200.0f, 200.0f)))
 		return E_FAIL;
 #endif // _DEBUG
 
@@ -113,8 +128,6 @@ HRESULT CRenderer::AddUIRenderGroup(shared_ptr<class CGameObject> _pGameObject, 
 
 HRESULT CRenderer::Render()
 {
-	wrl::ComPtr<ID3D11RenderTargetView> pBackBufferView;
-	wrl::ComPtr<ID3D11DepthStencilView> pDepthStencilView;
 
 	if (FAILED(RenderPriority()))
 		return E_FAIL;
@@ -127,16 +140,18 @@ HRESULT CRenderer::Render()
 	if (FAILED(RenderLight()))
 		return E_FAIL;
 
-	//if (FAILED(RenderGlow()))
-	//	return E_FAIL;
-
 	if (FAILED(RenderFinal()))
 		return E_FAIL;
 
 
+//	if (FAILED(RenderGlow()))
+//		return E_FAIL;
+
 	if (FAILED(RenderNonLight()))
 		return E_FAIL;
 
+	if (FAILED(RenderOutLine()))
+		return E_FAIL;
 
 	if (FAILED(RenderBlend()))
 		return E_FAIL;
@@ -182,7 +197,7 @@ HRESULT CRenderer::RenderPriority()
 
 HRESULT CRenderer::RenderNonBlend()
 {
-	//Diffuset + Normal
+	//Diffuse + Normal
 	if (FAILED(CGameInstance::GetInstance()->BeginMRT(TEXT("MRT_GameObjects"))))
 		return E_FAIL;
 
@@ -283,15 +298,59 @@ HRESULT CRenderer::RenderNonLight()
 	return S_OK;
 }
 
-HRESULT CRenderer::RenderGlow()
+HRESULT CRenderer::RenderOutLine()
 {
 
+	if (FAILED(CGameInstance::GetInstance()->BeginMRT(TEXT("MRT_OutLine"))))
+		return E_FAIL;
+
+	if (FAILED(CGameInstance::GetInstance()->BindSRV(TEXT("Target_Normal"), m_pPostProcessShader, "g_BackBufferTexture")))
+		return E_FAIL;
+
+	if (FAILED(m_pPostProcessShader->BindMatrix("g_WorldMatrix", &m_WorldMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pPostProcessShader->BindMatrix("g_ViewMatrix", &m_ViewMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pPostProcessShader->BindMatrix("g_ProjMatrix", &m_ProjMatrix)))
+		return E_FAIL;
+
+	if (FAILED(m_pPostProcessShader->BindRawValue("g_fScreenWidth", &m_fScreenWidth, sizeof(_float))))
+		return E_FAIL;
+	if (FAILED(m_pPostProcessShader->BindRawValue("g_fScreenHeight", &m_fScreenHeight, sizeof(_float))))
+		return E_FAIL;
+
+	//g_BackBufferTexture
+
+	m_pPostProcessShader->Begin(3);
+
+	m_pVIBuffer->BindBuffers();
+	m_pVIBuffer->Render();
+
+	if (FAILED(CGameInstance::GetInstance()->EndMRT()))
+		return E_FAIL;
+
+	// 원본 텍스쳐랑 섞기 
+
+	if (FAILED(CGameInstance::GetInstance()->BindBackBufferSRV(m_pPostProcessShader, "g_BackBufferTexture")))
+		return E_FAIL;
+
+	if (FAILED(CGameInstance::GetInstance()->BindSRV(TEXT("Target_OutLine"), m_pPostProcessShader, "g_OutLineTexture")))
+		return E_FAIL;
+
+	m_pPostProcessShader->Begin(5);
+	m_pVIBuffer->BindBuffers();
+	m_pVIBuffer->Render();
+
+	return S_OK;
+}
+
+HRESULT CRenderer::RenderGlow()
+{
+	//각 객체에 Render를 돌려서 렌더 타겟에 전부 그린다음에 그 타겟을 디퍼드 셰이더에 던져서(가로 세로 총 2회) 완성함? 
 	if (m_RenderObjects[RENDER_GLOW].empty())
 		return S_OK;
 
-	//각 객체에 Render를 돌려서 렌더 타겟에 전부 그린다음에 그 타겟을 디퍼드 셰이더에 던져서(가로 세로 총 2회) 완성함? 
 
-	/*****렌더 타겟 텍스쳐에 객체 그리기 ******/
 	if (FAILED(CGameInstance::GetInstance()->BeginMRT(TEXT("MRT_Glow"))))
 		return E_FAIL;
 
@@ -300,28 +359,42 @@ HRESULT CRenderer::RenderGlow()
 			pGameObject->Render();
 	}
 
+	if (FAILED(m_pPostProcessShader->BindMatrix("g_WorldMatrix", &m_WorldMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pPostProcessShader->BindMatrix("g_ViewMatrix", &m_ViewMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pPostProcessShader->BindMatrix("g_ProjMatrix", &m_ProjMatrix)))
+		return E_FAIL;
+
+	//화면 해상도 바인드
+	if (FAILED(m_pPostProcessShader->BindRawValue("g_fScreenWidth", &m_fScreenWidth, sizeof(_float))))
+		return E_FAIL;
+	if (FAILED(m_pPostProcessShader->BindRawValue("g_fScreenHeight", &m_fScreenHeight, sizeof(_float))))
+		return E_FAIL;
+	
+	m_pPostProcessShader->Begin(2);
+	m_pVIBuffer->BindBuffers();
+	m_pVIBuffer->Render();
+
+	//m_pPostProcessShader->Begin(2);
+	//m_pVIBuffer->BindBuffers();
+	//m_pVIBuffer->Render();
+
 	m_RenderObjects[RENDER_GLOW].clear();
+
 
 	if (FAILED(CGameInstance::GetInstance()->EndMRT()))
 		return E_FAIL;
 
-	/*********그린 렌더 타겟을 디퍼드 셰이더에 던져서 후처리 작업**********/
-	if (FAILED(m_pShader->BindMatrix("g_WorldMatrix", &m_WorldMatrix)))
-		return E_FAIL;
-	if (FAILED(m_pShader->BindMatrix("g_ViewMatrix", &m_ViewMatrix)))
-		return E_FAIL;
-	if (FAILED(m_pShader->BindMatrix("g_ProjMatrix", &m_ProjMatrix)))
+	if (FAILED(CGameInstance::GetInstance()->BindBackBufferSRV(m_pPostProcessShader, "g_BackBufferTexture")))
 		return E_FAIL;
 
-	//화면 해상도 바인드
-	if (FAILED(m_pShader->BindRawValue("g_fScreenWidth", &m_fScreenWidth, sizeof(_float))))
-		return E_FAIL;
-	if (FAILED(m_pShader->BindRawValue("g_fScreenHeight", &m_fScreenHeight, sizeof(_float))))
+	if (FAILED(CGameInstance::GetInstance()->BindSRV(TEXT("Target_Glow"), m_pPostProcessShader, "g_BlendTexture")))
 		return E_FAIL;
 
-
-	if (FAILED(CGameInstance::GetInstance()->BindSRV(TEXT("Target_Glow"), m_pShader, "g_Texture")))
-		return E_FAIL;
+	m_pPostProcessShader->Begin(4);
+	m_pVIBuffer->BindBuffers();
+	m_pVIBuffer->Render();
 
 
 	return S_OK;
@@ -335,6 +408,17 @@ HRESULT CRenderer::RenderBlend()
 	}
 
 	m_RenderObjects[RENDER_BLEND].clear();
+
+	return S_OK;
+}
+
+HRESULT CRenderer::RenderDistortion()
+{
+
+	
+
+
+
 
 	return S_OK;
 }
@@ -362,6 +446,8 @@ HRESULT CRenderer::RenderDebug()
 
 	CGameInstance::GetInstance()->RenderMRT(TEXT("MRT_GameObjects"), m_pShader, m_pVIBuffer);
 	CGameInstance::GetInstance()->RenderMRT(TEXT("MRT_LightAcc"), m_pShader, m_pVIBuffer);
+	CGameInstance::GetInstance()->RenderMRT(TEXT("MRT_OutLine"), m_pShader, m_pVIBuffer);
+	CGameInstance::GetInstance()->RenderMRT(TEXT("MRT_Glow"), m_pShader, m_pVIBuffer);
 
 	for (auto& pComponent : m_DebugCom)
 	{

@@ -49,6 +49,7 @@ HRESULT CGameInstance::InitializeEngine(HINSTANCE hInst, _uint iNumLevels, _uint
 	m_pTargetMgr = CTargetMgr::Create(m_pGraphicDev->GetDeviceInfo(), m_pGraphicDev->GetDeviceContextInfo());
 	if (!m_pTargetMgr)
 		return E_FAIL;
+	m_pTargetMgr->CreateCopyBuffer(_iScreenX, _iScreenY);
 
 	m_pRenderer = CRenderer::Create(m_pGraphicDev->GetDeviceInfo(), m_pGraphicDev->GetDeviceContextInfo());
 	if (!m_pRenderer)
@@ -481,6 +482,11 @@ HRESULT CGameInstance::EndMRT()
 HRESULT CGameInstance::BindSRV(const wstring& _strTargetTag, shared_ptr<class CShader> _pShader, const _char* _pConstantName)
 {
 	return m_pTargetMgr->BindSRV(_strTargetTag, _pShader, _pConstantName);
+}
+
+HRESULT CGameInstance::BindBackBufferSRV(shared_ptr<class CShader> _pShader, const _char* _pConstantName)
+{
+	return m_pTargetMgr->BindBackBufferSRV(_pShader, _pConstantName);
 }
 
 #ifdef _DEBUG

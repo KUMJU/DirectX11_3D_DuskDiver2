@@ -106,6 +106,10 @@ void CEffectMesh::LateTick(_float _fTimeDelta)
 
     if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_NONLIGHT, shared_from_this())))
         return;
+
+    if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_GLOW, shared_from_this())))
+       return;
+
 }
 
 HRESULT CEffectMesh::Render()

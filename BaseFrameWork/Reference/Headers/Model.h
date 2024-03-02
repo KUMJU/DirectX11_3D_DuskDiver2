@@ -87,6 +87,7 @@ private:
 
 	_uint m_iNextAnimation = { 0 };
 	_uint m_RootBoneIdx = { 0 };
+	
 
 private:
 	HRESULT ReadyMeshes(ifstream& _ifs);

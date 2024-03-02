@@ -76,30 +76,30 @@ HRESULT CMinigameHockey::Initialize(CTransform::TRANSFORM_DESC* _pDesc)
     /*몬스터 소환 리스트*/
 
     CMonsterPool::SPAWN_INFO info = {};
-    info.iMonsterType = 4;
+    info.iMonsterType = 3;
     info.vMonsterPos = { -10.f, 30.f , -310.f, 1.f };
 
     m_MonsterList.push_back(info);
 
-    info.iMonsterType = 4;
+    info.iMonsterType = 3;
     info.vMonsterPos = { 7.f, 30.f , -300.f, 1.f };
 
     m_MonsterList.push_back(info);
 
 
-    info.iMonsterType = 4;
+    info.iMonsterType = 3;
     info.vMonsterPos = { -5.f, 30.f , -315.f, 1.f };
 
     m_MonsterList.push_back(info);
 
 
-    info.iMonsterType = 4;
+    info.iMonsterType = 3;
     info.vMonsterPos = { 13.f, 30.f , -313.f, 1.f };
 
     m_MonsterList.push_back(info);
 
 
-    info.iMonsterType = 4;
+    info.iMonsterType = 3;
     info.vMonsterPos = { -13.f, 30.f , -295.f, 1.f };
 
     m_MonsterList.push_back(info);

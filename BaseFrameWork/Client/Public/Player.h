@@ -317,6 +317,14 @@ public:
 	void SetGaugingEffect(_int _iEffectIdx);
 	void StartLastAttack();
 
+/*모션 트레일 테스트용*/
+private:
+	_float4x4 m_vPrevBone[MAX_BONE];
+	_float4x4 m_vPrevWorldMat = _float4x4();
+	_float m_fRenewTrailTime = 0.f;
+
+	shared_ptr<CModel> m_pMotionTrailModel = nullptr;
+
 public:
 	static shared_ptr<CPlayer> Create();
 

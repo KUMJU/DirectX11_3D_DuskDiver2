@@ -1,13 +1,35 @@
 #include "Shader_Defines.hlsli"
 
 matrix		g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+
 texture2D g_Texture;
 
-vector g_vLightDir;
+//Final까지 그려진 최종 텍스쳐 
+texture2D g_BackBufferTexture;
+//백버퍼에 섞을 포스트 프로세싱이 끝난 텍스쳐 
+texture2D g_BlendTexture;
+texture2D g_OutLineTexture;
+
+/*디스토션*/
+texture2D g_DistortionTex;
+float g_fDeltaTime; 
+float g_fStrength;
+float g_fDistortionSpeed;
+
+/*글로우*/
 texture2D g_GlowTexture;
 
 float g_fScreenWidth;
 float g_fScreenHeight;
+
+//외곽선 검출용 라플라시안 필터
+float g_fLaplacianMask[9] =
+{
+    -1, -1, -1,
+    -1,  8, -1,
+    -1, -1, -1
+};
+float g_fCoord[3] = { -1.f, 0.f, 1.f };
 
 struct VS_IN
 {
@@ -55,7 +77,6 @@ struct VS_GLOW_OUT
 VS_GLOW_OUT VS_GLOW_HORIZONTAL(VS_IN In)
 {
     VS_GLOW_OUT Out = (VS_GLOW_OUT) 0;
-    
     
     vector vPos = vector(In.vPosition, 1.f);
     
@@ -116,14 +137,71 @@ struct PS_OUT
 	vector vColor : SV_TARGET0;
 };
 
+PS_OUT PS_TEST(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    Out.vColor = g_BlendTexture.Sample(g_LinearSampler, In.vTexcoord);
+    
+    return Out;
+
+
+}
 
 PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
 
-    Out.vColor = g_Texture.Sample(g_LinearSampler, In.vTexcoord);
-
+    vector vBackBufferCol = g_BackBufferTexture.Sample(g_PointSampler, In.vTexcoord);
+    vector vBlendCol = g_BlendTexture.Sample(g_LinearSampler, In.vTexcoord);
+    
+    Out.vColor = vBackBufferCol + vBlendCol;
+    
 	return Out;
+}
+
+PS_OUT PS_OUTLINE(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+  //  Out.vColor = g_BackBufferTexture.Sample(g_LinearSampler, In.vTexcoord);
+
+    for (uint i = 0; i < 9; ++i)
+    {
+        Out.vColor += g_fLaplacianMask[i] *
+        g_BackBufferTexture.Sample(g_LinearSampler, In.vTexcoord + float2((g_fCoord[i % 3] / g_fScreenWidth), (g_fCoord[i % 3] / g_fScreenHeight)));
+    }
+    
+    float fBlack = 1 - (Out.vColor.r * 0.3f + Out.vColor.g * 0.59f + Out.vColor.b * 0.11f);
+    Out.vColor = vector(fBlack, fBlack, fBlack, 1);
+    
+    return Out;
+}
+
+PS_OUT PS_DISTORTION(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    float2 vTrans = In.vTexcoord + g_fDeltaTime;
+    vector vNoiseTex = g_DistortionTex.Sample(g_LinearSampler, vTrans);
+    float2 vUV = In.vTexcoord + vNoiseTex.xy * g_fDistortionSpeed;
+    vector vBackBuffer = g_BackBufferTexture.Sample(g_LinearSampler, vUV);
+    
+    Out.vColor = vBackBuffer;
+    
+    return Out;
+}
+
+PS_OUT PS_BLEND_OUTLINE(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    vector vBackBuffer = g_BackBufferTexture.Sample(g_LinearSampler, In.vTexcoord);
+    vector vOutLine = g_OutLineTexture.Sample(g_LinearSampler, In.vTexcoord);
+    
+    Out.vColor =  vBackBuffer * vOutLine;
+    
+    return Out;
 }
 
 
@@ -155,6 +233,7 @@ PS_GLOW_OUT PS_GLOW(PS_GLOW_IN In)
     float normalization;
     float4 color;
     
+    vector vGlowTex = g_GlowTexture.Sample(g_LinearSampler, In.vTexcoord);
 
     weight0 = 1.f;
     weight1 = 0.9f;
@@ -170,7 +249,7 @@ PS_GLOW_OUT PS_GLOW(PS_GLOW_IN In)
     weight3 = weight3 / normalization;
     weight4 = weight4 / normalization;
     
-    color = float4(0.f, 0.f, 0.f, 0.f);
+    color = float4(1.f, 0.7f, 0.f, 0.5f);
     
     color += g_Texture.Sample(g_LinearSampler, In.texCoord1) * weight4;
     color += g_Texture.Sample(g_LinearSampler, In.texCoord2) * weight3;
@@ -207,8 +286,8 @@ technique11	DefaultTechnique
     pass Glow_Horizontal //1
     {
         SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_None_ZTestAndWrite, 0);
-        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_GLOW_HORIZONTAL();
         GeometryShader = NULL;
@@ -219,13 +298,58 @@ technique11	DefaultTechnique
     pass Glow_Vertical //2
     {
         SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_None_ZTestAndWrite, 0);
-        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_GLOW_VERTICAL();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_GLOW();
     }
+
+    pass OutLine //3
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_OUTLINE();
+    }
+
+    pass Test //4
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_TEST();
+    }
+
+    pass OutLine_Blend //5
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_BLEND_OUTLINE();
+    }
+
+    pass Distortion //6
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_DISTORTION();
+    }
+
 }
 
 

@@ -1,5 +1,6 @@
 #include "TargetMgr.h"
 #include "RenderTarget.h"
+#include "Shader.h"
 
 CTargetMgr::CTargetMgr(wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID3D11DeviceContext> _pContext)
     :m_pDevice(_pDevice) ,
@@ -16,6 +17,7 @@ HRESULT CTargetMgr::AddRenderTarget(const wstring& strTargetTag, _uint iSizeX, _
 {
     if (FindRenderTarget(strTargetTag))
         return E_FAIL;
+
 
 
     shared_ptr<CRenderTarget> pRenderTarget = CRenderTarget::Create(m_pDevice, m_pContext, iSizeX, iSizeY, ePixelFormat, vClearColor);
@@ -94,6 +96,37 @@ HRESULT CTargetMgr::BindSRV(const wstring& _strTargetTag, shared_ptr<class CShad
     return pRenderTarget->BindSRV(_pShader, _pConstantName);
 }
 
+HRESULT CTargetMgr::CreateCopyBuffer(_uint iSizeX, _uint iSizeY)
+{
+    ID3D11RenderTargetView* pBackBufferRTV = nullptr;
+    m_pContext->OMGetRenderTargets(1, &pBackBufferRTV, nullptr);
+
+    D3D11_RENDER_TARGET_VIEW_DESC pBackBufferDesc;
+    pBackBufferRTV->GetDesc(&pBackBufferDesc);
+
+    D3D11_TEXTURE2D_DESC tBackBufferCopyDesc;
+    ZeroMemory(&tBackBufferCopyDesc, sizeof(D3D11_TEXTURE2D_DESC));
+
+    tBackBufferCopyDesc.Width = iSizeX;
+    tBackBufferCopyDesc.Height = iSizeY;
+    tBackBufferCopyDesc.MipLevels = 1;
+    tBackBufferCopyDesc.ArraySize = 1;
+    tBackBufferCopyDesc.Format = pBackBufferDesc.Format;
+    tBackBufferCopyDesc.SampleDesc.Quality = 0;
+    tBackBufferCopyDesc.SampleDesc.Count = 1;
+    tBackBufferCopyDesc.Usage = D3D11_USAGE_DEFAULT;
+    tBackBufferCopyDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+    tBackBufferCopyDesc.CPUAccessFlags = 0;
+    tBackBufferCopyDesc.MiscFlags = 0;
+
+    if (FAILED(m_pDevice->CreateTexture2D(&tBackBufferCopyDesc, nullptr, &m_pCopyRes)))
+        return E_FAIL;
+
+    pBackBufferRTV->Release();
+
+    return S_OK;
+}
+
 #ifdef _DEBUG
 
 HRESULT CTargetMgr::ReadyDebug(const wstring& _strTargetTag, _float _fX, _float _fY, _float _fSizeX, _float _fSizeY)
@@ -113,6 +146,32 @@ HRESULT CTargetMgr::RenderMRT(const wstring& _strMRTTag, shared_ptr<class CShade
     for (auto& pRenderTarget : *pMRTList) {
         pRenderTarget->Render(_pShader, _pVIBuffer);
     }
+
+    return S_OK;
+}
+
+HRESULT CTargetMgr::BindBackBufferSRV(shared_ptr<class CShader> _pShader, const _char* _pConstantName)
+{
+    ID3D11RenderTargetView* pBackBufferRTV = nullptr;
+    m_pContext->OMGetRenderTargets(1, &pBackBufferRTV, nullptr);
+
+    /* Get BackBuffer RenderTarget Texture. */
+    ID3D11Resource* pBackBufferResource = nullptr;
+    pBackBufferRTV->GetResource(&pBackBufferResource);
+
+    /* Copy the BackBuffer Texture into "m_pBackBufferTextureCopy". */
+    m_pContext->CopyResource(m_pCopyRes.Get(), pBackBufferResource);
+
+
+    /* Make a Shader Resource View based on the copied "m_pBackBufferTextureCopy". */
+    if (FAILED(m_pDevice->CreateShaderResourceView(m_pCopyRes.Get(), nullptr, &m_pBackBufferSRV)))
+        return E_FAIL;
+
+    pBackBufferRTV->Release();
+    pBackBufferResource->Release();
+
+    if(FAILED(_pShader->BindSRV(_pConstantName, m_pBackBufferSRV)))
+        return E_FAIL;
 
     return S_OK;
 }

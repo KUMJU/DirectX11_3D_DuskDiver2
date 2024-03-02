@@ -167,6 +167,9 @@ void CResourceMgr::ReadShaderFile(const wstring& _strBaseFilepath, const wstring
             else if (wstring::npos != strName.find(TEXT("Deferred"))) {
                 pShader = CShader::Create(m_pDevice, m_pContext, strPath, VTXPOSTEX::Elements, VTXPOSTEX::iNumElements);
             }
+            else if (wstring::npos != strName.find(TEXT("Post"))) {
+                pShader = CShader::Create(m_pDevice, m_pContext, strPath, VTXPOSTEX::Elements, VTXPOSTEX::iNumElements);
+            }
             
             if (pShader) {
                 m_Shaders.emplace(EraseExt(strName), pShader);

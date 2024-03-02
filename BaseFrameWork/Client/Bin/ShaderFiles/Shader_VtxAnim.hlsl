@@ -133,9 +133,12 @@ PS_OUT PS_RIMLIGHT(PS_IN In)
 
 }
 
+
+
+
 technique11 DefaultTechnique
 {
-    pass Default //1
+    pass Default //0
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -146,7 +149,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN();
     }
 
-    pass RimLight //2 
+    pass RimLight //1
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -156,5 +159,6 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_RIMLIGHT();
     }
+
 
 }
