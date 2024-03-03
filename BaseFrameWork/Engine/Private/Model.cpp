@@ -153,6 +153,8 @@ HRESULT CModel::BindBoneMatrices(shared_ptr<class CShader> _pShader, const _char
 
     m_Meshes[_iMeshIndex]->SetUpBoneMatrices(BoneMatirces, m_Bones);
 
+    m_pBoneMat.push_back(BoneMatirces);
+
     return _pShader->BindMatrices(_pConstName, BoneMatirces, MAX_BONE) ;
 } 
 
@@ -160,6 +162,8 @@ _bool CModel::PlayAnimation(_float _fTimeDelta , _bool _isLoop, _float3* _vRootP
 {
     _bool m_IsFinish = false;
     _bool IsSaveRootPos = true;
+
+    m_pBoneMat.clear();
 
     //애니메이션 변경 이후 선형보간하는 시간
     if (m_IsLinearState) {

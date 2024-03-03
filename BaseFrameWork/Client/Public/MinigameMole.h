@@ -53,10 +53,14 @@ private:
 private:
 
 	_bool m_bEndEventStart = false;
+	_bool m_bBarrierOff = false;
 
 	//EndEvent¿ë 
 	shared_ptr<class CBear> m_pBear = nullptr;
 	shared_ptr<class CUI_SequenceTex> m_pDustImg = nullptr;
+
+private:
+	shared_ptr<class CBarrier> m_pBarrier = nullptr;
 
 private:
 

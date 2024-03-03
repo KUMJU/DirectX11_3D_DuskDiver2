@@ -4,12 +4,17 @@
 #include "Collider.h"
 #include "GameInstance.h"
 
+#include "EffectMgr.h"
+#include "EffectPreset.h"
+
 CAirAtk::CAirAtk()
 {
 }
 
 HRESULT CAirAtk::Initialize(_uint _iComboNum)
 {
+
+    m_iComboNum = _iComboNum;
     m_eSkillOwner = EOWNER_TYPE::OWNER_PLAYER;
     m_IsBasicCombat = true;
     m_iDamage = 10;
@@ -40,6 +45,8 @@ HRESULT CAirAtk::Initialize(_uint _iComboNum)
     }
     else if (3 == _iComboNum) {
 
+        m_pParticlePreset = CEffectMgr::GetInstance()->FindEffect(TEXT("HeavyAtkFin"));
+
         skillDesc.iStartTrackPosition = 7.0;
         skillDesc.iEndTrackPosition = 15.0;
 
@@ -52,9 +59,13 @@ HRESULT CAirAtk::Initialize(_uint _iComboNum)
 
     }
     else if (4 == _iComboNum) {
+        m_pParticlePreset = CEffectMgr::GetInstance()->FindEffect(TEXT("HeavyAtkFin"));
+        CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Effect"), m_pParticlePreset);
 
-        skillDesc.iStartTrackPosition = 7.0;
-        skillDesc.iEndTrackPosition = 15.0;
+        m_pEffectPreset = CEffectMgr::GetInstance()->FindEffect(TEXT("HeavyAtk"));
+
+        skillDesc.iStartTrackPosition = 10.0;
+        skillDesc.iEndTrackPosition = 13.0;
 
         skillDesc.bKnockUp = true;
         skillDesc.fWeight = 1.5f;
@@ -87,12 +98,22 @@ void CAirAtk::Tick(_float _fTimeDelta)
 
 void CAirAtk::LateTick(_float _fTimeDelta)
 {
+    __super::LateTick(_fTimeDelta);
+
 }
 
 HRESULT CAirAtk::Render()
 {
     __super::Render();
     return S_OK;
+}
+
+void CAirAtk::EndSkill()
+{
+    if (3 == m_iComboNum || 4 == m_iComboNum) {
+        m_pParticlePreset->PlayEffect();
+    }
+
 }
 
 shared_ptr<CAirAtk> CAirAtk::Create(_uint _iComboNum)

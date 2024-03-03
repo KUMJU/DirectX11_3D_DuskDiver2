@@ -58,6 +58,8 @@ public:
 	void SetAnimNum(_uint _iAnimNum) { _iAnimNum = _iAnimNum; }
 	_bool ChangeAnimation(_uint _iAnimNum , _float _LinearTime = 0.06f);
 
+	_float4x4* GetPrevBoneMatrix() { return m_pBoneMat; }
+
 private:
 	_float4x4 m_PivotMatrix;
 	CModel::TYPE m_eModelType = CModel::TYPE::TYPE_END;
@@ -88,6 +90,10 @@ private:
 	_uint m_iNextAnimation = { 0 };
 	_uint m_RootBoneIdx = { 0 };
 	
+
+private:
+
+	_float4x4 m_pBoneMat[MAX_BONE];
 
 private:
 	HRESULT ReadyMeshes(ifstream& _ifs);

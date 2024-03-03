@@ -19,6 +19,14 @@ public:
 	virtual void LateTick(_float _fTimeDelta);
 	virtual HRESULT Render();
 
+protected:
+	virtual void EndSkill();
+
+private:
+	shared_ptr<class CEffectPreset> m_pFinishPreset = nullptr;
+
+	_int m_iComboNum = 0;
+
 public:
 
 	static shared_ptr<CAirAtk> Create(_uint _iComboNum);

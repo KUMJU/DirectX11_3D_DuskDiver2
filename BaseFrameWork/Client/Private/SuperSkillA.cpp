@@ -58,6 +58,36 @@ void CSuperSkillA::Tick(_float _fTimeDelta)
 {
     __super::Tick(_fTimeDelta);
 
+    m_fAccTime += _fTimeDelta;
+
+    if (m_fAccTime >= 1.53f && !bVoiceDone) {
+
+        bVoiceDone = true;
+        CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_FX);
+        CGameInstance::GetInstance()->PlayAudio(TEXT("se_HE01_Super01_1.wav"), CSoundMgr::CHANNELID::CH_PLR_FX, 1.f);
+
+    }
+
+    if (m_fAccTime >= 2.3f && !bSkillSeDone) {
+
+        bSkillSeDone = true;
+        CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
+        CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_62.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
+
+        CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_FX);
+        CGameInstance::GetInstance()->PlayAudio(TEXT("se_HE01_Super02_2.wav"), CSoundMgr::CHANNELID::CH_PLR_FX, 1.f);
+
+    }
+
+    if (m_fAccTime >= 3.6f && !m_IsSkillFinSe) {
+
+        m_IsSkillFinSe = true;
+
+        CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_FX);
+        CGameInstance::GetInstance()->PlayAudio(TEXT("se_HE01_Super02_3.wav"), CSoundMgr::CHANNELID::CH_PLR_FX, 1.f);
+
+    }
+
 }
 
 void CSuperSkillA::LateTick(_float _fTimeDelta)
@@ -74,6 +104,7 @@ HRESULT CSuperSkillA::Render()
 
 void CSuperSkillA::EndSkill()
 {
+    m_IsSkillFinSe = false;
     m_pParticlePreset->PlayEffect();
 }
 

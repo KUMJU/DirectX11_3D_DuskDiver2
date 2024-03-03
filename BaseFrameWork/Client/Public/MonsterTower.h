@@ -36,6 +36,7 @@ private:
 
 private:
 	_bool m_IsActived = false;
+	_bool m_IsBattleFin = false;
 
 private:
 	shared_ptr<CModel> m_pRingModel = nullptr;
@@ -43,6 +44,10 @@ private:
 	shared_ptr<CTransform> m_pRingTransform = nullptr;
 
 	list<CMonsterPool::SPAWN_INFO> m_SpawnMonsterList;
+
+private:
+	shared_ptr<class CBarrier> m_pBarrier = nullptr;
+
 
 	//shared_ptr<Trigger> m_pTrigger
 	//TowerType 1 2 

@@ -13,6 +13,10 @@
 #include "MinigameHockey.h"
 
 #include "UIMgr.h"
+#include "Barrier.h"
+
+#include "BattleSystem.h"
+
 
 CMonsterTower::CMonsterTower()
 {
@@ -20,9 +24,6 @@ CMonsterTower::CMonsterTower()
 
 HRESULT CMonsterTower::Initialize(_uint _iTowerIdx)
 {
-
-	//		CUIMgr::GetInstance()->StartDialog(TEXT("StartDialog"));
-
 
 	m_iTowerIdx = _iTowerIdx;
 	__super::Initialize(TEXT("TowerA"),nullptr);
@@ -46,6 +47,7 @@ HRESULT CMonsterTower::Initialize(_uint _iTowerIdx)
 
 	TowerEventSetting();
 
+
 	return S_OK;
 }
 
@@ -58,6 +60,18 @@ void CMonsterTower::PriorityTick(_float _fTimeDelta)
 void CMonsterTower::Tick(_float _fTimeDelta)
 {
 
+	if (0 == m_iTowerIdx) {
+		if (m_IsActived && !CBattleSystem::GetInstance()->GetOnBattle() && !m_IsBattleFin) {
+
+			m_pBarrier->SetEnable(false);
+			CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MAPSE);
+			CGameInstance::GetInstance()->PlayAudio(TEXT("se_LR_Finish.wav"), CSoundMgr::CHANNELID::CH_MAPSE, 1.f);
+			m_IsBattleFin = true;
+		}
+
+	}
+
+
 	m_pCollider->Tick(m_pTransformCom->GetWorldMatrix());
 	CGameInstance::GetInstance()->AddCollider(CCollisionMgr::COL_MONSTER, m_pCollider);
 	//collision Manager Add
@@ -67,6 +81,8 @@ void CMonsterTower::Tick(_float _fTimeDelta)
 void CMonsterTower::LateTick(_float _fTimeDelta)
 {
 	__super::LateTick(_fTimeDelta);
+
+
 
 #ifdef _DEBUG
 	CGameInstance::GetInstance()->AddDebugComponent(m_pCollider);
@@ -192,6 +208,13 @@ void CMonsterTower::TowerEventSetting()
 
 		shared_ptr<CMonsterTrigger> pTrigger = CMonsterTrigger::Create(&m_SpawnMonsterList, {0.f, 15.f, -94.f });
 		CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Event"), pTrigger);
+
+		/*¹è¸®¾î*/
+
+		m_pBarrier = CBarrier::Create({ 0.f, 18.f, -116.f , 1.f }, { 0.f, 0.f, 0.f });
+		CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Event"), m_pBarrier);
+
+
 
 	}
 	else if (1 == m_iTowerIdx) {

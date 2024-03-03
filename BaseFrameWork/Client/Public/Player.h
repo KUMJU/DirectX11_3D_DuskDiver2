@@ -317,13 +317,27 @@ public:
 	void SetGaugingEffect(_int _iEffectIdx);
 	void StartLastAttack();
 
+public:
+	virtual HRESULT RenderTrail() override;
+
 /*모션 트레일 테스트용*/
 private:
 	_float4x4 m_vPrevBone[MAX_BONE];
 	_float4x4 m_vPrevWorldMat = _float4x4();
 	_float m_fRenewTrailTime = 0.f;
 
+	vector<shared_ptr<CTransform>> m_pMotionTrailTransforms;
+	vector<shared_ptr<CModel>> m_pMotionTrailModels;
+	
+	shared_ptr<CTransform> m_pTestTransform = nullptr;
 	shared_ptr<CModel> m_pMotionTrailModel = nullptr;
+
+	list<_float4x4[MAX_BONE]> m_pBoneLists;
+	list<_float4x4> m_pWorldMatirxs; 
+
+private:
+	_int m_iMaxTrailNum = 2;
+
 
 public:
 	static shared_ptr<CPlayer> Create();

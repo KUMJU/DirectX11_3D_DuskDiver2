@@ -78,8 +78,6 @@ void CSkill::Tick(_float _fTimeDelta)
 	}
 	else {
 
-		_double pp = m_pMainAnims->front()->GetCurrentTrackPosition();
-		_double ss = m_Infos[m_iCurrentSkillOrder].iStartTrackPosition;
 		if (m_pMainAnims->front()->GetCurrentTrackPosition() >= m_Infos[m_iCurrentSkillOrder].iStartTrackPosition) {
 			if (m_Infos[m_iCurrentSkillOrder].iEndTrackPosition <= m_pMainAnims->front()->GetCurrentTrackPosition()) {
 				++m_iCurrentSkillOrder;

@@ -14,6 +14,8 @@
 #include "Bear.h"
 
 #include "UI_SequenceTex.h"
+#include "Barrier.h"
+
 
 CMinigameMole::CMinigameMole()
 {
@@ -141,6 +143,10 @@ HRESULT CMinigameMole::Initialize(CTransform::TRANSFORM_DESC* _pDesc)
     m_pDustImg = CUI_SequenceTex::Create(&UIInfo, TEXT("T_ToonSmoke_01"), 2, &SequeneceInfo);
     m_pDustImg->SetEnable(false);
     CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Effect"), m_pDustImg);
+
+
+    m_pBarrier = CBarrier::Create({ 110.f, 42.f, -300.f, 1.f }, { 0.f, 90.f, 0.f });
+    CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Event"), m_pBarrier);
 
 
     //시작 이벤트 카메라 프리셋 세팅 
@@ -425,15 +431,24 @@ void CMinigameMole::ProcessingEndEvent(_float _fTimeDelta)
 
     }
 
+    if (m_fEventProcessTime >= 4.f && !m_bBarrierOff) {
 
-    if (m_fEventProcessTime >= 4.f) {
         //배리어 해제
+        m_pBarrier->SetEnable(false);
+        CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MAPSE);
+        CGameInstance::GetInstance()->PlayAudio(TEXT("se_LR_Finish.wav"), CSoundMgr::CHANNELID::CH_MAPSE, 1.f);
+
+        m_bBarrierOff = true;
+
+    }
+
+    if (m_fEventProcessTime >= 5.f ) {
         m_pBear->SetEnable(false);
         CCameraMgr::GetInstance()->SwitchingCamera(CCameraMgr::ECAMERATYPE::THIRDPERSON);
         CUIMgr::GetInstance()->CloseUI(TEXT("UI_Miniquest"));
         __super::GameEnd();
-
     }
+
 }
 
 shared_ptr<CMinigameMole> CMinigameMole::Create()

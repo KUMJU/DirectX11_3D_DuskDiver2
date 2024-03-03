@@ -406,6 +406,30 @@ HRESULT CArcadeMap::ReadyLight()
 		return E_FAIL;
 
 
+	LightDesc.vPosition = { 0.f, 100.f, -140.f , 1.f };
+	LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+	LightDesc.fRange = 35.0f;
+	LightDesc.vDiffuse = _float4(1.f, 0.3f, 0.6f, 1.f);
+	LightDesc.vAmbient = _float4(1.f, 0.4f, 0.4f, 1.f);
+	LightDesc.vSpecular = LightDesc.vDiffuse;
+
+	if (FAILED(CGameInstance::GetInstance()->AddLight(LightDesc)))
+		return E_FAIL;
+
+
+	LightDesc.vPosition = { 0.f, 100.f, -350.f , 1.f };
+	LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+	LightDesc.fRange = 20.0f;
+	LightDesc.vDiffuse = _float4(0.f, 0.6f, 0.8f, 1.f);
+	LightDesc.vAmbient = _float4(1.f, 0.6f, 0.6f, 1.f);
+	LightDesc.vSpecular = LightDesc.vDiffuse;
+
+	if (FAILED(CGameInstance::GetInstance()->AddLight(LightDesc)))
+		return E_FAIL;
+
+	//CGameInstance::GetInstance()->SetLightEnabled(m_iFianlEffectLightIdx, false);
+
+
 	return S_OK;
 }
                                                                                                                                                             

@@ -159,6 +159,29 @@ PS_OUT PS_MAIN(PS_IN In)
 
 }
 
+PS_OUT PS_BARRIER(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    Out.vColor = g_Texture.Sample(g_LinearSampler, In.vTexcoord) * g_RGBColor;
+
+    if (0.3f > Out.vColor.r)
+    {
+        Out.vColor = g_RGBColor;
+        
+    }
+    else
+    {
+        discard;
+
+        
+    }
+    
+    
+    return Out;
+
+}
+
 PS_OUT PS_SEQUENCE_MAIN(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
@@ -202,5 +225,15 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = compile gs_5_0 GS_SEQUENCE_MAIN();
         PixelShader = compile ps_5_0 PS_SEQUENCE_MAIN();
+    }
+
+    pass Barrier //2
+    {
+        SetRasterizerState(RS_None_Cull);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = compile gs_5_0 GS_MAIN();
+        PixelShader = compile ps_5_0 PS_BARRIER();
     }
 }

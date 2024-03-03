@@ -121,6 +121,12 @@ HRESULT CPlayer::Initialize()
 
     /*모션 트레일 테스트*/
     m_pMotionTrailModel = CGameInstance::GetInstance()->GetModel(TEXT("Hero1_BattleMode_3Anim"));
+    m_pTestTransform = CTransform::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo());
+
+    for (_int i = 0; i < 2; ++i) {
+        m_pMotionTrailTransforms.push_back(CTransform::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo()));
+        m_pMotionTrailModels.push_back(CGameInstance::GetInstance()->GetModel(TEXT("Hero1_BattleMode_3Anim")));
+    }
 
 
     /*
@@ -167,7 +173,6 @@ void CPlayer::Tick(_float _fTimeDelta)
             m_pBurstModelCom->PlayAnimation(_fTimeDelta, false, &fTemp);
         }
     }
-
 
     if (HEROSTATE::STATE_HIT == m_eCurrentState) {
         
@@ -255,6 +260,7 @@ void CPlayer::Tick(_float _fTimeDelta)
         XMStoreFloat4(&pLightDesc->vPosition, XMVectorSetW(m_pTransformCom->GetState(CTransform::STATE_POSITION) + _vector({0.f, 1.f, 0.f, 0.f}), 1.f));
 
     }
+
 }
 
 void CPlayer::LateTick(_float _fTimeDelta)
@@ -378,9 +384,44 @@ void CPlayer::LateTick(_float _fTimeDelta)
 
     }
 
+    m_fRenewTrailTime += _fTimeDelta;
+    if (m_fRenewTrailTime >= 0.15f) {
+
+        m_fRenewTrailTime = 0.f;
+
+        _float4x4 PrevMat;
+        XMStoreFloat4x4(&PrevMat, m_pTransformCom->GetWorldMatrix());
+
+        if (m_pWorldMatirxs.size() == m_iMaxTrailNum) {
+            m_pWorldMatirxs.pop_front();
+            m_pWorldMatirxs.push_back(PrevMat);
+
+        //    m_pBoneLists.pop_front()
+          // m_pBoneLists.push_back(m_pModelCom->GetPrevBoneMatrix());
+
+        }
+        else {
+            m_pWorldMatirxs.push_back(PrevMat);
+           // m_pBoneLists.push_back(m_pModelCom->GetPrevBoneMatrix());
+            //bone Matrix get and 갱신~
+        }
+
+        auto iter = m_pWorldMatirxs.begin();
+
+        for (_int i = 0; i < m_pWorldMatirxs.size(); ++i) {
+            m_pMotionTrailTransforms[i]->SetWorldMatrix(*iter);
+            ++iter;
+        }
+
+    }
+
 
     if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_NONBLEND, shared_from_this())))
         return;
+
+    if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_TRAIL, shared_from_this())))
+        return;
+
 
     m_IsCollideMonster = false;
 
@@ -400,16 +441,11 @@ void CPlayer::LateTick(_float _fTimeDelta)
 
 HRESULT CPlayer::Render()
 {
+    _uint iNumMeshes = m_pModelCom->GetNumMeshes();
+
 
     if (FAILED(BindShaderResources()))
         return E_FAIL;
-
-    _uint iNumMeshes = m_pModelCom->GetNumMeshes();
-
-    /*잔상*/
-
-
-
 
     for (size_t i = 0; i < iNumMeshes; i++) {
 
@@ -1614,7 +1650,29 @@ void CPlayer::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _
 
         OnHitHockeyBall();
     }
+    else if (EObjType::OBJ_WALL == _eObjType) {
+        _float3 vExtents = _pCollider->GetExtents();
+        _float3 vCenter = _pCollider->GetBounding()->GetBoundingAABB()->Center;
 
+        _float fColRadius = m_Colliders[1]->GetRadius();
+
+        _vector vLook = m_pTransformCom->GetState(CTransform::STATE_LOOK);
+        _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
+
+        _float fminDistance;
+
+        fminDistance = vExtents.z;
+        _float fComputeZ = 0.f;
+
+
+        _vector vNewPos = XMLoadFloat3(&vCenter) + ((fminDistance + fColRadius + 0.1f) * (-1.f * vLook));
+
+        vNewPos = XMVectorSetW(XMVectorSetY(vNewPos, vPos.m128_f32[1]),1.f);
+        vNewPos = XMVectorSetX(vNewPos, vPos.m128_f32[0]);
+
+        m_pTransformCom->SetState(CTransform::STATE_POSITION, vNewPos);
+
+    }
 }
 
 void CPlayer::SetGaugingEffect(_int _iEffectIdx)
@@ -1673,6 +1731,47 @@ void CPlayer::StartLastAttack()
 
 
     //이펙트 재생 
+}
+
+HRESULT CPlayer::RenderTrail()
+{
+    _uint iNumMeshes = m_pModelCom->GetNumMeshes();
+
+    /*잔상*/
+
+    for (_int i = 0; i < m_pWorldMatirxs.size(); ++i) {
+
+        if (FAILED(m_pMotionTrailTransforms[i]->BindShaderResource(m_pShader, "g_WorldMatrix")))
+            return E_FAIL;
+
+        _float4x4 ViewMat = CGameInstance::GetInstance()->GetTransformFloat4x4(CPipeLine::D3DTS_VIEW);
+
+        if (FAILED(m_pShader->BindMatrix("g_ViewMatrix", &ViewMat)))
+            return E_FAIL;
+
+        _float4x4 ProjMat = CGameInstance::GetInstance()->GetTransformFloat4x4(CPipeLine::D3DTS_PROJ);
+
+        if (FAILED(m_pShader->BindMatrix("g_ProjMatrix", &ProjMat)))
+            return E_FAIL;
+
+        for (size_t i = 0; i < iNumMeshes; i++) {
+
+            if (FAILED(m_pModelCom->BindMaterialShaderResource(m_pShader, (_uint)i, aiTextureType::aiTextureType_DIFFUSE, "g_DiffuseTexture")))
+                return E_FAIL;
+
+            if (FAILED(m_pModelCom->BindBoneMatrices(m_pShader, "g_BoneMatrices", (_uint)i)))
+                return E_FAIL;
+
+            if (FAILED(m_pShader->Begin(2)))
+                return E_FAIL;
+
+            if (FAILED(m_pModelCom->Render((_uint)i)))
+                return E_FAIL;
+        }
+
+    }
+
+    return S_OK;
 }
 
 void CPlayer::OnHit(_float _fTimeDelta)

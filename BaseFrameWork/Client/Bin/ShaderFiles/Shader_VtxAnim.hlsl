@@ -134,6 +134,26 @@ PS_OUT PS_RIMLIGHT(PS_IN In)
 }
 
 
+PS_OUT PS_MOTIONTRAIL(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    //Far 받아와서 처리 
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);    
+
+   float rim = 1 - saturate(dot(In.vNormal, -g_vCamLook));
+   rim = pow(rim, 2.f);
+   
+    vector vRimColor = vector(0.8f, 0.7f, 0.1f, 1.f);
+    
+    float3 rimColor = rim * vRimColor;
+    Out.vDiffuse = vector(rimColor,0.1f);
+    
+    return Out;
+
+}
 
 
 technique11 DefaultTechnique
@@ -158,6 +178,17 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_RIMLIGHT();
+    }
+
+    pass MotionTrail //2
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MOTIONTRAIL();
     }
 
 

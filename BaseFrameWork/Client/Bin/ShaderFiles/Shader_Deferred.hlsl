@@ -97,6 +97,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     (g_vLightAmbient * g_vMtrlAmbient);
 	
     vector vToonShade = saturate(vShade);
+    
     vToonShade = 0.5 * smoothstep(0.16, 0.34, vToonShade);
     Out.vShade = smoothstep(0.33, 0.67, vToonShade);
    

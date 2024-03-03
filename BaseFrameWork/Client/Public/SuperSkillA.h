@@ -20,6 +20,8 @@ public:
 protected:
 	virtual void EndSkill();
 
+private:
+	_bool m_IsSkillFinSe = false;
 
 public:
 
