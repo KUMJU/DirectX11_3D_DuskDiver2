@@ -95,6 +95,15 @@ HRESULT CEffectPreset::Render()
 	return S_OK;
 }
 
+void CEffectPreset::AddDistortionRender()
+{
+	if (!m_IsEnabled)
+		return;
+
+	for (auto& iter : m_Effects)
+		iter->AddDistortionRender();
+}
+
 void CEffectPreset::AddEffect(shared_ptr<class CEffect> _pEffect)
 {
 	m_Effects.push_back(_pEffect);
@@ -137,6 +146,13 @@ void CEffectPreset::SetBillboard(_bool _bBillboard)
 {
 	for (auto& pEffect : m_Effects) {
 		pEffect->SetBillboard(_bBillboard);
+	}
+}
+
+void CEffectPreset::SetDistortionOption(_bool _bDistortion)
+{
+	for (auto& pEffect : m_Effects) {
+		pEffect->SetDistortionOption();
 	}
 }
 

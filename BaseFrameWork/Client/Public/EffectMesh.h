@@ -49,15 +49,17 @@ public:
 
 public:
 	virtual HRESULT Initialize( const wstring& _strModelKey, MESH_DESC* _MeshDesc, char* _strName, _bool _bLoop);
-	
-	
-	
+
 	virtual void PriorityTick(_float _fTimeDelta);
 	virtual void Tick(_float _fTimeDelta, _matrix _ParentMat = XMMatrixIdentity());
 	virtual void LateTick(_float _fTimeDelta);
 	virtual HRESULT Render();
 
+	virtual HRESULT RenderGlow(shared_ptr<class CShader> _pShader);
 
+
+public:
+	virtual HRESULT RenderDistortion(shared_ptr<class CShader> _pShader);
 private:
 	void ComputeInitSetting();
 	void ScaleLerp();
@@ -80,6 +82,8 @@ private:
 	_float m_fMiddleTime = 0.f;
 
 	wstring m_MeshKey = TEXT("");
+
+	_float m_fDistortionTimer = 0.f;
 
 private:
 

@@ -104,11 +104,21 @@ void CEffectMesh::LateTick(_float _fTimeDelta)
         return;
     }
 
-    if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_NONLIGHT, shared_from_this())))
-        return;
 
-    if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_GLOW, shared_from_this())))
-       return;
+    if (m_bDistortion) {
+        //if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_NONLIGHT, shared_from_this())))
+        //    return;
+
+        if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_DISTORTION, shared_from_this())))
+            return;
+    }
+    else {
+        if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_NONLIGHT, shared_from_this())))
+            return;
+
+        if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_GLOW, shared_from_this())))
+            return;
+    }
 
 }
 
@@ -232,6 +242,254 @@ HRESULT CEffectMesh::Render()
     return S_OK;
 }
 
+HRESULT CEffectMesh::RenderGlow(shared_ptr<class CShader> _pShader)
+{
+
+    _float4x4 ViewMat = CGameInstance::GetInstance()->GetTransformFloat4x4(CPipeLine::D3DTS_VIEW);
+
+    if (FAILED(m_pShader->BindMatrix("g_ViewMatrix", &ViewMat)))
+        return E_FAIL;
+
+    _float4x4 ProjMat = CGameInstance::GetInstance()->GetTransformFloat4x4(CPipeLine::D3DTS_PROJ);
+
+    if (FAILED(m_pShader->BindMatrix("g_ProjMatrix", &ProjMat)))
+        return E_FAIL;
+
+    _matrix WorldOwnMatrix = m_pTransformCom->GetWorldMatrix();
+    _float4x4 FloatWorld;
+
+    //부모 객체가 따로 없으면 0,0,0 혹은 아이덴티티가 들어가서 아무 영향 없다 
+    WorldOwnMatrix.r[3] += m_vParentPos;
+    WorldOwnMatrix = WorldOwnMatrix * m_ParentMat;
+
+
+    XMStoreFloat4x4(&FloatWorld, WorldOwnMatrix);
+
+    //if (FAILED(m_pTransformCom->BindShaderResource(m_pShader, "g_WorldMatrix")))
+     //   return E_FAIL;
+
+    if (m_bBillboard) {
+
+        _float4x4 ViewCopyMat = ViewMat;
+
+        ViewCopyMat._41 = 0.f;
+        ViewCopyMat._42 = 0.f;
+        ViewCopyMat._43 = 0.f;
+
+        _matrix ViewInv = {};
+
+        ViewInv = XMMatrixInverse(NULL, XMLoadFloat4x4(&ViewCopyMat));
+        ViewInv = WorldOwnMatrix * ViewInv;
+        ViewInv.r[3] = WorldOwnMatrix.r[3] + _vector({ m_MeshDesc.vCenter.x , m_MeshDesc.vCenter.y, m_MeshDesc.vCenter.z, 0.f });
+
+        _float4x4 BillboardWorld = {};
+        XMStoreFloat4x4(&BillboardWorld, ViewInv);
+
+        if (FAILED(m_pShader->BindMatrix("g_WorldMatrix", &BillboardWorld)))
+            return E_FAIL;
+
+    }
+    else {
+        if (FAILED(m_pShader->BindMatrix("g_WorldMatrix", &FloatWorld)))
+            return E_FAIL;
+    }
+
+
+    if (FAILED(m_pShader->BindRawValue("g_vColor", &m_vColor, sizeof(_float4))))
+        return E_FAIL;
+
+    if (FAILED(m_pShader->BindRawValue("g_vLerpColor", &m_MeshDesc.vLerpColor, sizeof(_float4))))
+        return E_FAIL;
+
+    if (FAILED(m_pShader->BindRawValue("g_bMaskTex", &m_MeshDesc.bMask, sizeof(_bool))))
+        return E_FAIL;
+
+    if (FAILED(m_pShader->BindRawValue("g_fDeltaTime", &m_fTimeDelta, sizeof(_float))))
+        return E_FAIL;
+
+    if (FAILED(m_pShader->BindRawValue("g_bBillboard", &m_bBillboard, sizeof(_bool))))
+        return E_FAIL;
+
+
+
+    if (m_MeshDesc.bMask) {
+        m_pMaskTexture->BindShaderResource(m_pShader, "g_MaskTexture", 0);
+
+        if (FAILED(m_pShader->BindRawValue("g_vMaskSpeed", &m_fCurrentSpeed, sizeof(_float))))
+            return E_FAIL;
+
+        m_fCurrentSpeed += m_MeshDesc.fMaskSpeed;
+
+        if (FAILED(m_pShader->BindRawValue("g_vMaskDirection", &m_MeshDesc.vMaskDir, sizeof(_float2))))
+            return E_FAIL;
+
+    }
+
+    if (FAILED(m_pShader->BindRawValue("g_bNoiseTex", &m_MeshDesc.bNoise, sizeof(_bool))))
+        return E_FAIL;
+
+    if (m_MeshDesc.bNoise) {
+        m_pNoiseTexture->BindShaderResource(m_pShader, "g_NoiseTexture", 0);
+
+        if (FAILED(m_pShader->BindRawValue("g_vNoiseSpeed", &m_MeshDesc.fNoiseSpeed, sizeof(_float))))
+            return E_FAIL;
+
+        if (FAILED(m_pShader->BindRawValue("g_vNoiseDirection", &m_MeshDesc.vNoiseDir, sizeof(_float2))))
+            return E_FAIL;
+    }
+
+    _uint iPassNum = 3; //Clamp
+
+    if (m_MeshDesc.bUVLoop) {
+        iPassNum = 2; //Wrap
+    }
+
+
+    _uint iNumMeshes = m_pModel->GetNumMeshes();
+
+    for (size_t i = 0; i < iNumMeshes; i++) {
+
+        if (FAILED(m_pModel->BindMaterialShaderResource(m_pShader, (_uint)i, aiTextureType::aiTextureType_DIFFUSE, "g_DiffuseTexture")))
+            return E_FAIL;
+
+        if (FAILED(m_pShader->Begin(iPassNum)))
+            return E_FAIL;
+
+        if (FAILED(m_pModel->Render((_uint)i)))
+            return E_FAIL;
+    }
+
+    return S_OK;
+}
+
+HRESULT CEffectMesh::RenderDistortion(shared_ptr<class CShader> _pShader)
+{
+    m_fDistortionTimer += m_fTimeDelta;
+
+    _float4x4 ViewMat = CGameInstance::GetInstance()->GetTransformFloat4x4(CPipeLine::D3DTS_VIEW);
+
+    if (FAILED(m_pShader->BindMatrix("g_ViewMatrix", &ViewMat)))
+        return E_FAIL;
+
+    _float4x4 ProjMat = CGameInstance::GetInstance()->GetTransformFloat4x4(CPipeLine::D3DTS_PROJ);
+
+    if (FAILED(m_pShader->BindMatrix("g_ProjMatrix", &ProjMat)))
+        return E_FAIL;
+
+    _matrix WorldOwnMatrix = m_pTransformCom->GetWorldMatrix();
+    _float4x4 FloatWorld;
+
+    //부모 객체가 따로 없으면 0,0,0 혹은 아이덴티티가 들어가서 아무 영향 없다 
+    WorldOwnMatrix.r[3] += m_vParentPos;
+    WorldOwnMatrix = WorldOwnMatrix * m_ParentMat;
+
+
+    XMStoreFloat4x4(&FloatWorld, WorldOwnMatrix);
+
+    //if (FAILED(m_pTransformCom->BindShaderResource(m_pShader, "g_WorldMatrix")))
+     //   return E_FAIL;
+
+    if (m_bBillboard) {
+
+        _float4x4 ViewCopyMat = ViewMat;
+
+        ViewCopyMat._41 = 0.f;
+        ViewCopyMat._42 = 0.f;
+        ViewCopyMat._43 = 0.f;
+
+        _matrix ViewInv = {};
+
+        ViewInv = XMMatrixInverse(NULL, XMLoadFloat4x4(&ViewCopyMat));
+        ViewInv = WorldOwnMatrix * ViewInv;
+        ViewInv.r[3] = WorldOwnMatrix.r[3] + _vector({ m_MeshDesc.vCenter.x , m_MeshDesc.vCenter.y, m_MeshDesc.vCenter.z, 0.f });
+
+        _float4x4 BillboardWorld = {};
+        XMStoreFloat4x4(&BillboardWorld, ViewInv);
+
+        if (FAILED(m_pShader->BindMatrix("g_WorldMatrix", &BillboardWorld)))
+            return E_FAIL;
+
+    }
+    else {
+        if (FAILED(m_pShader->BindMatrix("g_WorldMatrix", &FloatWorld)))
+            return E_FAIL;
+    }
+
+
+    if (FAILED(m_pShader->BindRawValue("g_vColor", &m_vColor, sizeof(_float4))))
+        return E_FAIL;
+
+    if (FAILED(m_pShader->BindRawValue("g_vLerpColor", &m_MeshDesc.vLerpColor, sizeof(_float4))))
+        return E_FAIL;
+
+    if (FAILED(m_pShader->BindRawValue("g_bMaskTex", &m_MeshDesc.bMask, sizeof(_bool))))
+        return E_FAIL;
+
+    if (FAILED(m_pShader->BindRawValue("g_fDeltaTime", &m_fTimeDelta, sizeof(_float))))
+        return E_FAIL;
+
+    if (FAILED(m_pShader->BindRawValue("g_bBillboard", &m_bBillboard, sizeof(_bool))))
+        return E_FAIL;
+
+
+
+    if (m_MeshDesc.bMask) {
+        m_pMaskTexture->BindShaderResource(m_pShader, "g_MaskTexture", 0);
+
+        if (FAILED(m_pShader->BindRawValue("g_vMaskSpeed", &m_fCurrentSpeed, sizeof(_float))))
+            return E_FAIL;
+
+        m_fCurrentSpeed += m_MeshDesc.fMaskSpeed;
+
+        if (FAILED(m_pShader->BindRawValue("g_vMaskDirection", &m_MeshDesc.vMaskDir, sizeof(_float2))))
+            return E_FAIL;
+
+    }
+
+    if (FAILED(m_pShader->BindRawValue("g_bNoiseTex", &m_MeshDesc.bNoise, sizeof(_bool))))
+        return E_FAIL;
+
+    if (m_MeshDesc.bNoise) {
+        m_pNoiseTexture->BindShaderResource(m_pShader, "g_NoiseTexture", 0);
+
+        if (FAILED(m_pShader->BindRawValue("g_vNoiseSpeed", &m_MeshDesc.fNoiseSpeed, sizeof(_float))))
+            return E_FAIL;
+
+        if (FAILED(m_pShader->BindRawValue("g_vNoiseDirection", &m_MeshDesc.vNoiseDir, sizeof(_float2))))
+            return E_FAIL;
+    }
+
+    _uint iPassNum = 3; //Clamp
+
+    if (m_MeshDesc.bUVLoop) {
+        iPassNum = 2; //Wrap
+    }
+
+
+    _uint iNumMeshes = m_pModel->GetNumMeshes();
+
+    for (size_t i = 0; i < iNumMeshes; i++) {
+
+        if (FAILED(m_pModel->BindMaterialShaderResource(m_pShader, (_uint)i, aiTextureType::aiTextureType_DIFFUSE, "g_DiffuseTexture")))
+            return E_FAIL;
+
+        if (FAILED(m_pShader->Begin(iPassNum)))
+            return E_FAIL;
+
+        if (FAILED(m_pModel->Render((_uint)i)))
+            return E_FAIL;
+    }
+
+
+    if (FAILED(_pShader->BindRawValue("g_fDistortionTime", &m_fDistortionTimer, sizeof(_float))))
+        return E_FAIL;
+
+
+    return S_OK;
+
+
+}
+
 
 void CEffectMesh::ScaleLerp()
 {
@@ -277,6 +535,7 @@ void CEffectMesh::ResetEffect()
 {
     m_fCurrentSpeed = 0.f;
     m_fAccTime = 0.f;
+    m_fDistortionTimer = 0.f;
     m_vCurrentScale = XMLoadFloat3(&m_MeshDesc.vStartScale);
 }
 

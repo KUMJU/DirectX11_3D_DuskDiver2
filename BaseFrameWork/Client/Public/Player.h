@@ -60,6 +60,7 @@ public:
 	virtual void Tick(_float _fTimeDelta) override;
 	virtual void LateTick(_float _fTimeDelta) override;
 	virtual HRESULT Render() override;
+	virtual HRESULT RenderGlow(shared_ptr<class CShader> _pShader);
 
 
 public:
@@ -329,15 +330,14 @@ private:
 	vector<shared_ptr<CTransform>> m_pMotionTrailTransforms;
 	vector<shared_ptr<CModel>> m_pMotionTrailModels;
 	
-	shared_ptr<CTransform> m_pTestTransform = nullptr;
-	shared_ptr<CModel> m_pMotionTrailModel = nullptr;
 
-	list<_float4x4[MAX_BONE]> m_pBoneLists;
+	list<_float4x4*> m_pBoneLists;
 	list<_float4x4> m_pWorldMatirxs; 
+	list<_float> m_Trailtimes;
 
 private:
-	_int m_iMaxTrailNum = 2;
-
+	_int m_iMaxTrailNum = 3;
+	_float m_fTrailRenewTotalTime = 0.055f;
 
 public:
 	static shared_ptr<CPlayer> Create();

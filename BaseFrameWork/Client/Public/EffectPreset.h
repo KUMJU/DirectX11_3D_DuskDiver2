@@ -22,6 +22,9 @@ public:
 	virtual HRESULT Render();
 
 public:
+	void AddDistortionRender();
+
+public:
 	void AddEffect(shared_ptr<class CEffect> _pEffect);
 	void DeleteEffect(_uint _iEffectIdx);
 
@@ -33,6 +36,7 @@ public:
 	void SetEffectPosition(_vector _vPos);
 	void SetEffectRotation(_float fX, _float _fY, _float _fZ);
 	void SetBillboard(_bool _bBillboard);
+	void SetDistortionOption(_bool _bDistortion);
 
 public:
 

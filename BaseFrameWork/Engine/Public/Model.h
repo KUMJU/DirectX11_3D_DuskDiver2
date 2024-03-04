@@ -58,7 +58,7 @@ public:
 	void SetAnimNum(_uint _iAnimNum) { _iAnimNum = _iAnimNum; }
 	_bool ChangeAnimation(_uint _iAnimNum , _float _LinearTime = 0.06f);
 
-	vector<_float4x4*>* GetPrevBoneMatrix() { return &m_pBoneMat; }
+	_float4x4* GetPrevBoneMatrix() { return m_pBoneMat; }
 
 private:
 	_float4x4 m_PivotMatrix;
@@ -93,7 +93,7 @@ private:
 
 private:
 
-	vector<_float4x4*> m_pBoneMat;
+	_float4x4 m_pBoneMat[MAX_BONE];
 
 private:
 	HRESULT ReadyMeshes(ifstream& _ifs);

@@ -19,6 +19,7 @@ HRESULT CSkillQ::Initialize()
 
     m_pEffectPreset = CEffectMgr::GetInstance()->FindEffect(TEXT("SkillQ"));
    // m_pEffectPreset->SetParentTransform(m_pOwnerTransform);
+    m_pEffectPreset->SetDistortionOption(true);
 
     CCollider::COLLIDER_DESC normalAtkDesc = {};
     normalAtkDesc.fRadius = 0.5f;

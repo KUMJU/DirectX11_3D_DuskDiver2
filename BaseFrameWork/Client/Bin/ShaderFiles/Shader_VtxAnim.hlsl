@@ -11,6 +11,8 @@ bool g_bRimLight = false;
 float3 g_vRimColor;
 float4 g_vCamLook;
 
+float g_fTrailAlpha = 1.f;
+
 struct VS_IN
 {
     float3 vPosition : POSITION;
@@ -149,7 +151,7 @@ PS_OUT PS_MOTIONTRAIL(PS_IN In)
     vector vRimColor = vector(0.8f, 0.7f, 0.1f, 1.f);
     
     float3 rimColor = rim * vRimColor;
-    Out.vDiffuse = vector(rimColor,0.1f);
+    Out.vDiffuse = vector(rimColor, 0.3f * g_fTrailAlpha);
     
     return Out;
 

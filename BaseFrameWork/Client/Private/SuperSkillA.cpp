@@ -36,6 +36,8 @@ HRESULT CSuperSkillA::Initialize()
     m_pEffectPreset = CEffectMgr::GetInstance()->FindEffect(TEXT("SuperSkill1"));
     m_pParticlePreset = CEffectMgr::GetInstance()->FindEffect(TEXT("SuperParticle"));
 
+    m_pEffectPreset->SetDistortionOption(true);
+
     CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Effect"), m_pParticlePreset);
 
     shared_ptr<CCollider> pCollider = CCollider::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), CCollider::TYPE_SPHERE, AtkDesc);

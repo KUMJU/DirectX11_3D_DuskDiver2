@@ -120,19 +120,11 @@ HRESULT CPlayer::Initialize()
 
 
     /*모션 트레일 테스트*/
-    m_pMotionTrailModel = CGameInstance::GetInstance()->GetModel(TEXT("Hero1_BattleMode_3Anim"));
-    m_pTestTransform = CTransform::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo());
-
-    for (_int i = 0; i < 2; ++i) {
+    for (_int i = 0; i < m_iMaxTrailNum; ++i) {
         m_pMotionTrailTransforms.push_back(CTransform::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo()));
         m_pMotionTrailModels.push_back(CGameInstance::GetInstance()->GetModel(TEXT("Hero1_BattleMode_3Anim")));
     }
 
-
-    /*
-    if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, nullptr, pDepthStencilTexture.GetAddressOf())))
-        return E_FAIL;
-    */
     return S_OK;
 }
 
@@ -385,7 +377,12 @@ void CPlayer::LateTick(_float _fTimeDelta)
     }
 
     m_fRenewTrailTime += _fTimeDelta;
-    if (m_fRenewTrailTime >= 0.15f) {
+
+    for (auto& iter : m_Trailtimes) {
+        iter += _fTimeDelta;
+    }
+
+    if (m_fRenewTrailTime >= m_fTrailRenewTotalTime && m_bBurstMode) {
 
         m_fRenewTrailTime = 0.f;
 
@@ -396,14 +393,28 @@ void CPlayer::LateTick(_float _fTimeDelta)
             m_pWorldMatirxs.pop_front();
             m_pWorldMatirxs.push_back(PrevMat);
 
-        //    m_pBoneLists.pop_front()
-          // m_pBoneLists.push_back(m_pModelCom->GetPrevBoneMatrix());
+            delete[] m_pBoneLists.front();
+            m_pBoneLists.pop_front();
+
+            m_Trailtimes.pop_front();
+
+            _float4x4* pBone = new _float4x4[MAX_BONE];
+            _float4x4* dd = m_pModelCom->GetPrevBoneMatrix();;
+            memcpy_s(pBone, sizeof(_float4x4)* MAX_BONE, dd, sizeof(_float4x4)* MAX_BONE);
+
+            m_Trailtimes.push_back(0.f);
+            m_pBoneLists.push_back(pBone);
 
         }
         else {
             m_pWorldMatirxs.push_back(PrevMat);
-           // m_pBoneLists.push_back(m_pModelCom->GetPrevBoneMatrix());
-            //bone Matrix get and 갱신~
+
+            _float4x4* pBone = new _float4x4[MAX_BONE];
+            _float4x4* dd = m_pModelCom->GetPrevBoneMatrix();;
+            memcpy_s(pBone, sizeof(_float4x4)* MAX_BONE, dd, sizeof(_float4x4)* MAX_BONE);
+
+            m_Trailtimes.push_back(0.f);
+            m_pBoneLists.push_back(pBone);
         }
 
         auto iter = m_pWorldMatirxs.begin();
@@ -419,8 +430,13 @@ void CPlayer::LateTick(_float _fTimeDelta)
     if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_NONBLEND, shared_from_this())))
         return;
 
-    if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_TRAIL, shared_from_this())))
+    if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_GLOW, shared_from_this())))
         return;
+
+    if (m_bBurstMode) {
+        if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_TRAIL, shared_from_this())))
+            return;
+    }
 
 
     m_IsCollideMonster = false;
@@ -462,6 +478,32 @@ HRESULT CPlayer::Render()
             return E_FAIL;
     }
 
+
+    return S_OK;
+}
+
+HRESULT CPlayer::RenderGlow(shared_ptr<class CShader> _pShader)
+{
+
+    for (_int i = 7; i < 10; ++i) {
+
+        if (FAILED(BindShaderResources()))
+            return E_FAIL;
+
+        if (FAILED(m_pModelCom->BindMaterialShaderResource(m_pShader, (_uint)i, aiTextureType::aiTextureType_DIFFUSE, "g_DiffuseTexture")))
+            return E_FAIL;
+
+        if (FAILED(m_pModelCom->BindBoneMatrices(m_pShader, "g_BoneMatrices", (_uint)i)))
+            return E_FAIL;
+
+        if (FAILED(m_pShader->Begin(0)))
+            return E_FAIL;
+
+        if (FAILED(m_pModelCom->Render((_uint)i)))
+            return E_FAIL;
+
+
+    }
 
     return S_OK;
 }
@@ -1739,6 +1781,9 @@ HRESULT CPlayer::RenderTrail()
 
     /*잔상*/
 
+    auto iter = m_pBoneLists.begin();
+    auto TimerIter = m_Trailtimes.begin();
+
     for (_int i = 0; i < m_pWorldMatirxs.size(); ++i) {
 
         if (FAILED(m_pMotionTrailTransforms[i]->BindShaderResource(m_pShader, "g_WorldMatrix")))
@@ -1754,20 +1799,30 @@ HRESULT CPlayer::RenderTrail()
         if (FAILED(m_pShader->BindMatrix("g_ProjMatrix", &ProjMat)))
             return E_FAIL;
 
-        for (size_t i = 0; i < iNumMeshes; i++) {
 
-            if (FAILED(m_pModelCom->BindMaterialShaderResource(m_pShader, (_uint)i, aiTextureType::aiTextureType_DIFFUSE, "g_DiffuseTexture")))
+        _float fAlphaRate = ((m_fTrailRenewTotalTime * 3.f) - *TimerIter) / (m_fTrailRenewTotalTime * 3.f);
+
+        if (FAILED(m_pShader->BindRawValue("g_fTrailAlpha", &fAlphaRate, sizeof(_float))))
+            return E_FAIL;
+
+        //m_Trailtimes
+
+        for (size_t j = 0; j < iNumMeshes; j++) {
+
+            if (FAILED(m_pModelCom->BindMaterialShaderResource(m_pShader, (_uint)j, aiTextureType::aiTextureType_DIFFUSE, "g_DiffuseTexture")))
                 return E_FAIL;
 
-            if (FAILED(m_pModelCom->BindBoneMatrices(m_pShader, "g_BoneMatrices", (_uint)i)))
-                return E_FAIL;
+            m_pShader->BindMatrices("g_BoneMatrices", *iter, MAX_BONE);
 
             if (FAILED(m_pShader->Begin(2)))
                 return E_FAIL;
 
-            if (FAILED(m_pModelCom->Render((_uint)i)))
+            if (FAILED(m_pModelCom->Render((_uint)j)))
                 return E_FAIL;
         }
+
+        ++iter;
+        ++TimerIter;
 
     }
 

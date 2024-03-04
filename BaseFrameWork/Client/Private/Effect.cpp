@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Effect.h"
 
+#include "GameInstance.h"
+
 CEffect::CEffect()
 {
 }
@@ -27,6 +29,15 @@ void CEffect::LateTick(_float _fTimeDelta)
 HRESULT CEffect::Render()
 {
     return S_OK;
+}
+
+void CEffect::AddDistortionRender()
+{
+
+   // if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::render, shared_from_this())))
+    //    return;
+
+
 }
 
 void CEffect::SetRotation(_float _fX, _float _fY, _float _fZ)

@@ -33,7 +33,12 @@ public:
 	virtual void Tick(_float _fTimeDelta);
 	virtual void LateTick(_float _fTimeDelta);
 	virtual HRESULT Render();
+
+/*PostEffect Render*/
+public:
 	virtual HRESULT RenderTrail() { return S_OK; }
+	virtual HRESULT RenderDistortion(shared_ptr<class CShader> _pShader) { return S_OK; }
+	virtual HRESULT RenderGlow(shared_ptr<class CShader> _pShader) { return S_OK; }
 
 public:
 	bool IsActive() { return m_IsActive; }

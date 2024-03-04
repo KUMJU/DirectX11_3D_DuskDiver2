@@ -12,9 +12,12 @@ texture2D g_OutLineTexture;
 
 /*디스토션*/
 texture2D g_DistortionTex;
-float g_fDeltaTime; 
+float g_fDistortionTime; 
 float g_fStrength;
 float g_fDistortionSpeed;
+
+texture2D g_NoiseTexture;
+
 
 /*글로우*/
 texture2D g_GlowTexture;
@@ -30,6 +33,17 @@ float g_fLaplacianMask[9] =
     -1, -1, -1
 };
 float g_fCoord[3] = { -1.f, 0.f, 1.f };
+
+/*블러*/
+float g_fWeight[13] =
+{
+    0.0561, 0.1353, 0.278, 0.4868, 0.7261, 0.9231,
+    1, 0.9231, 0.7261, 0.4868, 0.278, 0.1353, 0.0561
+};
+
+float g_fWeightTotal = 6.2108;
+
+
 
 struct VS_IN
 {
@@ -160,6 +174,51 @@ PS_OUT PS_MAIN(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_BLUR_HORIZONTAL(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    vector vOriginColor = g_GlowTexture.Sample(g_LinearSampler, In.vTexcoord);
+    float fPixelSize = 1.f / g_fScreenWidth;
+    
+    float2 UVPos = 0;
+    
+    for (int i = -6; i < 6; ++i)
+    {
+        UVPos = In.vTexcoord + float2(fPixelSize * i, 0);
+        Out.vColor += g_fWeight[6 + i] * g_GlowTexture.Sample(g_LinearSampler, UVPos);   
+    }
+    
+    Out.vColor /= g_fWeightTotal;
+    Out.vColor.a = 0.3f;
+
+    return Out;
+
+}
+
+PS_OUT PS_BLUR_VERTICAL(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    vector vOriginColor = g_GlowTexture.Sample(g_LinearSampler, In.vTexcoord);
+    float fPixelSize = 1.f / (g_fScreenHeight / 2.f);
+    
+    float2 UVPos = 0;
+    
+    for (int i = -6; i < 6; ++i)
+    {
+        UVPos = In.vTexcoord + float2(fPixelSize * i, 0);
+        Out.vColor += g_fWeight[6 + i] * g_GlowTexture.Sample(g_LinearSampler, UVPos);
+    }
+    
+    Out.vColor /= g_fWeightTotal;
+    Out.vColor.a = 0.3f;
+    
+    return Out;
+
+
+}
+
 PS_OUT PS_OUTLINE(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
@@ -182,12 +241,20 @@ PS_OUT PS_DISTORTION(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
-    float2 vTrans = In.vTexcoord + g_fDeltaTime;
-    vector vNoiseTex = g_DistortionTex.Sample(g_LinearSampler, vTrans);
-    float2 vUV = In.vTexcoord + vNoiseTex.xy * g_fDistortionSpeed;
-    vector vBackBuffer = g_BackBufferTexture.Sample(g_LinearSampler, vUV);
+    vector vDistortionColor = g_DistortionTex.Sample(g_LinearSampler, In.vTexcoord);
+    vector vBackBuffer = g_BackBufferTexture.Sample(g_LinearSampler, In.vTexcoord);
+   
+
+     float2 vTransUV = In.vTexcoord + g_fDistortionTime * g_fDistortionSpeed;
+
+     vector vNoiseTex = g_NoiseTexture.Sample(g_LinearSampler, vTransUV);
+     float2 vUV = In.vTexcoord + vNoiseTex.r * 0.05f;
+     float2 fWeight = lerp(In.vTexcoord, vUV, 1 / 100);
     
-    Out.vColor = vBackBuffer;
+    vector vDistorBuffer = g_DistortionTex.Sample(g_LinearSampler, vUV);
+
+    
+    Out.vColor = vBackBuffer + vDistorBuffer;
     
     return Out;
 }
@@ -229,41 +296,6 @@ PS_GLOW_OUT PS_GLOW(PS_GLOW_IN In)
 {
     PS_GLOW_OUT Out = (PS_GLOW_OUT) 0;
     
-    float weight0, weight1, weight2, weight3, weight4;
-    float normalization;
-    float4 color;
-    
-    vector vGlowTex = g_GlowTexture.Sample(g_LinearSampler, In.vTexcoord);
-
-    weight0 = 1.f;
-    weight1 = 0.9f;
-    weight2 = 0.55f;
-    weight3 = 0.18f;
-    weight4 = 0.1f;
-    
-    normalization = (weight0 + 2.f * (weight1 + weight2 + weight3 + weight4));
-    
-    weight0 = weight0 / normalization;
-    weight1 = weight1 / normalization;
-    weight2 = weight2 / normalization;
-    weight3 = weight3 / normalization;
-    weight4 = weight4 / normalization;
-    
-    color = float4(1.f, 0.7f, 0.f, 0.5f);
-    
-    color += g_Texture.Sample(g_LinearSampler, In.texCoord1) * weight4;
-    color += g_Texture.Sample(g_LinearSampler, In.texCoord2) * weight3;
-    color += g_Texture.Sample(g_LinearSampler, In.texCoord3) * weight2;
-    color += g_Texture.Sample(g_LinearSampler, In.texCoord4) * weight1;
-    color += g_Texture.Sample(g_LinearSampler, In.texCoord5) * weight0;
-    color += g_Texture.Sample(g_LinearSampler, In.texCoord6) * weight1;
-    color += g_Texture.Sample(g_LinearSampler, In.texCoord7) * weight2;
-    color += g_Texture.Sample(g_LinearSampler, In.texCoord8) * weight3;
-    color += g_Texture.Sample(g_LinearSampler, In.texCoord9) * weight4;
-    
-    color.a = 1.f;
-    
-    Out.vColor = color;
     
     return Out;
    
@@ -286,24 +318,24 @@ technique11	DefaultTechnique
     pass Glow_Horizontal //1
     {
         SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetDepthStencilState(DSS_None_ZTestAndWrite, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
-        VertexShader = compile vs_5_0 VS_GLOW_HORIZONTAL();
+        VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_GLOW();
+        PixelShader = compile ps_5_0 PS_BLUR_HORIZONTAL();
     }
 
 
     pass Glow_Vertical //2
     {
         SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetDepthStencilState(DSS_None_ZTestAndWrite, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
-        VertexShader = compile vs_5_0 VS_GLOW_VERTICAL();
+        VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_GLOW();
+        PixelShader = compile ps_5_0 PS_BLUR_VERTICAL();
     }
 
     pass OutLine //3
@@ -342,7 +374,7 @@ technique11	DefaultTechnique
     pass Distortion //6
     {
         SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default, 0);
+        SetDepthStencilState(DSS_None_ZTestAndWrite, 0);
         SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN();

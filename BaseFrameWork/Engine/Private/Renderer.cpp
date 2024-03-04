@@ -5,6 +5,8 @@
 #include "Shader.h"
 #include "VIRect.h"
 
+#include "Texture.h"
+
 CRenderer::CRenderer(wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID3D11DeviceContext> _pContext)
 	:m_pDevice(_pDevice),
 	m_pContext(_pContext)
@@ -35,15 +37,25 @@ HRESULT CRenderer::Initialize()
 	if (FAILED(CGameInstance::GetInstance()->AddRenderTarget(TEXT("Target_Specular"), ViewPortDesc.Width, ViewPortDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
 
-	if (FAILED(CGameInstance::GetInstance()->AddRenderTarget(TEXT("Target_Glow"), ViewPortDesc.Width, ViewPortDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
+	if (FAILED(CGameInstance::GetInstance()->AddRenderTarget(TEXT("Target_BlurObj"), ViewPortDesc.Width, ViewPortDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
+
+	if (FAILED(CGameInstance::GetInstance()->AddRenderTarget(TEXT("Target_BlurHorizontal"), ViewPortDesc.Width, ViewPortDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
+		return E_FAIL;
+
+	if (FAILED(CGameInstance::GetInstance()->AddRenderTarget(TEXT("Target_BlurVertical"), ViewPortDesc.Width, ViewPortDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
+		return E_FAIL;
+
 
 	if (FAILED(CGameInstance::GetInstance()->AddRenderTarget(TEXT("Target_OutLine"), ViewPortDesc.Width, ViewPortDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(1.f, 1.f, 1.f, 1.f))))
 		return E_FAIL;
 
-	if (FAILED(CGameInstance::GetInstance()->AddRenderTarget(TEXT("Target_MotionTrail"), ViewPortDesc.Width, ViewPortDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
+	if (FAILED(CGameInstance::GetInstance()->AddRenderTarget(TEXT("Target_MotionTrail"), ViewPortDesc.Width, ViewPortDesc.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
 
+
+	if (FAILED(CGameInstance::GetInstance()->AddRenderTarget(TEXT("Target_Distortion"), ViewPortDesc.Width, ViewPortDesc.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
+		return E_FAIL;
 
 	/*Set MRT*/
 	if(FAILED(CGameInstance::GetInstance()->AddMRT(TEXT("MRT_GameObjects"), TEXT("Target_Diffuse"))))
@@ -61,13 +73,23 @@ HRESULT CRenderer::Initialize()
 	if (FAILED(CGameInstance::GetInstance()->AddMRT(TEXT("MRT_LightAcc"), TEXT("Target_Specular"))))
 		return E_FAIL;
 
-	if (FAILED(CGameInstance::GetInstance()->AddMRT(TEXT("MRT_Glow"), TEXT("Target_Glow"))))
+	if (FAILED(CGameInstance::GetInstance()->AddMRT(TEXT("MRT_BlurObj"), TEXT("Target_BlurObj"))))
+		return E_FAIL;
+
+	if (FAILED(CGameInstance::GetInstance()->AddMRT(TEXT("MRT_BlurHorizontal"), TEXT("Target_BlurHorizontal"))))
+		return E_FAIL;
+
+	if (FAILED(CGameInstance::GetInstance()->AddMRT(TEXT("MRT_BlurVertical"), TEXT("Target_BlurVertical"))))
 		return E_FAIL;
 
 	if (FAILED(CGameInstance::GetInstance()->AddMRT(TEXT("MRT_OutLine"), TEXT("Target_OutLine"))))
 		return E_FAIL;
 
 	if (FAILED(CGameInstance::GetInstance()->AddMRT(TEXT("MRT_MotionTrail"), TEXT("Target_MotionTrail"))))
+		return E_FAIL;
+
+
+	if (FAILED(CGameInstance::GetInstance()->AddMRT(TEXT("MRT_Distortion"), TEXT("Target_Distortion"))))
 		return E_FAIL;
 
 
@@ -100,11 +122,11 @@ HRESULT CRenderer::Initialize()
 		return E_FAIL;
 	if (FAILED(CGameInstance::GetInstance()->ReadyDebug(TEXT("Target_Specular"), 300.0f, 300.0f, 200.0f, 200.0f)))
 		return E_FAIL;
-	if (FAILED(CGameInstance::GetInstance()->ReadyDebug(TEXT("Target_OutLine"), 300.0f, 500.0f, 200.0f, 200.0f)))
+	if (FAILED(CGameInstance::GetInstance()->ReadyDebug(TEXT("Target_Distortion"), 300.0f, 500.0f, 200.0f, 200.0f)))
 		return E_FAIL;
 
-	if (FAILED(CGameInstance::GetInstance()->ReadyDebug(TEXT("Target_MotionTrail"), 500.0f, 100.0f, 200.0f, 200.0f)))
-		return E_FAIL;
+	//if (FAILED(CGameInstance::GetInstance()->ReadyDebug(TEXT("Target_Glow"), 500.0f, 100.0f, 200.0f, 200.0f)))
+	//	return E_FAIL;
 #endif // _DEBUG
 
 
@@ -148,20 +170,22 @@ HRESULT CRenderer::Render()
 	if (FAILED(RenderFinal()))
 		return E_FAIL;
 
-
-//	if (FAILED(RenderGlow()))
-//		return E_FAIL;
-
 	if (FAILED(RenderNonLight()))
 		return E_FAIL;
 
 	if (FAILED(RenderOutLine()))
 		return E_FAIL;
 
+	if (FAILED(RenderGlow()))
+		return E_FAIL;
+
 	if (FAILED(RenderMotionTrail()))
 		return E_FAIL;
 
 	if (FAILED(RenderBlend()))
+		return E_FAIL;
+
+	if (FAILED(RenderDistortion()))
 		return E_FAIL;
 
 	if (FAILED(RenderUI()))
@@ -355,19 +379,30 @@ HRESULT CRenderer::RenderOutLine()
 
 HRESULT CRenderer::RenderGlow()
 {
-	//각 객체에 Render를 돌려서 렌더 타겟에 전부 그린다음에 그 타겟을 디퍼드 셰이더에 던져서(가로 세로 총 2회) 완성함? 
-	if (m_RenderObjects[RENDER_GLOW].empty())
-		return S_OK;
+	//if (m_RenderObjects[RENDER_GLOW].empty())
+	//	return S_OK;
 
-
-	if (FAILED(CGameInstance::GetInstance()->BeginMRT(TEXT("MRT_Glow"))))
+	/*객체 원본 그리기*/
+	if (FAILED(CGameInstance::GetInstance()->BeginMRT(TEXT("MRT_BlurObj"))))
 		return E_FAIL;
+
+	m_RenderObjects[RENDER_GLOW].sort([](shared_ptr<CGameObject> _pSrc, shared_ptr<CGameObject> _pDst)
+		{
+			return _pSrc->GetCamDistance() > _pDst->GetCamDistance();
+		});
+
 
 	for (auto& pGameObject : m_RenderObjects[RENDER_GLOW]) {
 		if (nullptr != pGameObject)
-			pGameObject->Render();
+			pGameObject->RenderGlow(m_pPostProcessShader);
 	}
+	
+	m_RenderObjects[RENDER_GLOW].clear();
 
+	if (FAILED(CGameInstance::GetInstance()->EndMRT()))
+		return E_FAIL;
+
+	/*포스트 프로세스 셰이더 바인드*/
 	if (FAILED(m_pPostProcessShader->BindMatrix("g_WorldMatrix", &m_WorldMatrix)))
 		return E_FAIL;
 	if (FAILED(m_pPostProcessShader->BindMatrix("g_ViewMatrix", &m_ViewMatrix)))
@@ -375,36 +410,66 @@ HRESULT CRenderer::RenderGlow()
 	if (FAILED(m_pPostProcessShader->BindMatrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
-	//화면 해상도 바인드
 	if (FAILED(m_pPostProcessShader->BindRawValue("g_fScreenWidth", &m_fScreenWidth, sizeof(_float))))
 		return E_FAIL;
 	if (FAILED(m_pPostProcessShader->BindRawValue("g_fScreenHeight", &m_fScreenHeight, sizeof(_float))))
 		return E_FAIL;
-	
+
+
+	/*가로로 흔들기*/
+	if (FAILED(CGameInstance::GetInstance()->BeginMRT(TEXT("MRT_BlurVertical"))))
+		return E_FAIL;
+
+	if (FAILED(CGameInstance::GetInstance()->BindSRV(TEXT("Target_BlurObj"), m_pPostProcessShader, "g_GlowTexture")))
+		return E_FAIL;
+
 	m_pPostProcessShader->Begin(2);
 	m_pVIBuffer->BindBuffers();
 	m_pVIBuffer->Render();
 
-	//m_pPostProcessShader->Begin(2);
-	//m_pVIBuffer->BindBuffers();
-	//m_pVIBuffer->Render();
+	if (FAILED(CGameInstance::GetInstance()->EndMRT()))
+		return E_FAIL;
 
-	m_RenderObjects[RENDER_GLOW].clear();
 
+	/*세로로 흔들기 */
+
+	if (FAILED(CGameInstance::GetInstance()->BeginMRT(TEXT("MRT_BlurVertical"))))
+		return E_FAIL;
+
+	if (FAILED(CGameInstance::GetInstance()->BindSRV(TEXT("Target_BlurObj"), m_pPostProcessShader, "g_GlowTexture")))
+		return E_FAIL;
+
+	m_pPostProcessShader->Begin(1);
+	m_pVIBuffer->BindBuffers();
+	m_pVIBuffer->Render();
 
 	if (FAILED(CGameInstance::GetInstance()->EndMRT()))
 		return E_FAIL;
 
+
+	/*원본 텍스쳐랑 블렌드*/
+
+
 	if (FAILED(CGameInstance::GetInstance()->BindBackBufferSRV(m_pPostProcessShader, "g_BackBufferTexture")))
 		return E_FAIL;
 
-	if (FAILED(CGameInstance::GetInstance()->BindSRV(TEXT("Target_Glow"), m_pPostProcessShader, "g_BlendTexture")))
+	if (FAILED(CGameInstance::GetInstance()->BindSRV(TEXT("Target_BlurVertical"), m_pPostProcessShader, "g_BlendTexture")))
 		return E_FAIL;
 
-	m_pPostProcessShader->Begin(4);
+	m_pPostProcessShader->Begin(0);
 	m_pVIBuffer->BindBuffers();
 	m_pVIBuffer->Render();
 
+	if (FAILED(CGameInstance::GetInstance()->BindBackBufferSRV(m_pPostProcessShader, "g_BackBufferTexture")))
+		return E_FAIL;
+
+	if (FAILED(CGameInstance::GetInstance()->BindSRV(TEXT("Target_BlurHorizontal"), m_pPostProcessShader, "g_BlendTexture")))
+		return E_FAIL;
+
+	m_pPostProcessShader->Begin(0);
+	m_pVIBuffer->BindBuffers();
+	m_pVIBuffer->Render();
+	/***************/
 
 	return S_OK;
 }
@@ -468,10 +533,65 @@ HRESULT CRenderer::RenderMotionTrail()
 HRESULT CRenderer::RenderDistortion()
 {
 
-	
+	//RENDER_DISTORTION
+
+	for (auto& pGameObject : m_RenderObjects[RENDER_DISTORTION]) {
+
+		if (FAILED(CGameInstance::GetInstance()->BeginMRT(TEXT("MRT_Distortion"))))
+			return E_FAIL;
+
+		if (nullptr != pGameObject) {
+			pGameObject->RenderDistortion(m_pPostProcessShader);
+		}
+
+		if (FAILED(CGameInstance::GetInstance()->EndMRT()))
+			return E_FAIL;
+
+		if (FAILED(m_pPostProcessShader->BindMatrix("g_WorldMatrix", &m_WorldMatrix)))
+			return E_FAIL;
+		if (FAILED(m_pPostProcessShader->BindMatrix("g_ViewMatrix", &m_ViewMatrix)))
+			return E_FAIL;
+		if (FAILED(m_pPostProcessShader->BindMatrix("g_ProjMatrix", &m_ProjMatrix)))
+			return E_FAIL;
+
+		if (FAILED(m_pPostProcessShader->BindRawValue("g_fScreenWidth", &m_fScreenWidth, sizeof(_float))))
+			return E_FAIL;
+		if (FAILED(m_pPostProcessShader->BindRawValue("g_fScreenHeight", &m_fScreenHeight, sizeof(_float))))
+			return E_FAIL;
+
+		shared_ptr<CTexture> pTexture = CGameInstance::GetInstance()->GetTexture(TEXT("water"));
+		pTexture->BindShaderResource(m_pPostProcessShader, "g_NoiseTexture", 0);
+
+		float fSpeed = 3.f;
+		if (FAILED(m_pPostProcessShader->BindRawValue("g_fDistortionSpeed", &fSpeed, sizeof(_float))))
+			return E_FAIL;
+
+		if (FAILED(CGameInstance::GetInstance()->BindBackBufferSRV(m_pPostProcessShader, "g_BackBufferTexture")))
+			return E_FAIL;
+
+		if (FAILED(CGameInstance::GetInstance()->BindSRV(TEXT("Target_Distortion"), m_pPostProcessShader, "g_DistortionTex")))
+			return E_FAIL;
+
+		m_pPostProcessShader->Begin(6);
+		m_pVIBuffer->BindBuffers();
+		m_pVIBuffer->Render();
 
 
+		/*그리고 난 후 섞기*/
 
+		/*if (FAILED(CGameInstance::GetInstance()->BindBackBufferSRV(m_pPostProcessShader, "g_BackBufferTexture")))
+			return E_FAIL;
+
+		if (FAILED(CGameInstance::GetInstance()->BindSRV(TEXT("Target_Distortion"), m_pPostProcessShader, "g_BlendTexture")))
+			return E_FAIL;
+
+		m_pPostProcessShader->Begin(0);
+		m_pVIBuffer->BindBuffers();
+		m_pVIBuffer->Render();*/
+
+	}
+
+	m_RenderObjects[RENDER_DISTORTION].clear();
 
 	return S_OK;
 }
@@ -499,8 +619,8 @@ HRESULT CRenderer::RenderDebug()
 
 	CGameInstance::GetInstance()->RenderMRT(TEXT("MRT_GameObjects"), m_pShader, m_pVIBuffer);
 	CGameInstance::GetInstance()->RenderMRT(TEXT("MRT_LightAcc"), m_pShader, m_pVIBuffer);
-	CGameInstance::GetInstance()->RenderMRT(TEXT("MRT_OutLine"), m_pShader, m_pVIBuffer);
-	CGameInstance::GetInstance()->RenderMRT(TEXT("MRT_MotionTrail"), m_pShader, m_pVIBuffer);
+	CGameInstance::GetInstance()->RenderMRT(TEXT("MRT_Distortion"), m_pShader, m_pVIBuffer);
+	//CGameInstance::GetInstance()->RenderMRT(TEXT("MRT_MotionTrail"), m_pShader, m_pVIBuffer);
 
 	for (auto& pComponent : m_DebugCom)
 	{

@@ -32,6 +32,12 @@ public:
 	virtual void Tick(_float _fTimeDelta , _matrix _ParentMat = XMMatrixIdentity());
 	virtual void LateTick(_float _fTimeDelta);
 	virtual HRESULT Render();
+	virtual HRESULT RenderGlow(shared_ptr<class CShader> _pShader) { return S_OK; }
+
+public:
+	void AddDistortionRender();
+
+	void SetDistortionOption() { m_bDistortion = true; }
 
 public:
 	char* GetEffectName() {
@@ -71,6 +77,9 @@ protected:
 
 	_bool m_bBillboard = false;
 	_bool m_bLoop = false;
+
+
+	_bool m_bDistortion = false;
 
 public:
 
