@@ -105,9 +105,9 @@ void CEffectMesh::LateTick(_float _fTimeDelta)
     }
 
 
-    if (m_bDistortion) {
-        //if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_NONLIGHT, shared_from_this())))
-        //    return;
+    if (m_MeshDesc.bDistortion) {
+        if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_NONLIGHT, shared_from_this())))
+            return;
 
         if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_DISTORTION, shared_from_this())))
             return;
@@ -124,6 +124,10 @@ void CEffectMesh::LateTick(_float _fTimeDelta)
 
 HRESULT CEffectMesh::Render()
 {
+
+    m_pTransformCom->SetScaling(m_vCurrentScale.m128_f32[0],
+        m_vCurrentScale.m128_f32[1],
+        m_vCurrentScale.m128_f32[2]);
  
     _float4x4 ViewMat = CGameInstance::GetInstance()->GetTransformFloat4x4(CPipeLine::D3DTS_VIEW);
 
@@ -366,6 +370,10 @@ HRESULT CEffectMesh::RenderDistortion(shared_ptr<class CShader> _pShader)
 {
     m_fDistortionTimer += m_fTimeDelta;
 
+    m_pTransformCom->SetScaling(m_vCurrentScale.m128_f32[0] * m_MeshDesc.fDistortionScale,
+        m_vCurrentScale.m128_f32[1] * m_MeshDesc.fDistortionScale,
+        m_vCurrentScale.m128_f32[2] * m_MeshDesc.fDistortionScale);
+
     _float4x4 ViewMat = CGameInstance::GetInstance()->GetTransformFloat4x4(CPipeLine::D3DTS_VIEW);
 
     if (FAILED(m_pShader->BindMatrix("g_ViewMatrix", &ViewMat)))
@@ -483,6 +491,7 @@ HRESULT CEffectMesh::RenderDistortion(shared_ptr<class CShader> _pShader)
 
     if (FAILED(_pShader->BindRawValue("g_fDistortionTime", &m_fDistortionTimer, sizeof(_float))))
         return E_FAIL;
+
 
 
     return S_OK;

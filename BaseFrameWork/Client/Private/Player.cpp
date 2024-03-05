@@ -614,7 +614,7 @@ void CPlayer::CheckTimer(_float _fTimeDelta)
 {
     //버스트모드일때
     //여기서 버스트 게이지 차감 
-   if (m_bBurstMode) {
+   /*if (m_bBurstMode) {
         m_fBurstAccTime += _fTimeDelta;
         m_fBurstGage -= 3.f;
 
@@ -632,7 +632,7 @@ void CPlayer::CheckTimer(_float _fTimeDelta)
             m_pPlayerSkillset->SetBurstMode(false);
 
         }
-    }
+    }*/
 
 
     //스킬 게이지 체크 
@@ -1293,15 +1293,35 @@ void CPlayer::KeyInput(_float _fTimeDelta)
       //  CCameraMgr::GetInstance()->SwitchingCamera(CCameraMgr::ECAMERATYPE::FREE);
     }
 
-    if (GetKeyState('6') & 0x8000) {
 
 
-       // m_pTransformCom->SetState(CTransform::STATE_POSITION, { 5.f , 40.f, -300.f, 1.f });
-        //m_pNavigationCom->CalcCurrentPos({ 5.f , 40.f, -300.f, 1.f });
-
+    if (CGameInstance::GetInstance()->Key_Down('6')) {
         m_pTransformCom->SetState(CTransform::STATE_POSITION, { -1.5f, 40.f, -365.f, 1.f });
         m_pNavigationCom->CalcCurrentPos({ 0.f, 40.f, -380.f, 1.f });
     }
+
+
+    //if (GetKeyState('6') & 0x8000) {
+
+
+    //   // m_pTransformCom->SetState(CTransform::STATE_POSITION, { 5.f , 40.f, -300.f, 1.f });
+    //    //m_pNavigationCom->CalcCurrentPos({ 5.f , 40.f, -300.f, 1.f });
+
+    //    m_pTransformCom->SetState(CTransform::STATE_POSITION, { -1.5f, 40.f, -365.f, 1.f });
+    //    m_pNavigationCom->CalcCurrentPos({ 0.f, 40.f, -380.f, 1.f });
+    //}
+
+    if (CGameInstance::GetInstance()->Key_Down('7')) {
+        m_pTransformCom->SetState(CTransform::STATE_POSITION, { 0.f, 27.f, -140.f , 1.f });
+        m_pNavigationCom->CalcCurrentPos({ 0.f, 27.f, -140.f , 1.f });
+    }
+
+    //if (GetKeyState('7') & 0x8000) {
+
+
+    //    m_pTransformCom->SetState(CTransform::STATE_POSITION, { 0.f, 27.f, -140.f , 1.f });
+    //    m_pNavigationCom->CalcCurrentPos({ 0.f, 40.f, -380.f, 1.f });
+    //}
 
     if(CGameInstance::GetInstance()->Key_Down('5')) {
         CGameInstance::GetInstance()->SetDebugOnOff();

@@ -37,6 +37,9 @@ public:
 
 		_float fScaleChangeTime;
 		_float3 vRotation;
+
+		_bool bDistortion;
+		_float fDistortionScale;
 	};
 
 

@@ -68,16 +68,14 @@ void CSkill_BurstR::PriorityTick(_float _fTimeDelta)
 
 void CSkill_BurstR::Tick(_float _fTimeDelta)
 {
+    //if (!m_bShaking) {
 
-    m_fAccTime += _fTimeDelta;
-    if (!m_bShaking) {
+    //    if (m_fAccTime >= 2.5f) {
+    //        CCameraMgr::GetInstance()->SetShakingMode(15.f, 0.1f, true);
+    //        m_bShaking = true;
+    //    }
 
-        if (m_fAccTime >= 2.5f) {
-            CCameraMgr::GetInstance()->SetShakingMode(15.f, 0.1f, true);
-            m_bShaking = true;
-        }
-
-    }
+    //}
 
     m_fAccTime += _fTimeDelta;
 

@@ -245,16 +245,27 @@ PS_OUT PS_DISTORTION(PS_IN In)
     vector vBackBuffer = g_BackBufferTexture.Sample(g_LinearSampler, In.vTexcoord);
    
 
-     float2 vTransUV = In.vTexcoord + g_fDistortionTime * g_fDistortionSpeed;
+    float2 vTransUV = In.vTexcoord + g_fDistortionTime * g_fDistortionSpeed;
 
-     vector vNoiseTex = g_NoiseTexture.Sample(g_LinearSampler, vTransUV);
-     float2 vUV = In.vTexcoord + vNoiseTex.r * 0.05f;
-     float2 fWeight = lerp(In.vTexcoord, vUV, 1 / 100);
+    vector vNoiseTex = g_NoiseTexture.Sample(g_LinearSampler, vTransUV);
+    float2 vUV = In.vTexcoord + vNoiseTex.r * 0.05f;
     
-    vector vDistorBuffer = g_DistortionTex.Sample(g_LinearSampler, vUV);
+     float2 fWeight = lerp(In.vTexcoord, vUV, 0.5f);
+    vector vDistorBuffer;
+    
+    if (vDistortionColor.r > 0.f)
+    {
+        vDistorBuffer = g_BackBufferTexture.Sample(g_LinearSampler, fWeight);
+ 
+    }
+    else
+    {
+        vDistorBuffer = g_BackBufferTexture.Sample(g_LinearSampler, In.vTexcoord);
 
+    }
     
-    Out.vColor = vBackBuffer + vDistorBuffer;
+    //vBackBuffer + 
+    Out.vColor = vDistorBuffer;
     
     return Out;
 }

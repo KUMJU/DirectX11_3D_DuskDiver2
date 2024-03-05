@@ -70,7 +70,8 @@ void CEffectParticle::LateTick(_float _fTimeDelta)
     if (m_IsEnabled == false)
         return;
 
-
+    if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_NONLIGHT, shared_from_this())))
+        return;
 
     if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_GLOW, shared_from_this())))
         return;

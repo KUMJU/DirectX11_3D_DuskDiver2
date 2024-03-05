@@ -60,7 +60,7 @@
 			{
 				"Speed" : 0.0,
 				"TexKey" : "txt_fx_underwater_caustic",
-				"Using" : true,
+				"Using" : false,
 				"x" : 0.0,
 				"y" : 0.0
 			},

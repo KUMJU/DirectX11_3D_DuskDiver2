@@ -957,7 +957,7 @@
       <Filter>02. GameObject\06. EventTrigger\03. CutSceneTrigger\BossEvent</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\BossSkill1.cpp">
-      <Filter>02. GameObject\05. Skill\01. MonsterSkill\03. Skill_FinalBoss</Filter>
+      <Filter>02. GameObject\05. Skill\01. MonsterSkill\03. Skill_FinalBoss\Skill1</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

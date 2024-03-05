@@ -272,8 +272,8 @@ HRESULT CArcadeMap::ReadyLayerEvent(const wstring& _strLayerTag)
 
 	/*코인 이벤트 트리거*/
 
-	shared_ptr<CSceneTriggerCoin> pTrigger3 = CSceneTriggerCoin::Create({ 0.f, 27.f, -140.f });
-	CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pTrigger3);
+	//shared_ptr<CSceneTriggerCoin> pTrigger3 = CSceneTriggerCoin::Create({ 0.f, 27.f, -140.f });
+	//CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pTrigger3);
 
 	shared_ptr<CSceneTriggerBear> pTrigger4 = CSceneTriggerBear::Create({ -87.f , 43.f, -87.f });
 	CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pTrigger4);

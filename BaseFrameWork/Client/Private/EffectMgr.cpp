@@ -284,6 +284,40 @@ void CEffectMgr::ReadData(const wstring& _strFullPath, const wstring& _strKeyNam
             ElementKey["LerpColor"]["z"].asFloat(),
             1.f };
 
+            desc.bDistortion = false;
+            desc.fDistortionScale = 1.f;
+
+            /*Distortion*/
+
+            if (keyName == "OutSideBall") {
+
+                desc.bDistortion = true;
+                desc.fDistortionScale = 2.4f;
+
+            }
+
+            if(keyName ==  "BlastWind1") {
+
+                desc.bDistortion = true;
+                desc.fDistortionScale = 5.f;
+            }
+
+
+            if (keyName == "BlastWind2") {
+
+                desc.bDistortion = true;
+                desc.fDistortionScale = 5.f;
+            }
+
+            if (keyName == "ScreamWind") {
+
+                desc.bDistortion = true;
+                desc.fDistortionScale = 1.1f;
+            }
+
+
+
+
             shared_ptr<CEffectMesh> pMeshEffect = CEffectMesh::Create(szMeshName, &desc, const_cast<char*>(keyName.c_str()), bLoop);
             pPreset->AddEffect(pMeshEffect);
             pMeshEffect->SetEnable(false);

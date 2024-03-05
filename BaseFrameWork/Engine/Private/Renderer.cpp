@@ -559,10 +559,10 @@ HRESULT CRenderer::RenderDistortion()
 		if (FAILED(m_pPostProcessShader->BindRawValue("g_fScreenHeight", &m_fScreenHeight, sizeof(_float))))
 			return E_FAIL;
 
-		shared_ptr<CTexture> pTexture = CGameInstance::GetInstance()->GetTexture(TEXT("water"));
+		shared_ptr<CTexture> pTexture = CGameInstance::GetInstance()->GetTexture(TEXT("T_Luminous_Swirl_0004_3"));
 		pTexture->BindShaderResource(m_pPostProcessShader, "g_NoiseTexture", 0);
 
-		float fSpeed = 3.f;
+		float fSpeed = 1.f;
 		if (FAILED(m_pPostProcessShader->BindRawValue("g_fDistortionSpeed", &fSpeed, sizeof(_float))))
 			return E_FAIL;
 
