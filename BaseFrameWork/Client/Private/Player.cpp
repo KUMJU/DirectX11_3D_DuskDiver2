@@ -134,6 +134,33 @@ void CPlayer::PriorityTick(_float _fTimeDelta)
 
 void CPlayer::Tick(_float _fTimeDelta)
 {
+    if (m_eCurrentState == HEROSTATE::STATE_WALK) {
+
+        m_fStepSoundTime += _fTimeDelta;
+
+
+        if (m_bDash) {
+            if (m_fStepSoundTime > 0.25f) {
+                m_fStepSoundTime = 0.f;
+
+
+                CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_WALK_SE);
+                CGameInstance::GetInstance()->PlayAudio(TEXT("se_flat_step_s_asphalt_10.wav"), CSoundMgr::CHANNELID::CH_PLR_WALK_SE, 3.f);
+            }
+        }
+        else {
+            if (m_fStepSoundTime > 0.4f) {
+                m_fStepSoundTime = 0.f;
+
+
+                CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_WALK_SE);
+                CGameInstance::GetInstance()->PlayAudio(TEXT("se_flat_step_s_asphalt_10.wav"), CSoundMgr::CHANNELID::CH_PLR_WALK_SE, 3.f);
+            }
+        }
+
+    }
+
+
     if (m_bSuperArmor) {
        
         m_fSuperArmorTime += _fTimeDelta;
@@ -321,6 +348,11 @@ void CPlayer::LateTick(_float _fTimeDelta)
                    m_bDrop = false;
                    m_fJumpDelay = 0.f;
                    m_fWeight = 1.f;
+
+                   CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_WALK_SE);
+                   CGameInstance::GetInstance()->PlayAudio(TEXT("se_flat_Landing_s_asphalt_01.wav"), CSoundMgr::CHANNELID::CH_PLR_WALK_SE, 1.f);
+
+
                    ChangeAnim(53, false);
                }
            }
@@ -768,11 +800,9 @@ void CPlayer::CheckReserveAnimList()
 
             if (m_bDash) {
                 m_eCurrentState = HEROSTATE::STATE_WALK;
-                m_eCurrentState = HEROSTATE::STATE_WALK;
                 ChangeAnim(80, true);
             }
             else {
-                //IDLE로 돌아감
                 m_eCurrentState = HEROSTATE::STATE_WALK;
                 ChangeAnim(59, true);
             }
@@ -1243,6 +1273,8 @@ void CPlayer::KeyInput(_float _fTimeDelta)
             m_pDashPreset->PlayEffect();
             FinalAnimNum = 81;
 
+            CGameInstance::GetInstance()->SetZoomBlurOn(30.f, 0.1f);
+
             CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_FX);
             CGameInstance::GetInstance()->PlayAudio(TEXT("se_ba_dash_h_01.wav"), CSoundMgr::CHANNELID::CH_PLR_FX, 1.f);
 
@@ -1369,6 +1401,10 @@ void CPlayer::MouseInput(_float _fTimeDelta)
         if (m_bJump) {
             m_NextAnimIndex.clear();
             if (ChangeAnim(3, false)) {
+
+                CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
+                CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_08.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
+
                 m_bJump = true;
                 m_eCurrentState = HEROSTATE::STATE_HEAVY_ATTACK;
                 m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_AIRHEAVY);
@@ -1378,6 +1414,11 @@ void CPlayer::MouseInput(_float _fTimeDelta)
 
         }
         else {
+            
+            CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
+            CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_06.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
+
+
             m_eCurrentState = HEROSTATE::STATE_HEAVY_ATTACK;
             if (ChangeAnim(35, false)) {
                 m_eCurrentState = HEROSTATE::STATE_HEAVY_ATTACK;
@@ -1405,11 +1446,17 @@ void CPlayer::MouseInput(_float _fTimeDelta)
             {
             case Client::CPlayer::HEROSTATE::STATE_COMBO_ATTACK1:
                 m_fMinComboAnimTime = 0.3f;
+
+                CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
+                CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_03.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
                 m_NextAnimIndex.push_back({ 1 , false });
                 m_bReserveCombo = true;
                 break;
             case Client::CPlayer::HEROSTATE::STATE_COMBO_ATTACK2:
                 m_fMinComboAnimTime = 0.3f;
+
+                CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
+                CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_07.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
                 m_NextAnimIndex.push_back({ 2 , false });
                 m_fJumpSpeed = 10.f;
                 m_bReserveCombo = true;
@@ -1427,6 +1474,10 @@ void CPlayer::MouseInput(_float _fTimeDelta)
                  m_fMinComboAnimTime = 0.3f;
                  m_eCurrentState = HEROSTATE::STATE_COMBO_ATTACK1;
                  m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_AIRATK1);
+
+                 CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
+                 CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_02.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
+
                  m_bComboAttackStart = true;
                 }
                 break;
@@ -1658,6 +1709,8 @@ void CPlayer::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _
     else if (EObjType::OBJ_PROJ == _eObjType) {
  
 
+
+
         if (!m_pPlayerSkillset->CheckHitEnable()) {
             return;
         }
@@ -1674,6 +1727,30 @@ void CPlayer::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _
         StateReset();
         ChangeAnim(100, false);
         //100
+
+        /*사운드*/
+        _int iVoiceIdx = rand() % 3;
+
+        if (0 == iVoiceIdx) {
+            CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
+            CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_16.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
+
+        }
+        else if (1 == iVoiceIdx) {
+            CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
+            CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_19.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
+
+        }
+        else if (2 == iVoiceIdx) {
+            CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
+            CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_20.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
+        }
+
+        /**/
+
+
+        CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_FX);
+        CGameInstance::GetInstance()->PlayAudio(TEXT("flesh_hit_02.wav"), CSoundMgr::CHANNELID::CH_PLR_FX, 1.f);
 
         shared_ptr<CSkill> pSkill = dynamic_pointer_cast<CSkill>(_pCollider->GetOwner());
 
@@ -1851,7 +1928,6 @@ HRESULT CPlayer::RenderTrail()
 
 void CPlayer::OnHit(_float _fTimeDelta)
 {
-
     _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
     _vector vLook = m_pTransformCom->GetState(CTransform::STATE_LOOK);
 

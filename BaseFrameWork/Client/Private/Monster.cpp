@@ -421,8 +421,11 @@ void CMonster::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> 
         m_fGweight = pSkill->GetGravityWeight();
         m_bDrop = pSkill->GetIsDropAttack();
 
+        wstring strHitSound = pSkill->GetHitSound();
+        _float fHitVol = pSkill->GetHitVolume();
+
         CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MON);
-        CGameInstance::GetInstance()->PlayAudio(TEXT("flesh_hit_02.wav"), CSoundMgr::CHANNELID::CH_MON, 0.7f);
+        CGameInstance::GetInstance()->PlayAudio(strHitSound.c_str(), CSoundMgr::CHANNELID::CH_MON, fHitVol);
 
         _int iDamage = pSkill->GetDamage();
 

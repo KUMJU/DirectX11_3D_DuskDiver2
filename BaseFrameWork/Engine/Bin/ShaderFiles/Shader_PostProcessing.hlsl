@@ -25,6 +25,12 @@ texture2D g_GlowTexture;
 float g_fScreenWidth;
 float g_fScreenHeight;
 
+/*줌 블러*/
+
+float g_fFocusPow = 40.f;
+float2 g_fFocusCenter;
+uint g_iFocusDetail = 5;
+
 //외곽선 검출용 라플라시안 필터
 float g_fLaplacianMask[9] =
 {
@@ -162,6 +168,7 @@ PS_OUT PS_TEST(PS_IN In)
 
 }
 
+
 PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
@@ -172,6 +179,31 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vColor = vBackBufferCol + vBlendCol;
     
 	return Out;
+}
+
+
+PS_OUT PS_ZOOMBLUR(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    float2 vFocusPosition = float2(g_fFocusCenter.x / 2, g_fFocusCenter.y / 2);
+    vFocusPosition.x /= g_fScreenWidth;
+    vFocusPosition.y /= g_fScreenHeight;
+    
+    float2 vFocus = In.vTexcoord - vFocusPosition;
+    
+    for (uint i = 0; i < g_iFocusDetail; ++i)
+    {
+        float fScale = 1.f - g_fFocusPow * (1.f / g_fScreenWidth) * float(i);
+        Out.vColor.rgb += g_BackBufferTexture.Sample(g_LinearSampler, fScale * vFocus + vFocusPosition).rgb;
+        
+    }
+    
+    Out.vColor.rgb *= 1.0 / float(g_iFocusDetail);
+    
+    return Out;
+
+
 }
 
 PS_OUT PS_BLUR_HORIZONTAL(PS_IN In)
@@ -187,11 +219,14 @@ PS_OUT PS_BLUR_HORIZONTAL(PS_IN In)
     {
         UVPos = In.vTexcoord + float2(fPixelSize * i, 0);
         Out.vColor += g_fWeight[6 + i] * g_GlowTexture.Sample(g_LinearSampler, UVPos);   
+        
+        
     }
     
     Out.vColor /= g_fWeightTotal;
-    Out.vColor.a = 0.3f;
+    Out.vColor.a = 0.7f;
 
+    
     return Out;
 
 }
@@ -201,7 +236,7 @@ PS_OUT PS_BLUR_VERTICAL(PS_IN In)
     PS_OUT Out = (PS_OUT) 0;
     
     vector vOriginColor = g_GlowTexture.Sample(g_LinearSampler, In.vTexcoord);
-    float fPixelSize = 1.f / (g_fScreenHeight / 2.f);
+    float fPixelSize = 1.f / g_fScreenHeight;
     
     float2 UVPos = 0;
     
@@ -212,7 +247,7 @@ PS_OUT PS_BLUR_VERTICAL(PS_IN In)
     }
     
     Out.vColor /= g_fWeightTotal;
-    Out.vColor.a = 0.3f;
+    Out.vColor.a = 0.7f;
     
     return Out;
 
@@ -391,6 +426,17 @@ technique11	DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_DISTORTION();
+    }
+
+    pass ZoomBlur //7
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None_ZTestAndWrite, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_ZOOMBLUR();
     }
 
 }

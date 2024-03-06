@@ -19,6 +19,8 @@ public:
 	virtual void Tick(_float _fTimeDelta, _matrix _ParentMat = XMMatrixIdentity());
 	virtual void LateTick(_float _fTimeDelta);
 	virtual HRESULT Render();
+	virtual HRESULT RenderGlow(shared_ptr<CShader> _pShader);
+
 
 private:
 	shared_ptr<CVIBufferPoint> m_pVIBufferCom = nullptr;

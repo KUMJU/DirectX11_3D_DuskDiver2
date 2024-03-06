@@ -6,6 +6,8 @@
 
 #include "EffectPreset.h"
 
+#include "CameraMgr.h"
+
 CSkillQ::CSkillQ()
 {
 }
@@ -27,6 +29,8 @@ HRESULT CSkillQ::Initialize()
 
     m_eSkillOwner = EOWNER_TYPE::OWNER_PLAYER;
 
+    m_pParticlePreset = CEffectMgr::GetInstance()->FindEffect(TEXT("ParticleBase"));
+    CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Effect"), m_pParticlePreset);
 
     SKILLINFO info = {};
 
@@ -38,6 +42,7 @@ HRESULT CSkillQ::Initialize()
     info.iEndTrackPosition = 35.f;
     info.CancleAbleRatio = 0.2;
     info.strHitSound = TEXT("se_HE01_Skill01_2.wav");
+    info.fHitVolume = 1.4f;
 
     shared_ptr<CCollider> pCollider = CCollider::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), CCollider::TYPE_SPHERE, normalAtkDesc);
     pCollider->SetOwner(shared_from_this());
@@ -72,6 +77,26 @@ void CSkillQ::Tick(_float _fTimeDelta)
     }
 
    
+    if (m_fAccTime >= 0.6f && !m_bSetTimer) {
+
+        CGameInstance::GetInstance()->SetTimerOffset(TEXT("Timer_60"), 0.5f);
+        m_bSetTimer = true;
+
+
+    }
+
+    if (m_fAccTime >= 0.67f && !m_bFinTimer) {
+        CGameInstance::GetInstance()->SetTimerOffset(TEXT("Timer_60"), 1.f);
+        CCameraMgr::GetInstance()->SetBattleZoom(0.15f, 90.f);
+
+        _vector vLook = m_pOwnerTransform->GetState(CTransform::STATE_LOOK);
+        _vector vParticlePos = m_pOwnerTransform->GetState(CTransform::STATE_POSITION) + vLook + _vector({ 0.f, 0.5f, 0.f });
+
+        m_pParticlePreset->SetEffectPosition(vParticlePos);
+        m_pParticlePreset->PlayEffect();
+        m_bFinTimer = true;
+    }
+
 }
 
 void CSkillQ::LateTick(_float _fTimeDelta)
@@ -86,6 +111,11 @@ HRESULT CSkillQ::Render()
 
 	return S_OK;
 }
+
+void CSkillQ::EndSkill()
+{
+}
+
 
 shared_ptr<CSkillQ> CSkillQ::Create()
 {

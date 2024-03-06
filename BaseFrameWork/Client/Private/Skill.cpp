@@ -165,13 +165,16 @@ void CSkill::SetOwnerTransform(shared_ptr<CTransform> _pOwnerTransform) {
 	}
 
 	if (m_pParticlePreset) {
-		m_pParticlePreset->SetParentTransform(_pOwnerTransform);
+		//m_pParticlePreset->SetParentTransform(_pOwnerTransform);
 	}
 
 }
 
 void CSkill::ActiveSkill()
 {
+
+	m_fAccTime = 0.f;
+
 	if (!m_IsBasicCombat && EOWNER_TYPE::OWNER_PLAYER == m_eSkillOwner) {
 
 		CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_SKILLTRIGER);
@@ -196,6 +199,8 @@ void CSkill::SkillReset()
 	m_fAccTime = 0.f;
 	bVoiceDone = false;
 	bSkillSeDone = false;
+	m_bSetTimer = false;
+	m_bFinTimer = false;
 
 	if (m_pEffectPreset) {
 		m_pEffectPreset->StopEffect();

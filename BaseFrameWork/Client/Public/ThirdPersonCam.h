@@ -84,8 +84,22 @@ public:
 	void SetPositionLerpMove(_vector _vPos, _float _fAccTime);
 	void SetLerpMoveComeBack(_float _fAccTime);
 
+
+public:
+	void SetBattleCamFovLerp(_float _fTotalAccTime, _float _fDstFov);
+
+
 private:
 	_bool m_bLerpStart = false;
+	 
+//¿¸≈ıƒ´∏ﬁ∂Û ¡‹¿Œ&¡‹æ∆øÙ
+private:
+	_bool m_bBattleZoom = false;
+
+	_float m_fZoomTotalTime = 0.f;
+	_float m_fDstFov = 0.f;
+
+	_float m_fDiffFovPerTick = 0.f;
 
 
 private:

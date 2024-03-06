@@ -18,10 +18,10 @@ HRESULT CEffectTestModel::Initialize(CTransform::TRANSFORM_DESC* _pDesc)
 	if (FAILED(__super::Initialize(&TransformDesc)))
 		return E_FAIL;
 
-	m_pModel = CGameInstance::GetInstance()->GetModel(TEXT("FinalBoss"));
+	//m_pModel = CGameInstance::GetInstance()->GetModel(TEXT("FinalBoss"));
 	
 	//Player
-	//m_pModel = CGameInstance::GetInstance()->GetModel(TEXT("Hero1_BattleMode_3Anim"));
+	m_pModel = CGameInstance::GetInstance()->GetModel(TEXT("Hero1_BattleMode_3Anim"));
 	m_pShader = CGameInstance::GetInstance()->GetShader(TEXT("Shader_VtxAnim"));
 	
 	m_pModel->ChangeAnimation(1);

@@ -79,6 +79,7 @@ public:
 	HRESULT AddUIRenderGroup(shared_ptr<class CGameObject> _pGameObject, CRenderer::UIGROUP _eUIGroup);
 
 	void SetDebugOnOff();
+	void SetZoomBlurOn(_float _fZoomBlurPow, _float _fZoomBlurTime);
 
 /*Picking*/
 public:

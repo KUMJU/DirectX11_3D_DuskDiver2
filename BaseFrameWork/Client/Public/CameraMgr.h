@@ -42,6 +42,10 @@ public:
 public:
 	void SwitchDefaultCamMode(CThirdPersonCam::ECAMSTATE _eCamState);
 
+
+public:
+	void SetBattleZoom(_float _fAccTime, _float _fDstFov);
+
 public:
 	void SetShakingMode(_float _fShakingPow, _float _fShakingTime, _bool m_bXDir);
 	void SetFov(_float _fFov);

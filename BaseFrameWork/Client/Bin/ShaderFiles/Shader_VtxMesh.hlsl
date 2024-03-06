@@ -37,6 +37,11 @@ bool g_bRimLight = false;
 float3 g_vRimColor;
 float4 g_vCamLook;
 
+/*Glow*/
+bool g_bGlow = false;
+float g_fGlowPower = 0.f;
+float g_fGlowAlpha = 1.f;
+
 
 struct VS_IN
 {

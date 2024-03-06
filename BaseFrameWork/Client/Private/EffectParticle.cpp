@@ -130,6 +130,54 @@ HRESULT CEffectParticle::Render()
     return S_OK;
 }
 
+HRESULT CEffectParticle::RenderGlow(shared_ptr<CShader> _pShader)
+{
+    _matrix WorldOwnMatrix = m_pTransformCom->GetWorldMatrix();
+    _float4x4 FloatWorld;
+
+    WorldOwnMatrix.r[3] += m_vParentPos;
+    WorldOwnMatrix = WorldOwnMatrix * m_ParentMat;
+
+    XMStoreFloat4x4(&FloatWorld, WorldOwnMatrix);
+
+    if (FAILED(m_pShader->BindMatrix("g_WorldMatrix", &FloatWorld)))
+        return E_FAIL;
+
+    _float4x4 ViewMat = CGameInstance::GetInstance()->GetTransformFloat4x4(CPipeLine::D3DTS_VIEW);
+
+    if (FAILED(m_pShader->BindMatrix("g_ViewMatrix", &ViewMat)))
+        return E_FAIL;
+
+    _float4x4 ProjMat = CGameInstance::GetInstance()->GetTransformFloat4x4(CPipeLine::D3DTS_PROJ);
+
+    if (FAILED(m_pShader->BindMatrix("g_ProjMatrix", &ProjMat)))
+        return E_FAIL;
+
+    _float4 CamPos = CGameInstance::GetInstance()->GetCamPosition();
+
+    if (FAILED(m_pShader->BindRawValue("g_vCamPosition", &CamPos, sizeof(_float4))))
+        return E_FAIL;
+
+    _float4 vGlowColor = _float4(0.38, 1.0, 0.98, 1.f);
+        
+    if (FAILED(m_pShader->BindRawValue("g_vGlowColor", &vGlowColor, sizeof(_float4))))
+        return E_FAIL;
+
+    if (FAILED(m_pTexture->BindShaderResource(m_pShader, "g_Texture", 0)))
+        return E_FAIL;
+
+    if (FAILED(m_pShader->Begin(1)))
+        return E_FAIL;
+
+    if (FAILED(m_pVIBufferCom->Bind_Buffers()))
+        return E_FAIL;
+
+    if (FAILED(m_pVIBufferCom->Render()))
+        return E_FAIL;
+
+    return S_OK;
+}
+
 void CEffectParticle::ResetEffect()
 {
     m_bSetParentMat = false;

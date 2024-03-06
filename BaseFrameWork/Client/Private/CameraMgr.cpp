@@ -111,6 +111,15 @@ void CCameraMgr::SwitchDefaultCamMode(CThirdPersonCam::ECAMSTATE _eCamState)
 	m_pDefualtCam->SwitchingCamMode(_eCamState);
 }
 
+void CCameraMgr::SetBattleZoom(_float _fAccTime, _float _fDstFov)
+{
+	if (!m_pDefualtCam)
+		return;
+
+	m_pDefualtCam->SetBattleCamFovLerp(_fAccTime, _fDstFov);
+
+}
+
 void CCameraMgr::SetShakingMode(_float _fShakingPow, _float _fShakingTime, _bool m_bXDir)
 {
 	if (ECAMERATYPE::THIRDPERSON != m_eCurrentCamType)

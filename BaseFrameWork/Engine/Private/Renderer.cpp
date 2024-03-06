@@ -188,6 +188,9 @@ HRESULT CRenderer::Render()
 	if (FAILED(RenderDistortion()))
 		return E_FAIL;
 
+	if (FAILED(RenderZoomBlur()))
+		return E_FAIL;
+
 	if (FAILED(RenderUI()))
 		return E_FAIL;
 
@@ -212,6 +215,14 @@ HRESULT CRenderer::AddDebugComponent(shared_ptr<class CComponent> _pComponent)
 	m_DebugCom.push_back(_pComponent);
 
 	return S_OK;
+}
+void CRenderer::SetZoomBlur(_float _fZoomPower, _float _fZoomAccTime)
+{
+	m_fZoomBlurPower = _fZoomPower;
+	m_bZoomBlur = true;
+	m_fBlurAccTime = 0.f;
+	m_fBlurTotalTime = _fZoomAccTime;
+
 }
 #endif // _DEBUG
 
@@ -559,7 +570,7 @@ HRESULT CRenderer::RenderDistortion()
 		if (FAILED(m_pPostProcessShader->BindRawValue("g_fScreenHeight", &m_fScreenHeight, sizeof(_float))))
 			return E_FAIL;
 
-		shared_ptr<CTexture> pTexture = CGameInstance::GetInstance()->GetTexture(TEXT("T_Luminous_Swirl_0004_3"));
+		shared_ptr<CTexture> pTexture = CGameInstance::GetInstance()->GetTexture(TEXT("T_GPBAR_Inky_smoke"));
 		pTexture->BindShaderResource(m_pPostProcessShader, "g_NoiseTexture", 0);
 
 		float fSpeed = 1.f;
@@ -592,6 +603,38 @@ HRESULT CRenderer::RenderDistortion()
 	}
 
 	m_RenderObjects[RENDER_DISTORTION].clear();
+
+	return S_OK;
+}
+
+HRESULT CRenderer::RenderZoomBlur()
+{
+	if (!m_bZoomBlur)
+		return S_OK;
+
+
+	m_fBlurAccTime += CGameInstance::GetInstance()->ComputeTimeDelta(TEXT("Timer_60"));
+
+	_float2 vFocusCenter = _float2(m_fScreenWidth, m_fScreenHeight);
+
+	if (FAILED(m_pPostProcessShader->BindRawValue("g_fFocusCenter", &vFocusCenter, sizeof(_float2))))
+		return E_FAIL;
+
+	if (FAILED(m_pPostProcessShader->BindRawValue("g_fFocusPow", &m_fZoomBlurPower, sizeof(_float))))
+		return E_FAIL;
+
+	if (FAILED(CGameInstance::GetInstance()->BindBackBufferSRV(m_pPostProcessShader, "g_BackBufferTexture")))
+		return E_FAIL;
+
+	m_pPostProcessShader->Begin(7);
+	m_pVIBuffer->BindBuffers();
+	m_pVIBuffer->Render();
+
+	if (m_fBlurAccTime >= m_fBlurTotalTime) {
+		m_fBlurAccTime = 0.f;
+		m_bZoomBlur = false;
+	}
+
 
 	return S_OK;
 }

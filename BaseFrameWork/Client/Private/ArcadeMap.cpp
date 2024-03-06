@@ -215,16 +215,6 @@ HRESULT CArcadeMap::ReadyLayerMap(const wstring& _strLayerTag)
 	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pPortal)))
 		return E_FAIL;
 
-	/******몬스터 트리거 테스트(중간보스)*******/
-
-	/*list<CMonsterPool::SPAWN_INFO> SpawnList;
-	CMonsterPool::SPAWN_INFO info1 = {};
-	info1.iMonsterType = 3;
-	info1.vMonsterPos = _vector({ 0.f, 39.5f, -425.f });
-	SpawnList.push_back(info1);
-
-	shared_ptr<CMonsterTrigger> pTrigger = CMonsterTrigger::Create(&SpawnList, { 0.f, 40.f, -380.f });
-	CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Event"), pTrigger);*/
 
 
 	return S_OK;
@@ -278,7 +268,7 @@ HRESULT CArcadeMap::ReadyLayerEvent(const wstring& _strLayerTag)
 	shared_ptr<CSceneTriggerBear> pTrigger4 = CSceneTriggerBear::Create({ -87.f , 43.f, -87.f });
 	CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pTrigger4);
 
-	shared_ptr<CSceneTriggerBoss> pTrigger5 = CSceneTriggerBoss::Create({ 2.f, 40.f, -378.f });
+	shared_ptr<CSceneTriggerBoss> pTrigger5 = CSceneTriggerBoss::Create({ 0.f, 40.f, -378.f });
 	CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pTrigger5);
 
 	return S_OK;

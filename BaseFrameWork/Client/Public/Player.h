@@ -230,6 +230,7 @@ private:
 	_bool m_IsLoopMotion = false;
 	_float m_fCurLoopTime = 0.f;
 
+	_float m_fStepSoundTime = 0.f;
 private:
 	void ResetComboState();
 

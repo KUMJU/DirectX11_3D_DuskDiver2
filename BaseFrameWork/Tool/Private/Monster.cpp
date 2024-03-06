@@ -320,6 +320,7 @@ void CMonster::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> 
             //m_iLastHitIndex = pSkill->GetSkillIndex();
            // m_iCurrentSkillOrderIndex = pSkill->GetCurrentOrder();
 
+
             CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MON);
             CGameInstance::GetInstance()->PlayAudio(TEXT("flesh_hit_02.wav"), CSoundMgr::CHANNELID::CH_MON, 0.7f);
 
@@ -395,6 +396,7 @@ void CMonster::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> 
         m_fKnockUpSpeed = pSkill->GetKnokUpDistance();
         m_fGweight = pSkill->GetGravityWeight();
         m_bDrop = pSkill->GetIsDropAttack();
+
 
         CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MON);
         CGameInstance::GetInstance()->PlayAudio(TEXT("flesh_hit_02.wav"), CSoundMgr::CHANNELID::CH_MON, 0.7f);

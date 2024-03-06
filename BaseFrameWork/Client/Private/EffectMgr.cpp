@@ -316,6 +316,24 @@ void CEffectMgr::ReadData(const wstring& _strFullPath, const wstring& _strKeyNam
             }
 
 
+            if (keyName == "BackWind") {
+
+                desc.bDistortion = true;
+                desc.fDistortionScale = 2.f;
+            }
+
+            if (keyName == "AroundWind") {
+
+                desc.bDistortion = true;
+                desc.fDistortionScale = 2.f;
+            }
+
+
+            if (keyName == "SpinWind") {
+
+                desc.bDistortion = true;
+                desc.fDistortionScale = 2.f;
+            }
 
 
             shared_ptr<CEffectMesh> pMeshEffect = CEffectMesh::Create(szMeshName, &desc, const_cast<char*>(keyName.c_str()), bLoop);

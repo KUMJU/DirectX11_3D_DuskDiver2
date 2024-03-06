@@ -17,7 +17,6 @@ public:
 	virtual HRESULT Render();
 
 private:
-	_float m_fAccTime = 0.f;
 	_bool m_bShaking = false;
 
 public:

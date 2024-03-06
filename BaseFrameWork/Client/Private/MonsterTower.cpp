@@ -82,6 +82,7 @@ void CMonsterTower::LateTick(_float _fTimeDelta)
 {
 	__super::LateTick(_fTimeDelta);
 
+	CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_GLOW, shared_from_this());
 
 
 #ifdef _DEBUG
@@ -127,8 +128,51 @@ HRESULT CMonsterTower::Render()
 		return E_FAIL;
 
 
-	const LIGHT_DESC* pLightDesc = CGameInstance::GetInstance()->GetLightDesc(0);
-	if (nullptr == pLightDesc)
+	for (size_t i = 0; i < iNumMeshes; i++) {
+
+
+		if (FAILED(m_pRingModel->BindMaterialShaderResource(m_pShader, (_uint)i, aiTextureType::aiTextureType_DIFFUSE, "g_DiffuseTexture")))
+			return E_FAIL;
+
+		if (FAILED(m_pShader->Begin(1)))
+			return E_FAIL;
+
+		if (FAILED(m_pRingModel->Render((_uint)i)))
+			return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+HRESULT CMonsterTower::RenderGlow(shared_ptr<class CShader> _pShader)
+{
+
+	_uint iNumMeshes = m_pRingModel->GetNumMeshes();
+
+	if (FAILED(m_pRingTransform->BindShaderResource(m_pShader, "g_WorldMatrix")))
+		return E_FAIL;
+
+	_float4x4 ViewMat = CGameInstance::GetInstance()->GetTransformFloat4x4(CPipeLine::D3DTS_VIEW);
+
+	if (FAILED(m_pShader->BindMatrix("g_ViewMatrix", &ViewMat)))
+		return E_FAIL;
+
+	_float4x4 ProjMat = CGameInstance::GetInstance()->GetTransformFloat4x4(CPipeLine::D3DTS_PROJ);
+
+	if (FAILED(m_pShader->BindMatrix("g_ProjMatrix", &ProjMat)))
+		return E_FAIL;
+
+	_float4 vColor;
+
+	//타워 활성화
+	if (m_IsActived) {
+		vColor = { 0.9f, 0.4f, 0.6f , 1.f };
+	}
+	else {
+		vColor = { 0.6f, 0.6f, 0.2f, 1.f };
+	}
+
+	if (FAILED(m_pShader->BindRawValue("g_vColor", &vColor, sizeof(_float4))))
 		return E_FAIL;
 
 
@@ -146,6 +190,7 @@ HRESULT CMonsterTower::Render()
 	}
 
 	return S_OK;
+
 }
 
 void CMonsterTower::OnCollide(EObjType _eObjType, shared_ptr<CCollider> _pCollider)

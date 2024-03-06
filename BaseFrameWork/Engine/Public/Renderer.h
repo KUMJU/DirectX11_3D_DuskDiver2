@@ -37,6 +37,7 @@ private:
 #ifdef _DEBUG
 public:
 	HRESULT AddDebugComponent(shared_ptr<class CComponent> _pComponent);
+	void SetZoomBlur(_float _fZoomPower, _float _fZoomAccTime);
 
 private:
 	list<shared_ptr<class CComponent>> m_DebugCom;
@@ -59,7 +60,9 @@ private:
 	HRESULT RenderBlend();
 	HRESULT RenderMotionTrail();
 	HRESULT RenderDistortion();
+	HRESULT RenderZoomBlur();
 	HRESULT RenderUI();
+	
 
 #ifdef _DEBUG
 	HRESULT RenderDebug();
@@ -76,6 +79,10 @@ private:
 	_float m_fScreenWidth = 0.f;
 	_float m_fScreenHeight = 0.f;
 
+	_bool m_bZoomBlur = false;
+	_float m_fZoomBlurPower = 0.f;
+	_float m_fBlurAccTime = 0.f;
+	_float m_fBlurTotalTime = 0.f;
 
 public:
 	static shared_ptr<CRenderer> Create(wrl::ComPtr<ID3D11Device> _pDevice, wrl::ComPtr<ID3D11DeviceContext> _pContext);

@@ -4,7 +4,7 @@ matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 vector g_vCamPosition;
 texture2D g_Texture;
 
-vector g_vGlowColor;
+float4 g_vGlowColor;
 
 struct VS_IN
 {
@@ -126,7 +126,6 @@ PS_OUT PS_MAIN(PS_IN In)
     if (Out.vColor.a < 0.3f)
         discard;
 
-   //Out.vColor = In.vColor;
 
     return Out;
 
@@ -137,14 +136,11 @@ PS_OUT PS_MAIN(PS_IN In)
 PS_OUT PS_GLOW(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
-
-    if (In.vColor.a == 0.f)
-        discard;
     
-    Out.vColor = g_Texture.Sample(g_LinearSampler, In.vTexcoord) * g_vGlowColor;
+    Out.vColor = g_Texture.Sample(g_LinearSampler, In.vTexcoord) * g_vGlowColor * 2.f;
 
-    if (Out.vColor.a < 0.3f)
-        discard;
+    //if (Out.vColor.a < 0.3f)
+    //    discard;
 
 
     return Out;
@@ -154,7 +150,7 @@ PS_OUT PS_GLOW(PS_IN In)
 technique11 DefaultTechnique
 {
     //pass를 여러개로 나눠서 한 셰이더 파일 안에 여러 진입점, 다른 효과를 줄 수도 있음
-    pass DefaultPass
+    pass DefaultPass // 1
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -164,7 +160,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN();
     }
 
-    pass Glow
+    pass Glow // 2 
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);

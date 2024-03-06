@@ -46,6 +46,8 @@ HRESULT CSkill_BurstR::Initialize()
     info2.iStartTrackPosition = 10.f;
     info2.iEndTrackPosition = 20.f;
     info2.CancleAbleRatio = 1.0;
+    info2.strHitSound = TEXT("se_HE01_Skill04_4.wav");
+    info2.fHitVolume = 1.7f;
 
 
     shared_ptr<CCollider> pCollider = CCollider::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), CCollider::TYPE_SPHERE, normalAtkDesc);
@@ -68,14 +70,6 @@ void CSkill_BurstR::PriorityTick(_float _fTimeDelta)
 
 void CSkill_BurstR::Tick(_float _fTimeDelta)
 {
-    //if (!m_bShaking) {
-
-    //    if (m_fAccTime >= 2.5f) {
-    //        CCameraMgr::GetInstance()->SetShakingMode(15.f, 0.1f, true);
-    //        m_bShaking = true;
-    //    }
-
-    //}
 
     m_fAccTime += _fTimeDelta;
 
@@ -92,7 +86,7 @@ void CSkill_BurstR::Tick(_float _fTimeDelta)
 
     }
 
-    if (m_fAccTime >= 4.f && !bVoiceDone) {
+    if (m_fAccTime >= 2.3f && !bVoiceDone) {
 
         bVoiceDone = true;
         CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_FX);
@@ -102,6 +96,21 @@ void CSkill_BurstR::Tick(_float _fTimeDelta)
         CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_47.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
 
     }
+
+
+    if (m_fAccTime >= 2.55f && !m_bSetTimer) {
+
+        CCameraMgr::GetInstance()->SetBattleZoom(0.2f, 20.f);
+        m_bSetTimer = true;
+
+
+    }
+
+    //if (m_fAccTime >= 2.6f && !m_bFinTimer) {
+    //    CGameInstance::GetInstance()->SetTimerOffset(TEXT("Timer_60"), 1.f);
+    //    m_bFinTimer = true;
+    //}
+
 
 
     __super::Tick(_fTimeDelta);

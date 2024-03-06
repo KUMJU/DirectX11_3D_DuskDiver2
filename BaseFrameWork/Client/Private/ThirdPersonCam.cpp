@@ -140,6 +140,27 @@ void CThirdPersonCam::LateTick(_float fTimeDelta)
 			ShakeCamera(fTimeDelta);
 		}
 
+		if (m_bBattleZoom) {
+			
+			m_fZoomLerpTime += fTimeDelta;
+
+
+			if (m_fZoomLerpTime >= m_fZoomTotalTime / 2.f) {
+				m_fFovy -= XMConvertToRadians(m_fDiffFovPerTick) * fTimeDelta;
+			}
+			else {
+				m_fFovy += XMConvertToRadians(m_fDiffFovPerTick) * fTimeDelta;
+			}
+
+			if (m_fZoomLerpTime >= m_fZoomTotalTime) {
+				m_fFovy = XMConvertToRadians(60.f);
+				m_fZoomLerpTime = 0.f;
+				m_bBattleZoom = false;
+			}
+
+
+		}
+
 
 	}
 	else if (m_eCamState == ECAM_EVENT) {
@@ -364,6 +385,16 @@ void CThirdPersonCam::SetLerpMoveComeBack(_float _fAccTime)
 	m_vLerpEndPos = m_vLerpSrcPos;
 	m_vLerpSrcPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
 	m_fLerpTime = _fAccTime;
+}
+
+void CThirdPersonCam::SetBattleCamFovLerp(_float _fTotalAccTime, _float _fDstFov)
+{
+
+	m_fZoomTotalTime = _fTotalAccTime;
+	m_fDstFov = _fDstFov;
+	m_fDiffFovPerTick = (_fDstFov - 60.f) / (_fTotalAccTime * 0.5f);
+	m_fZoomLerpTime = 0.f;
+	m_bBattleZoom = true;
 }
 
 

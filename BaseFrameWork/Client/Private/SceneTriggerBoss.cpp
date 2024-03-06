@@ -59,6 +59,7 @@ void CSceneTriggerBoss::Tick(_float _fTimeDelta)
 		}
 
 		if (m_fEventAccTime >= 3.5f && !m_bShakingEvent) {
+			CGameInstance::GetInstance()->SetZoomBlurOn(30.f, 0.3f);
 			CCameraMgr::GetInstance()->SetShakingMode(5.f, 1.f, false);
 			m_bShakingEvent = true;
 		}
@@ -114,6 +115,7 @@ void CSceneTriggerBoss::SpawnBoss()
 
 	CMonsterPool::GetInstance()->ActiveMonster(m_SpawnMonsterList);
 	CBattleSystem::GetInstance()->BattleStart();
+
 }
 
 shared_ptr<CSceneTriggerBoss> CSceneTriggerBoss::Create(_float3 _vTriggerPos)

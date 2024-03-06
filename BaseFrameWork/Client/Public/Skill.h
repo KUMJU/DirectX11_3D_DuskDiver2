@@ -28,7 +28,8 @@ public:
 		_bool bDownAtk;
 		_bool bDropAtk;
 
-		wstring strHitSound = TEXT("");
+		wstring strHitSound = TEXT("flesh_hit_02.wav");
+		_float fHitVolume = 1.f;
 	};
 
 public:
@@ -73,6 +74,9 @@ public:
 	_uint GetSkillIndex() { return m_iSkillIndex; }
 
 	_bool GetIsBasicCombat() { return m_IsBasicCombat; }
+
+	wstring GetHitSound() { return m_Infos[m_iCurrentSkillOrder].strHitSound; }
+	_float GetHitVolume() { return m_Infos[m_iCurrentSkillOrder].fHitVolume; }
 
 protected:
 	_float m_fSkillDuration = 0.f; //스킬 사용시간
@@ -136,6 +140,9 @@ protected:
 	_bool m_bMultiAtk = false;
 	_float m_fDelay = 0.f;
 
+	_bool m_bSetTimer = false;
+	_bool m_bFinTimer = false;
+
 	_uint m_iSkillIndex = 0;
 	_uint m_iCurrentSkillOrder = 0;
 
@@ -143,7 +150,6 @@ protected:
 	_float m_fKnockUpDistance = 0.f;
 
 	wstring m_strCutSceneName = TEXT(""); // 이벤트 카메라에 넘겨줄 이벤트씬 이름
-
 
 	shared_ptr<class CEffectPreset> m_pEffectPreset = nullptr;
 

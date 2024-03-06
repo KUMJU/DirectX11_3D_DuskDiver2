@@ -203,6 +203,8 @@ void CBear::OnHit()
 
     if (m_iHitNum >= 10) {
 
+        
+
         CUIMgr::GetInstance()->StartDialog(TEXT("BearCoinQuest"));
         m_bRunaway = true;
         //Dialog

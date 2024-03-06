@@ -322,6 +322,13 @@ void CGameInstance::SetDebugOnOff()
 
 }
 
+void CGameInstance::SetZoomBlurOn(_float _fZoomBlurPow, _float _fZoomBlurTime)
+{
+
+	m_pRenderer->SetZoomBlur(_fZoomBlurPow, _fZoomBlurTime);
+
+}
+
 _float4 CGameInstance::TerrainPicking(POINT _ptMouse, shared_ptr<class CVITerrain> _pTerrainCom, shared_ptr<class CTransform> _pTransCom)
 {
 	if (!m_pPickingMgr)

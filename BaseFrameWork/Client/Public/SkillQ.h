@@ -19,6 +19,10 @@ public:
 	virtual void LateTick(_float _fTimeDelta);
 	virtual HRESULT Render();
 
+
+public:
+	virtual void EndSkill();
+
 public:
 
 	static shared_ptr<CSkillQ> Create();

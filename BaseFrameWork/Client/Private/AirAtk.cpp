@@ -112,6 +112,7 @@ void CAirAtk::EndSkill()
 {
     if (3 == m_iComboNum || 4 == m_iComboNum) {
         m_pParticlePreset->PlayEffect();
+        m_pParticlePreset->SetEffectPosition(m_pOwnerTransform->GetState(CTransform::STATE_POSITION));
     }
 
 }

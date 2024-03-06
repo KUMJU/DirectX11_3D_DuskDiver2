@@ -23,6 +23,7 @@ public:
 	virtual void Tick(_float _fTimeDelta) override;
 	virtual void LateTick(_float _fTimeDelta) override;
 	virtual HRESULT Render() override;
+	virtual HRESULT RenderGlow(shared_ptr<class CShader> _pShader) override;
 
 public:
 	virtual void OnCollide(EObjType _eObjType, shared_ptr<CCollider> _pCollider) override;
