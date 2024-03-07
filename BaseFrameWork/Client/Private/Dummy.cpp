@@ -72,6 +72,11 @@ HRESULT CDummy::Render()
         shared_ptr<CTexture> pTexture = (*Materials)[iMaterialIndex]->GetTextures()[aiTextureType::aiTextureType_NORMALS];
         _uint iPassNum = 0;
 
+        shared_ptr<CTexture> pTexture2 = (*Materials)[iMaterialIndex]->GetTextures()[aiTextureType::aiTextureType_AMBIENT];
+
+        if (pTexture2) {
+            int a = 3;
+        }
 
         if (pTexture) {
 

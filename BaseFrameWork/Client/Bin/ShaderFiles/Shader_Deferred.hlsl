@@ -23,6 +23,7 @@ texture2D g_DiffuseTexture;
 texture2D g_ShadeTexture;
 texture2D g_DepthTexture;
 texture2D g_SpecularTexture;
+texture2D g_EmissiveTexture;
 
 float g_fScreenWidth;
 float g_fScreenHeight;
@@ -88,7 +89,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 	
     vector vNormalDesc = g_NormalTexture.Sample(g_PointSampler, In.vTexcoord);
     vector vDepthDesc = g_DepthTexture.Sample(g_PointSampler, In.vTexcoord);
-
+    
     vector vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
 	
     
@@ -174,9 +175,12 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
 	
     vector vShade = g_ShadeTexture.Sample(g_LinearSampler, In.vTexcoord);
     vector vSpecular = g_SpecularTexture.Sample(g_LinearSampler, In.vTexcoord);
-    	
-    Out.vColor = vDiffuse * vShade + vSpecular;
+    vector vEmissive = g_EmissiveTexture.Sample(g_LinearSampler, In.vTexcoord);
 
+    
+    Out.vColor = vDiffuse * vShade + vSpecular;
+    Out.vColor.rgb += vEmissive.rgb;
+    
     return Out;
 
 }

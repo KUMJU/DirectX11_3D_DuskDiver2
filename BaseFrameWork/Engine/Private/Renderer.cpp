@@ -34,6 +34,9 @@ HRESULT CRenderer::Initialize()
 	if (FAILED(CGameInstance::GetInstance()->AddRenderTarget(TEXT("Target_Depth"), ViewPortDesc.Width, ViewPortDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 0.f, 1.f))))
 		return E_FAIL;
 
+	if (FAILED(CGameInstance::GetInstance()->AddRenderTarget(TEXT("Target_Emissive"), ViewPortDesc.Width, ViewPortDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
+		return E_FAIL;
+
 	if (FAILED(CGameInstance::GetInstance()->AddRenderTarget(TEXT("Target_Specular"), ViewPortDesc.Width, ViewPortDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
 
@@ -66,6 +69,10 @@ HRESULT CRenderer::Initialize()
 
 	if (FAILED(CGameInstance::GetInstance()->AddMRT(TEXT("MRT_GameObjects"), TEXT("Target_Depth"))))
 		return E_FAIL;
+
+	if (FAILED(CGameInstance::GetInstance()->AddMRT(TEXT("MRT_GameObjects"), TEXT("Target_Emissive"))))
+		return E_FAIL;
+
 
 
 	if (FAILED(CGameInstance::GetInstance()->AddMRT(TEXT("MRT_LightAcc"), TEXT("Target_Shade"))))
@@ -122,7 +129,7 @@ HRESULT CRenderer::Initialize()
 		return E_FAIL;
 	if (FAILED(CGameInstance::GetInstance()->ReadyDebug(TEXT("Target_Specular"), 300.0f, 300.0f, 200.0f, 200.0f)))
 		return E_FAIL;
-	if (FAILED(CGameInstance::GetInstance()->ReadyDebug(TEXT("Target_Distortion"), 300.0f, 500.0f, 200.0f, 200.0f)))
+	if (FAILED(CGameInstance::GetInstance()->ReadyDebug(TEXT("Target_BlurObj"), 300.0f, 500.0f, 200.0f, 200.0f)))
 		return E_FAIL;
 
 	//if (FAILED(CGameInstance::GetInstance()->ReadyDebug(TEXT("Target_Glow"), 500.0f, 100.0f, 200.0f, 200.0f)))
@@ -314,6 +321,9 @@ HRESULT CRenderer::RenderFinal()
 	if (FAILED(CGameInstance::GetInstance()->BindSRV(TEXT("Target_Specular"), m_pShader, "g_SpecularTexture")))
 		return E_FAIL;
 
+	if (FAILED(CGameInstance::GetInstance()->BindSRV(TEXT("Target_Emissive"), m_pShader, "g_EmissiveTexture")))
+		return E_FAIL;
+
 	m_pShader->Begin(3);
 
 	m_pVIBuffer->BindBuffers();
@@ -453,6 +463,7 @@ HRESULT CRenderer::RenderGlow()
 	m_pPostProcessShader->Begin(1);
 	m_pVIBuffer->BindBuffers();
 	m_pVIBuffer->Render();
+
 
 	if (FAILED(CGameInstance::GetInstance()->EndMRT()))
 		return E_FAIL;
@@ -662,7 +673,7 @@ HRESULT CRenderer::RenderDebug()
 
 	CGameInstance::GetInstance()->RenderMRT(TEXT("MRT_GameObjects"), m_pShader, m_pVIBuffer);
 	CGameInstance::GetInstance()->RenderMRT(TEXT("MRT_LightAcc"), m_pShader, m_pVIBuffer);
-	CGameInstance::GetInstance()->RenderMRT(TEXT("MRT_Distortion"), m_pShader, m_pVIBuffer);
+	CGameInstance::GetInstance()->RenderMRT(TEXT("MRT_BlurObj"), m_pShader, m_pVIBuffer);
 	//CGameInstance::GetInstance()->RenderMRT(TEXT("MRT_MotionTrail"), m_pShader, m_pVIBuffer);
 
 	for (auto& pComponent : m_DebugCom)

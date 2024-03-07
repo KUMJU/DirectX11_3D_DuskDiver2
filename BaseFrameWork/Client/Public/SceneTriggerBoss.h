@@ -28,6 +28,8 @@ private:
 
 //Event Checker
 private:
+	_bool m_bScriptDone = false;
+	_bool m_bScreenEffectDone= false;
 	_bool m_bSpawnBoss = false;
 	_bool m_bBossSpawnDone = false;
 	_bool m_bShakingEvent = false;
@@ -35,6 +37,9 @@ private:
 private:
 	void SpawnBoss();
 
+
+private:
+	shared_ptr<CBear> pBear = nullptr;
 
 private:
 	list<CMonsterPool::SPAWN_INFO> m_SpawnMonsterList;

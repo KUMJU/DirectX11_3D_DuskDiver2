@@ -6,6 +6,7 @@ float3 g_vCamPos;
 
 texture2D g_DiffuseTexture;
 texture2D g_NormalTexture;
+texture2D g_EmissiveTexture;
 
 bool g_bDiffuseTex = false;
 
@@ -29,6 +30,8 @@ float g_fTexAlphaRatio = 0.f;
 
 vector g_vColor;
 vector g_vLerpColor;
+
+float g_fLerpRate = 0.f;
 
 float g_fDeltaTime;
 
@@ -144,9 +147,11 @@ struct PS_OUT
     vector vDiffuse : SV_TARGET0;
     vector vNormal : SV_TARGET1;
     vector vDepth : SV_TARGET2;
+    vector vEmissive : SV_TARGET3;
     
 };
 
+//Emissive X
 PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
@@ -154,7 +159,7 @@ PS_OUT PS_MAIN(PS_IN In)
    
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(g_LinearSampler, In.vTexcoord);
     vector vNormalDesc = g_NormalTexture.Sample(g_LinearSampler, In.vTexcoord);
-    
+
     float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
     float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
     
@@ -166,11 +171,38 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
+    Out.vEmissive = vector(0.f, 0.f, 0.f, 0.f);
     
     return Out;
 
 }
 
+//Emissive O
+PS_OUT PS_EMISSIVE(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+   
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(g_LinearSampler, In.vTexcoord);
+    vector vNormalDesc = g_NormalTexture.Sample(g_LinearSampler, In.vTexcoord);
+    vector vEmissiveDesc = g_EmissiveTexture.Sample(g_LinearSampler, In.vTexcoord);
+
+    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
+    float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
+    
+    vNormal = mul(vNormal, WorldMatrix);
+    
+    if (vMtrlDiffuse.a < 0.1f)
+        discard;
+    
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
+    Out.vEmissive = vEmissiveDesc;
+    
+    return Out;
+
+}
 
 PS_OUT PS_NONNORTEX_MAIN(PS_IN In)
 {
@@ -251,6 +283,30 @@ PS_OUT PS_LIMLIGHT(PS_IN In)
         float3 rimColor = rim * g_vRimColor;
         Out.vDiffuse.rgb = Out.vDiffuse.rgb + rimColor.rgb;
     }
+    
+    
+    return Out;
+
+}
+
+
+PS_OUT PS_COLORLERP(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+   
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(g_LinearSampler, In.vTexcoord);
+   
+    if (vMtrlDiffuse.a < 0.1f)
+        discard;
+    
+    float3 vRate = float3(g_fLerpRate, g_fLerpRate, g_fLerpRate);
+    
+    Out.vDiffuse = float4(lerp(vMtrlDiffuse.rgb, float3(1.0f, 1.0f, 1.0f), vRate), 1.f);
+  
+//    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
     
     
     return Out;
@@ -444,7 +500,7 @@ technique11 DefaultTechnique
 
     pass GreyScale // 5
     {
-        SetRasterizerState(RS_None_Cull);
+        SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
@@ -455,13 +511,35 @@ technique11 DefaultTechnique
 
     pass NonNormalTex // 6
     {
-        SetRasterizerState(RS_None_Cull);
+        SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();
+    }
+
+    pass EmissiveTex // 7
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_EMISSIVE();
+    }
+
+    pass ColorLerp // 8
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_COLORLERP();
     }
 
 }

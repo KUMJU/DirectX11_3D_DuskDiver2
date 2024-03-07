@@ -517,7 +517,18 @@ HRESULT CPlayer::Render()
 HRESULT CPlayer::RenderGlow(shared_ptr<class CShader> _pShader)
 {
 
-    for (_int i = 7; i < 10; ++i) {
+    _int iStartIdx= 5;
+
+
+    if (m_bBurstMode) {
+        iStartIdx = 5;
+    }
+    else {
+
+        iStartIdx = 6;
+    }
+
+    for (_int i = iStartIdx; i < 10; ++i) {
 
         if (FAILED(BindShaderResources()))
             return E_FAIL;
@@ -528,7 +539,7 @@ HRESULT CPlayer::RenderGlow(shared_ptr<class CShader> _pShader)
         if (FAILED(m_pModelCom->BindBoneMatrices(m_pShader, "g_BoneMatrices", (_uint)i)))
             return E_FAIL;
 
-        if (FAILED(m_pShader->Begin(0)))
+        if (FAILED(m_pShader->Begin(3)))
             return E_FAIL;
 
         if (FAILED(m_pModelCom->Render((_uint)i)))
@@ -1273,7 +1284,7 @@ void CPlayer::KeyInput(_float _fTimeDelta)
             m_pDashPreset->PlayEffect();
             FinalAnimNum = 81;
 
-            CGameInstance::GetInstance()->SetZoomBlurOn(30.f, 0.1f);
+            CGameInstance::GetInstance()->SetZoomBlurOn(40.f, 0.1f);
 
             CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_FX);
             CGameInstance::GetInstance()->PlayAudio(TEXT("se_ba_dash_h_01.wav"), CSoundMgr::CHANNELID::CH_PLR_FX, 1.f);

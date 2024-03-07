@@ -90,16 +90,6 @@ HRESULT CEffectParticle::Render()
     if (FAILED(m_pShader->BindMatrix("g_WorldMatrix", &FloatWorld)))
         return E_FAIL;
 
-
-    //m_pTransformCom->SetState(CTransform::STATE_POSITION, m_ParentMat.r[3]);
-   // XMStoreFloat4x4(&matWorld, m_ParentMat);
-
-    /*if (FAILED(m_pShader->BindMatrix("g_WorldMatrix", &matWorld)))
-        return E_FAIL;*/
-
-    //if (FAILED(m_pTransformCom->BindShaderResource(m_pShader, "g_WorldMatrix")))
-    //    return E_FAIL;
-
     _float4x4 ViewMat = CGameInstance::GetInstance()->GetTransformFloat4x4(CPipeLine::D3DTS_VIEW);
 
     if (FAILED(m_pShader->BindMatrix("g_ViewMatrix", &ViewMat)))

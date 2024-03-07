@@ -79,73 +79,6 @@ VS_OUT VS_MAIN(VS_IN In)
 	return Out;
 }
 
-struct VS_GLOW_OUT
-{
-    float4 vPosition : SV_POSITION;
-    float2 vTexcoord : TEXCOORD0;
-    float2 texCoord1 : TEXCOORD1;
-    float2 texCoord2 : TEXCOORD2;
-    float2 texCoord3 : TEXCOORD3;
-    float2 texCoord4 : TEXCOORD4;
-    float2 texCoord5 : TEXCOORD5;
-    float2 texCoord6 : TEXCOORD6;
-    float2 texCoord7 : TEXCOORD7;
-    float2 texCoord8 : TEXCOORD8;
-    float2 texCoord9 : TEXCOORD9;
-};
-
-VS_GLOW_OUT VS_GLOW_HORIZONTAL(VS_IN In)
-{
-    VS_GLOW_OUT Out = (VS_GLOW_OUT) 0;
-    
-    vector vPos = vector(In.vPosition, 1.f);
-    
-    //matrix WV = g_WorldMatrix * g_ViewMatrix;
-    //matrix WVP = WV * g_ProjMatrix;
-    
-    Out.vPosition = vPos;
-   // Out.vPosition = mul(vPos, WVP);
-    Out.vTexcoord = In.vTexcoord;
-    
-    float texelSize = 1.f / g_fScreenWidth; 
-    
-    Out.texCoord1 = In.vTexcoord + float2(texelSize * -4.f, 0.f);
-    Out.texCoord2 = In.vTexcoord + float2(texelSize * -3.f, 0.f);
-    Out.texCoord3 = In.vTexcoord + float2(texelSize * -2.f, 0.f);
-    Out.texCoord4 = In.vTexcoord + float2(texelSize * -1.f, 0.f);
-    Out.texCoord5 = In.vTexcoord + float2(texelSize * -0.f, 0.f);
-    Out.texCoord6 = In.vTexcoord + float2(texelSize * 1.f, 0.f);
-    Out.texCoord7 = In.vTexcoord + float2(texelSize * 2.f, 0.f);
-    Out.texCoord8 = In.vTexcoord + float2(texelSize * 3.f, 0.f);
-    Out.texCoord9 = In.vTexcoord + float2(texelSize * 4.f, 0.f);
-    
-    return Out;
-}
-
-VS_GLOW_OUT VS_GLOW_VERTICAL(VS_IN In)
-{
-    VS_GLOW_OUT Out = (VS_GLOW_OUT) 0;
-   
-    vector vPos = vector(In.vPosition, 1.f);
-    
-    Out.vPosition = vPos;
-    Out.vTexcoord = In.vTexcoord;
-    
-    float texelSize = 1.f / g_fScreenHeight;
-    
-    Out.texCoord1 = In.vTexcoord + float2(0.f, texelSize * -4.f);
-    Out.texCoord2 = In.vTexcoord + float2(0.f, texelSize * -3.f);
-    Out.texCoord3 = In.vTexcoord + float2(0.f, texelSize * -2.f);
-    Out.texCoord4 = In.vTexcoord + float2(0.f, texelSize * -1.f);
-    Out.texCoord5 = In.vTexcoord + float2(0.f, texelSize * -0.f);
-    Out.texCoord6 = In.vTexcoord + float2(0.f, texelSize * 1.f);
-    Out.texCoord7 = In.vTexcoord + float2(0.f, texelSize * 2.f);
-    Out.texCoord8 = In.vTexcoord + float2(0.f, texelSize * 3.f);
-    Out.texCoord9 = In.vTexcoord + float2(0.f, texelSize * 4.f);
-    
-    return Out;
-}
-
 struct PS_IN
 {
 	float4 vPosition : SV_POSITION;
@@ -210,12 +143,11 @@ PS_OUT PS_BLUR_HORIZONTAL(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
-    vector vOriginColor = g_GlowTexture.Sample(g_LinearSampler, In.vTexcoord);
     float fPixelSize = 1.f / g_fScreenWidth;
     
     float2 UVPos = 0;
     
-    for (int i = -6; i < 6; ++i)
+    for (int i = -6; i < 7; ++i)
     {
         UVPos = In.vTexcoord + float2(fPixelSize * i, 0);
         Out.vColor += g_fWeight[6 + i] * g_GlowTexture.Sample(g_LinearSampler, UVPos);   
@@ -224,7 +156,8 @@ PS_OUT PS_BLUR_HORIZONTAL(PS_IN In)
     }
     
     Out.vColor /= g_fWeightTotal;
-    Out.vColor.a = 0.7f;
+    
+//    Out.vColor = (dot(Out.vColor.rgb, float3(0.2125f, 0.7154f, 0.0721f)) + 0.0001f, 1.f);
 
     
     return Out;
@@ -235,20 +168,19 @@ PS_OUT PS_BLUR_VERTICAL(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
-    vector vOriginColor = g_GlowTexture.Sample(g_LinearSampler, In.vTexcoord);
-    float fPixelSize = 1.f / g_fScreenHeight;
-    
+    float fPixelSize = 1.f / (g_fScreenHeight / 2.f);
     float2 UVPos = 0;
     
-    for (int i = -6; i < 6; ++i)
+    for (int i = -6; i < 7; ++i)
     {
         UVPos = In.vTexcoord + float2(fPixelSize * i, 0);
         Out.vColor += g_fWeight[6 + i] * g_GlowTexture.Sample(g_LinearSampler, UVPos);
     }
     
     Out.vColor /= g_fWeightTotal;
-    Out.vColor.a = 0.7f;
     
+ //   Out.vColor = (dot(Out.vColor.rgb, float3(0.2125f, 0.7154f, 0.0721f)) + 0.0001f, 1.f);
+
     return Out;
 
 

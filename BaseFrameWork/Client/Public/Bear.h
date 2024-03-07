@@ -39,6 +39,9 @@ public:
 private:
 	void Shaking(_float _fTimeDelta);
 
+public:
+	void StartWhiteLerp() { m_bWhiteLerp = true; }
+
 private:
 	_float m_fMovingTime = false;
 	_bool m_bMove = false;
@@ -52,6 +55,11 @@ private:
 	_int m_iHitNum = 0;
 	_bool m_bRunaway = false;
 	_float m_fDialogAccTime = 0.f;
+
+	/*마지막 컷신 연출용*/
+	_bool m_bWhiteLerp = false;
+	_float m_fLerpTime = 0.f;
+
 private:
 
 	_bool m_bShaking = false;

@@ -142,6 +142,16 @@ void CBear::Tick(_float _fTimeDelta)
     }
 
 
+    if (m_bWhiteLerp) {
+
+        m_fLerpTime += _fTimeDelta;
+
+        if (m_fLerpTime > 2.0f) {
+            m_fLerpTime = 2.0f;
+        }
+
+    }
+
     m_pCollider->Tick(m_pTransformCom->GetWorldMatrix());
     CGameInstance::GetInstance()->AddCollider(CCollisionMgr::COL_MONSTER, m_pCollider);
 }
@@ -153,6 +163,13 @@ void CBear::LateTick(_float _fTimeDelta)
 
     if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_NONBLEND, shared_from_this())))
         return;
+
+    if (m_bWhiteLerp) {
+
+        if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_GLOW, shared_from_this())))
+            return;
+
+    }
 
 }
 
@@ -171,7 +188,18 @@ HRESULT CBear::Render()
         if (FAILED(m_pModelCom->BindMaterialShaderResource(m_pShader, (_uint)i, aiTextureType::aiTextureType_DIFFUSE, "g_DiffuseTexture")))
             return E_FAIL;
 
-        if (FAILED(m_pShader->Begin(0)))
+        _int iPassIdx = 0;
+
+        if (m_bWhiteLerp) {
+            iPassIdx = 8;
+
+            _float fCurrentRate = m_fLerpTime / 2.0f;
+            if (FAILED(m_pShader->BindRawValue("g_fLerpRate", &fCurrentRate, sizeof(_float))))
+                return E_FAIL;
+
+        }
+
+        if (FAILED(m_pShader->Begin(iPassIdx)))
             return E_FAIL;
 
         if (FAILED(m_pModelCom->Render((_uint)i)))
@@ -232,6 +260,8 @@ void CBear::Shaking(_float _fTimeDelta)
     m_pTransformCom->SetState(CTransform::STATE_POSITION, vPos);
 
 }
+
+
 
 void CBear::MovingFront(_vector _vDstPos)
 {

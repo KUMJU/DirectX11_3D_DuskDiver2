@@ -31,6 +31,8 @@ HRESULT CEffectMesh::Initialize( const wstring& _strModelKey, MESH_DESC* _MeshDe
     m_pShader = CGameInstance::GetInstance()->GetShader(TEXT("Shader_VtxMesh"));
 
 
+    m_vCurrentScale = XMLoadFloat3(&m_MeshDesc.vStartScale);
+
     _tchar szNoiseKey[MAX_PATH] = TEXT("");
     MultiByteToWideChar(CP_ACP, 0, m_MeshDesc.szNoiseTexKey, (_int)strlen(m_MeshDesc.szNoiseTexKey), szNoiseKey, MAX_PATH);
 
@@ -107,6 +109,9 @@ void CEffectMesh::LateTick(_float _fTimeDelta)
 
     if (m_MeshDesc.bDistortion) {
         if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_NONLIGHT, shared_from_this())))
+            return;
+
+        if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_GLOW, shared_from_this())))
             return;
 
         if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_DISTORTION, shared_from_this())))

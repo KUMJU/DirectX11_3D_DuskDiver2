@@ -115,6 +115,9 @@ HRESULT CCoin::Render()
         if (FAILED(m_pModelCom->BindMaterialShaderResource(m_pShader, (_uint)i, aiTextureType::aiTextureType_DIFFUSE, "g_DiffuseTexture")))
             return E_FAIL;
 
+       // if (FAILED(m_pModelCom->BindMaterialShaderResource(m_pShader, (_uint)i, aiTextureType::aiTextureType_EMISSIVE, "g_EmissiveTexture")))
+       //     return E_FAIL;
+
         if (FAILED(m_pModelCom->BindMaterialShaderResource(m_pShader, (_uint)i, aiTextureType::aiTextureType_NORMALS, "g_NormalTexture")))
             return E_FAIL;
 

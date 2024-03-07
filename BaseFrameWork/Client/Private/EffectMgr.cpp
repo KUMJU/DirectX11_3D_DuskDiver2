@@ -322,17 +322,11 @@ void CEffectMgr::ReadData(const wstring& _strFullPath, const wstring& _strKeyNam
                 desc.fDistortionScale = 2.f;
             }
 
-            if (keyName == "AroundWind") {
+
+            if (keyName == "Tornado") {
 
                 desc.bDistortion = true;
-                desc.fDistortionScale = 2.f;
-            }
-
-
-            if (keyName == "SpinWind") {
-
-                desc.bDistortion = true;
-                desc.fDistortionScale = 2.f;
+                desc.fDistortionScale = 1.5f;
             }
 
 

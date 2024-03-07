@@ -136,12 +136,12 @@ PS_OUT PS_MAIN(PS_IN In)
 PS_OUT PS_GLOW(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
+   
+    
+    if (In.vColor.a == 0.f)
+        discard;
     
     Out.vColor = g_Texture.Sample(g_LinearSampler, In.vTexcoord) * g_vGlowColor * 2.f;
-
-    //if (Out.vColor.a < 0.3f)
-    //    discard;
-
 
     return Out;
 

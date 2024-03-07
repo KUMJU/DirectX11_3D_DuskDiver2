@@ -65,6 +65,36 @@ VS_OUT VS_MAIN(VS_IN In)
 
 }
 
+VS_OUT VS_GLOW(VS_IN In)
+{
+    VS_OUT Out = (VS_OUT) 0;
+    
+    matrix matWV, matWVP;
+    
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+    
+    float fWeightW = 1.f - (In.vBlendWeights.x + In.vBlendWeights.y + In.vBlendWeights.z);
+
+    matrix BoneMatrix = g_BoneMatrices[In.vBlendIndices.x] * In.vBlendWeights.x +
+    g_BoneMatrices[In.vBlendIndices.y] * In.vBlendWeights.y +
+    g_BoneMatrices[In.vBlendIndices.z] * In.vBlendWeights.z +
+    g_BoneMatrices[In.vBlendIndices.w] * fWeightW;
+    
+    vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
+    vector vNormal = mul(vector(In.vNormal, 0.f), BoneMatrix);
+    
+    Out.vPosition = mul(vPosition, matWVP);
+    Out.vTexcoord = In.vTexcoord;
+    Out.vWorldPos = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
+    Out.vNormal = normalize(mul(vNormal, g_WorldMatrix));
+    Out.vProjPos = Out.vPosition;
+    
+    return Out;
+
+}
+
+
 struct PS_IN
 {
     float4 vPosition : SV_POSITION;
@@ -135,15 +165,14 @@ PS_OUT PS_RIMLIGHT(PS_IN In)
 
 }
 
-
-PS_OUT PS_MOTIONTRAIL(PS_IN In)
+struct PS_GLOW
 {
-    PS_OUT Out = (PS_OUT) 0;
+    vector vDiffuse : SV_TARGET0;
+};
 
-
-    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
-    //Far 받아와서 처리 
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);    
+PS_GLOW PS_MOTIONTRAIL(PS_IN In)
+{
+    PS_GLOW Out = (PS_GLOW) 0;
 
    float rim = 1 - saturate(dot(In.vNormal, -g_vCamLook));
    rim = pow(rim, 2.f);
@@ -157,6 +186,28 @@ PS_OUT PS_MOTIONTRAIL(PS_IN In)
 
 }
 
+
+PS_GLOW PS_BLUR(PS_IN In)
+{
+    PS_GLOW Out = (PS_GLOW) 0;
+
+   
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(g_LinearSampler, In.vTexcoord);
+   
+   
+    if (vMtrlDiffuse.a < 0.1f)
+        discard;
+    
+    Out.vDiffuse = float4(vMtrlDiffuse.xyz, 1);
+    
+    if (Out.vDiffuse.r <= 0.3f &&
+        Out.vDiffuse.g <= 0.3f && 
+        Out.vDiffuse.b <= 0.3f)
+        discard;
+    
+        return Out;
+
+}
 
 technique11 DefaultTechnique
 {
@@ -191,6 +242,17 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MOTIONTRAIL();
+    }
+
+    pass Glow //3
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlending, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_GLOW();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_BLUR();
     }
 
 
