@@ -54,6 +54,7 @@ private:
 
 	_int m_iHitNum = 0;
 	_bool m_bRunaway = false;
+	_bool m_bRunawaySound = false;
 	_float m_fDialogAccTime = 0.f;
 
 	/*마지막 컷신 연출용*/

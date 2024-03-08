@@ -47,6 +47,19 @@ void CBossSkill5::PriorityTick(_float _fTimeDelta)
 
 void CBossSkill5::Tick(_float _fTimeDelta)
 {
+    m_fAccTime += _fTimeDelta;
+
+    if (m_fAccTime >= 0.7f && !bSkillSeDone) {
+
+        bSkillSeDone = true;
+
+        CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MON_SE);
+        CGameInstance::GetInstance()->PlayAudio(TEXT("se_EN0301_attack3_1.wav"), CSoundMgr::CHANNELID::CH_MON_SE, 1.f);
+
+
+    }
+
+
     __super::Tick(_fTimeDelta);
 
 }

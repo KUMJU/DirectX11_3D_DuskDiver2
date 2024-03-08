@@ -262,8 +262,8 @@ HRESULT CArcadeMap::ReadyLayerEvent(const wstring& _strLayerTag)
 
 	/*코인 이벤트 트리거*/
 
-	//shared_ptr<CSceneTriggerCoin> pTrigger3 = CSceneTriggerCoin::Create({ 0.f, 27.f, -140.f });
-	//CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pTrigger3);
+	shared_ptr<CSceneTriggerCoin> pTrigger3 = CSceneTriggerCoin::Create({ 0.f, 27.f, -140.f });
+	CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pTrigger3);
 
 	shared_ptr<CSceneTriggerBear> pTrigger4 = CSceneTriggerBear::Create({ -87.f , 43.f, -87.f });
 	CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pTrigger4);
@@ -417,8 +417,16 @@ HRESULT CArcadeMap::ReadyLight()
 	if (FAILED(CGameInstance::GetInstance()->AddLight(LightDesc)))
 		return E_FAIL;
 
-	//CGameInstance::GetInstance()->SetLightEnabled(m_iFianlEffectLightIdx, false);
 
+	LightDesc.vPosition = { 1.f, 40.f, -172.f , 1.f };
+	LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+	LightDesc.fRange = 30.0f;
+	LightDesc.vDiffuse = _float4(0.6f, 0.6f, 0.6f, 1.f);
+	LightDesc.vAmbient = _float4(0.7f, 0.8f, 0.9f, 1.f);
+	LightDesc.vSpecular = LightDesc.vDiffuse;
+
+	if (FAILED(CGameInstance::GetInstance()->AddLight(LightDesc)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -427,9 +435,6 @@ void CArcadeMap::KeyInput()
 {
 	if (m_bKeyDeb)
 		return;
-
-
-
 
 
 }

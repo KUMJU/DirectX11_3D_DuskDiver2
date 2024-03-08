@@ -25,9 +25,9 @@
 			"EffectType" : 2,
 			"EndScale" : 
 			{
-				"x" : 1.5,
+				"x" : 1.1,
 				"y" : 9.6999998092651367,
-				"z" : 1.5
+				"z" : 1.1
 			},
 			"LerpColor": {
 				"w": 0.7,
@@ -40,20 +40,19 @@
 				"EffectLoop" : false,
 				"UVLoop" : true
 			},
-			"Mask" : 
-			{
-				"Speed" : 4.0,
-				"TexKey" : "T_LaserGradient",
-				"Using" : true,
-				"x" : 1.0,
-				"y" : 0.0
+			"Mask": {
+				"Speed": 4.0,
+				"TexKey": "T_LaserGradient2",
+				"Using": true,
+				"x": 1.0,
+				"y": 0.0
 			},
 			"MeshKey" : "Effect_Cylinder",
 			"MiddleScale" : 
 			{
-				"x" : 1.5,
+				"x" : 1.1,
 				"y" : 9.6999998092651367,
-				"z" : 1.5
+				"z" : 1.1
 			},
 			"Noise" : 
 			{
@@ -71,9 +70,9 @@
 			},
 			"StartScale" : 
 			{
-				"x" : 1.5,
+				"x" : 1.1,
 				"y" : 9.6999998092651367,
-				"z" : 1.5
+				"z" : 1.1
 			}
 		},
 		"LaserWind" : 
@@ -90,7 +89,7 @@
 				"w" : 1.0,
 				"x" : 1.0,
 				"y" : 0.85294121503829956,
-				"z" : 0.0
+				"z" : 0.7
 			},
 			"Duration" : 
 			{
@@ -109,7 +108,7 @@
 				"w" : 1.0,
 				"x" : 1.0,
 				"y" : 0.79411768913269043,
-				"z" : 0.0
+				"z" : 0.7
 			},
 			"Loop" : 
 			{

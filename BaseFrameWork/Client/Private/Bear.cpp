@@ -124,6 +124,14 @@ void CBear::Tick(_float _fTimeDelta)
         m_fDialogAccTime += _fTimeDelta;
 
         if (m_fDialogAccTime > 8.f && m_fDialogAccTime < 12.f) {
+
+            if (!m_bRunawaySound) {
+                CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MAPOBJ_SE);
+                CGameInstance::GetInstance()->PlayAudio(TEXT("UI_SkillSt.wav"), CSoundMgr::CHANNELID::CH_MAPOBJ_SE, 1.f);
+
+                m_bRunawaySound = true;
+            }
+
             _float fSpeedPerTick = 18.f * _fTimeDelta;
             _vector vPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
 
@@ -134,6 +142,7 @@ void CBear::Tick(_float _fTimeDelta)
         }
         else if (m_fDialogAccTime >= 12.f) {
             m_bRunaway = false;
+
             m_pTransformCom->Rotation({ 0.f,1.f, 0.f }, XMConvertToRadians(0.f));
             CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Event"), m_pTrigger);
         }
@@ -231,7 +240,8 @@ void CBear::OnHit()
 
     if (m_iHitNum >= 10) {
 
-        
+        CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MAPOBJ_SE);
+        CGameInstance::GetInstance()->PlayAudio(TEXT("UI_SceneSwitch_Burn_ed.wav"), CSoundMgr::CHANNELID::CH_MAPOBJ_SE, 1.f);
 
         CUIMgr::GetInstance()->StartDialog(TEXT("BearCoinQuest"));
         m_bRunaway = true;

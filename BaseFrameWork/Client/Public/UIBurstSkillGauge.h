@@ -21,6 +21,7 @@ public:
 	void SetBurstSkillGauge(_float _fGaugeAmount);
 	void ComputeUIAngle();
 
+	void ActiveBurstSkill();
 
 private:
 	shared_ptr<CTexture> m_pBackgroundTexture = nullptr;

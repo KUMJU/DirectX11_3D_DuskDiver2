@@ -41,13 +41,12 @@ float g_fLaplacianMask[9] =
 float g_fCoord[3] = { -1.f, 0.f, 1.f };
 
 /*ºí·¯*/
-float g_fWeight[13] =
-{
-    0.0561, 0.1353, 0.278, 0.4868, 0.7261, 0.9231,
-    1, 0.9231, 0.7261, 0.4868, 0.278, 0.1353, 0.0561
-};
+const float g_fWeight[17] = 
+    { 0.0561, 0.1353, 0.278, 0.4868, 0.6534, 0.7261, 0.8253, 0.9231, 1,
+    0.9231, 0.8253, 0.7261, 0.6534, 0.4868, 0.278, 0.1353, 0.0561 };
 
-float g_fWeightTotal = 6.2108;
+
+float g_fWeightTotal = 9.1682;
 
 
 
@@ -143,14 +142,14 @@ PS_OUT PS_BLUR_HORIZONTAL(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
-    float fPixelSize = 1.f / g_fScreenWidth;
+    float fPixelSize = 1.0 / g_fScreenWidth;
     
     float2 UVPos = 0;
     
-    for (int i = -6; i < 7; ++i)
+    for (int i = -8; i < 8; ++i)
     {
         UVPos = In.vTexcoord + float2(fPixelSize * i, 0);
-        Out.vColor += g_fWeight[6 + i] * g_GlowTexture.Sample(g_LinearSampler, UVPos);   
+        Out.vColor += g_fWeight[8 + i] * g_GlowTexture.Sample(g_LinearSampler, UVPos);   
         
         
     }
@@ -168,13 +167,13 @@ PS_OUT PS_BLUR_VERTICAL(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
-    float fPixelSize = 1.f / (g_fScreenHeight / 2.f);
+    float fPixelSize = 1.0 / (g_fScreenHeight / 2.0);
     float2 UVPos = 0;
     
-    for (int i = -6; i < 7; ++i)
+    for (int i = -8; i < 8; ++i)
     {
         UVPos = In.vTexcoord + float2(fPixelSize * i, 0);
-        Out.vColor += g_fWeight[6 + i] * g_GlowTexture.Sample(g_LinearSampler, UVPos);
+        Out.vColor += g_fWeight[8 + i] * g_GlowTexture.Sample(g_LinearSampler, UVPos);
     }
     
     Out.vColor /= g_fWeightTotal;

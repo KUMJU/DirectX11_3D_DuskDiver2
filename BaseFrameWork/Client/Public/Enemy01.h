@@ -46,6 +46,10 @@ public:
 private:
 	_uint m_iWalkPatternNum = 0;	
 
+	_bool m_bRoar = false;
+	_float m_fRoarAccTime = 0.f;
+
+
 private:
 
 	shared_ptr<class CWorldHPBar> m_pHPBar = nullptr;

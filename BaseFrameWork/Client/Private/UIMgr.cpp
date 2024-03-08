@@ -172,6 +172,7 @@ void CUIMgr::BurstModeEnd()
 	shared_ptr<CUI> pSkillBar = FindUI(FindKey);
 
 	if (pSkillBar) {
+		dynamic_pointer_cast<CUIBurstSkillGauge>(pSkillBar)->ActiveBurstSkill();
 		pSkillBar->SetEnable(false);
 		//¸®¼Â 
 	}
@@ -192,6 +193,26 @@ void CUIMgr::SetBurstSkillGauge(_float _fCurrentBurst)
 
 	if (pSkillBar) {
 		dynamic_pointer_cast<CUIBurstSkillGauge>(pSkillBar)->SetBurstSkillGauge(_fCurrentBurst);
+	}
+}
+
+void CUIMgr::DecreaseBurstGauge()
+{
+	wstring FindKey = TEXT("UI_BurstBar");
+	shared_ptr<CUI> pBurstBar = FindUI(FindKey);
+
+	if (pBurstBar) {
+		dynamic_pointer_cast<CUIBurstGaugeBar>(pBurstBar)->DecreaseBurstGauge();
+	}
+}
+
+void CUIMgr::ActiveBurstSkill()
+{
+	wstring FindKey = TEXT("UI_BurstSkillBar");
+	shared_ptr<CUI> pSkillBar = FindUI(FindKey);
+
+	if (pSkillBar) {
+		dynamic_pointer_cast<CUIBurstSkillGauge>(pSkillBar)->ActiveBurstSkill();
 	}
 }
 

@@ -329,6 +329,12 @@ void CEffectMgr::ReadData(const wstring& _strFullPath, const wstring& _strKeyNam
                 desc.fDistortionScale = 1.5f;
             }
 
+            if (keyName == "TransBallWind") {
+
+                desc.bDistortion = true;
+                desc.fDistortionScale = 1.5f;
+            }
+
 
             shared_ptr<CEffectMesh> pMeshEffect = CEffectMesh::Create(szMeshName, &desc, const_cast<char*>(keyName.c_str()), bLoop);
             pPreset->AddEffect(pMeshEffect);

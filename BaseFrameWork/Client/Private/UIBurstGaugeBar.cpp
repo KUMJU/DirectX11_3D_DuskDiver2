@@ -131,6 +131,19 @@ void CUIBurstGaugeBar::AddBurstGauge()
 
 }
 
+void CUIBurstGaugeBar::DecreaseBurstGauge()
+{
+    if (m_fCurrentBurstGauge <= 0.f) {
+        return;
+    }
+
+    m_fCurrentBurstGauge -= 1.f;
+    ComputeRatio();
+
+
+
+}
+
 void CUIBurstGaugeBar::SetBurstMode(_bool _bBurst)
 {
     m_bBurstMode = _bBurst;
@@ -150,6 +163,9 @@ void CUIBurstGaugeBar::ComputeRatio()
         m_fCurrentBurstGauge = 90.f;
     }
 
+    if (m_fCurrentBurstGauge < 0.f) {
+        m_fCurrentBurstGauge = 0.f;
+    }
 
     _int iFullGaugeNum = (_int)(m_fCurrentBurstGauge / 30);
 

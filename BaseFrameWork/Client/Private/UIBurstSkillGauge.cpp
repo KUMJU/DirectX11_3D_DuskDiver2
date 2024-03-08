@@ -155,6 +155,14 @@ void CUIBurstSkillGauge::ComputeUIAngle()
     m_fCurrentRate = m_fCurrentBurstGauge / m_fMaxGauge;
 }
 
+void CUIBurstSkillGauge::ActiveBurstSkill()
+{
+    m_fCurrentAngle = 0.f;
+    m_fCurrentBurstGauge = 0.f;
+    m_fCurrentRate = 0.f;
+
+}
+
 shared_ptr<CUIBurstSkillGauge> CUIBurstSkillGauge::Create()
 {
     shared_ptr<CUIBurstSkillGauge> pInstance = make_shared<CUIBurstSkillGauge>();

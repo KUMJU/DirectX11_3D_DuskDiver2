@@ -129,6 +129,7 @@ private:
 
 	_bool m_IsInBattle = false;
 	_bool m_IsOnMinigame = false;
+	_bool m_IsOnFinalAtk = false;
 
 	_bool m_IsLastAttack = false;
 
@@ -136,7 +137,7 @@ private:
 private:
 	_float m_fTransformTime = 0.f;
 
-	_float m_fBurstTotalTime = 30.f;
+	_float m_fBurstTotalTime = 60.f;
 	_float m_fBurstAccTime = 0.f;
 
 
@@ -187,6 +188,8 @@ private:
 
 	_float m_fBurstGage = 0.f;
 	_float m_fBurstSkillGauge = 0.f;
+	_float m_fBurstOnTimer = 0.f;
+
 	_int m_iSkillGage = 4;
 
 
@@ -294,6 +297,10 @@ private:
 	shared_ptr<class CEffectPreset> m_pDashPreset= nullptr;
 	shared_ptr<class CEffectPreset> m_pLastAttack= nullptr;
 	shared_ptr<class CEffectPreset> m_pLastAttack2= nullptr;
+
+	shared_ptr<class CEffectPreset> m_pTransformEffect= nullptr;
+	shared_ptr<class CEffectPreset> m_pTransformParticle = nullptr;
+
 	vector<shared_ptr<class CEffectPreset>> m_pGuagingPresets;
 
 public:

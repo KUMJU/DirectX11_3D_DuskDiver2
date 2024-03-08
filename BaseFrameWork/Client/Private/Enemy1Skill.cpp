@@ -44,7 +44,7 @@ HRESULT CEnemy1Skill::Initialize(_uint _iSkillNum)
         skillDesc.fDropSpeed = 4.f;
 
 
-        skillDesc.iStartTrackPosition = 14.0;
+        skillDesc.iStartTrackPosition = 18.0;
         skillDesc.iEndTrackPosition = 30.0;
 
 

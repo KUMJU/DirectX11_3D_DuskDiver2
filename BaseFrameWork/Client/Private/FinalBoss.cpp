@@ -154,13 +154,31 @@ void CFinalBoss::Tick(_float _fTimeDelta)
 
         //플레이어 조준 완료, 레이저 발사 
         if (!m_bLaserOn && m_fPatternCheckTime> 6.f) {
+
+            if (!m_bLaserSeDone) {
+                CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MON_SE);
+                CGameInstance::GetInstance()->PlayAudio(TEXT("se_EN0301_attack4_1.wav"), CSoundMgr::CHANNELID::CH_MON_SE, 1.f);
+
+                m_bLaserSeDone = true;
+            }
+
             m_pSkillSet->SwitchingSkill(CMonsterSkillSet::MON_SKILL4);
             m_pLaserEffectPreset2->PlayEffect();
             m_bLaserOn = true;
 
         }
 
-        if (!m_bLaserOn) {
+        if (!m_bLaserOn && m_fPatternCheckTime < 4.5f) {
+
+
+            if (!m_bLaserGaugeSeDone) {
+                CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MON_SE);
+                CGameInstance::GetInstance()->PlayAudio(TEXT("se_EN0301_attack4_1.wav"), CSoundMgr::CHANNELID::CH_MON_SE, 1.f);
+
+                m_bLaserGaugeSeDone = true;
+            }
+       
+
             m_pLaserEffectPreset->Tick(_fTimeDelta);
             CalcPlayerDistance();
         }
@@ -175,6 +193,8 @@ void CFinalBoss::Tick(_float _fTimeDelta)
             m_bLaserOn = false;
             m_fPatternCheckTime = 0;
 
+            m_bLaserSeDone = false;
+            m_bLaserGaugeSeDone = false;
         }
     }
 
@@ -295,6 +315,16 @@ void CFinalBoss::AttackPattern(_uint _iAtkNum)
         break;
 
     case 2:
+
+
+        CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MON);
+        CGameInstance::GetInstance()->PlayAudio(TEXT("se_EN0301_attack5_1.wav"), CSoundMgr::CHANNELID::CH_MON, 1.f);
+
+
+        CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MON_SE);
+        CGameInstance::GetInstance()->PlayAudio(TEXT("se_EN0301_attack5_2.wav"), CSoundMgr::CHANNELID::CH_MON_SE, 1.f);
+
+
         ChangeAnim(2, false);
         m_pSkillSet->SwitchingSkill(CMonsterSkillSet::MON_SKILL3);
 
@@ -302,6 +332,7 @@ void CFinalBoss::AttackPattern(_uint _iAtkNum)
         break;
 
     case 3:
+
         ChangeAnim(3, false);
         m_NextAnimIndex.push_back({ 4 , true });
         m_vOriginLookVec = m_pTransformCom->GetState(CTransform::STATE_LOOK);

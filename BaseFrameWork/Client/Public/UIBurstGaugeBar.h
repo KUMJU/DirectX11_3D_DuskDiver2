@@ -20,6 +20,7 @@ public:
 public:
 	void SetCurrentBurstGauge(_float _fBurstEnergy);
 	void AddBurstGauge();
+	void DecreaseBurstGauge();
 	void SetBurstMode(_bool _bBurst);
 
 private:

@@ -76,6 +76,17 @@ void CEnemy01::Tick(_float _fTimeDelta)
     if (!m_IsEnabled)
         return;
 
+    if (m_bRoar) {
+        m_fRoarAccTime += _fTimeDelta;
+
+        if (m_fRoarAccTime >= 2.f) {
+            CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MON_SE);
+            CGameInstance::GetInstance()->PlayAudio(TEXT("se_EN0001_roar_1.wav"), CSoundMgr::CHANNELID::CH_MON_SE, 1.f);
+
+            m_bRoar = false;
+        }
+    }
+
     __super::Tick(_fTimeDelta);
 
 
@@ -322,12 +333,17 @@ void CEnemy01::IdlePattern(_uint _iAtkNum)
         break;
     case 1:
         ChangeAnim(3, false);
+
         m_eCurrentState = EMONSTER_STATE::STATE_IDLE;
         m_iWalkPatternNum = 1;
 
         break;
     case 2:
         ChangeAnim(6, false);
+
+        m_bRoar = true;
+        m_fRoarAccTime = 0.f;
+
         m_NextAnimIndex.push_back({ 13, true });
         m_eCurrentState = EMONSTER_STATE::STATE_IDLE;
         break;

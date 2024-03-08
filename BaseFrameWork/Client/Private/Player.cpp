@@ -113,10 +113,22 @@ HRESULT CPlayer::Initialize()
     m_pLastAttack2->SetEnable(false);
     CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Effect"), m_pLastAttack2);
 
+    m_pTransformEffect = CEffectMgr::GetInstance()->FindEffect(TEXT("Transform"));
+    m_pTransformEffect->SetParentTransform(m_pTransformCom);
+    m_pTransformEffect->SetEnable(false);
+    CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Effect"), m_pTransformEffect);
+
+
+
+    m_pTransformParticle = CEffectMgr::GetInstance()->FindEffect(TEXT("ParticleSparkleBase"));
+    m_pTransformParticle->SetEnable(false);
+    CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Effect"), m_pTransformParticle);
 
     //SuperSkillAfter
 
     SetLight();
+
+
 
 
     /*모션 트레일 테스트*/
@@ -182,9 +194,17 @@ void CPlayer::Tick(_float _fTimeDelta)
             CUIMgr::GetInstance()->SetBurstMode();
             CGameInstance::GetInstance()->SetLightEnabled(m_iBurstModeLightIdx, true);
 
+            CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_FX);
+            CGameInstance::GetInstance()->PlayAudio(TEXT("se_GuardianWall_Shatter2.wav"), CSoundMgr::CHANNELID::CH_PLR_FX, 1.5f);
+
+            m_pTransformParticle->SetEffectPosition(m_pTransformCom->GetState(CTransform::STATE_POSITION));
+            m_pTransformParticle->PlayEffect();
+
             m_eCurrentState = HEROSTATE::STATE_IDLE;
             m_fTransformTime = 0.f;
             m_bBurstMode = true;
+
+
             
         }
         else {
@@ -465,7 +485,7 @@ void CPlayer::LateTick(_float _fTimeDelta)
     if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_GLOW, shared_from_this())))
         return;
 
-    if (m_bBurstMode) {
+    if (m_bBurstMode || m_IsOnFinalAtk) {
         if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_TRAIL, shared_from_this())))
             return;
     }
@@ -520,7 +540,7 @@ HRESULT CPlayer::RenderGlow(shared_ptr<class CShader> _pShader)
     _int iStartIdx= 5;
 
 
-    if (m_bBurstMode) {
+    if (m_bBurstMode || m_IsOnFinalAtk) {
         iStartIdx = 5;
     }
     else {
@@ -657,25 +677,32 @@ void CPlayer::CheckTimer(_float _fTimeDelta)
 {
     //버스트모드일때
     //여기서 버스트 게이지 차감 
-   /*if (m_bBurstMode) {
-        m_fBurstAccTime += _fTimeDelta;
-        m_fBurstGage -= 3.f;
+   if (m_bBurstMode) {
+       // m_fBurstAccTime += _fTimeDelta;
+        m_fBurstOnTimer += _fTimeDelta;
 
+        if (m_fBurstOnTimer >= 2.f) {
+            m_fBurstGage -= 1.f;
+            m_fBurstOnTimer = 0.f;
+            CUIMgr::GetInstance()->DecreaseBurstGauge();
 
-        if (m_fBurstAccTime >= m_fBurstTotalTime && m_eCurrentState == HEROSTATE::STATE_IDLE) {
+        }
 
-            m_fBurstAccTime = 0.f;
+        if (m_fBurstGage == 0.f && m_eCurrentState == HEROSTATE::STATE_IDLE) {
+
+          //  m_fBurstAccTime = 0.f;
             m_pModelCom = m_pBattleModelCom;
             m_bBurstMode = false;
             ChangeAnim(44, true);
             CUIMgr::GetInstance()->BurstModeEnd();
+        
 
             CGameInstance::GetInstance()->SetLightEnabled(m_iBurstModeLightIdx, false);
 
             m_pPlayerSkillset->SetBurstMode(false);
 
         }
-    }*/
+    }
 
 
     //스킬 게이지 체크 
@@ -936,6 +963,10 @@ void CPlayer::KeyInput(_float _fTimeDelta)
             m_iCurrentAnimIdx = 30;
             m_isAnimLoop = false;
 
+            CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_FX);
+            CGameInstance::GetInstance()->PlayAudio(TEXT("se_HE01_Super01_1.wav"), CSoundMgr::CHANNELID::CH_PLR_FX, 1.f);
+
+            m_pTransformEffect->PlayEffect();
 
             CCameraMgr::GetInstance()->StartPlrCamEvent(TEXT("BurstTransform"));
 
@@ -954,11 +985,15 @@ void CPlayer::KeyInput(_float _fTimeDelta)
         //Burst : Super1
     if (CGameInstance::GetInstance()->Key_Down('X')) {
         if (m_bBurstMode) {
+
             m_pPlayerSkillset->SwitchingSkill(CSkillSet::SKILL_SUPER1);
             m_eCurrentState = HEROSTATE::STATE_SKILL_Q;
             CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
             CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_61.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
             CCameraMgr::GetInstance()->StartPlrCamEvent(TEXT("SuperSkill1"));
+
+            CUIMgr::GetInstance()->ActiveBurstSkill();
+
             ChangeAnim(91, false);
             m_IsUsingSkill = true;
             m_bSuperArmor = true;
@@ -2027,6 +2062,7 @@ void CPlayer::OnHitHockeyBall()
 
 void CPlayer::SetOnFinalEvent(_bool _bOnEvent) {
     m_IsOnMinigame = _bOnEvent;
+    m_IsOnFinalAtk = _bOnEvent;
 
     if (_bOnEvent) {
         m_pModelCom = m_pBurstModelCom;

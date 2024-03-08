@@ -48,6 +48,11 @@ private:
 	_float m_fPatternCheckTime = 0.f;
 
 	_bool m_bLaserOn = false;
+	
+	_bool m_bLaserGaugeSeDone = false;
+	_bool m_bLaserSeDone = false;
+
+
 	_bool m_bSetOriginLook = true;
 	_float m_fTurnTime = 0.f;
 

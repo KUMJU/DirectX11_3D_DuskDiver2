@@ -41,6 +41,8 @@ public:
 	void SetBurstMode();
 	void BurstModeEnd();
 	void SetBurstSkillGauge(_float _fCurrentBurst);
+	void DecreaseBurstGauge();
+	void ActiveBurstSkill();
 
 public:
 	void StartDialog(const wstring& _strDialogKey);

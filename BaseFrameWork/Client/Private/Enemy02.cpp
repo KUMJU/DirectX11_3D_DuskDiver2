@@ -322,18 +322,28 @@ void CEnemy02::AttackPattern(_uint _iAtkNum)
     case 0:
         
         ChangeAnim(0, m_bLoop);
+
+        CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MON2);
+        CGameInstance::GetInstance()->PlayAudio(TEXT("se_EN0006_attack1.wav"), CSoundMgr::CHANNELID::CH_MON2, 1.f);
+
         m_pSkillSet->SwitchingSkill(CMonsterSkillSet::ESKILLSTATE::MON_SKILL1);
         m_iAtkPattern = _iAtkNum;
         break;
 
     case 1:
         ChangeAnim(2, m_bLoop);
+        CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MON2);
+        CGameInstance::GetInstance()->PlayAudio(TEXT("se_EN0006_attack2_2.wav"), CSoundMgr::CHANNELID::CH_MON2, 1.f);
+
         m_pSkillSet->SwitchingSkill(CMonsterSkillSet::ESKILLSTATE::MON_SKILL2);
         m_iAtkPattern = _iAtkNum;
         break;
 
     case 2:
         ChangeAnim(4, m_bLoop);
+
+        CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MON2);
+        CGameInstance::GetInstance()->PlayAudio(TEXT("se_EN0004_attack1_2.wav"), CSoundMgr::CHANNELID::CH_MON2, 1.f);
         m_pSkillSet->SwitchingSkill(CMonsterSkillSet::ESKILLSTATE::MON_SKILL3);
         m_iAtkPattern = _iAtkNum;
         break;

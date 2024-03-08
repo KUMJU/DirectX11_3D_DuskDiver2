@@ -49,7 +49,7 @@ void CSceneTriggerBoss::Tick(_float _fTimeDelta)
 
 
 		if (m_fEventAccTime >= 5.f && !m_bScriptDone) {
-			pBear->StartWhiteLerp();
+			pBear->StartWhiteLerp(); 
 			m_bScriptDone = true;
 
 		}
@@ -120,8 +120,10 @@ void CSceneTriggerBoss::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CC
 
 	if (EObjType::OBJ_PLAYER == _eObjType) {
 
-		pBear->SetPosition({ 0.f, 39.5f, -415.f, 1.f });
+		pBear->SetPosition({ 0.f, 39.5f, -400.f, 1.f });
 		pBear->SetEnable(true);
+
+		CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_BGM);
 
 		CUIMgr::GetInstance()->StartDialog(TEXT("LastBoss"));
 
