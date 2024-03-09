@@ -4,6 +4,8 @@
 #include "Collider.h"
 #include "GameInstance.h"
 
+#include "GroundCrack.h"
+
 CBossSkill2::CBossSkill2()
 {
 }
@@ -40,6 +42,11 @@ HRESULT CBossSkill2::Initialize()
     m_Collider = pCollider;
     m_Infos.push_back(skillDesc);
 
+    m_pGroundCrack = CGroundCrack::Create();
+    m_pGroundCrack->SetEnable(false);
+    m_pGroundCrack->SetPosition({ 0.f, 39.5f, -410.f, 1.f });
+    CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_GameObject"), m_pGroundCrack);
+
     return S_OK;
 }
 
@@ -57,6 +64,8 @@ void CBossSkill2::Tick(_float _fTimeDelta)
 
         CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MON_SE);
         CGameInstance::GetInstance()->PlayAudio(TEXT("se_EN0301_attack2_3.wav"), CSoundMgr::CHANNELID::CH_MON_SE, 1.f);
+
+        m_pGroundCrack->ActiveSkill();
 
     }
 

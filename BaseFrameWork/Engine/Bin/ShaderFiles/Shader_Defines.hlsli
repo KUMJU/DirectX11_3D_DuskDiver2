@@ -24,6 +24,13 @@ sampler g_LinearClampSampler = sampler_state
     AddressV = CLAMP;
 };
 
+sampler g_LinearMirrorSampler = sampler_state
+{
+    Filter = MIN_MAG_MIP_LINEAR;
+    AddressU = MIRROR;
+    AddressV = MIRROR;
+};
+
 /* For.Render_State */
 
 /* Rasterizer State : D3D11_RASTERIZER_DESC */

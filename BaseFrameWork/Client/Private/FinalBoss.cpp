@@ -14,6 +14,8 @@
 #include "EffectMgr.h"
 #include "EffectPreset.h"
 
+#include "GroundCrack.h"
+
 
 CFinalBoss::CFinalBoss()
 {
@@ -157,7 +159,7 @@ void CFinalBoss::Tick(_float _fTimeDelta)
 
             if (!m_bLaserSeDone) {
                 CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MON_SE);
-                CGameInstance::GetInstance()->PlayAudio(TEXT("se_EN0301_attack4_1.wav"), CSoundMgr::CHANNELID::CH_MON_SE, 1.f);
+                CGameInstance::GetInstance()->PlayAudio(TEXT("se_EN0302_freeze.wav"), CSoundMgr::CHANNELID::CH_MON_SE, 1.f);
 
                 m_bLaserSeDone = true;
             }
@@ -192,9 +194,8 @@ void CFinalBoss::Tick(_float _fTimeDelta)
             ChangeAnim(5, false);
             m_bLaserOn = false;
             m_fPatternCheckTime = 0;
-
-            m_bLaserSeDone = false;
-            m_bLaserGaugeSeDone = false;
+      
+           
         }
     }
 
@@ -311,7 +312,6 @@ void CFinalBoss::AttackPattern(_uint _iAtkNum)
         ChangeAnim(1, false);
         m_pSkillSet->SwitchingSkill(CMonsterSkillSet::MON_SKILL2);
 
-
         break;
 
     case 2:
@@ -332,6 +332,9 @@ void CFinalBoss::AttackPattern(_uint _iAtkNum)
         break;
 
     case 3:
+
+        m_bLaserSeDone = false;
+        m_bLaserGaugeSeDone = false;
 
         ChangeAnim(3, false);
         m_NextAnimIndex.push_back({ 4 , true });

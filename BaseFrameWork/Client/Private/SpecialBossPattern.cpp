@@ -84,6 +84,9 @@ void CSpecialBossPattern::Tick(_float _fTimeDelta)
 		if (m_fAccTime >= 3.2f && !m_bCamFocusDone) {
 			m_pPlayer->SetGaugingEffect(0);
 
+			CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
+			CGameInstance::GetInstance()->PlayAudio(TEXT("se_powercharge.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 2.0f);
+
 			m_pGaugeUI->SetEnable(true);
 			m_pKeySpaceBarUI->SetEnable(true);
 
@@ -108,6 +111,10 @@ void CSpecialBossPattern::Tick(_float _fTimeDelta)
 			CGameInstance::GetInstance()->SetTimerOffset(TEXT("Timer_60"), 0.3f);
 			CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MONHIT);
 			CGameInstance::GetInstance()->PlayAudio(TEXT("se_slowmotion_finish.wav"), CSoundMgr::CHANNELID::CH_MONHIT, 1.3f);
+			
+			CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MAPSE);
+			CGameInstance::GetInstance()->PlayAudio(TEXT("se_EN0301_dead2.wav"), CSoundMgr::CHANNELID::CH_MAPSE, 1.3f);
+
 			m_bTimerSetting = true;
 		}
 
@@ -133,6 +140,11 @@ void CSpecialBossPattern::PatternStart()
 {
 	m_IsEnabled = true;
 	/*Player*/
+
+	CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MON);
+	CGameInstance::GetInstance()->PlayAudio(TEXT("se_EN0301_attack3_1.wav"), CSoundMgr::CHANNELID::CH_MON, 1.3f);
+
+
 	m_pPlayer->SetOnFinalEvent(true);	
 	CCameraMgr::GetInstance()->SetFreeCamPos({ 0.f, 43.f, -407.f, 1.f }, { 0.f, 42.5f, -425.f , 1.f });
 

@@ -27,6 +27,9 @@ private:
 
 public:
 	virtual void ResetEffect();
+	void SetGlowColor(_float4 _vColor) {
+		m_vGlowColor = _vColor;
+	}
 
 private:
 	CVIBufferInstancing::INSTANCE_DESC m_InstanceDesc = {};
@@ -37,7 +40,8 @@ private:
 	_bool m_bFollow = false;
 	_bool m_bSetParentMat = false;
 
-
+	_float4 m_vGlowColor = _float4();
+	
 private:
 	_matrix m_ParentMat;
 

@@ -16,6 +16,12 @@ public:
 	virtual void LateTick(_float _fTimeDelta);
 	virtual HRESULT Render();
 
+protected:
+	virtual void EndSkill();
+
+private:
+	_bool m_bParticleDone = false;
+
 public:
 
 	static shared_ptr<CSkillE> Create();

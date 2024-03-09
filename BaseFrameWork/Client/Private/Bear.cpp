@@ -9,6 +9,8 @@
 #include "GameInstance.h"
 #include "SceneTriggerInsert.h"
 
+#include "EffectMgr.h"
+#include "EffectPreset.h"
 
 CBear::CBear()
 {
@@ -49,6 +51,12 @@ HRESULT CBear::Initialize()
     m_eMonsterType = EMONSTER_TYPE::MONSTER_NORMAL;
 
     m_pTrigger = CSceneTriggerInsert::Create({ -3.f, 27.f, -139.f });
+
+    m_pTransformPreset = CEffectMgr::GetInstance()->FindAndCloneEffect(TEXT("TransformBoss"));
+   // m_pTransformPreset->SetParentTransform(m_pTransformCom);
+    m_pTransformPreset->SetEnable(false);
+    CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Effect"), m_pTransformPreset);
+
 
     return S_OK;
 }
@@ -155,8 +163,8 @@ void CBear::Tick(_float _fTimeDelta)
 
         m_fLerpTime += _fTimeDelta;
 
-        if (m_fLerpTime > 2.0f) {
-            m_fLerpTime = 2.0f;
+        if (m_fLerpTime > 1.5f) {
+            m_fLerpTime = 1.5f;
         }
 
     }
@@ -202,7 +210,7 @@ HRESULT CBear::Render()
         if (m_bWhiteLerp) {
             iPassIdx = 8;
 
-            _float fCurrentRate = m_fLerpTime / 2.0f;
+            _float fCurrentRate = m_fLerpTime / 1.5f;
             if (FAILED(m_pShader->BindRawValue("g_fLerpRate", &fCurrentRate, sizeof(_float))))
                 return E_FAIL;
 
@@ -268,6 +276,14 @@ void CBear::Shaking(_float _fTimeDelta)
 
     vPos = XMVectorSetW(vPos + fDistance, 1.f);
     m_pTransformCom->SetState(CTransform::STATE_POSITION, vPos);
+
+}
+
+void CBear::StartWhiteLerp()
+{
+    m_bWhiteLerp = true;
+    m_pTransformPreset->SetEffectPosition(m_pTransformCom->GetState(CTransform::STATE_POSITION) + _vector({ 0.f, 1.f, 0.f, 0.f }));
+    m_pTransformPreset->PlayEffect();
 
 }
 

@@ -32,6 +32,7 @@ public:
 		_float2 vDuration;
 		_bool bUVLoop;
 		_bool bLoop;
+	
 		char* szNoiseTexKey;
 		char* szMaskTexKey;
 
@@ -40,6 +41,7 @@ public:
 
 		_bool bDistortion;
 		_float fDistortionScale;
+		_bool bDistortionMesh = false;
 	};
 
 

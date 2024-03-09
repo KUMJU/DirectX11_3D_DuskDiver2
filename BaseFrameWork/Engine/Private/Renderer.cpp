@@ -129,7 +129,7 @@ HRESULT CRenderer::Initialize()
 		return E_FAIL;
 	if (FAILED(CGameInstance::GetInstance()->ReadyDebug(TEXT("Target_Specular"), 300.0f, 300.0f, 200.0f, 200.0f)))
 		return E_FAIL;
-	if (FAILED(CGameInstance::GetInstance()->ReadyDebug(TEXT("Target_BlurObj"), 300.0f, 500.0f, 200.0f, 200.0f)))
+	if (FAILED(CGameInstance::GetInstance()->ReadyDebug(TEXT("Target_Distortion"), 300.0f, 500.0f, 200.0f, 200.0f)))
 		return E_FAIL;
 
 	//if (FAILED(CGameInstance::GetInstance()->ReadyDebug(TEXT("Target_Glow"), 500.0f, 100.0f, 200.0f, 200.0f)))
@@ -673,7 +673,7 @@ HRESULT CRenderer::RenderDebug()
 
 	CGameInstance::GetInstance()->RenderMRT(TEXT("MRT_GameObjects"), m_pShader, m_pVIBuffer);
 	CGameInstance::GetInstance()->RenderMRT(TEXT("MRT_LightAcc"), m_pShader, m_pVIBuffer);
-	CGameInstance::GetInstance()->RenderMRT(TEXT("MRT_BlurObj"), m_pShader, m_pVIBuffer);
+	CGameInstance::GetInstance()->RenderMRT(TEXT("MRT_Distortion"), m_pShader, m_pVIBuffer);
 	//CGameInstance::GetInstance()->RenderMRT(TEXT("MRT_MotionTrail"), m_pShader, m_pVIBuffer);
 
 	for (auto& pComponent : m_DebugCom)

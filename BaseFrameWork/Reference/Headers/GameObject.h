@@ -39,6 +39,7 @@ public:
 	virtual HRESULT RenderTrail() { return S_OK; }
 	virtual HRESULT RenderDistortion(shared_ptr<class CShader> _pShader) { return S_OK; }
 	virtual HRESULT RenderGlow(shared_ptr<class CShader> _pShader) { return S_OK; }
+	virtual HRESULT RenderShadow() { return S_OK; }
 
 public:
 	bool IsActive() { return m_IsActive; }

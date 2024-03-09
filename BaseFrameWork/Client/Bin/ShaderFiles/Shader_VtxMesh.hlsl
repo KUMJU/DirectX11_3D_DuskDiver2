@@ -328,6 +328,9 @@ PS_EFFECT_OUT PS_EFFECT_LOOP_MAIN(PS_IN In)
     float fG = lerp(g_vColor.g, g_vLerpColor.g, In.vTexcoord.y);
     float fB = lerp(g_vColor.b, g_vLerpColor.b, In.vTexcoord.y);
         
+ 
+    if (g_vColor.a < 0.1)
+        discard;
         
     Out.vDiffuse.rgb = float3(fR, fG, fB);
     Out.vDiffuse.a = 1.f;
@@ -380,6 +383,10 @@ PS_EFFECT_OUT PS_EFFECT_ONCE_MAIN(PS_IN In)
 {
     PS_EFFECT_OUT Out = (PS_EFFECT_OUT) 0;
 
+    
+    if (g_vColor.a < 0.1)
+        discard;
+    
     if (g_bDiffuseTex)
     {
         Out.vDiffuse = g_DiffuseTexture.Sample(g_LinearSampler, In.vTexcoord);

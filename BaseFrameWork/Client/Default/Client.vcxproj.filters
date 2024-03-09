@@ -325,6 +325,9 @@
     <Filter Include="02. GameObject\06. EventTrigger\03. CutSceneTrigger\BossEvent">
       <UniqueIdentifier>{4af3600f-1861-4668-84b1-35976901bbcc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\00.Creature\01. Monster\04. FinalBoss\GroundCrack">
+      <UniqueIdentifier>{922c60b5-636b-47f0-bf70-b99053976e1f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -651,6 +654,9 @@
     <ClInclude Include="..\Public\SceneTriggerBoss.h">
       <Filter>02. GameObject\06. EventTrigger\03. CutSceneTrigger\BossEvent</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\GroundCrack.h">
+      <Filter>02. GameObject\00.Creature\01. Monster\04. FinalBoss\GroundCrack</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -958,6 +964,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\BossSkill1.cpp">
       <Filter>02. GameObject\05. Skill\01. MonsterSkill\03. Skill_FinalBoss\Skill1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GroundCrack.cpp">
+      <Filter>02. GameObject\00.Creature\01. Monster\04. FinalBoss\GroundCrack</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -18,6 +18,10 @@ public:
 	virtual void LateTick(_float _fTimeDelta);
 	virtual HRESULT Render();
 
+private:
+	shared_ptr<class CGroundCrack> m_pGroundCrack = nullptr;
+
+
 public:
 	static shared_ptr<CBossSkill2> Create();
 

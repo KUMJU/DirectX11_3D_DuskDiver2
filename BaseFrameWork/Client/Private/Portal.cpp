@@ -63,6 +63,9 @@ void CPortal::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _
 		//플레이어 위치 셋팅 + 네비게이션 인덱스 갱신
 		pPlayer->SetPosition(XMVectorSetW(vPos, 1.f));
 		dynamic_pointer_cast<CNavigation>(pPlayer->GetComponent(TEXT("Com_Navigation")))->CalcCurrentPos(vPos);
+		
+		CUIMgr::GetInstance()->SetQuestDesc(TEXT("타워를 부수고 결계를 푼다"));
+
 		m_IsActive = false;
 	}
 }

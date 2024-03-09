@@ -40,7 +40,7 @@ private:
 	void Shaking(_float _fTimeDelta);
 
 public:
-	void StartWhiteLerp() { m_bWhiteLerp = true; }
+	void StartWhiteLerp();
 
 private:
 	_float m_fMovingTime = false;
@@ -82,6 +82,9 @@ private:
 private:
 	//맞으면 얼굴이 바뀐다 x0 < 이런식으로..
 	shared_ptr<CModel> m_pHitModel = nullptr;
+
+private:
+	shared_ptr<class CEffectPreset> m_pTransformPreset = nullptr;
 
 public:
 	static shared_ptr<CBear> Create();

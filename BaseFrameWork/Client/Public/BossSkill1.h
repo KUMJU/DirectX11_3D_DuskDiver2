@@ -18,6 +18,7 @@ public:
 	virtual void LateTick(_float _fTimeDelta);
 	virtual HRESULT Render();
 
+
 public:
 	static shared_ptr<CBossSkill1> Create();
 

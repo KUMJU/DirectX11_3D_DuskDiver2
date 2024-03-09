@@ -107,15 +107,23 @@ void CEffectMesh::LateTick(_float _fTimeDelta)
     }
 
 
+
     if (m_MeshDesc.bDistortion) {
-        if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_NONLIGHT, shared_from_this())))
-            return;
 
-        if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_GLOW, shared_from_this())))
-            return;
+        if (m_MeshDesc.bDistortionMesh) {
+            if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_DISTORTION, shared_from_this())))
+                return;
+        }
+        else {
+            if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_NONLIGHT, shared_from_this())))
+                return;
 
-        if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_DISTORTION, shared_from_this())))
-            return;
+            if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_GLOW, shared_from_this())))
+                return;
+
+            if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_DISTORTION, shared_from_this())))
+                return;
+        }
     }
     else {
         if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_NONLIGHT, shared_from_this())))

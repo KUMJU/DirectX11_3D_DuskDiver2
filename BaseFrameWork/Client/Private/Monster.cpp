@@ -404,6 +404,8 @@ void CMonster::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> 
             if (m_iLastHitIndex == pSkill->GetSkillIndex() && m_iCurrentSkillOrderIndex == pSkill->GetCurrentOrder())
                 return;
 
+            m_pTarget->AddBurstGauge();
+
         }
 
         //공격 중이었다면 공격 취소 
@@ -470,7 +472,7 @@ void CMonster::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> 
             _float fXDistance = fX(m_RandomNumber);
             _float fYDistance = fY(m_RandomNumber);
 
-            vPos = vPos + _vector({ fXDistance ,fYDistance,  0.f});
+            vPos = vPos + _vector({ fXDistance ,fYDistance,  3.f});
 
             CEffectMgr::GetInstance()->SetHitMark(vPos);
 
@@ -481,7 +483,6 @@ void CMonster::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> 
 
         m_bRimLight = true;
 
-        m_pTarget->AddBurstGauge();
         m_bCollisionCheck = true;
         //넉백 여부, 넉업 여부, 
         OnHit();

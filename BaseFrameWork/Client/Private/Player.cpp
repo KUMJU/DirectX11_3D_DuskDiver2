@@ -686,6 +686,11 @@ void CPlayer::CheckTimer(_float _fTimeDelta)
             m_fBurstOnTimer = 0.f;
             CUIMgr::GetInstance()->DecreaseBurstGauge();
 
+
+            if (m_fBurstGage < 0.f) {
+                m_fBurstGage = 0.f;
+            }
+
         }
 
         if (m_fBurstGage == 0.f && m_eCurrentState == HEROSTATE::STATE_IDLE) {
@@ -993,6 +998,9 @@ void CPlayer::KeyInput(_float _fTimeDelta)
             CCameraMgr::GetInstance()->StartPlrCamEvent(TEXT("SuperSkill1"));
 
             CUIMgr::GetInstance()->ActiveBurstSkill();
+            m_fBurstSkillGauge = 0.f;
+
+
 
             ChangeAnim(91, false);
             m_IsUsingSkill = true;

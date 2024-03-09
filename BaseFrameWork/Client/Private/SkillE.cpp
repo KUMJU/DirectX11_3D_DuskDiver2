@@ -3,6 +3,7 @@
 
 #include "GameInstance.h"
 #include "Collider.h"
+#include "EffectPreset.h"
 
 CSkillE::CSkillE()
 {
@@ -17,7 +18,9 @@ HRESULT CSkillE::Initialize()
     m_eSkillOwner = EOWNER_TYPE::OWNER_PLAYER;
     m_pEffectPreset = CEffectMgr::GetInstance()->FindEffect(TEXT("SkillR"));
 
-
+    m_pParticlePreset = CEffectMgr::GetInstance()->FindAndCloneEffect(TEXT("UpParticleBase"));
+    CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Effect"), m_pParticlePreset);
+    m_pParticlePreset->SetEnable(false);
 
     m_bCancle = true;
 
@@ -112,9 +115,18 @@ void CSkillE::Tick(_float _fTimeDelta)
 
         CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_FX);
         CGameInstance::GetInstance()->PlayAudio(TEXT("se_HE01_Skill02_4.wav"), CSoundMgr::CHANNELID::CH_PLR_FX, 1.f);
-
     }
 
+    //끝나는 파티클 
+    if (m_fAccTime >= 2.1f && !m_bParticleDone) {
+
+        m_bParticleDone = true;
+        _vector vLook = m_pOwnerTransform->GetState(CTransform::STATE_LOOK);
+        _vector vParticlePos = m_pOwnerTransform->GetState(CTransform::STATE_POSITION) + vLook;
+        m_pParticlePreset->SetEffectPosition(vParticlePos);
+        m_pParticlePreset->PlayEffect();
+      
+    }
 
 
     __super::Tick(_fTimeDelta);
@@ -132,6 +144,12 @@ HRESULT CSkillE::Render()
     __super::Render();
 
     return S_OK;
+}
+
+void CSkillE::EndSkill()
+{
+
+    m_bParticleDone = false;
 }
 
 shared_ptr<CSkillE> CSkillE::Create()

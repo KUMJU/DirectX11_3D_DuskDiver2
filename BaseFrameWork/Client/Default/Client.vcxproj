@@ -198,6 +198,7 @@
     <ClInclude Include="..\Public\EventTrigger.h" />
     <ClInclude Include="..\Public\FinalBoss.h" />
     <ClInclude Include="..\Public\GameMgr.h" />
+    <ClInclude Include="..\Public\GroundCrack.h" />
     <ClInclude Include="..\Public\HockeyBall.h" />
     <ClInclude Include="..\Public\imconfig.h" />
     <ClInclude Include="..\Public\imgui.h" />
@@ -308,6 +309,7 @@
     <ClCompile Include="..\Private\EventTrigger.cpp" />
     <ClCompile Include="..\Private\FinalBoss.cpp" />
     <ClCompile Include="..\Private\GameMgr.cpp" />
+    <ClCompile Include="..\Private\GroundCrack.cpp" />
     <ClCompile Include="..\Private\HockeyBall.cpp" />
     <ClCompile Include="..\Private\imgui.cpp" />
     <ClCompile Include="..\Private\ImguiMgr.cpp" />

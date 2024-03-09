@@ -42,6 +42,7 @@ HRESULT CBossSkill1::Initialize()
     m_Collider = pCollider;
     m_Infos.push_back(skillDesc);
 
+    
     return S_OK;
 }
 
@@ -60,7 +61,7 @@ void CBossSkill1::Tick(_float _fTimeDelta)
 
         CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MON_SE);
         CGameInstance::GetInstance()->PlayAudio(TEXT("se_EN0301_attack1_2.wav"), CSoundMgr::CHANNELID::CH_MON_SE, 1.f);
-
+       
     }
 
     __super::Tick(_fTimeDelta);

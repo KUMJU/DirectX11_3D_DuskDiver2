@@ -539,6 +539,135 @@
 				"y": 1.0,
 				"z": 1.2000000476837158
 			}
+		},
+
+		"CrashWind": {
+			"Center": {
+				"x": 0.0,
+				"y": 0.0,
+				"z": 1.0
+			},
+			"ChangeTime": 1.3,
+			"Color": {
+				"w": 1.0,
+				"x": 1.0,
+				"y": 0.95588237047195435,
+				"z": 0.95588237047195435
+			},
+			"Duration": {
+				"x": 2.0,
+				"y": 2.4
+			},
+			"EffectType": 2,
+			"EndScale": {
+				"x": 1.5,
+				"y": 1.5,
+				"z": 1.5
+			},
+			"LerpColor": {
+				"w": 1.0,
+				"x": 0.51960784196853638,
+				"y": 1.0,
+				"z": 0.94348323345184326
+			},
+			"Loop": {
+				"EffectLoop": false,
+				"UVLoop": false
+			},
+			"Mask": {
+				"Speed": 1.0,
+				"TexKey": "T_St3_Land_Wind_00",
+				"Using": true,
+				"x": 0.0,
+				"y": -1.0
+			},
+			"MeshKey": "Tornado_Wind",
+			"MiddleScale": {
+				"x": 1.5,
+				"y": 1.5,
+				"z": 1.5
+			},
+			"Noise": {
+				"Speed": 0.0,
+				"TexKey": "flow_67",
+				"Using": true,
+				"x": 0.0,
+				"y": 0.0
+			},
+			"Rotation": {
+				"x": 0.0,
+				"y": -130.0,
+				"z": 0.0
+			},
+			"StartScale": {
+				"x": 1.5,
+				"y": 1.5,
+				"z": 1.5
+			}
+		},
+		"CrashWind2": {
+			"Center": {
+				"x": 0.0,
+				"y": 0.0,
+				"z": 1.0
+			},
+			"ChangeTime": 1.3,
+			"Color": {
+				"w": 1.0,
+				"x": 1.0,
+				"y": 0.95588237047195435,
+				"z": 0.95588237047195435
+			},
+			"Duration": {
+				"x": 2.0,
+				"y": 2.4
+			},
+			"EffectType": 2,
+			"EndScale": {
+				"x": 1.5,
+				"y": 1.5,
+				"z": 1.5
+			},
+			"LerpColor": {
+				"w": 1.0,
+				"x": 0.51960784196853638,
+				"y": 1.0,
+				"z": 0.94348323345184326
+			},
+			"Loop": {
+				"EffectLoop": false,
+				"UVLoop": false
+			},
+			"Mask": {
+				"Speed": 1.0,
+				"TexKey": "T_St3_Land_Wind_00",
+				"Using": true,
+				"x": 0.0,
+				"y": -1.0
+			},
+			"MeshKey": "Tornado_Wind",
+			"MiddleScale": {
+				"x": 1.5,
+				"y": 1.5,
+				"z": 1.5
+			},
+			"Noise": {
+				"Speed": 0.0,
+				"TexKey": "flow_67",
+				"Using": true,
+				"x": 0.0,
+				"y": 0.0
+			},
+			"Rotation": {
+				"x": 0.0,
+				"y": 60.0,
+				"z": 0.0
+			},
+			"StartScale": {
+				"x": 1.5,
+				"y": 1.5,
+				"z": 1.5
+			}
 		}
 	},
 	"Preset Info" : 

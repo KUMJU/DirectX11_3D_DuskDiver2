@@ -1,0 +1,86 @@
+{
+	"Elements" : 
+	{
+		"CrashWind" : 
+		{
+			"Center" : 
+			{
+				"x" : 0.0,
+				"y" : 1.0,
+				"z" : 15.0
+			},
+			"ChangeTime" : 2.0,
+			"Color" : 
+			{
+				"w" : 1.0,
+				"x" : 1.0,
+				"y" : 0.95588237047195435,
+				"z" : 0.95588237047195435
+			},
+			"Duration" : 
+			{
+				"x" : 1.0,
+				"y" : 4.0
+			},
+			"EffectType" : 2,
+			"EndScale" : 
+			{
+				"x" : 5.0,
+				"y" : 5.0,
+				"z" : 5.0
+			},
+			"LerpColor" : 
+			{
+				"w" : 1.0,
+				"x" : 0.51960784196853638,
+				"y" : 1.0,
+				"z" : 0.94348323345184326
+			},
+			"Loop" : 
+			{
+				"EffectLoop" : false,
+				"UVLoop" : false
+			},
+			"Mask" : 
+			{
+				"Speed" : 2.0,
+				"TexKey" : "T_St3_Land_Wind_00",
+				"Using" : true,
+				"x" : 0.0,
+				"y" : -1.0
+			},
+			"MeshKey" : "Tornado_Wind",
+			"MiddleScale" : 
+			{
+				"x" : 5.0,
+				"y" : 5.0,
+				"z" : 5.0
+			},
+			"Noise" : 
+			{
+				"Speed" : 0.0,
+				"TexKey" : "flow_67",
+				"Using" : true,
+				"x" : 0.0,
+				"y" : 0.0
+			},
+			"Rotation" : 
+			{
+				"x" : 0.0,
+				"y" : 0.0,
+				"z" : 0.0
+			},
+			"StartScale" : 
+			{
+				"x" : 5.0,
+				"y" : 5.0,
+				"z" : 5.0
+			}
+		}
+	},
+	"Preset Info" : 
+	{
+		"Duration" : 6.0,
+		"Loop" : false
+	}
+}

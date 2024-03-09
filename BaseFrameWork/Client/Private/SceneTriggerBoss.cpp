@@ -44,11 +44,14 @@ void CSceneTriggerBoss::PriorityTick(_float _fTimeDelta)
 
 void CSceneTriggerBoss::Tick(_float _fTimeDelta)
 {
-	if (m_bCollided) {
+	if (m_bCollided) {                                                           
 		m_fEventAccTime += _fTimeDelta;
 
 
 		if (m_fEventAccTime >= 5.f && !m_bScriptDone) {
+			CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MAPOBJ_SE);
+			CGameInstance::GetInstance()->PlayAudio(TEXT("se_BossTransform_Ready.wav"), CSoundMgr::CHANNELID::CH_MAPOBJ_SE, 1.5f);
+
 			pBear->StartWhiteLerp(); 
 			m_bScriptDone = true;
 
@@ -56,18 +59,23 @@ void CSceneTriggerBoss::Tick(_float _fTimeDelta)
 
 		if (m_fEventAccTime >= 7.f && !m_bScreenEffectDone) {
 		
+			pBear->SetEnable(false);
+
+			CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MAPOBJ_SE);
+			CGameInstance::GetInstance()->PlayAudio(TEXT("se_BossTransform.wav"), CSoundMgr::CHANNELID::CH_MAPOBJ_SE, 2.0f);
+
 			CUIMgr::GetInstance()->StartScreenEffect(CUIScreenEffect::TYPE_WHITEOUT);
 			m_bScreenEffectDone = true;
 		
 		}
 
-		if (m_fEventAccTime >= 9.5f && !m_bSpawnBoss) {
+		if (m_fEventAccTime >= 8.5f && !m_bSpawnBoss) {
 			SpawnBoss();
 			
 			m_bSpawnBoss = true;
 		}
 
-		if (m_fEventAccTime >= 11.f && !m_bBossSpawnDone) {
+		if (m_fEventAccTime >= 9.5f && !m_bBossSpawnDone) {
 
 			CCameraMgr::GetInstance()->SetLerpMoving({ 0.f, 47.f, -409.f, 1.f }, 0.5f);
 
@@ -77,15 +85,18 @@ void CSceneTriggerBoss::Tick(_float _fTimeDelta)
 			m_bBossSpawnDone = true;
 		}
 
-		if (m_fEventAccTime >= 11.5f && !m_bShakingEvent) {
+		if (m_fEventAccTime >= 10.5f && !m_bShakingEvent) {
 			CGameInstance::GetInstance()->SetZoomBlurOn(30.f, 0.3f);
 			CCameraMgr::GetInstance()->SetShakingMode(5.f, 1.f, false);
 			m_bShakingEvent = true;
 		}
 
-		if (m_fEventAccTime >= 12.8f) {
+		if (m_fEventAccTime >= 11.8f) {
 
 			CCameraMgr::GetInstance()->SetLerpMovingBack(0.5f);
+			CUIMgr::GetInstance()->SetQuestDesc(TEXT("È¥µ·ÀÇ ¾ß¼ö¸¦ Ã³Ä¡ÇÑ´Ù"));
+
+
 			m_IsActive = false;
 		}
 
@@ -120,7 +131,7 @@ void CSceneTriggerBoss::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CC
 
 	if (EObjType::OBJ_PLAYER == _eObjType) {
 
-		pBear->SetPosition({ 0.f, 39.5f, -400.f, 1.f });
+		pBear->SetPosition({ 1.f, 39.5f, -400.f, 1.f });
 		pBear->SetEnable(true);
 
 		CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_BGM);

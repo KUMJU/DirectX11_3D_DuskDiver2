@@ -219,14 +219,16 @@ PS_OUT PS_DISTORTION(PS_IN In)
      float2 fWeight = lerp(In.vTexcoord, vUV, 0.5f);
     vector vDistorBuffer;
     
-    if (vDistortionColor.r > 0.f)
+    if (vDistortionColor.r > 0.f ||
+        vDistortionColor.g > 0.f || 
+        vDistortionColor.b > 0.f)
     {
-        vDistorBuffer = g_BackBufferTexture.Sample(g_LinearSampler, fWeight);
+        vDistorBuffer = g_BackBufferTexture.Sample(g_LinearMirrorSampler, fWeight);
  
     }
     else
     {
-        vDistorBuffer = g_BackBufferTexture.Sample(g_LinearSampler, In.vTexcoord);
+        vDistorBuffer = g_BackBufferTexture.Sample(g_LinearMirrorSampler, In.vTexcoord);
 
     }
     

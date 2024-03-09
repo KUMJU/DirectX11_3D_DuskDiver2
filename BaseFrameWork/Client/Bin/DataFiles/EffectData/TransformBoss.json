@@ -1,0 +1,73 @@
+{
+	"Elements": {
+		"PopBall": {
+			"Center": {
+				"x": 0.0,
+				"y": 0.5,
+				"z": 0.0
+			},
+			"ChangeTime": 2.5000001907348633,
+			"Color": {
+				"w": 1.0,
+				"x": 1.0,
+				"y": 0.94607841968536377,
+				"z": 0.94607841968536377
+			},
+			"Duration": {
+				"x": 3.0,
+				"y": 4.6
+			},
+			"EffectType": 2,
+			"EndScale": {
+				"x": 80.0,
+				"y": 80.0,
+				"z": 80.0
+			},
+			"LerpColor": {
+				"w": 1.0,
+				"x": 1.0,
+				"y": 0.92156863212585449,
+				"z": 0.92156863212585449
+			},
+			"Loop": {
+				"EffectLoop": false,
+				"UVLoop": true
+			},
+			"Mask": {
+				"Speed": 0.0,
+				"TexKey": "T_128White",
+				"Using": true,
+				"x": 0.0,
+				"y": 0.0
+			},
+			"MeshKey": "ball",
+			"MiddleScale": {
+				"x": 50.0,
+				"y": 50.0,
+				"z": 50.0
+			},
+			"Noise": {
+				"Speed": 0.0,
+				"TexKey": "flow_00",
+				"Using": false,
+				"x": 0.0,
+				"y": 0.0
+			},
+			"Rotation": {
+				"x": 0.0,
+				"y": 0.0,
+				"z": 0.0
+			},
+			"StartScale": {
+				"x": 1.0,
+				"y": 1.0,
+				"z": 1.0
+			}
+		}
+	},
+	"Preset Info" : 
+	{
+		"Duration" : 10.0,
+		"Loop" : false
+	}
+}

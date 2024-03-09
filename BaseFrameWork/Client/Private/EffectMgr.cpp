@@ -326,13 +326,20 @@ void CEffectMgr::ReadData(const wstring& _strFullPath, const wstring& _strKeyNam
             if (keyName == "Tornado") {
 
                 desc.bDistortion = true;
-                desc.fDistortionScale = 1.5f;
+                desc.fDistortionScale = 3.f;
             }
 
             if (keyName == "TransBallWind") {
 
                 desc.bDistortion = true;
                 desc.fDistortionScale = 1.5f;
+            }
+
+            if (keyName == "DistortionMesh") {
+
+                desc.bDistortion = true;
+                desc.fDistortionScale = 1.f;
+                desc.bDistortionMesh = true;
             }
 
 
