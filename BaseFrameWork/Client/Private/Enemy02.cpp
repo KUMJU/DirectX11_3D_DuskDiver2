@@ -11,6 +11,8 @@
 #include "Navigation.h"
 #include "WorldHPBar.h"
 
+#include "Texture.h"
+
 CEnemy02::CEnemy02()
 {
 }
@@ -75,6 +77,12 @@ void CEnemy02::Tick(_float _fTimeDelta)
 
     __super::Tick(_fTimeDelta);
 
+
+    if (m_bDie) {
+
+        m_fDissolveAccTime += _fTimeDelta;
+
+    }
 
     //공격 쿨타임일때
     if (m_IsAtkCool) {
@@ -294,6 +302,22 @@ HRESULT CEnemy02::Render()
 
     _uint iNumMeshes = m_pModelCom->GetNumMeshes();
 
+    _uint iPassIdx = 1;
+
+
+    if (m_bDie) {
+        iPassIdx = 4;
+
+        _float fRate = m_fDissolveAccTime / m_fTotalDissolveTime;
+
+        if (FAILED(m_pShader->BindRawValue("g_fDissolveRate", &fRate, sizeof(_float))))
+            return E_FAIL;
+
+        if (FAILED(m_pDissolveTexture->BindShaderResource(m_pShader, "g_DissolveTexture", 0)))
+            return E_FAIL;
+
+    }
+
     for (size_t i = 0; i < iNumMeshes; i++) {
 
         if (FAILED(m_pModelCom->BindMaterialShaderResource(m_pShader, (_uint)i, aiTextureType::aiTextureType_DIFFUSE, "g_DiffuseTexture")))
@@ -302,7 +326,7 @@ HRESULT CEnemy02::Render()
         if (FAILED(m_pModelCom->BindBoneMatrices(m_pShader, "g_BoneMatrices", (_uint)i)))
             return E_FAIL;
 
-        if (FAILED(m_pShader->Begin(1)))
+        if (FAILED(m_pShader->Begin(iPassIdx)))
             return E_FAIL;
 
         if (FAILED(m_pModelCom->Render((_uint)i)))

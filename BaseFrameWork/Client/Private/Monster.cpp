@@ -32,6 +32,7 @@ HRESULT CMonster::Initialize(CTransform::TRANSFORM_DESC* _pDesc)
     }
 
     m_RandomNumber = mt19937_64(m_RandomDevice());
+    m_pDissolveTexture = CGameInstance::GetInstance()->GetTexture(TEXT("smoke"));
 
     return S_OK;
 }
@@ -83,6 +84,8 @@ void CMonster::SetSpawnState()
     m_bSuperArmor = false;
     m_bSuperArmorCoolTime = 0.f;
     m_bHit = false;
+
+    m_fDissolveAccTime = 0.f;
 
 }
 

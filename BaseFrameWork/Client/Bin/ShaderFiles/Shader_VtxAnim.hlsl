@@ -13,6 +13,11 @@ float4 g_vCamLook;
 
 float g_fTrailAlpha = 1.f;
 
+/*디졸브*/
+texture2D g_DissolveTexture;
+float g_fDissolveRate;
+
+
 struct VS_IN
 {
     float3 vPosition : POSITION;
@@ -186,7 +191,6 @@ PS_GLOW PS_MOTIONTRAIL(PS_IN In)
 
 }
 
-
 PS_GLOW PS_BLUR(PS_IN In)
 {
     PS_GLOW Out = (PS_GLOW) 0;
@@ -208,6 +212,34 @@ PS_GLOW PS_BLUR(PS_IN In)
         return Out;
 
 }
+
+PS_OUT PS_DISSOLVE(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+   
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(g_LinearSampler, In.vTexcoord);
+    float fDissolveAlpha = g_DissolveTexture.Sample(g_LinearSampler, In.vTexcoord).r;
+    
+    
+    
+    if (fDissolveAlpha < g_fDissolveRate)
+    {
+        discard;
+    }
+    
+        
+    Out.vDiffuse = float4(vMtrlDiffuse.xyz, 1);
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    
+    //Far 받아와서 처리 
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
+
+   
+    return Out;
+
+}
+
 
 technique11 DefaultTechnique
 {
@@ -253,6 +285,18 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_GLOW();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_BLUR();
+    }
+
+
+    pass Dissolve //4
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_DISSOLVE();
     }
 
 

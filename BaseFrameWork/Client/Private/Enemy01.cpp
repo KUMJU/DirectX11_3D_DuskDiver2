@@ -13,6 +13,8 @@
 
 #include "WorldHPBar.h"
 
+#include "Texture.h"
+
 
 CEnemy01::CEnemy01()
 {
@@ -75,6 +77,13 @@ void CEnemy01::Tick(_float _fTimeDelta)
 {
     if (!m_IsEnabled)
         return;
+
+
+    if (m_bDie) {
+
+        m_fDissolveAccTime += _fTimeDelta;
+
+    }
 
     if (m_bRoar) {
         m_fRoarAccTime += _fTimeDelta;
@@ -250,6 +259,23 @@ HRESULT CEnemy01::Render()
         return E_FAIL;
 
     _uint iNumMeshes = m_pModelCom->GetNumMeshes();
+    _uint iPassIdx = 1;
+
+
+    if (m_bDie) {
+        iPassIdx = 4;
+
+        _float fRate = m_fDissolveAccTime / m_fTotalDissolveTime;
+
+        if (FAILED(m_pShader->BindRawValue("g_fDissolveRate", &fRate, sizeof(_float))))
+            return E_FAIL;
+
+        if(FAILED(m_pDissolveTexture->BindShaderResource(m_pShader, "g_DissolveTexture",0)))
+            return E_FAIL;
+
+    }
+
+
 
     for (size_t i = 0; i < iNumMeshes; i++) {
 
@@ -259,7 +285,7 @@ HRESULT CEnemy01::Render()
         if (FAILED(m_pModelCom->BindBoneMatrices(m_pShader, "g_BoneMatrices", (_uint)i)))
             return E_FAIL;
 
-        if (FAILED(m_pShader->Begin(1)))
+        if (FAILED(m_pShader->Begin(iPassIdx)))
             return E_FAIL;
 
         if (FAILED(m_pModelCom->Render((_uint)i)))

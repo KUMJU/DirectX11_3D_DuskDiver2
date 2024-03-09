@@ -30,6 +30,16 @@ void CPortal::PriorityTick(_float _fTimeDelta)
 void CPortal::Tick(_float _fTimeDelta)
 {
 
+	if (m_bCollide) {
+		m_fAccTime += _fTimeDelta;
+
+		if (m_fAccTime >= 12.f) {
+			CUIMgr::GetInstance()->StartQuest(TEXT("타워를 부수고 결계를 푼다"));
+			m_IsActive = false;
+		}
+
+	}
+
 	__super::Tick(_fTimeDelta);
 }
 
@@ -52,6 +62,9 @@ void CPortal::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _
 	if (!m_IsEnabled)
 		return;
 
+	if (m_bCollide)
+		return;
+
 	//플레이어 충돌
 
 	if (CGameObject::EObjType::OBJ_PLAYER == _eObjType) {
@@ -64,9 +77,7 @@ void CPortal::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _
 		pPlayer->SetPosition(XMVectorSetW(vPos, 1.f));
 		dynamic_pointer_cast<CNavigation>(pPlayer->GetComponent(TEXT("Com_Navigation")))->CalcCurrentPos(vPos);
 		
-		CUIMgr::GetInstance()->SetQuestDesc(TEXT("타워를 부수고 결계를 푼다"));
-
-		m_IsActive = false;
+		m_bCollide = true;
 	}
 }
 

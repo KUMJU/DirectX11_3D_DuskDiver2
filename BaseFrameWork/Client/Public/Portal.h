@@ -24,6 +24,10 @@ private:
 
 
 private:
+	_bool m_bCollide = false;
+	_float m_fAccTime = 0.f;
+
+private:
 	virtual void OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _pCollider) override;
 
 public:

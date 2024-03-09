@@ -27,9 +27,7 @@ private:
 	void IfEmptyAnimList() override;
 	_bool CalcDistanceOption() override;
 
-
 private:
-
 	void ResetState();
 
 private:

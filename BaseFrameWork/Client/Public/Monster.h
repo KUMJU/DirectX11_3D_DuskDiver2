@@ -10,6 +10,7 @@ class CShader;
 class CGameInstance;
 class CCollider;
 class CNavigation;
+class CTexture;
 END
 
 BEGIN(Client)
@@ -185,6 +186,13 @@ protected:
 
 	_bool m_bCollisionCheck = false;
 	_bool m_bHit = false;
+
+	shared_ptr<CTexture> m_pDissolveTexture = nullptr;
+
+//디졸브
+protected:
+	_float m_fTotalDissolveTime = 3.5f;
+	_float m_fDissolveAccTime = 0.f;
 
 //림라이트
 protected:

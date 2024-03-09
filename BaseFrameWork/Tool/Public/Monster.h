@@ -187,7 +187,6 @@ protected:
 protected:
 	shared_ptr<CMonsterSkillSet> m_pSkillSet = nullptr;
 
-
 public:
 
 	virtual void OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _pCollider);
