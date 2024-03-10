@@ -150,6 +150,9 @@ HRESULT CTargetMgr::RenderMRT(const wstring& _strMRTTag, shared_ptr<class CShade
     return S_OK;
 }
 
+#endif
+
+
 HRESULT CTargetMgr::BindBackBufferSRV(shared_ptr<class CShader> _pShader, const _char* _pConstantName)
 {
     ID3D11RenderTargetView* pBackBufferRTV = nullptr;
@@ -170,13 +173,12 @@ HRESULT CTargetMgr::BindBackBufferSRV(shared_ptr<class CShader> _pShader, const 
     pBackBufferRTV->Release();
     pBackBufferResource->Release();
 
-    if(FAILED(_pShader->BindSRV(_pConstantName, m_pBackBufferSRV)))
+    if (FAILED(_pShader->BindSRV(_pConstantName, m_pBackBufferSRV)))
         return E_FAIL;
 
     return S_OK;
 }
 
-#endif
 
 shared_ptr<class CRenderTarget> CTargetMgr::FindRenderTarget(const wstring& _strTargetTag)
 {

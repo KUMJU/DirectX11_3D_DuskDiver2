@@ -37,12 +37,15 @@ private:
 #ifdef _DEBUG
 public:
 	HRESULT AddDebugComponent(shared_ptr<class CComponent> _pComponent);
-	void SetZoomBlur(_float _fZoomPower, _float _fZoomAccTime);
 
 private:
 	list<shared_ptr<class CComponent>> m_DebugCom;
 
 #endif
+
+
+public:
+	void SetZoomBlur(_float _fZoomPower, _float _fZoomAccTime);
 
 
 private:

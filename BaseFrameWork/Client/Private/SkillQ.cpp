@@ -29,8 +29,7 @@ HRESULT CSkillQ::Initialize()
 
     m_eSkillOwner = EOWNER_TYPE::OWNER_PLAYER;
 
-  //  m_pParticlePreset = CEffectMgr::GetInstance()->FindEffect(TEXT("ParticleBase"));
-    m_pParticlePreset = CEffectMgr::GetInstance()->FindEffect(TEXT("ParticleBaseMap"));
+    m_pParticlePreset = CEffectMgr::GetInstance()->FindEffect(TEXT("ParticleBase"));
     CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Effect"), m_pParticlePreset);
 
     SKILLINFO info = {};

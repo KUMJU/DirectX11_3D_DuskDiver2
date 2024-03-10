@@ -15,7 +15,7 @@ HRESULT CEnemy2Skill::Initialize(_uint _iComboNum)
 
     m_eSkillOwner = EOWNER_TYPE::OWNER_MONSTER;
 
-    m_iDamage = 15.f;
+    m_iDamage = 5.f;
 
     //돌면서 공격
     if (1 == _iComboNum) {

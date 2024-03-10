@@ -3,6 +3,9 @@
 #include "Client_Defines.h"
 #include "Skill.h"
 
+BEGIN(Client)
+
+
 class CSkill_BurstR : public CSkill
 {
 public:
@@ -19,6 +22,8 @@ public:
 private:
 	_bool m_bShaking = false;
 
+	shared_ptr<class CGroundCrack> m_pGroundCrack = nullptr;
+
 public:
 
 	static shared_ptr<CSkill_BurstR> Create();
@@ -26,4 +31,6 @@ public:
 
 
 };
+
+END
 

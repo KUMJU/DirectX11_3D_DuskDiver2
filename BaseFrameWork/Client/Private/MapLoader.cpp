@@ -15,6 +15,8 @@
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
 
+#include "MapMesh.h"
+
 #include "ImGuizmo.h"
 
 IMPLEMENT_SINGLETON(CMapLoader)
@@ -55,6 +57,39 @@ void CMapLoader::LoadMapData(const char* _filePath, vector<char*>* _ObjectNameLi
 		}
 
 		ClassifyObject(wstrModelName, &CurrentMatrix, _ObjectList);
+	}
+
+	fp.close();
+}
+
+void CMapLoader::LoadMapMesh(const char* _filePath, vector<char*>* _ObjectNameList, list<shared_ptr<CGameObject>>* _ObjectList, vector<shared_ptr<CModel>>* _modelList)
+{
+	ifstream fp(_filePath, ios::binary);
+
+	_int iIndex = 0;
+
+	fp.read((char*)&iIndex, sizeof(_int));
+
+	for (_int i = 0; i < iIndex; ++i) {
+
+		_float4x4 CurrentMatrix;
+		fp.read((char*)&CurrentMatrix, sizeof(_float) * 16);
+		char* szKeyName = new char[MAX_PATH];
+
+		fp.read((char*)szKeyName, sizeof(char) * MAX_PATH);
+
+		string strModelName = szKeyName;
+
+		wstring wstrModelName;
+		wstrModelName.assign(strModelName.begin(), strModelName.end());
+
+		if (m_IsImguiLoad) {
+			_ObjectNameList->push_back(szKeyName);
+		}
+
+		shared_ptr<CGameObject> pInstance =  CMapMesh::Create(wstrModelName);
+		CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Object"), pInstance);
+		pInstance->SetWorldMatrix(CurrentMatrix);
 	}
 
 	fp.close();

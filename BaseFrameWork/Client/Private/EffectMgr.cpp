@@ -343,6 +343,36 @@ void CEffectMgr::ReadData(const wstring& _strFullPath, const wstring& _strKeyNam
             }
 
 
+            if (keyName == "Laser") {
+
+                desc.bDistortion = true;
+                desc.fDistortionScale = 1.5f;
+            }
+
+            if (keyName == "BallOutSide") {
+
+                desc.bDistortion = true;
+                desc.fDistortionScale = 2.5f;
+            }
+
+            if (keyName == "OutsideDome") {
+
+                desc.bDistortion = true;
+                desc.fDistortionScale = 1.5f;
+            }
+
+            if (keyName == "PlasmaOutside1") {
+
+                desc.bDistortion = true;
+                desc.fDistortionScale = 1.f;
+            }
+
+            if (keyName == "PlasmaOutside2") {
+
+                desc.bDistortion = true;
+                desc.fDistortionScale = 1.f;
+            }
+
             shared_ptr<CEffectMesh> pMeshEffect = CEffectMesh::Create(szMeshName, &desc, const_cast<char*>(keyName.c_str()), bLoop);
             pPreset->AddEffect(pMeshEffect);
             pMeshEffect->SetEnable(false);

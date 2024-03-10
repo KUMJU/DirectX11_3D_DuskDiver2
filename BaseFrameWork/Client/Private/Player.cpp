@@ -1327,7 +1327,7 @@ void CPlayer::KeyInput(_float _fTimeDelta)
             m_pDashPreset->PlayEffect();
             FinalAnimNum = 81;
 
-            CGameInstance::GetInstance()->SetZoomBlurOn(40.f, 0.1f);
+            CGameInstance::GetInstance()->SetZoomBlurOn(40.f, 0.01f);
 
             CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_FX);
             CGameInstance::GetInstance()->PlayAudio(TEXT("se_ba_dash_h_01.wav"), CSoundMgr::CHANNELID::CH_PLR_FX, 1.f);

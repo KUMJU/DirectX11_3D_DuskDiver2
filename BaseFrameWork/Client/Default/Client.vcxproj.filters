@@ -328,6 +328,9 @@
     <Filter Include="02. GameObject\00.Creature\01. Monster\04. FinalBoss\GroundCrack">
       <UniqueIdentifier>{922c60b5-636b-47f0-bf70-b99053976e1f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\10. MapMesh">
+      <UniqueIdentifier>{e7113372-127e-4e36-8e70-5ad3c1e19f4e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -657,6 +660,9 @@
     <ClInclude Include="..\Public\GroundCrack.h">
       <Filter>02. GameObject\00.Creature\01. Monster\04. FinalBoss\GroundCrack</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\MapMesh.h">
+      <Filter>02. GameObject\10. MapMesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -967,6 +973,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\GroundCrack.cpp">
       <Filter>02. GameObject\00.Creature\01. Monster\04. FinalBoss\GroundCrack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MapMesh.cpp">
+      <Filter>02. GameObject\10. MapMesh</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

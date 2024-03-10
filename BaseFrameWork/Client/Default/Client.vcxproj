@@ -217,6 +217,7 @@
     <ClInclude Include="..\Public\Logo.h" />
     <ClInclude Include="..\Public\MainApp.h" />
     <ClInclude Include="..\Public\MapLoader.h" />
+    <ClInclude Include="..\Public\MapMesh.h" />
     <ClInclude Include="..\Public\MapObject.h" />
     <ClInclude Include="..\Public\MiddleBossSkill.h" />
     <ClInclude Include="..\Public\Minigame.h" />
@@ -325,6 +326,7 @@
     <ClCompile Include="..\Private\Logo.cpp" />
     <ClCompile Include="..\Private\MainApp.cpp" />
     <ClCompile Include="..\Private\MapLoader.cpp" />
+    <ClCompile Include="..\Private\MapMesh.cpp" />
     <ClCompile Include="..\Private\MapObject.cpp" />
     <ClCompile Include="..\Private\MiddleBossSkill.cpp" />
     <ClCompile Include="..\Private\Minigame.cpp" />

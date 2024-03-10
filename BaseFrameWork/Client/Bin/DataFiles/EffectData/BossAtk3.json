@@ -1,86 +1,264 @@
 {
-	"Elements" : 
-	{
-		"ScreamWind" : 
-		{
-			"Center" : 
-			{
-				"x" : 0.0,
-				"y" : 5.0,
-				"z" : 10.0
+	"Elements": {
+		"WindBeam": {
+			"Center": {
+				"x": 0.0,
+				"y": 5.0,
+				"z": 5.0
 			},
-			"ChangeTime" : 2.2999999523162842,
-			"Color" : 
-			{
-				"w" : 1.0,
-				"x" : 1.0,
-				"y" : 1.0,
-				"z" : 1.0
+			"ChangeTime": 2.5999999046325684,
+			"Color": {
+				"w": 1.0,
+				"x": 1.0,
+				"y": 0.91176468133926392,
+				"z": 0.91176468133926392
 			},
-			"Duration" : 
-			{
-				"x" : 2.2000000476837158,
-				"y" : 2.7000000476837158
+			"Duration": {
+				"x": 2.0,
+				"y": 3.0
 			},
-			"EffectType" : 2,
-			"EndScale" : 
-			{
-				"x" : 80.0,
-				"y" : 80.0,
-				"z" : 80.0
+			"EffectType": 2,
+			"EndScale": {
+				"x": 120.0,
+				"y": 120.0,
+				"z": 120.0
 			},
-			"LerpColor" : 
-			{
-				"w" : 1.0,
-				"x" : 1.0,
-				"y" : 1.0,
-				"z" : 0.82843136787414551
+			"LerpColor": {
+				"w": 1.0,
+				"x": 0.67594194412231445,
+				"y": 0.95098036527633667,
+				"z": 0.86199730634689331
 			},
-			"Loop" : 
-			{
-				"EffectLoop" : false,
-				"UVLoop" : false
+			"Loop": {
+				"EffectLoop": false,
+				"UVLoop": false
 			},
-			"Mask" : 
-			{
-				"Speed" : 2.0,
-				"TexKey" : "T_128White",
-				"Using" : true,
-				"x" : 0.0,
-				"y" : -1.0
+			"Mask": {
+				"Speed": 2.0,
+				"TexKey": "T_Storm_Mask_04",
+				"Using": true,
+				"x": 0.0,
+				"y": -1.0
 			},
-			"MeshKey" : "HemiSphere",
-			"MiddleScale" : 
-			{
-				"x" : 30.0,
-				"y" : 30.0,
-				"z" : 30.0
+			"MeshKey": "HemiSphere",
+			"MiddleScale": {
+				"x": 70.0,
+				"y": 70.0,
+				"z": 70.0
 			},
-			"Noise" : 
-			{
-				"Speed" : 0.0,
-				"TexKey" : "flow_00",
-				"Using" : true,
-				"x" : 0.0,
-				"y" : 0.0
+			"Noise": {
+				"Speed": 0.0,
+				"TexKey": "flow_67",
+				"Using": true,
+				"x": 0.0,
+				"y": 0.0
 			},
-			"Rotation" : 
-			{
-				"x" : 0.0,
-				"y" : -90.0,
-				"z" : 0.0
+			"Rotation": {
+				"x": 0.0,
+				"y": -90.0,
+				"z": 0.0
 			},
-			"StartScale" : 
-			{
-				"x" : 4.0,
-				"y" : 4.0,
-				"z" : 4.0
+			"StartScale": {
+				"x": 10.0,
+				"y": 10.0,
+				"z": 10.0
+			}
+		},
+		"WindGround": {
+			"Center": {
+				"x": 0.0,
+				"y": 0.10000000149011612,
+				"z": 2.0
+			},
+			"ChangeTime": 2.5999999046325684,
+			"Color": {
+				"w": 1.0,
+				"x": 1.0,
+				"y": 1.0,
+				"z": 1.0
+			},
+			"Duration": {
+				"x": 2.0,
+				"y": 3.0
+			},
+			"EffectType": 2,
+			"EndScale": {
+				"x": 100.0,
+				"y": 30.0,
+				"z": 100.0
+			},
+			"LerpColor": {
+				"w": 1.0,
+				"x": 0.67594194412231445,
+				"y": 0.95098036527633667,
+				"z": 0.86199730634689331
+			},
+			"Loop": {
+				"EffectLoop": false,
+				"UVLoop": false
+			},
+			"Mask": {
+				"Speed": 3.0,
+				"TexKey": "T_Storm_Mask_04",
+				"Using": true,
+				"x": 0.0,
+				"y": 1.0
+			},
+			"MeshKey": "helfBallGround",
+			"MiddleScale": {
+				"x": 80.0,
+				"y": 30.0,
+				"z": 80.0
+			},
+			"Noise": {
+				"Speed": 0.0,
+				"TexKey": "flow_67",
+				"Using": true,
+				"x": 0.0,
+				"y": 0.0
+			},
+			"Rotation": {
+				"x": 0.0,
+				"y": 90.0,
+				"z": 0.0
+			},
+			"StartScale": {
+				"x": 30.0,
+				"y": 30.0,
+				"z": 30.0
+			}
+		},
+		"Trianglel": {
+			"Center": {
+				"x": 0.0,
+				"y": 0.2000000149011612,
+				"z": -2.0
+			},
+			"ChangeTime": 2.3999999046325684,
+			"Color": {
+				"w": 1.0,
+				"x": 1.0,
+				"y": 1.0,
+				"z": 1.0
+			},
+			"Duration": {
+				"x": 2.0,
+				"y": 3.0
+			},
+			"EffectType": 2,
+			"EndScale": {
+				"x": 50.0,
+				"y": 50.0,
+				"z": 50.0
+			},
+			"LerpColor": {
+				"w": 1.0,
+				"x": 0.67594194412231445,
+				"y": 0.95098036527633667,
+				"z": 0.86199730634689331
+			},
+			"Loop": {
+				"EffectLoop": false,
+				"UVLoop": false
+			},
+			"Mask": {
+				"Speed": 1.0,
+				"TexKey": "T_Storm_Mask_04",
+				"Using": true,
+				"x": 0.0,
+				"y": 1.0
+			},
+			"MeshKey": "TrianglePlane",
+			"MiddleScale": {
+				"x": 50.0,
+				"y": 50.0,
+				"z": 50.0
+			},
+			"Noise": {
+				"Speed": 0.0,
+				"TexKey": "flow_70",
+				"Using": true,
+				"x": 0.0,
+				"y": 0.0
+			},
+			"Rotation": {
+				"x": 90.0,
+				"y": 0.0,
+				"z": 0.0
+			},
+			"StartScale": {
+				"x": 50.0,
+				"y": 50.0,
+				"z": 50.0
+			}
+		},
+		"DistortionMesh": {
+			"Center": {
+				"x": 0.0,
+				"y": 0.89999997615814209,
+				"z": 0.80000001192092896
+			},
+			"Rotation": {
+				"x": 0.0,
+				"y": 0.0,
+				"z": 0.0
+			},
+			"ChangeTime": 3.05000001668930054,
+			"Color": {
+				"w": 0.0,
+				"x": 0.5,
+				"y": 0.0,
+				"z": 0.0
+			},
+			"Duration": {
+				"x": 2.00000001192092896,
+				"y": 3.3000000476837158
+			},
+			"EffectType": 2,
+			"EndScale": {
+				"x": 60.10000000149011612,
+				"y": 60.10000000149011612,
+				"z": 60.10000000149011612
+			},
+			"LerpColor": {
+				"w": 0.0,
+				"x": 0.50,
+				"y": 0.0,
+				"z": 0.0
+			},
+			"Loop": {
+				"EffectLoop": false,
+				"UVLoop": true
+			},
+			"Mask": {
+				"Speed": 3.0,
+				"TexKey": "T_Fire_Tile_00",
+				"Using": true,
+				"x": 1.0,
+				"y": 0.0
+			},
+			"MeshKey": "ball",
+			"MiddleScale": {
+				"x": 30.50000001192092896,
+				"y": 30.50000001192092896,
+				"z": 30.50000001192092896
+			},
+			"Noise": {
+				"Speed": 1.0,
+				"TexKey": "T_GPP_Noise_Smooth_A",
+				"Using": true,
+				"x": 1.0,
+				"y": 0.0
+			},
+			"StartScale": {
+				"x": 0.5,
+				"y": 0.5,
+				"z": 0.5
 			}
 		}
 	},
-	"Preset Info" : 
-	{
-		"Duration" : 4.0,
-		"Loop" : false
+	"Preset Info": {
+		"Duration": 4.5,
+		"Loop": false
 	}
 }

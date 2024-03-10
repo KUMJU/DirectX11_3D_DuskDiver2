@@ -10,6 +10,7 @@
 
 #include "Dummy.h"
 #include "Player.h"
+#include "MapMesh.h"
 
 #include "Engine_Defines.h"
 #include "GameMgr.h"
@@ -192,7 +193,7 @@ HRESULT CArcadeMap::ReadyLayerCamera(const wstring& _strLayerTag)
 HRESULT CArcadeMap::ReadyLayerMap(const wstring& _strLayerTag)
 {
 	//¸Ê ¼³Ä¡ 
-	shared_ptr<CGameObject> pDummy = CDummy::Create(TEXT("ArcadeMap_Final"));
+	shared_ptr<CGameObject> pDummy = CMapMesh::Create(TEXT("ArcadeMap_Final"));
 	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, _strLayerTag, pDummy)))
 		return E_FAIL;
 
@@ -218,11 +219,13 @@ HRESULT CArcadeMap::ReadyLayerMap(const wstring& _strLayerTag)
 
 	/*¸ÊÆÄÆ¼Å¬ Å×½ºÆ®*/
 
-	//shared_ptr<CEffectPreset> pParticlePreset = CEffectMgr::GetInstance()->FindEffect(TEXT("ParticleBaseMap"));
-	//pParticlePreset->SetEffectPosition({ 0.f, 40.f, -245.f, 1.f });
+	shared_ptr<CEffectPreset> pParticlePreset = CEffectMgr::GetInstance()->FindEffect(TEXT("ParticleBaseMap"));
+	pParticlePreset->SetEffectPosition({ 0.f, 0.f, -225.f, 1.f });
 
-	//if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Effect"), pParticlePreset)))
-	//	return E_FAIL;
+	if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Effect"), pParticlePreset)))
+		return E_FAIL;
+
+	pParticlePreset->PlayEffect();
 
 	return S_OK;
 }

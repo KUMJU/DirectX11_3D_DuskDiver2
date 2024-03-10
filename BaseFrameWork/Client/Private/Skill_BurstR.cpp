@@ -5,6 +5,8 @@
 #include "GameInstance.h"
 
 #include "CameraMgr.h"
+#include "GroundCrack.h"
+#include "EffectPreset.h"
 
 CSkill_BurstR::CSkill_BurstR()
 {
@@ -17,6 +19,12 @@ HRESULT CSkill_BurstR::Initialize()
     m_bMultiAtk = false;
     m_pEffectPreset = CEffectMgr::GetInstance()->FindEffect(TEXT("BurstR"));
 
+    m_pParticlePreset = CEffectMgr::GetInstance()->FindAndCloneEffect(TEXT("UpParticleBase"));
+    m_pParticlePreset->SetEnable(false);
+    m_pParticlePreset->SetParticleGlowColor({1.f, 1.f, 0.1f, 1.f});
+
+    if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Effect"), m_pParticlePreset)))
+        return E_FAIL;
 
     m_iDamage = 20;
 
@@ -59,7 +67,11 @@ HRESULT CSkill_BurstR::Initialize()
     m_Infos.push_back(info);
     m_Infos.push_back(info2);
 
+    m_pGroundCrack = CGroundCrack::Create();
+    m_pGroundCrack->SetEnable(false);
 
+    if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Effect"), m_pGroundCrack)))
+        return E_FAIL;
 
     return S_OK;
 }
@@ -101,6 +113,13 @@ void CSkill_BurstR::Tick(_float _fTimeDelta)
     if (m_fAccTime >= 2.55f && !m_bSetTimer) {
 
         CCameraMgr::GetInstance()->SetBattleZoom(0.2f, 20.f);
+
+        m_pGroundCrack->SetPosition(m_pOwnerTransform->GetState(CTransform::STATE_POSITION));
+        m_pGroundCrack->ActiveSkill();
+
+        m_pParticlePreset->SetEffectPosition(m_pOwnerTransform->GetState(CTransform::STATE_POSITION) - _vector({ 0.f, -1.f, 0.f, 0.f }));
+        m_pParticlePreset->PlayEffect();
+
         m_bSetTimer = true;
 
 

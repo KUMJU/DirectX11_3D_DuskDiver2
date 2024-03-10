@@ -223,6 +223,9 @@ HRESULT CRenderer::AddDebugComponent(shared_ptr<class CComponent> _pComponent)
 
 	return S_OK;
 }
+
+#endif // _DEBUG
+
 void CRenderer::SetZoomBlur(_float _fZoomPower, _float _fZoomAccTime)
 {
 	m_fZoomBlurPower = _fZoomPower;
@@ -231,7 +234,6 @@ void CRenderer::SetZoomBlur(_float _fZoomPower, _float _fZoomAccTime)
 	m_fBlurTotalTime = _fZoomAccTime;
 
 }
-#endif // _DEBUG
 
 HRESULT CRenderer::RenderPriority()
 {

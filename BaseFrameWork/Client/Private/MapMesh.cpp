@@ -1,6 +1,5 @@
 #include "pch.h"
-#include "Dummy.h"
-
+#include "MapMesh.h"
 #include "GameInstance.h"
 #include "Shader.h"
 #include "Model.h"
@@ -10,12 +9,15 @@
 #include "EffectMgr.h"
 #include "EffectPreset.h"
 
-CDummy::CDummy()
+CMapMesh::CMapMesh()
 {
 }
 
+CMapMesh::~CMapMesh()
+{
+}
 
-HRESULT CDummy::Initialize(const wstring& _strKey)
+HRESULT CMapMesh::Initialize(const wstring& _strKey)
 {
     if (FAILED(__super::Initialize(nullptr)))
         return E_FAIL;
@@ -28,30 +30,27 @@ HRESULT CDummy::Initialize(const wstring& _strKey)
     m_pModelCom = CGameInstance::GetInstance()->GetModel(_strKey);
     m_Components.emplace(TEXT("Com_Model"), m_pModelCom);
 
-    //m_pEffectPreset = CEffectMgr::GetInstance()->FindEffect(TEXT("ParticleMap"));
-    //m_pEffectPreset->SetParentTransform(m_pTransformCom);
-    //m_pEffectPreset->PlayEffect();
-	return S_OK;
+    return S_OK;
 }
 
-void CDummy::PriorityTick(_float _fTimeDelta)
+void CMapMesh::PriorityTick(_float _fTimeDelta)
 {
 }
 
-void CDummy::Tick(_float _fTimeDelta)
+void CMapMesh::Tick(_float _fTimeDelta)
 {
-
 }
 
-void CDummy::LateTick(_float _fTimeDelta)
+void CMapMesh::LateTick(_float _fTimeDelta)
 {
     if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_NONBLEND, shared_from_this())))
         return;
 
-
+    if (FAILED(CGameInstance::GetInstance()->AddRenderGroup(CRenderer::RENDER_GLOW, shared_from_this())))
+        return;
 }
 
-HRESULT CDummy::Render()
+HRESULT CMapMesh::Render()
 {
     if (FAILED(BindShaderResources()))
         return E_FAIL;
@@ -67,7 +66,20 @@ HRESULT CDummy::Render()
             return E_FAIL;
 
         _uint iMaterialIndex = Meshes[i]->GetMaterialIndex();
+        shared_ptr<CTexture> pTexture = (*Materials)[iMaterialIndex]->GetTextures()[aiTextureType::aiTextureType_NORMALS];
         _uint iPassNum = 0;
+
+        shared_ptr<CTexture> pTexture2 = (*Materials)[iMaterialIndex]->GetTextures()[aiTextureType::aiTextureType_AMBIENT];
+
+
+        if (pTexture) {
+
+            if (FAILED(m_pModelCom->BindMaterialShaderResource(m_pShader, (_uint)i, aiTextureType::aiTextureType_NORMALS, "g_NormalTexture")))
+                return E_FAIL;
+
+            iPassNum = 6;
+
+        }
 
         if (FAILED(m_pShader->Begin(iPassNum)))
             return E_FAIL;
@@ -76,19 +88,36 @@ HRESULT CDummy::Render()
             return E_FAIL;
     }
 
-
-	return S_OK;
+    return S_OK;
 }
 
-HRESULT CDummy::AddComponent()
+HRESULT CMapMesh::RenderGlow(shared_ptr<CShader> _pShader)
+{
+
+    if (FAILED(BindShaderResources()))
+        return E_FAIL;
+
+    if (FAILED(m_pModelCom->BindMaterialShaderResource(m_pShader, (_uint)27, aiTextureType::aiTextureType_DIFFUSE, "g_DiffuseTexture")))
+        return E_FAIL;
+
+    if (FAILED(m_pShader->Begin(0)))
+        return E_FAIL;
+
+    if (FAILED(m_pModelCom->Render((_uint)27)))
+        return E_FAIL;
+
+    return S_OK;
+}
+
+HRESULT CMapMesh::AddComponent()
 {
     wrl::ComPtr<ID3D11Device> pDevice = CGameInstance::GetInstance()->GetDeviceInfo();
     wrl::ComPtr<ID3D11DeviceContext> pContext = CGameInstance::GetInstance()->GetDeviceContextInfo();
 
     return S_OK;
-}                       
+}
 
-HRESULT CDummy::BindShaderResources()
+HRESULT CMapMesh::BindShaderResources()
 {
     if (FAILED(m_pTransformCom->BindShaderResource(m_pShader, "g_WorldMatrix")))
         return E_FAIL;
@@ -106,12 +135,12 @@ HRESULT CDummy::BindShaderResources()
     return S_OK;
 }
 
-shared_ptr<CDummy> CDummy::Create(const wstring& _strKey)
+shared_ptr<CMapMesh> CMapMesh::Create(const wstring& _strKey)
 {
-    shared_ptr<CDummy> pInstance = make_shared<CDummy>();
+    shared_ptr<CMapMesh> pInstance = make_shared<CMapMesh>();
 
     if (FAILED(pInstance->Initialize(_strKey)))
-        MSG_BOX("Failed to Create : CDummy");
+        MSG_BOX("Failed to Create : CMapMesh");
 
-	return pInstance;
+    return pInstance;
 }

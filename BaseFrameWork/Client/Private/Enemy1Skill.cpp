@@ -17,7 +17,7 @@ HRESULT CEnemy1Skill::Initialize(_uint _iSkillNum)
 
     SKILLINFO skillDesc = {};
 
-    m_iDamage = 15.f;
+    m_iDamage = 5.f;
 
     if (1 == _iSkillNum) {
 

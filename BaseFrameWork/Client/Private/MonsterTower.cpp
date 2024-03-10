@@ -251,6 +251,10 @@ void CMonsterTower::TowerEventSetting()
 		info1.vMonsterPos = _vector({ 12.f, 20.f, -90.f });
 		m_SpawnMonsterList.push_back(info1);
 
+		info1.iMonsterType = 0;
+		info1.vMonsterPos = _vector({ 0.f, 20.f, -100.f });
+		m_SpawnMonsterList.push_back(info1);
+
 		shared_ptr<CMonsterTrigger> pTrigger = CMonsterTrigger::Create(&m_SpawnMonsterList, {0.f, 15.f, -94.f });
 		CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Event"), pTrigger);
 
@@ -283,6 +287,10 @@ void CMonsterTower::TowerEventSetting()
 
 		info1.iMonsterType = 1;
 		info1.vMonsterPos = _vector({ -70.f, 35.f, -306.f });
+		m_SpawnMonsterList.push_back(info1);
+
+		info1.iMonsterType = 0;
+		info1.vMonsterPos = _vector({ -70.f, 35.f, -310.f });
 		m_SpawnMonsterList.push_back(info1);
 
 		shared_ptr<CMonsterTrigger> pTrigger = CMonsterTrigger::Create(&m_SpawnMonsterList, { -74.f, 35.f, -306.f });

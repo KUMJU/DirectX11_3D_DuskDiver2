@@ -23,6 +23,7 @@ private:
 
 public:
 	void LoadMapData(const char* _filePath, vector<char*>* _ObjectNameList = nullptr, list<shared_ptr<CGameObject>>* _ObjectList = nullptr, vector<shared_ptr<CModel>>* _modelList = nullptr );
+	void LoadMapMesh(const char* _filePath, vector<char*>* _ObjectNameList = nullptr, list<shared_ptr<CGameObject>>* _ObjectList = nullptr, vector<shared_ptr<CModel>>* _modelList = nullptr );
 	void LoadCellData(const wstring& _strPath);
 	shared_ptr<CNavigation> GetCurrentNavi(_uint _iStartIdx);
 
