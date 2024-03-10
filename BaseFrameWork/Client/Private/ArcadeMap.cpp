@@ -216,6 +216,13 @@ HRESULT CArcadeMap::ReadyLayerMap(const wstring& _strLayerTag)
 		return E_FAIL;
 
 
+	/*맵파티클 테스트*/
+
+	//shared_ptr<CEffectPreset> pParticlePreset = CEffectMgr::GetInstance()->FindEffect(TEXT("ParticleBaseMap"));
+	//pParticlePreset->SetEffectPosition({ 0.f, 40.f, -245.f, 1.f });
+
+	//if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Effect"), pParticlePreset)))
+	//	return E_FAIL;
 
 	return S_OK;
 }

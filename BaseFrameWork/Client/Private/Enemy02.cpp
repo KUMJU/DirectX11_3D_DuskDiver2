@@ -82,6 +82,10 @@ void CEnemy02::Tick(_float _fTimeDelta)
 
         m_fDissolveAccTime += _fTimeDelta;
 
+        if (m_fDissolveAccTime == m_fTotalDissolveTime) {
+            m_IsEnabled = false;
+        }
+
     }
 
     //공격 쿨타임일때

@@ -104,6 +104,17 @@ void CEffectPreset::AddDistortionRender()
 		iter->AddDistortionRender();
 }
 
+void CEffectPreset::SetParticleGlowColor(_float4 _vGlowColor)
+{
+	for (auto& iter : m_Effects) {
+		if (iter->GetEffectType() == CEffect::EFFECT_TYPE::TYPE_PARTICLE) {
+			dynamic_pointer_cast<CEffectParticle>(iter)->SetGlowColor(_vGlowColor);
+		}
+
+	}
+
+}
+
 void CEffectPreset::AddEffect(shared_ptr<class CEffect> _pEffect)
 {
 	m_Effects.push_back(_pEffect);

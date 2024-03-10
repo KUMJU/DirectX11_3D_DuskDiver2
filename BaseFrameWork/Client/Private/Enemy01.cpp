@@ -82,6 +82,10 @@ void CEnemy01::Tick(_float _fTimeDelta)
     if (m_bDie) {
 
         m_fDissolveAccTime += _fTimeDelta;
+ 
+        if (m_fDissolveAccTime == m_fTotalDissolveTime) {
+            m_IsEnabled = false;
+        }
 
     }
 

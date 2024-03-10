@@ -1,0 +1,72 @@
+{
+	"Elements" : 
+	{
+		"ParticleBase" : 
+		{
+			"Center" : 
+			{
+				"x" : 0.0,
+				"y" : 0.7,
+				"z" : 3.4
+			},
+			"Color" : 
+			{
+				"x" : 1.0,
+				"y" : 1.0,
+				"z" : 1.0
+			},
+			"DirectMax" : 
+			{
+				"x" : 1.0,
+				"y" : 1.0,
+				"z" : -1.0
+			},
+			"DirectMin" : 
+			{
+				"x" : -1.0,
+				"y" : -1.0,
+				"z" : -1.0
+			},
+			"Duration" : 
+			{
+				"x" : 0.0,
+				"y" : 2.5
+			},
+			"EffectType" : 0,
+			"InstanceNum" : 200,
+			"LifeTime" : 
+			{
+				"x" : 1.5,
+				"y" : 2.5
+			},
+			"Size" : 
+			{
+				"x" : 0.03000000298023224,
+				"y" : 0.06000000298023224
+			},
+			"Speed" : 
+			{
+				"x" : 5.0,
+				"y" : 8.0
+			},
+			"StartPointMax" : 
+			{
+				"x" : 0.0,
+				"y" : 0.0,
+				"z" : 0.0
+			},
+			"StartPointMin" : 
+			{
+				"x" : 0.0,
+				"y" : 0.0,
+				"z" : 0.0
+			},
+			"TextureKey" : "T_Glow_00"
+		}
+	},
+	"Preset Info" : 
+	{
+		"Duration" : 3.0,
+		"Loop" : false
+	}
+}

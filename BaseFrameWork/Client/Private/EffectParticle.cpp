@@ -24,6 +24,7 @@ HRESULT CEffectParticle::Initialize(_uint _iInstanceNum, const wstring& _strText
     if (FAILED(__super::Initialize(nullptr)))
         return E_FAIL;
 
+
     m_pTexture = CGameInstance::GetInstance()->GetTexture(_strTextureKey);
     m_Components.emplace(TEXT("Com_Texture"), m_pTexture);
 

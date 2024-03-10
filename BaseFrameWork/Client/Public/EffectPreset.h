@@ -23,6 +23,7 @@ public:
 
 public:
 	void AddDistortionRender();
+	void SetParticleGlowColor(_float4 _vGlowColor);
 
 public:
 	void AddEffect(shared_ptr<class CEffect> _pEffect);

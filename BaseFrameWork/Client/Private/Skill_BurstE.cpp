@@ -3,6 +3,9 @@
 
 #include "Collider.h"
 #include "GameInstance.h"
+#include "CameraMgr.h"
+
+#include "EffectPreset.h"
 
 CSkill_BurstE::CSkill_BurstE()
 {
@@ -17,6 +20,9 @@ HRESULT CSkill_BurstE::Initialize()
     m_eSkillOwner = EOWNER_TYPE::OWNER_PLAYER;
     m_pEffectPreset = CEffectMgr::GetInstance()->FindEffect(TEXT("BurstE"));
 
+    m_pParticlePreset = CEffectMgr::GetInstance()->FindAndCloneEffect(TEXT("UpParticleBase2"));
+    m_pParticlePreset->SetEnable(false);
+    m_pParticlePreset->SetParticleGlowColor({ 1.f, 1.f, 0.1f, 1.f });
 
     CCollider::COLLIDER_DESC normalAtkDesc = {};
     normalAtkDesc.fRadius = 1.f;
@@ -111,12 +117,22 @@ void CSkill_BurstE::Tick(_float _fTimeDelta)
 
     if (m_fAccTime >= 0.7f && !bSkillSeDone) {
 
+        CCameraMgr::GetInstance()->SetBattleZoom(2.f, 80.f);
         bSkillSeDone = true;
 
         CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_FX);
         CGameInstance::GetInstance()->PlayAudio(TEXT("se_HE03_Super02_2.wav"), CSoundMgr::CHANNELID::CH_PLR_FX, 1.f);
-
     }
+
+    if (m_fAccTime >= 0.9f && !m_bParticleDone) {
+
+        m_bParticleDone = true;
+
+        m_pParticlePreset->SetEffectPosition(m_pOwnerTransform->GetState(CTransform::STATE_POSITION));
+        m_pParticlePreset->PlayEffect();
+    }
+
+
 
     if (m_fAccTime >= 1.6f && !bVoiceDone) {
 
@@ -127,6 +143,14 @@ void CSkill_BurstE::Tick(_float _fTimeDelta)
         CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
         CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_27.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
 
+    }
+
+    if (m_fAccTime >= 1.8f && !m_bCamDone) {
+
+        CCameraMgr::GetInstance()->SetBattleZoom(0.4f, 85.f);
+
+        m_bCamDone = true;
+    
     }
 
 
@@ -144,6 +168,12 @@ HRESULT CSkill_BurstE::Render()
     __super::Render();
 
     return S_OK;
+}
+
+void CSkill_BurstE::EndSkill()
+{
+    m_bCamDone = false;
+    m_bParticleDone = false;
 }
 
 shared_ptr<CSkill_BurstE> CSkill_BurstE::Create()

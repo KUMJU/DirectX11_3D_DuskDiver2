@@ -382,7 +382,7 @@
 				"UVLoop": false
 			},
 			"Mask": {
-				"Speed": 2.0,
+				"Speed": 1.0,
 				"TexKey": "T_GPP_Muzzle_Flash",
 				"Using": true,
 				"x": 0.0,

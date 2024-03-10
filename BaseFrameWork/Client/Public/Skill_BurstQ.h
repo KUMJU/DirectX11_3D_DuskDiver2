@@ -16,6 +16,12 @@ public:
 	virtual HRESULT Render();
 
 public:
+	virtual void EndSkill();
+
+private:
+	_bool m_bParticleDone = false;
+
+public:
 
 	static shared_ptr<CSkill_BurstQ> Create();
 

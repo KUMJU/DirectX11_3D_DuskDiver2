@@ -58,7 +58,7 @@ void CBossSkill2::Tick(_float _fTimeDelta)
 {
     m_fAccTime += _fTimeDelta;
 
-    if (m_fAccTime >= 1.4f && !bSkillSeDone) {
+    if (m_fAccTime >= 1.5f && !bSkillSeDone) {
 
         bSkillSeDone = true;
 

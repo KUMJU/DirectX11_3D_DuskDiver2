@@ -29,7 +29,8 @@ HRESULT CSkillQ::Initialize()
 
     m_eSkillOwner = EOWNER_TYPE::OWNER_PLAYER;
 
-    m_pParticlePreset = CEffectMgr::GetInstance()->FindEffect(TEXT("ParticleBase"));
+  //  m_pParticlePreset = CEffectMgr::GetInstance()->FindEffect(TEXT("ParticleBase"));
+    m_pParticlePreset = CEffectMgr::GetInstance()->FindEffect(TEXT("ParticleBaseMap"));
     CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Effect"), m_pParticlePreset);
 
     SKILLINFO info = {};
@@ -97,6 +98,7 @@ void CSkillQ::Tick(_float _fTimeDelta)
         m_bFinTimer = true;
     }
 
+
 }
 
 void CSkillQ::LateTick(_float _fTimeDelta)
@@ -114,6 +116,7 @@ HRESULT CSkillQ::Render()
 
 void CSkillQ::EndSkill()
 {
+
 }
 
 
