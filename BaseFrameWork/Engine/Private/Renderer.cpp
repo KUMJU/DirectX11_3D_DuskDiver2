@@ -201,7 +201,7 @@ HRESULT CRenderer::Render()
 	if (FAILED(RenderUI()))
 		return E_FAIL;
 
-
+/*
 #ifdef _DEBUG
 	if (m_bDebugOn) {
 		if (FAILED(RenderDebug()))
@@ -209,6 +209,8 @@ HRESULT CRenderer::Render()
 
 	}
 #endif
+
+*/
 
 
 

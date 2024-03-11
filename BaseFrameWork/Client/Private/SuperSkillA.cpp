@@ -16,6 +16,7 @@ HRESULT CSuperSkillA::Initialize()
 
     m_eSkillOwner = EOWNER_TYPE::OWNER_PLAYER;
 
+    m_iDamage = 5.f;
 
     m_bMultiAtk = true;
 

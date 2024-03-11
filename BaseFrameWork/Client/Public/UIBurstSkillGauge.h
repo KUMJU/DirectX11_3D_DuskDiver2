@@ -23,6 +23,8 @@ public:
 
 	void ActiveBurstSkill();
 
+	void StartBurstMode();
+
 private:
 	shared_ptr<CTexture> m_pBackgroundTexture = nullptr;
 	shared_ptr<CTransform> m_pBackGroundTransform = nullptr;
@@ -39,6 +41,7 @@ private:
 
 private:
 	shared_ptr<class CUI_SequenceTex> m_pUIEffect = nullptr;
+	shared_ptr<class CUI_SequenceTex> m_pUIStartEffect = nullptr;
 
 public:
 	static shared_ptr<CUIBurstSkillGauge> Create();

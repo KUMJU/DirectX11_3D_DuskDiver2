@@ -186,7 +186,7 @@ private:
 	_int m_iMaxHp = 100;
 	_int m_iHp = 100;
 
-	_float m_fBurstGage = 40.f;
+	_float m_fBurstGage = 0.f;
 	_float m_fBurstSkillGauge = 0.f;
 	_float m_fBurstOnTimer = 0.f;
 

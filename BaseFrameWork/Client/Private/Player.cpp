@@ -592,8 +592,19 @@ void CPlayer::AddBurstGauge()
     }
     //버스트 아닐때
     else {
-        m_fBurstGage += 3.f;
-        CUIMgr::GetInstance()->SetBurstGauge(m_fBurstGage);
+
+        if (m_fBurstGage < 90.f) {
+
+            m_fBurstGage += 3.f;
+
+            if (m_fBurstGage >= 90.f) {
+                m_fBurstGage = 90.f;
+            }
+            CUIMgr::GetInstance()->SetBurstGauge(m_fBurstGage);
+
+        }
+
+   
     }
 }
 
@@ -686,27 +697,25 @@ void CPlayer::CheckTimer(_float _fTimeDelta)
             m_fBurstOnTimer = 0.f;
             CUIMgr::GetInstance()->DecreaseBurstGauge();
 
+            if (m_fBurstGage <= 0.f) {
 
-            if (m_fBurstGage < 0.f) {
                 m_fBurstGage = 0.f;
+
+                m_fBurstAccTime = 0.f;
+                m_pModelCom = m_pBattleModelCom;
+                m_bBurstMode = false;
+                ChangeAnim(44, true);
+                CUIMgr::GetInstance()->BurstModeEnd();
+
+
+                CGameInstance::GetInstance()->SetLightEnabled(m_iBurstModeLightIdx, false);
+
+                m_pPlayerSkillset->SetBurstMode(false);
+
             }
 
         }
 
-        if (m_fBurstGage == 0.f && m_eCurrentState == HEROSTATE::STATE_IDLE) {
-
-          //  m_fBurstAccTime = 0.f;
-            m_pModelCom = m_pBattleModelCom;
-            m_bBurstMode = false;
-            ChangeAnim(44, true);
-            CUIMgr::GetInstance()->BurstModeEnd();
-        
-
-            CGameInstance::GetInstance()->SetLightEnabled(m_iBurstModeLightIdx, false);
-
-            m_pPlayerSkillset->SetBurstMode(false);
-
-        }
     }
 
 
@@ -1327,7 +1336,7 @@ void CPlayer::KeyInput(_float _fTimeDelta)
             m_pDashPreset->PlayEffect();
             FinalAnimNum = 81;
 
-            CGameInstance::GetInstance()->SetZoomBlurOn(40.f, 0.01f);
+            CGameInstance::GetInstance()->SetZoomBlurOn(40.f, 0.1f);
 
             CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_FX);
             CGameInstance::GetInstance()->PlayAudio(TEXT("se_ba_dash_h_01.wav"), CSoundMgr::CHANNELID::CH_PLR_FX, 1.f);
@@ -1382,8 +1391,8 @@ void CPlayer::KeyInput(_float _fTimeDelta)
 
 
     if (CGameInstance::GetInstance()->Key_Down('6')) {
-        m_pTransformCom->SetState(CTransform::STATE_POSITION, { -1.5f, 40.f, -365.f, 1.f });
-        m_pNavigationCom->CalcCurrentPos({ 0.f, 40.f, -380.f, 1.f });
+        m_pTransformCom->SetState(CTransform::STATE_POSITION, { -1.5f, 40.f, -345.f, 1.f });
+        m_pNavigationCom->CalcCurrentPos({ 0.f, 40.f, -345.f, 1.f });
     }
 
 
@@ -1838,6 +1847,25 @@ void CPlayer::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> _
     }
     else if (EObjType::OBJ_HOCKEYBALL == _eObjType) {
    
+
+        _int iVoiceIdx = rand() % 3;
+
+        if (0 == iVoiceIdx) {
+            CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
+            CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_16.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
+
+        }
+        else if (1 == iVoiceIdx) {
+            CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
+            CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_19.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
+
+        }
+        else if (2 == iVoiceIdx) {
+            CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
+            CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_20.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
+        }
+
+
         if (m_bSuperArmor)
             return;
 
@@ -2040,6 +2068,25 @@ void CPlayer::OnHit(_float _fTimeDelta)
 
 void CPlayer::OnHitMinigame()
 {
+
+    _int iVoiceIdx = rand() % 3;
+
+    if (0 == iVoiceIdx) {
+        CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
+        CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_16.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
+
+    }
+    else if (1 == iVoiceIdx) {
+        CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
+        CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_19.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
+
+    }
+    else if (2 == iVoiceIdx) {
+        CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_PLR_VO);
+        CGameInstance::GetInstance()->PlayAudio(TEXT("Hero01_ba_20.wav"), CSoundMgr::CHANNELID::CH_PLR_VO, 1.f);
+    }
+
+
     m_eCurrentState = HEROSTATE::STATE_HIT;
     m_bSuperArmor = true;
     m_fSuperArmorTime = 1.5f; 

@@ -19,7 +19,7 @@ HRESULT CBossSkill1::Initialize()
     m_eSkillOwner = EOWNER_TYPE::OWNER_MONSTER;
     m_pEffectPreset = CEffectMgr::GetInstance()->FindEffect(TEXT("BossAtk1"));
 
-    m_iDamage = 15.f;
+    m_iDamage = 10.f;
 
     normalAtkDesc.fRadius = 17.f;
     normalAtkDesc.vCenter = { 0.f, 0.f, 2.f };

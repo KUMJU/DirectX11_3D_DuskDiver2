@@ -27,6 +27,8 @@ public:
 	void Tick(_float _fTimeDelta);
 	void KillLastOne();
 
+	void EraseMonster();
+
 	_bool GetOnBattle() { return m_bOnBattle; }
 
 private:
@@ -35,6 +37,7 @@ private:
 	_bool m_bOnBattle = false;
 	_bool m_bSlowMotion = false;
 	_bool m_bEventDone = false;
+	_bool m_bLastOne = false;
 
 	shared_ptr<CLayers> m_pMonsterLayer = nullptr;
 	shared_ptr<class CPlayer> m_pPlayer = nullptr;

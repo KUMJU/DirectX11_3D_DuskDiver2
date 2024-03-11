@@ -5,6 +5,8 @@
 #include "Texture.h"
 #include "VIBuffer_UI.h"
 
+#include "Barrier.h"
+
 CUIMiniquest::CUIMiniquest()
 {
 }
@@ -39,11 +41,17 @@ HRESULT CUIMiniquest::Initialize()
         CGameInstance::GetInstance()->GetDeviceContextInfo(),
         nullptr);
 
-    m_pIconTransform->SetScaling( 80.f, 80.f, 1.f );
+    m_pIconTransform->SetScaling(80.f, 80.f, 1.f);
     m_pIconTransform->SetState(CTransform::STATE_POSITION, { UIInfo.fX - g_iWinSizeX * 0.5f - 115.f ,-UIInfo.fY + g_iWinSizeY * 0.5f , 0.f, 1.f });
     m_Components.emplace(TEXT("Com_IconTransform"), m_pIconTransform);
 
     m_eUIGroup = CRenderer::UI_BACKGROUND;
+
+    m_pBarrier = CBarrier::Create({ 0.5f, 26.f, -146.f , 1.f }, { 0.f, 0.f, 0.f });
+    
+    if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_GameObject"), m_pBarrier)))
+        return E_FAIL;
+
 
     m_IsEnabled = false;
 
@@ -52,6 +60,7 @@ HRESULT CUIMiniquest::Initialize()
 
 void CUIMiniquest::PriorityTick(_float _fTimeDelta)
 {
+ 
 }
 
 void CUIMiniquest::Tick(_float _fTimeDelta)
@@ -140,6 +149,11 @@ void CUIMiniquest::StartMoleGame()
     m_iCurrentSuccessNum = 0;
     m_iGoalNum = 10;
 
+}
+
+void CUIMiniquest::DeleteBarrier()
+{
+    m_pBarrier->SetEnable(false);
 }
 
 void CUIMiniquest::ResetUI()

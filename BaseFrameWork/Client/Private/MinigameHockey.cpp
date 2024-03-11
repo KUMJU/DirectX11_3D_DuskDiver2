@@ -12,6 +12,8 @@
 
 #include "UIMgr.h"
 
+#include "Barrier.h"
+
 
 CMinigameHockey::CMinigameHockey()
 {
@@ -104,6 +106,12 @@ HRESULT CMinigameHockey::Initialize(CTransform::TRANSFORM_DESC* _pDesc)
 
     m_MonsterList.push_back(info);
 
+    /*¹è¸®¾î*/
+
+    m_pBarrier = CBarrier::Create({ 0.5f, 34.f , -332.f, 1.f }, { 0.f, 0.f, 0.f });
+    CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_Event"), m_pBarrier);
+
+
     return S_OK;
 }
 
@@ -181,6 +189,9 @@ void CMinigameHockey::GameEnd()
     __super::GameEnd();
 
     m_pHockeyBall->SetInActive();
+    m_pBarrier->SetEnable(false);
+    CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MAPSE);
+    CGameInstance::GetInstance()->PlayAudio(TEXT("se_LR_Finish.wav"), CSoundMgr::CHANNELID::CH_MAPSE, 1.f);
 
 }
 

@@ -79,7 +79,7 @@ void CMainApp::Tick(_float _fTimeDelta)
 HRESULT CMainApp::Render()
 {
 
-	if (FAILED(CGameInstance::GetInstance()->ClearBackBufferView(_float4(0.f, 0.f, 1.f, 1.f))))
+	if (FAILED(CGameInstance::GetInstance()->ClearBackBufferView(_float4(0.f, 0.f, 0.f, 1.f))))
 		return E_FAIL;
 
 	if (FAILED(CGameInstance::GetInstance()->ClearDepthStencilView()))

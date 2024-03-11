@@ -13,6 +13,8 @@
 
 #include "Texture.h"
 
+#include "BattleSystem.h"
+
 CEnemy02::CEnemy02()
 {
 }
@@ -37,7 +39,7 @@ HRESULT CEnemy02::Initialize()
     m_iTotalAtkNum = 3;
     m_fTotalCoolTime = 2.f;
 
-    m_iHP = 100;
+    m_iHP = 150;
 
     m_pHPBar = CWorldHPBar::Create();
     m_pHPBar->SetMaxHP(m_iHP);
@@ -79,11 +81,12 @@ void CEnemy02::Tick(_float _fTimeDelta)
 
 
     if (m_bDie) {
-
+        m_pHPBar->SetEnable(false);
         m_fDissolveAccTime += _fTimeDelta;
 
-        if (m_fDissolveAccTime == m_fTotalDissolveTime) {
+        if (m_fDissolveAccTime >= m_fTotalDissolveTime) {
             m_IsEnabled = false;
+
         }
 
     }
@@ -106,8 +109,8 @@ void CEnemy02::Tick(_float _fTimeDelta)
 
 
             if (m_bDie) {
-                m_pHPBar->SetEnable(false);
-                m_IsEnabled = false;
+               // m_pHPBar->SetEnable(false);
+              //  m_IsEnabled = false;
             }
             else {
 
@@ -202,8 +205,8 @@ void CEnemy02::Tick(_float _fTimeDelta)
     if (m_pModelCom->PlayAnimation(_fTimeDelta, m_bLoop, &m_vCurrentAnimPos)) {
         
         if (m_iAnimNum == 9) {
-            m_pHPBar->SetEnable(false);
-            m_IsEnabled = false;
+         //   m_pHPBar->SetEnable(false);
+          //  m_IsEnabled = false;
             return;
         }
 
@@ -384,7 +387,7 @@ void CEnemy02::AttackPattern(_uint _iAtkNum)
     
 
     m_eCurrentState = EMONSTER_STATE::STATE_ATTACK;
-    m_fTotalCoolTime = 6.f + rand() % 3;
+    m_fTotalCoolTime = 3.f + rand() % 3;
 
 }
 
@@ -433,8 +436,8 @@ void CEnemy02::IfEmptyAnimList()
     m_vCurrentAnimPos = { 0.f, 0.f, 0.f };
     
     if (50 == m_iAnimNum) {
-        m_pHPBar->SetEnable(false);
-        m_IsEnabled = false;
+       // m_pHPBar->SetEnable(false);
+       // m_IsEnabled = false;
         return;
     }
 
@@ -573,7 +576,7 @@ void CEnemy02::SetSpawnState()
 
     m_eCurrentState = EMONSTER_STATE::STATE_SPAWN;
     ChangeAnim(37, false);
-    m_iHP = 100;
+    m_iHP = 150;
 
 }
 

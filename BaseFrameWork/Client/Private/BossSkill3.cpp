@@ -31,7 +31,7 @@ HRESULT CBossSkill3::Initialize()
     skillDesc.fDropSpeed = 0.f;
 
 
-    skillDesc.iStartTrackPosition = 55.0;
+    skillDesc.iStartTrackPosition = 52.0;
     skillDesc.iEndTrackPosition = 70.0;
 
     shared_ptr<CCollider> pCollider = CCollider::Create(CGameInstance::GetInstance()->GetDeviceInfo(), CGameInstance::GetInstance()->GetDeviceContextInfo(), CCollider::TYPE_SPHERE, normalAtkDesc);

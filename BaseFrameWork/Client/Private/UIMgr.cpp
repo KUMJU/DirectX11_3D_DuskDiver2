@@ -154,6 +154,8 @@ void CUIMgr::SetBurstMode()
 
 	if (pSkillBar) {
 		pSkillBar->SetEnable(true);
+		dynamic_pointer_cast<CUIBurstSkillGauge>(pSkillBar)->StartBurstMode();
+
 	}
 
 	wstring FindKey2 = TEXT("UI_BurstBar");
@@ -244,6 +246,16 @@ void CUIMgr::StartCoinQuest()
 
 	if (pMiniquest) {
 		dynamic_pointer_cast<CUIMiniquest>(pMiniquest)->StartCoinQuest();
+	}
+}
+
+void CUIMgr::EndCoinQuest()
+{
+	wstring FindKey = TEXT("UI_Miniquest");
+	shared_ptr<CUI> pMiniquest = FindUI(FindKey);
+
+	if (pMiniquest) {
+		dynamic_pointer_cast<CUIMiniquest>(pMiniquest)->DeleteBarrier();
 	}
 }
 

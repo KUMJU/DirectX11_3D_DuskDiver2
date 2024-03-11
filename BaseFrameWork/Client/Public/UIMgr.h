@@ -49,6 +49,8 @@ public:
 	
 	void StartMoleMinigame();
 	void StartCoinQuest();
+	void EndCoinQuest();
+
 	void SetMiniQuestSuccessNumber(_int _iSucNum);
 	void AddMiniQuestSuccessNumber();
 

@@ -251,7 +251,7 @@ void CMinigameMole::GetScore()
     CUIMgr::GetInstance()->SetMiniQuestSuccessNumber(m_iCurrentScore);
 
 
-    if (m_iCurrentScore >= 2) {
+    if (m_iCurrentScore >= 10) {
         GameEnd();
     }
 }

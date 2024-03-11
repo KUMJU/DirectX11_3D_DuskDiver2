@@ -2,6 +2,8 @@
 
 #include "UI.h"
 
+BEGIN(Client)
+
 class CUIMiniquest : public CUI
 {
 public:
@@ -20,6 +22,7 @@ public:
 	void StartCoinQuest();
 	void StartMoleGame();
 
+	void DeleteBarrier();
 
 	void SetSuccessNum(_int _iSucNum) { m_iCurrentSuccessNum = _iSucNum; }
 	void AddSuccessNum() { ++m_iCurrentSuccessNum; }
@@ -34,6 +37,9 @@ private:
 
 
 private:
+	shared_ptr<class CBarrier> m_pBarrier = nullptr;
+
+private:
 	shared_ptr<CTexture> m_pIconTexture[2];
 	shared_ptr<CTransform> m_pIconTransform;
 
@@ -41,3 +47,4 @@ public:
 	static shared_ptr<CUIMiniquest> Create();
 };
 
+END

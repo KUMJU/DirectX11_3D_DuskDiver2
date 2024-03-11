@@ -39,6 +39,9 @@ private:
 	//몬스터 4마리->하키게임용 몬스터 따로 만들기(에너미3)
 	//콜라이더 4개(벽)
 
+private:
+	shared_ptr<class CBarrier> m_pBarrier = nullptr;
+
 public:
 	static shared_ptr<CMinigameHockey> Create();
 

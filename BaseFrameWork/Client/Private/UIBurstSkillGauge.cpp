@@ -55,6 +55,10 @@ HRESULT CUIBurstSkillGauge::Initialize()
     if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_UI"), m_pUIEffect)))
         return E_FAIL;
 
+    m_pUIStartEffect = CUI_SequenceTex::Create(&UIInfo, TEXT("fx_burst_180"), 2, &SequeneceInfo);
+    if (FAILED(CGameInstance::GetInstance()->AddObject(LEVEL_ARCADE, TEXT("Layer_UI"), m_pUIStartEffect)))
+        return E_FAIL;
+
     return S_OK;
 }
 
@@ -161,6 +165,11 @@ void CUIBurstSkillGauge::ActiveBurstSkill()
     m_fCurrentBurstGauge = 0.f;
     m_fCurrentRate = 0.f;
 
+}
+
+void CUIBurstSkillGauge::StartBurstMode()
+{
+    m_pUIStartEffect->SetEnable(true);
 }
 
 shared_ptr<CUIBurstSkillGauge> CUIBurstSkillGauge::Create()

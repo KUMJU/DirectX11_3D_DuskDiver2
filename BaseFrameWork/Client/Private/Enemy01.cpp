@@ -13,6 +13,7 @@
 
 #include "WorldHPBar.h"
 
+#include "BattleSystem.h"
 #include "Texture.h"
 
 
@@ -46,7 +47,7 @@ HRESULT CEnemy01::Initialize()
     m_pNavigation = CMapLoader::GetInstance()->GetCurrentNavi(0);
     m_Components.emplace(TEXT("Com_Navigation"), m_pNavigation);
 
-    m_iHP = 100;
+    m_iHP = 150;
 
     m_pHPBar = CWorldHPBar::Create();
     m_pHPBar->SetMaxHP(m_iHP);
@@ -80,10 +81,10 @@ void CEnemy01::Tick(_float _fTimeDelta)
 
 
     if (m_bDie) {
-
+        m_pHPBar->SetEnable(false);
         m_fDissolveAccTime += _fTimeDelta;
  
-        if (m_fDissolveAccTime == m_fTotalDissolveTime) {
+        if (m_fDissolveAccTime >= m_fTotalDissolveTime) {
             m_IsEnabled = false;
         }
 
@@ -118,8 +119,8 @@ void CEnemy01::Tick(_float _fTimeDelta)
         if (m_fDownTime > 2.f) {
 
             if (m_bDie) {
-                m_pHPBar->SetEnable(false);
-                m_IsEnabled = false;
+              //  m_pHPBar->SetEnable(false);
+               // m_IsEnabled = false;
             }
             else {
 
@@ -199,8 +200,8 @@ void CEnemy01::Tick(_float _fTimeDelta)
         m_vCurrentAnimPos = { 0.f, 0.f, 0.f };
 
         if (m_iAnimNum == 8) {
-            m_pHPBar->SetEnable(false);
-            m_IsEnabled = false;
+          //  m_pHPBar->SetEnable(false);
+           // m_IsEnabled = false;
             return;
         }
 
@@ -431,8 +432,8 @@ void CEnemy01::IfEmptyAnimList()
     }
 
     if (14 == m_iAnimNum && m_bDie) {
-        m_pHPBar->SetEnable(false);
-        m_IsEnabled = false;
+       // m_pHPBar->SetEnable(false);
+       // m_IsEnabled = false;
         return;
     }
 
@@ -536,7 +537,7 @@ void CEnemy01::SetSpawnState()
 
     m_eCurrentState = EMONSTER_STATE::STATE_SPAWN;
     ChangeAnim(18, false);
-    m_iHP = 100;
+    m_iHP = 150;
 
 
 }

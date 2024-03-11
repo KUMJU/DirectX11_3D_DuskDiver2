@@ -36,6 +36,16 @@ void CBattleSystem::BattleEnd()
 void CBattleSystem::Tick(_float _fTimeDelta)
 {
 
+	if (m_bLastOne) {
+		m_pMonsterLayer = CGameInstance::GetInstance()->FindLayer(TEXT("Layer_Monster"));
+		list<shared_ptr<CGameObject>>* pMonsterList = m_pMonsterLayer->GetObjectList();
+
+		if (!(pMonsterList->front()->IsEnabled())) {
+			pMonsterList->clear();
+			m_bLastOne = false;
+		}
+	}
+
 	if (m_bEventDone)
 		return;
 	
@@ -53,7 +63,6 @@ void CBattleSystem::Tick(_float _fTimeDelta)
 			return;
 		}
 	}
-
 
 	if (!m_bOnBattle) {
 		return;
@@ -77,6 +86,8 @@ void CBattleSystem::Tick(_float _fTimeDelta)
 		}
 	}
 
+
+
 	if (1 == pMonsterList->size() && !m_bSlowMotion) {
 		if (dynamic_pointer_cast<CMonster>(pMonsterList->front())->GetIsDead()) {
 			m_bSlowMotion = true;
@@ -97,4 +108,10 @@ void CBattleSystem::KillLastOne()
 	CGameInstance::GetInstance()->StopSound(CSoundMgr::CHANNELID::CH_MONHIT);
 	CGameInstance::GetInstance()->PlayAudio(TEXT("se_slowmotion_finish.wav"), CSoundMgr::CHANNELID::CH_MONHIT, 1.3f);
 	CGameInstance::GetInstance()->SetTimerOffset(TEXT("Timer_60"), 0.3f);
+	m_bLastOne = true;
+}
+
+void CBattleSystem::EraseMonster()
+{
+
 }

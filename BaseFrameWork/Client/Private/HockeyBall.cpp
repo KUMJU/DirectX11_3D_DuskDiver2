@@ -77,7 +77,7 @@ HRESULT CHockeyBall::Render()
     if (FAILED(BindShaderResources()))
         return E_FAIL;
 
-    m_pCollider->Render();
+   // m_pCollider->Render();
 
     _uint iNumMeshes = m_pModel->GetNumMeshes();
 

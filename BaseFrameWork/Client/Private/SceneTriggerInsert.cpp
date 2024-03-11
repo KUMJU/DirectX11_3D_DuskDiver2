@@ -38,6 +38,8 @@ void CSceneTriggerInsert::Tick(_float _fTimeDelta)
 			CGameInstance::GetInstance()->PlayAudio(TEXT("se_Env12_CoinMach_On.wav"), CSoundMgr::CHANNELID::CH_MAPSE, 1.5f);
 			CUIMgr::GetInstance()->CloseUI(TEXT("UI_Miniquest"));
 
+			CUIMgr::GetInstance()->EndCoinQuest();
+
 			CUIMgr::GetInstance()->SetQuestDesc(TEXT("계속 앞으로 나아간다"));
 			
 			m_IsActive = false;

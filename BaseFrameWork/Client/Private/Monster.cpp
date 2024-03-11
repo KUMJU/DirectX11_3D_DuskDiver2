@@ -475,7 +475,7 @@ void CMonster::OnCollide(CGameObject::EObjType _eObjType, shared_ptr<CCollider> 
             _float fXDistance = fX(m_RandomNumber);
             _float fYDistance = fY(m_RandomNumber);
 
-            vPos = vPos + _vector({ fXDistance ,fYDistance,  3.f});
+            vPos = vPos + _vector({ fXDistance ,fYDistance,  0.f});
 
             CEffectMgr::GetInstance()->SetHitMark(vPos);
 
